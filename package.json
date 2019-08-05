@@ -40,7 +40,10 @@
       "plugin:vue/essential",
       "utopa"
     ],
-    "rules": {},
+    "rules": {
+      "array-callback-return": "off",
+      "no-nested-ternary": "off"
+    },
     "parserOptions": {
       "parser": "babel-eslint"
     }
