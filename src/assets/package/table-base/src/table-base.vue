@@ -115,8 +115,8 @@ export default {
     this.columns.map(column => {
       const { renderToolBox } = column
       if (renderToolBox) {
-        column.renderBody = (h, row) => {
-          const templates = renderToolBox(h, row)
+        column.renderBody = (h1, row) => {
+          const templates = renderToolBox(h1, row)
           if (!templates || !templates.length) {
             throw new Error('renderToolBox should return an Array')
           }
