@@ -59,7 +59,7 @@ export default {
   computed: {
     hasPagination () {
       // return !!this.fetchDataAsync || (this.tableData && this.tableData.length >= this.pageSize)
-      return !!this.fetchDataAsync || (this.tableData && this.tableData.length)
+      return !!this.fetchDataAsync || !!(this.tableData && this.tableData.length)
     }
   },
   mounted () {
