@@ -1,0 +1,14 @@
+///*
+// * Component: Sidebar
+// * ------------------
+// */
+
+.sidebar-menu{
+  .el-menu-item{
+    height: $navbar-height;
+    line-height: $navbar-height;
+  }
+  .el-menu.sidebar-menu{
+    border-radius: 0;
+  }
+}

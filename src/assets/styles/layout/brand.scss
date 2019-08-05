@@ -1,0 +1,39 @@
+/**  */
+.brand,
+.logo {
+  @include transition( $transition-speed $transition-fn);
+  float: left;
+  font-family: "microsoft yahei", Helvetica, Arial, sans-serif;
+  color: #000;
+  font-weight: 600;
+  font-size: 20px;
+  text-align: center;
+  height: $navbar-height;
+  line-height: 50px;
+  padding: 0 15px;
+  overflow: hidden;
+
+  &:hover, &:active, &:visited{
+    color: #000;
+  }
+
+  .brand-lg,
+  .logo-lg {
+    display: block;
+  }
+  .brand-mini,
+  .logo-mini {
+    display: none;
+  }
+  .brand-image,.brand-label,
+  .logo-image,.logo-label{
+    vertical-align: middle;
+  }
+  @media (max-width: $screen-sm) {
+    .brand-lg,.brand-mini,.brand-label,
+    .logo-lg,.logo-image,.logo-label {
+      display: inline-block;
+      margin-right: 5px;
+    }
+  }
+}

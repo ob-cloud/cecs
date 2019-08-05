@@ -1,0 +1,114 @@
+//COLORS
+//--------------------------------------------------------
+
+//Primary
+$light-blue: #3c8dbc !default;
+
+//Danger
+$red: #dd4b39 !default;
+//Success
+$green: #00a65a !default;
+//Info
+$aqua: #00c0ef !default;
+//Warning
+$yellow: #f39c12 !default;
+
+$gray-lte: #d2d6de;
+
+$white: #fff !default;
+
+$amber: #ffc107 !default;
+$blue: #2196F3 !default;
+$brown: #795548 !default;
+$cyan: #00bcd4 !default;
+$blue-grey: #607d8b !default;
+$light-green: #8bc34a !default;
+$indigo: #3f51b5 !default;
+$khaki: #f0e68c !default;
+$lime: #cddc39 !default;
+$orange: #ff9800 !default;
+$deep-orange: #ff5722 !default;
+$pink: #e91e63 !default;
+$purple: #9c27b0 !default;
+$deep-purple: #673ab7 !default;
+$sand: #fdf5e6 !default;
+$teal: #009688 !default;
+$white: #fff !default;
+$black: #000 !default;
+$grey: #9e9e9e !default;
+$light-grey: #f1f1f1 !default;
+$deep-grey: #ccc !default;
+$dark-grey: #616161 !default;
+$pale-red: #ffe7e7 !default;
+$pale-green: #e7ffe7 !default;
+$pale-yellow: #ffffd7 !default;
+$pale-blue: #e7ffff !default;
+$maroon: #D81B60!default;
+
+$text-amber: $amber !default;
+$text-aqua: $aqua !default;
+$text-blue: $blue !default;
+$text-light-blue: $light-blue !default;
+$text-brown: $brown !default;
+$text-cyan: $cyan !default;
+$text-blue-grey: $blue-grey !default;
+$text-green: $green !default;
+$text-light-green: $light-green !default;
+$text-indigo: $indigo !default;
+$text-khaki: $khaki !default;
+$text-lime: $lime !default;
+$text-orange: $orange !default;
+$text-deep-orange: $deep-orange !default;
+$text-pink: $pink !default;
+$text-purple: $purple !default;
+$text-deep-purple: $deep-purple !default;
+$text-red: $red !default;
+$text-sand: $sand !default;
+$text-teal: $teal !default;
+$text-yellow: $yellow !default;
+$text-white: $white !default;
+$text-black: $black !default;
+$text-grey: $grey !default;
+$text-light-grey: $light-grey !default;
+$text-dark-grey: $dark-grey !default;
+
+$border-amber: $amber !default;
+$border-aqua: $aqua !default;
+$border-blue: $blue !default;
+$border-light-blue: $light-blue !default;
+$border-brown: $brown !default;
+$border-cyan: $cyan !default;
+$border-blue-grey: $blue-grey !default;
+$border-green: $green !default;
+$border-light-green: $light-green !default;
+$border-indigo: $indigo !default;
+$border-khaki: $khaki !default;
+$border-lime: $lime !default;
+$border-orange: $orange !default;
+$border-deep-orange: $deep-orange !default;
+$border-pink: $pink !default;
+$border-purple: $purple !default;
+$border-deep-purple: $deep-purple !default;
+$border-red: $red !default;
+$border-sand: $sand !default;
+$border-teal: $teal !default;
+$border-yellow: $yellow !default;
+$border-white: $white !default;
+$border-black: $black !default;
+$border-grey: $grey !default;
+$border-deep-grey: $deep-grey !default;
+$border-light-grey: $light-grey !default;
+$border-dark-grey: $dark-grey !default;
+$border-pale-red: $pale-red !default;
+$border-pale-green: $pale-green !default;
+$border-pale-yellow: $pale-yellow !default;
+$border-pale-blue: $pale-blue !default;
+
+//$color-list: amber aqua blue light-blue brown cyan blue-grey green light-green indigo khaki lime orange deep-orange pink purple deep-purple red sand teal yellow white black grey light-grey deep-grey dark-grey pale-red pale-green pale-yellow pale-blue;
+$color-list: (amber $amber $black) (aqua $aqua $black) (blue $blue $white) (light-blue $light-blue $black) (brown $brown $white) (cyan $cyan $black) (blue-grey $blue-grey $white) (green $green $white) (light-green $light-green $black) (indigo $indigo $white) (khaki $khaki $black) (lime $lime $black) (orange $orange $black) (deep-orange $deep-orange $white) (pink $pink $white) (purple $purple $white) (deep-purple $deep-purple $white) (red $red $white) (sand $sand $black) (teal $teal $white) (yellow $yellow $black) (white $white $black) (black $black $white) (grey $grey $black) (light-grey $light-grey $black) (dark-grey $dark-grey $white) (pale-red $pale-red $black) (pale-green $pale-green $black) (pale-yellow $pale-yellow $black) (pale-blue $pale-blue $black);
+
+$basic-button-list: (amber $amber $black) (aqua $aqua $black) (blue $blue $white) (light-blue $light-blue $black) (brown $brown $white) (cyan $cyan $black) (blue-grey $blue-grey $white) (green $green $white) (light-green $light-green $black) (indigo $indigo $white) (khaki $khaki $black) (lime $lime $black) (orange $orange $black) (deep-orange $deep-orange $white) (pink $pink $white) (purple $purple $white) (deep-purple $deep-purple $white) (red $red $white) (sand $sand $black) (teal $teal $white) (yellow $yellow $black) (white $white $black) (black $black $white) (grey $grey $black) (light-grey $light-grey $black) (dark-grey $dark-grey $white) (pale-red $pale-red $black) (pale-green $pale-green $black) (pale-yellow $pale-yellow $black) (pale-blue $pale-blue $black);
+
+$text-color-list: (amber $amber $black) (aqua $aqua $black) (blue $blue $white) (light-blue $light-blue $black) (brown $brown $white) (cyan $cyan $black) (blue-grey $blue-grey $white) (green $green $white) (light-green $light-green $black) (indigo $indigo $white) (khaki $khaki $black) (lime $lime $black) (orange $orange $black) (deep-orange $deep-orange $white) (pink $pink $white) (purple $purple $white) (deep-purple $deep-purple $white) (red $red $white) (sand $sand $black) (teal $teal $white) (yellow $yellow $black) (white $white $black) (black $black $white) (grey $grey $black) (light-grey $light-grey $black) (dark-grey $dark-grey $white) (pale-red $pale-red $black) (pale-green $pale-green $black) (pale-yellow $pale-yellow $black) (pale-blue $pale-blue $black);
+
+$border-color-list: (amber $amber $black) (aqua $aqua $black) (blue $blue $white) (light-blue $light-blue $black) (brown $brown $white) (cyan $cyan $black) (blue-grey $blue-grey $white) (green $green $white) (light-green $light-green $black) (indigo $indigo $white) (khaki $khaki $black) (lime $lime $black) (orange $orange $black) (deep-orange $deep-orange $white) (pink $pink $white) (purple $purple $white) (deep-purple $deep-purple $white) (red $red $white) (sand $sand $black) (teal $teal $white) (yellow $yellow $black) (white $white $black) (black $black $white) (grey $grey $black) (light-grey $light-grey $black) (dark-grey $dark-grey $white) (pale-red $pale-red $black) (pale-green $pale-green $black) (pale-yellow $pale-yellow $black) (pale-blue $pale-blue $black);

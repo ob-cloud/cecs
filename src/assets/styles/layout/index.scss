@@ -1,0 +1,30 @@
+.app-wrapper {
+  @include clearfix;
+  position: relative;
+  overflow: hidden;
+
+  .el-menu.sidebar-menu{
+    // margin-right: 110px;
+  }
+}
+.app-header {
+  background-color: #fff;
+}
+
+@import './brand.scss';
+@import './navbar.scss';
+
+/*
+ * Content Wrapper - contains the main content
+ */
+
+ .app-main{
+   width: 100%;
+   position: relative;
+   overflow-x: hidden;
+   overflow-y: auto;
+
+   .app-container{
+     padding: 10px;
+   }
+ }

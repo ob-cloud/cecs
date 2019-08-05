@@ -1,0 +1,25 @@
+$--font-path: '~element-ui/lib/theme-chalk/fonts';
+@import "~element-ui/packages/theme-chalk/src/index.scss";
+
+.el-button{
+  padding: 7px 15px;
+  font-size: 12px;
+}
+
+.el-table{
+  .el-table__header-wrapper{
+    th{
+      padding: 6px 0;
+    }
+  }
+  .el-table__body-wrapper{
+    .el-table__row{
+      td{
+        padding: 6px 0;
+      }
+    }
+    .el-table__expanded-cell{
+      padding: 10px 50px;
+    }
+  }
+}

@@ -1,0 +1,122 @@
+@charset "utf-8";
+///*
+// * Component: Navbar
+// * ----------------------
+// */
+.navbar {
+  margin-bottom: 0;
+  border: none;
+  height: $navbar-height;
+  margin-left: $sidebar-width;
+  border-radius: 0;
+
+  .navbar-custom-menu,
+  .navbar-right {
+    float: right;
+    @media (max-width: $screen-sm-max) {
+      a {
+        color: inherit;
+        background: transparent;
+      }
+    }
+  }
+  .navbar-right {
+    @media (max-width: $screen-header-collapse) {
+      float: none;
+      .navbar-collapse & {
+        margin: 7.5px -15px;
+      }
+      > li {
+        color: inherit;
+        border: 0;
+      }
+    }
+  }
+
+  .navbar-menu-nav,
+  .sys-menu-nav{
+    display: inline-block;
+    line-height: $navbar-height;
+    text-align: center;
+    background-color: transparent;
+
+    &::before, &::after{
+      visibility: hidden;
+    }
+
+    .el-menu-item{
+      height: $navbar-height;
+      line-height: $navbar-height;
+    }
+
+    // &.el-menu--horizontal{
+    //   &, > .el-menu-item{
+    //     border: none;
+    //   }
+    // }
+
+  }
+  .el-menu--horizontal.el-menu.sys-menu-nav{
+    vertical-align: middle;
+    margin-right: 0;
+  }
+  .el-menu--horizontal > .el-menu-item.is-active{
+    border-bottom-width: 1px;
+  }
+  .el-menu--horizontal.sys-menu-nav > .el-menu-item.is-active{
+    border-bottom-width: 0;
+  }
+
+  .el-menu--horizontal > .el-submenu .el-submenu__title{
+    height: $navbar-height;
+    line-height: $navbar-height;
+  }
+
+  &.is-dialog {
+    position: inherit;
+  }
+}
+
+.navbar-custom-menu {
+  .#{$uv-css-prefix}-user-menu{
+    padding: 0 12px;
+    transition: all .3s;
+    line-height: $navbar-height;
+    .#{$uv-css-prefix}-menu-btn{
+      background-color: transparent;
+      border-color: transparent;
+      color: transparent;
+      padding: 0;
+      &:active,
+      &.is-active,
+      &:hover,
+      &:focus{
+        outline: none;
+        background-color: transparent;
+        border-color: transparent;
+        color: transparent;
+      }
+    }
+    .#{$uv-css-prefix}-user-menu{
+      padding: 0 12px;
+      > .dropdown-toggle {
+        display: inline-block;
+        color: #999;
+        line-height: 20px;
+      }
+
+      .dropdown-toggle > .user-image,
+      .dropdown-toggle > span{
+        vertical-align: middle;
+      }
+
+      .user-image{
+        width: 25px;
+        height: 25px;
+        border-radius: 50%;
+        margin-right: 10px;
+      }
+    }
+  }
+}
+

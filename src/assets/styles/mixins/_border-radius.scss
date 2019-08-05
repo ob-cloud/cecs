@@ -1,0 +1,37 @@
+// Single side border-radius
+
+@mixin border-top-radius($radius) {
+  border-top-right-radius: $radius;
+   border-top-left-radius: $radius;
+}
+@mixin border-right-radius($radius) {
+  border-bottom-right-radius: $radius;
+     border-top-right-radius: $radius;
+}
+@mixin border-bottom-radius($radius) {
+  border-bottom-right-radius: $radius;
+   border-bottom-left-radius: $radius;
+}
+@mixin border-left-radius($radius) {
+  border-bottom-left-radius: $radius;
+     border-top-left-radius: $radius;
+}
+
+@mixin border-radius-each($top-left,$top-right,$bottom-left,$bottom-right){
+  @include border-radius($top-left $top-right $bottom-left $bottom-right);
+}
+@mixin border-radius-factory(){
+  @each $item in $border-radius{
+    $border-radius-type: nth($item,1);
+    $border-radius-unit: nth($item,2);
+    @if($border-radius-type == circle) {
+      .#{$border-radius-type}{
+        @include border-radius(#{$border-radius-unit});
+      }
+    }@else {
+      .round-#{$border-radius-type}{
+        @include border-radius(#{$border-radius-unit});
+      }
+    }
+  }
+}

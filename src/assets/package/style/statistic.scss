@@ -1,0 +1,43 @@
+///*
+// * Component: Statistic
+// * ----------------------
+// */
+.#{$uv-css-prefix}-statistic {
+    display: inline-block;
+    margin: 14px 0;
+    padding: 10px 16px;
+
+    font-family: 'microsoft yahei',Arial,Helvetica,sans-serif;
+
+    >.#{$uv-css-prefix}-value{
+        font-weight: 500;
+        line-height: 1em;
+        color: #1B1C1D;
+        text-transform: uppercase;
+        text-align: center;
+        font-size: 4rem!important;
+    }
+
+    >.#{$uv-css-prefix}-label {
+        display: block;
+        font-size: 14px;
+        font-weight: 400;
+        color: #565656;
+        text-transform: uppercase;
+        text-align: center;
+
+        padding: 0;
+        margin-top: .6em;
+        line-height: 1;
+
+        & + .#{$uv-css-prefix}-label{
+            margin-top: .4em;
+            color: #B4B4B4;
+        }
+
+        & + .#{$uv-css-prefix}-label .num{
+            color: #454545;
+            //padding-left: 5px;
+        }
+    }
+}

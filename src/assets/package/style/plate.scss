@@ -1,0 +1,81 @@
+///*
+// * Component: Plate
+// * ----------------------
+// */
+.#{$uv-css-prefix}-plate{
+	display: block;
+	min-width: 230px;
+	border: 1px solid #ddd;
+	background: #fff;
+	.#{$uv-css-prefix}-header,
+	.#{$uv-css-prefix}-content{
+		padding: 10px;
+	}
+	.#{$uv-css-prefix}-header{
+		font-size: 14px;
+		color: #333;
+		background : #F8F8F8;
+		border-bottom: 1px solid #eee;
+		text-align: center;
+		margin: 0;
+	}
+}
+.#{$uv-css-prefix}-plates-group{
+	&,
+	&.column,
+	&.row{
+		margin-left: 0;
+		margin-right: 0;
+	}
+	@include clearfix;
+
+	&.column .#{$uv-css-prefix}-plate,
+	&.aside .#{$uv-css-prefix}-plate{
+		float: left;
+	}
+	&.column.pane{
+		border: 1px solid #eee;
+		.#{$uv-css-prefix}-plate{
+			border: 0;
+			padding: 20px 0;
+			background: #FAFAFA;
+		}
+		.#{$uv-css-prefix}-plate .#{$uv-css-prefix}-content{
+			border-right: 1px solid #eee;
+			padding: 5px;
+			text-align: center;
+		}
+		.#{$uv-css-prefix}-plate:last-child .#{$uv-css-prefix}-content{
+			border-right: 0;
+		}
+		.#{$uv-css-prefix}-content.#{$uv-css-prefix}-statistic{
+			display: block;
+		}
+		.#{$uv-css-prefix}-content.#{$uv-css-prefix}-statistic,
+		.#{$uv-css-prefix}-content .#{$uv-css-prefix}-statistic{
+			margin: 0;
+		}
+	}
+	&.vertical .#{$uv-css-prefix}-plate{
+		margin-top: 10px;
+	}
+	&.aside .#{$uv-css-prefix}-plate{
+		&:first-child{
+			float: left;
+			width: 230px;
+			max-width: 230px;
+		}
+		&:last-child{
+			float: none;
+			width: 100%;
+			margin-left: 240px;
+		}
+	}
+	&.aside .#{$uv-css-prefix}-plate:last-child .#{$uv-css-prefix}-header{
+		text-align: left;
+	}
+	&.fixed .#{$uv-css-prefix}-plate:first-child{
+		position: fixed;
+		height: 100%;
+	}
+}

@@ -1,0 +1,387 @@
+/**  */
+// Variables
+// --------------------------
+
+
+// Base
+// --------------------------
+$uv-css-prefix:       uv !default;
+
+// elementUI form
+$form-item-margin-bottom: 18px !default;
+$form-item-height: 30px;
+$form-el-tag-height: 24px;
+
+
+// Unit Size
+// --------------------------
+$unit-0: 0       !default;
+$unit-2: 2px     !default;
+$unit-4: 4px     !default;
+$unit-8: 8px     !default;
+$unit-10: 10px   !default;
+$unit-12: 12px   !default;
+$unit-14: 14px   !default;
+$unit-16: 16px   !default;
+$unit-24: 24px   !default;
+$unit-32: 32px   !default;
+$unit-48: 48px   !default;
+$unit-64: 64px   !default;
+$unit-128: 128px !default;
+
+// Size Alias
+// --------------------------
+$tiny:      tiny      !default;
+$small:     small     !default;
+$medium:    medium    !default;
+$large:     large     !default;
+$xlarge:    xlarge    !default;
+$xxlarge:   xxlarge   !default;
+$xxxlarge:  xxxlarge  !default;
+$huge:      huge      !default;
+
+$circle:    circle    !default;
+
+// Font Size
+// --------------------------
+$font-size-base:      $unit-14 !default;
+$font-size-tiny:      $unit-10   !default;
+$font-size-small:     $unit-12   !default;
+$font-size:           $unit-14   !default;
+$font-size-medium:    $font-size !default;
+$font-size-large:     $unit-16   !default;
+$font-size-xlarge:    $unit-24   !default;
+$font-size-xxlarge:   $unit-32   !default;
+$font-size-xxxlarge:  $unit-48   !default;
+$font-size-huge:      $unit-64   !default;
+
+//** Unit-less `line-height` for use in components like buttons.
+$line-height-base:        1.428571429 !default; // 20/14
+//** Computed "line-height" (`font-size` * `line-height`) for use with `margin`, `padding`, etc.
+$line-height-computed:    floor(($font-size-base * $line-height-base)) !default; // ~20px
+
+// Border Radius Size
+// --------------------------
+
+$circle-radius:  50%        !default;
+$small-radius:   $unit-2    !default;
+$medium-radius:  $unit-4    !default;
+$large-radius:   $unit-8    !default;
+$xlarge-radius:  $unit-16   !default;
+$xxlarge-radius: $unit-32   !default;
+$huge-radius:    $unit-64   !default;
+
+$border-radius-base:        4px !default;
+$border-radius-large:       6px !default;
+$border-radius-small:       3px !default;
+
+$border-radius: ($circle $circle-radius) ($small $small-radius) ($medium $medium-radius) ($large $large-radius) ($xlarge $xlarge-radius) ($xxlarge $xxlarge-radius) ($huge $huge-radius) !default;
+
+// Border Direction List
+// --------------------------
+$border-directions: none all top right bottom left !default;
+
+// Card  Shadow List
+// ---------------------------------------------
+$card-2-shadow1: 0 2px 4px 0 rgba(0,0,0,0.16)     !default;
+$card-2-shadow2: 0 2px 10px 0 rgba(0,0,0,0.12)    !default;
+$card-4-shadow1: 0 4px 8px 0 rgba(0,0,0,0.2)      !default;
+$card-4-shadow2: 0 6px 20px 0 rgba(0,0,0,0.19)    !default;
+$card-8-shadow1: 0 8px 16px 0 rgba(0,0,0,0.2)     !default;
+$card-8-shadow2: 0 6px 20px 0 rgba(0,0,0,0.19)    !default;
+$card-12-shadow1: 0 12px 16px 0 rgba(0,0,0,0.24)  !default;
+$card-12-shadow2: 0 17px 50px 0 rgba(0,0,0,0.19)  !default;
+$card-16-shadow1: 0 16px 24px 0 rgba(0,0,0,0.22)  !default;
+$card-16-shadow2: 0 25px 55px 0 rgba(0,0,0,0.21)  !default;
+$card-24-shadow1: 0 24px 24px 0 rgba(0,0,0,0.2)   !default;
+$card-24-shadow2: 0 40px 77px 0 rgba(0,0,0,0.22)  !default;
+
+$card-list: (0 0 0) (2 $card-2-shadow1 $card-2-shadow2) (4 $card-4-shadow1 $card-4-shadow2) (8 $card-8-shadow1 $card-8-shadow2) (12 $card-12-shadow1 $card-12-shadow2) (16 $card-16-shadow1 $card-16-shadow2) (24 $card-24-shadow1 $card-24-shadow2);
+
+// Image
+// ----------------------------------
+$mini-image:    35px    !default;
+$avatar-image:  50px    !default;
+$tiny-image:    80px    !default;
+$small-image:   150px   !default;
+$medium-image:  300px   !default;
+$large-image:   450px   !default;
+$big-image:     600px   !default;
+$huge-image:    800px   !default;
+$massive-image: 960px   !default;
+
+$image-size: (mini $mini-image) (tiny $tiny-image) (small $small-image) (medium $medium-image) (large $large-image) (big $big-image) (huge $huge-image) (massive $massive-image);
+
+// Avatar
+$mini-avatar:  30px !default;
+$tiny-avatar:  60px !default;
+$small-avatar: 90px !default;
+$avatar:       120px !default;
+$large-avatar: 160px!default;
+
+$avatar-size: (mini $mini-avatar) (tiny $tiny-avatar) (small $small-avatar) (medium $avatar) (large $large-avatar);
+
+$image-align: top bottom middle;
+
+
+// Colors
+// -------------------------------------------------
+$royalblue :  #4169E1 !default;
+$dodgerblue : #1E90FF !default;
+$deepskyblue :#00BFFF !default;
+$darkgray : #676876 !default;
+$white : #fff !default;
+
+
+// Buttons
+// --------------------------------------------------------
+$btn-clear-color :      #555 !default;
+$btn-clear-bg :         $white !default;
+$btn-clear-border :     darken($white, 5%) !default;
+
+//Border radius for non flat buttons
+$btn-border-radius: 3px;
+
+//Border box-shadow for  buttons
+$btn-boxshadow: none;
+
+//== Grid system
+//
+//## Define your custom responsive grid.
+
+//** Number of columns in the grid.
+$grid-columns:              12 !default;
+//** Padding between columns. Gets divided in half for the left and right.
+$grid-gutter-width:         30px !default;
+
+// BOXES
+//--------------------------------------------------------
+$box-border-color: #f4f4f4;
+$box-border-radius: 3px;
+$box-footer-bg: #fff;
+$box-boxshadow: 0 1px 1px rgba(0, 0, 0, .1);
+$box-padding: 10px;
+
+//Box variants
+$box-default-border-top-color: #d2d6de;
+
+//== Media queries breakpoints
+//
+//## Define the breakpoints at which your layout.scss will change, adapting to different screen sizes.
+
+// Extra small screen / phone
+//** Deprecated `$screen-xs` as of v3.0.1
+$screen-xs:                  480px !default;
+//** Deprecated `$screen-xs-min` as of v3.2.0
+$screen-xs-min:              $screen-xs !default;
+//** Deprecated `$screen-phone` as of v3.0.1
+$screen-phone:               $screen-xs-min !default;
+
+// Small screen / tablet
+//** Deprecated `$screen-sm` as of v3.0.1
+$screen-sm:                  768px !default;
+$screen-sm-min:              $screen-sm !default;
+//** Deprecated `$screen-tablet` as of v3.0.1
+$screen-tablet:              $screen-sm-min !default;
+
+// Medium screen / desktop
+//** Deprecated `$screen-md` as of v3.0.1
+$screen-md:                  992px !default;
+$screen-md-min:              $screen-md !default;
+//** Deprecated `$screen-desktop` as of v3.0.1
+$screen-desktop:             $screen-md-min !default;
+
+// Large screen / wide desktop
+//** Deprecated `$screen-lg` as of v3.0.1
+$screen-lg:                  1024px !default;
+$screen-lg-min:              $screen-lg !default;
+//** Deprecated `$screen-lg-desktop` as of v3.0.1
+$screen-lg-desktop:          $screen-lg-min !default;
+
+// So media queries don't overlap when required, provide a maximum
+$screen-xs-max:              ($screen-sm-min - 1) !default;
+$screen-sm-max:              ($screen-md-min - 1) !default;
+$screen-md-max:              ($screen-lg-min - 1) !default;
+
+// Basics of a navbar
+$navbar-height:                    50px !default;
+$navbar-margin-bottom:             $line-height-computed !default;
+$navbar-border-radius:             $border-radius-base !default;
+$navbar-padding-horizontal:        floor(($grid-gutter-width / 2)) !default;
+$navbar-padding-vertical:          (($navbar-height - $line-height-computed) / 2) !default;
+$navbar-collapse-max-height:       340px !default;
+
+$navbar-default-color:             #777 !default;
+$navbar-default-bg:                #f8f8f8 !default;
+$navbar-default-border:            darken($navbar-default-bg, 6.5%) !default;
+
+
+//FORMS
+//--------------------------------------------------------
+$input-radius: 0;
+
+//PROGRESS BARS
+//--------------------------------------------------------
+$progress-bar-border-radius: 1px;
+$progress-bar-sm-border-radius: 1px;
+$progress-bar-xs-border-radius: 1px;
+
+
+//TRANSITIONS SETTINGS
+//--------------------------------------------------------
+
+//Transition global options
+$transition-speed: .3s;
+$transition-fn: ease-in-out;
+
+
+//LAYOUT
+//--------------------------------------------------------
+
+//Side bar and logo width
+$sidebar-width: 230px;
+$sidebar-contarct-width: 64px;
+$sidebar-mobile-width: 140px;
+//Boxed layout.scss maximum width
+$boxed-layout-max-width: 1024px;
+//When the logo should go to the top of the screen
+$screen-header-collapse: $screen-xs-max;
+
+//Link colors (Aka: <a> tags)
+$link-color: $light-blue;
+$link-hover-color: lighten($link-color, 15%);
+
+//Body background (Affects main content background only)
+$body-bg: #ecf0f5;
+
+
+//SIDEBAR SKINS
+//--------------------------------------------------------
+
+//Dark sidebar
+$sidebar-dark-bg: #222d32;
+$sidebar-dark-hover-bg: darken($sidebar-dark-bg, 2%);
+$sidebar-dark-color: lighten($sidebar-dark-bg, 60%);
+$sidebar-dark-hover-color: #fff;
+$sidebar-dark-submenu-bg: lighten($sidebar-dark-bg, 5%);
+$sidebar-dark-submenu-color: lighten($sidebar-dark-submenu-bg, 40%);
+$sidebar-dark-submenu-hover-color: #fff;
+
+//Light sidebar
+$sidebar-light-bg: #f9fafc;
+$sidebar-light-hover-bg: lighten(#f0f0f1, 1.5%);
+$sidebar-light-color: #444;
+$sidebar-light-hover-color: #000;
+$sidebar-light-submenu-bg: $sidebar-light-hover-bg;
+$sidebar-light-submenu-color: #777;
+$sidebar-light-submenu-hover-color: #000;
+
+
+// Loader
+//--------------------------------------------------------
+$loader-tiny: 16px;
+$loader-small: 24px;
+$loader-medium: 32px;
+$loader-large: 48px;
+$loader-text-padding-top: 8px;
+
+
+// Navbar
+//--------------------------------------------------------
+//
+//##
+$font-size-base:          16px !default;
+
+// Basics of a navbar
+$navbar-height-base:               65px !default;
+$navbar-background-width:          277px !default;
+$navbar-background-right-width:    241px !default;
+
+$navbar-blue-color:             #fff !default;
+$navbar-blue-bg:                #0066CC !default;
+$navbar-blue-border:            darken($navbar-blue-bg, 6.5%) !default;
+
+// Navbar links
+$navbar-blue-link-color:                #fff !default;
+$navbar-blue-link-hover-color:          #fff !default;
+$navbar-blue-link-hover-bg:             transparent !default;
+$navbar-blue-link-active-color:         #fff !default;
+$navbar-blue-link-active-bg:            lighten(#2959A3, 6.5%) !default;
+$navbar-blue-link-disabled-color:       #ccc !default;
+$navbar-blue-link-disabled-bg:          transparent !default;
+$navbar-blue-item-link-bg-color:        $navbar-blue-link-active-bg;
+
+// Navbar brand label
+$navbar-blue-brand-color:               $navbar-blue-link-color !default;
+$navbar-blue-brand-hover-color:         darken($navbar-blue-brand-color, 10%) !default;
+$navbar-blue-brand-hover-bg:            transparent !default;
+
+// image url
+$navbar-center-image: "navbar/2/nav-center.png";
+$navbar-left-image: "navbar/2/nav-left.png";
+$navbar-right-image: "navbar/2/nav-right.png";
+$navbar-active-image: "navbar/2/nav-active.png";
+$navbar-swicth-image: "navbar/2/swicth.png";
+$navbar-swicth-hover-image: "navbar/2/swicth-hover.png";
+$navbar-user-image: "navbar/2/user.png";
+$navbar-dropdown-image: "navbar/2/dropdown.png";
+$navbar-dropdown-hover-image: "navbar/2/dropdown-hover.png";
+
+
+
+// Step
+//--------------------------------------------------------
+
+$steps-border-color: rgba(34,36,38,.15);
+
+$step-color: rgba(0,0,0,.87);
+$step-bg-color: $white;
+$step-border-right-color: rgba(34,36,38,.15);
+$step-arrow-bg-color: $step-bg-color;
+$step-arrow-border-color: $step-border-right-color;
+$step-description-color: $step-color;
+
+$link-step-hover-color: rgba(0,0,0,.8);
+$link-step-hover-bg-color: #F9FAFB;
+
+$link-step-active-hover-color: $step-color;
+$link-step-active-hover-bg-color:#DCDDDE;
+$link-step-active-icon-color: rgba(0,0,0,.85);
+
+$disabled-step-bg-color: $white;
+$disabled-step-content-color: rgba(40,40,40,.3);
+
+
+// Tab
+//--------------------------------------------------------
+$tab-anchor-color: rgba(0,0,0,.87);
+$tab-anchor-hover-color: rgba(0,0,0,.8);
+$tab-anchor-border-color: transparent;
+$tab-anchor-hover-bg-color: $tab-anchor-border-color;
+
+$tab-item-active-anchor-color: rgba(0,0,0,.95);
+$tab-item-active-anchor-bg-color: #fff;
+$tab-item-active-anchor-border-color: #D4D4D5;
+
+$tab-content-bg-color: #fff;
+$tab-content-border-color: rgba(34,36,38,.15);
+
+// Title Bar
+//--------------------------------------------------------
+$left-line-width: 4px;
+$left-line-color: #008000;
+
+$bottom-line-width: 2px;
+$bottom-line-color: #4CAF50 ;
+$title-bottom-line-color: #0000ff;
+
+$single-bottom-line-width: 1px;
+$single-bottom-line-color: #4CAF50;
+
+// Alert Box
+//--------------------------------------------------------
+$alert-box-width: 320px !default;
+
+$main-margin-left: 0;
+
+$menu-item-height: 39px;
