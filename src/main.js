@@ -7,6 +7,7 @@ import ElementUI from 'element-ui'
 // import "element-ui/packages/theme-chalk/src/index.scss"
 // import Icon from '@/assets/package/icon'
 import '@/assets/styles/index.scss'
+import '@/assets/package/style/index.scss'
 Vue.use(ElementUI)
 // Vue.use(Icon)
 Vue.config.productionTip = false

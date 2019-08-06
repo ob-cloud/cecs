@@ -16,10 +16,9 @@ const service = axios.create({
   timeout: 16000
 })
 service.interceptors.request.use(config => {
-  if (typeof config.data === 'object' && Storage.getToken()) {
-    config.data.access_token = Storage.getToken()
+  if (typeof config.params === 'object' && Storage.getToken()) {
+    config.params.access_token = Storage.getToken()
   }
-
   return config
 }, error => {
   Promise.reject(error)
@@ -36,15 +35,15 @@ service.interceptors.response.use(({data}) => {
 
 const _defaults = (method, url, params, headers) => {
   const config = {
-    params: (['GET', 'DELETE'].includes(method.toUpperCase()) && params),
-    data: (['POST', 'PUT'].includes(method.toUpperCase()) && params)
-  }
-  return {
     method,
     url,
-    ...config,
-    headers
+    params: ['GET', 'DELETE'].includes(method.toUpperCase()) ? params : {},
+    data: ['POST', 'PUT'].includes(method.toUpperCase()) ? params : {}
   }
+  if (headers) {
+    config.headers = headers
+  }
+  return config
 }
 export const request = {
   getRequestUrl (url) {

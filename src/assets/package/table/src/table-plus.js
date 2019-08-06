@@ -120,6 +120,7 @@ export default {
         console.error(err); // eslint-disable-line
         this.data = []
         this.total = 0
+        this.loading = false
       }
       this.$nextTick(() => {
         this.loading = false
