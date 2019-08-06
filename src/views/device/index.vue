@@ -1,6 +1,7 @@
 <template>
   <div class="device smart">
     <base-table
+      :height="tableHeight"
       :tableData="tableData"
       :columns="columns"
       stripe border
@@ -31,12 +32,13 @@
 <script>
 import BaseTable from '@/assets/package/table-base'
 import DeviceAPI from '@/api/device'
-const PAGINATION_PAGENO = 0
-const PAGINATION_PAGESIZE = 10
+import { PAGINATION_PAGENO, PAGINATION_PAGESIZE } from '@/common/constants'
+import Helper from '@/common/helper'
 export default {
   data () {
     return {
       tableLoading: true,
+      tableHeight: 0,
       search: {
         obox_serial_id: '',
         name: '',
@@ -60,9 +62,13 @@ export default {
     }
   },
   mounted () {
-
+    Helper.windowOnResize(this, this.fixLayout)
   },
   methods: {
+    fixLayout () {
+      this.tableHeight = Helper.calculateTableHeight()
+      console.log(this.tableHeight)
+    },
     getColumns () {
       return [{
         label: '设备序号',
@@ -160,6 +166,7 @@ export default {
 
 <style lang="scss" scoped>
 .smart{
-  padding: 10px;
+  width: 94%;
+  margin: 12px auto;
 }
 </style>

@@ -42,7 +42,8 @@
     ],
     "rules": {
       "array-callback-return": "off",
-      "no-nested-ternary": "off"
+      "no-nested-ternary": "off",
+      "arrow-body-style": "off"
     },
     "parserOptions": {
       "parser": "babel-eslint"
