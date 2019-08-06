@@ -2,7 +2,7 @@
  * @Author: eamiear
  * @Date: 2019-02-06 18:36:35
  * @Last Modified by: eamiear
- * @Last Modified time: 2019-02-20 11:36:10
+ * @Last Modified time: 2019-08-06 18:02:21
  */
 
 export const UPDATE_DOCUMENT_CLIENT_HEIGHT = 'UPDATE_DOCUMENT_CLIENT_HEIGHT'
@@ -22,4 +22,5 @@ export const SET_INTRODUCTION = 'SET_INTRODUCTION'
 export const SET_NAME = 'SET_NAME'
 export const SET_AVATAR = 'SET_AVATAR'
 export const SET_USER_INFO = 'SET_USER_INFO'
+export const SET_PWD = 'SET_PWD'
 

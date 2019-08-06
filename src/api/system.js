@@ -2,16 +2,15 @@
  * @Author: eamiear
  * @Date: 2019-02-06 21:34:24
  * @Last Modified by: eamiear
- * @Last Modified time: 2019-08-05 15:56:17
+ * @Last Modified time: 2019-08-06 18:14:50
  */
 
 import {request} from '@/common/request'
 import qs from 'qs'
-import md5 from 'md5'
 
 const SystemAPI = {
   login (username, password) {
-    return request.post('/oauth/token', qs.stringify({password: md5(btoa(password) + password), username, grant_type: 'password'}), {
+    return request.post('/oauth/token', qs.stringify({password, username, grant_type: 'password'}), {
       Authorization: 'Basic d2ViQXBwOndlYkFwcA==',
       'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8',
       'cache-control': 'no-cache'
@@ -29,10 +28,11 @@ const SystemAPI = {
       params: {accessToken: oldAccessToken}
     })
   },
-  resetPassword (params) {
-    return request.post({
-      url: 'resetPassword',
-      params
+  resetPassword (pwd) {
+    return request.get('/consumer/common', {
+      CMD: 'set_pwd',
+      type: '00',
+      pwd
     })
   },
   // 获取七牛token

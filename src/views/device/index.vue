@@ -67,7 +67,6 @@ export default {
   methods: {
     fixLayout () {
       this.tableHeight = Helper.calculateTableHeight()
-      console.log(this.tableHeight)
     },
     getColumns () {
       return [{

@@ -22,7 +22,7 @@
 
       <ura-nav-menu class="navbar-menu-nav"></ura-nav-menu>
 
-      <el-dialog title="重设密码" width="40%" :visible.sync="passwordModelVisible" :close-on-click-modal="false">
+      <el-dialog title="重设密码" width="600px" :visible.sync="passwordModelVisible" :close-on-click-modal="false">
         <el-form autoComplete="on" :rules="passwordModelRules" :model="passwordModel"  ref="passwordRef" label-position="right" label-width="18%">
           <el-form-item label="旧密码:" prop="oldPassword">
             <el-input class="filter-item" placeholder="旧密码" v-model="passwordModel.oldPassword" type="password">
@@ -51,11 +51,14 @@ import UraBrand from '@/views/layout/Brand.vue'
 import UraNavMenu from '@/views/layout/NavMenu.vue'
 import { mapGetters } from 'vuex'
 import SystemAPI from '@/api/system'
+import md5 from 'md5'
 export default {
   data () {
     const validatePassword = (rule, value, callback) => {
       if (value.length < 6) {
         callback(new Error('密码长度不能小于6位'))
+      } else if (!this.isOldPwdCorrect(md5(btoa(value) + value))) {
+        callback(new Error('旧密码不正确'))
       } else {
         callback()
       }
@@ -88,7 +91,8 @@ export default {
     ...mapGetters([
       'sidebar',
       'name',
-      'avatar'
+      'avatar',
+      'pwd'
     ])
   },
   watch: {
@@ -117,13 +121,18 @@ export default {
     doresetPassword () {
       this.$refs.passwordRef.validate(valid => {
         if (valid) {
-          SystemAPI.resetPassword(this.passwordModel).then(response => {
-            if (response.code === 0) {
+          let pwd = this.passwordModel.rePassword
+          pwd = md5(btoa(pwd) + pwd)
+          SystemAPI.resetPassword(pwd).then(response => {
+            if (response.message.includes('update success')) {
               this.$message({
                 type: 'success',
-                message: '重置成功'
+                message: '重置成功， 准备退出重新登录'
               })
-              this.passwordModelVisible = false
+              setTimeout(() => {
+                this.passwordModelVisible = false
+                this.logout()
+              }, 1000)
             } else {
               this.$message({
                 type: 'error',
@@ -133,6 +142,9 @@ export default {
           })
         }
       })
+    },
+    isOldPwdCorrect (pwd) {
+      return this.pwd === pwd
     }
   }
 }

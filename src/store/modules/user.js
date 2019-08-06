@@ -2,7 +2,7 @@
  * @Author: eamiear
  * @Date: 2019-02-06 18:37:25
  * @Last Modified by: eamiear
- * @Last Modified time: 2019-08-06 17:01:00
+ * @Last Modified time: 2019-08-06 18:03:30
  */
 
 import {
@@ -11,11 +11,13 @@ import {
   SET_INTRODUCTION,
   SET_NAME,
   SET_AVATAR,
-  SET_USER_INFO
+  SET_USER_INFO,
+  SET_PWD
 } from '../mutation-types'
 // import UserAPI from '@/api/user'
 import SystemAPI from '@/api/system'
 import Storage from '@/common/cache'
+import md5 from 'md5'
 
 const user = {
   state: {
@@ -24,7 +26,8 @@ const user = {
     name: '',
     avatar: '',
     introduction: '',
-    userInfo: null
+    userInfo: null,
+    pwd: ''
   },
   mutations: {
     [SET_TOKEN] (state, token) {
@@ -44,17 +47,24 @@ const user = {
     },
     [SET_USER_INFO] (state, userInfo) {
       state.userInfo = userInfo
+    },
+    [SET_PWD] (state, pwd) {
+      state.pwd = pwd
     }
   },
   actions: {
     loginByAccount ({ commit }, userInfo) {
       return new Promise((resolve, reject) => {
-        SystemAPI.login(userInfo.account.trim(), userInfo.password).then(data => {
+        const password = md5(btoa(userInfo.password) + userInfo.password)
+        SystemAPI.login(userInfo.account.trim(), password).then(data => {
           if (data) {
             const token = data.access_token
             Storage.setToken(token)
+            // cache.setStrategy('sessionStorage').set('pk', password)
             commit('SET_TOKEN', token)
             commit('SET_NAME', userInfo.account.trim())
+            commit('SET_USER_INFO', data)
+            commit('SET_PWD', password)
           }
           resolve(data)
         }).catch(error => {
@@ -88,6 +98,8 @@ const user = {
       return new Promise((resolve, reject) => {
         commit('SET_TOKEN', '')
         commit('SET_USER_INFO', null)
+        commit('SET_NAME', '')
+        commit('SET_PWD', '')
         Storage.removeToken()
         resolve()
         // SystemAPI.logout(state.token).then(() => {
