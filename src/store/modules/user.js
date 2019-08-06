@@ -2,7 +2,7 @@
  * @Author: eamiear
  * @Date: 2019-02-06 18:37:25
  * @Last Modified by: eamiear
- * @Last Modified time: 2019-08-05 17:04:36
+ * @Last Modified time: 2019-08-06 17:01:00
  */
 
 import {
@@ -86,16 +86,18 @@ const user = {
     // 登出
     logOut ({ commit, state }) {
       return new Promise((resolve, reject) => {
-        SystemAPI.logout(state.token).then(() => {
-          commit('SET_TOKEN', '')
-          commit('SET_UID', '')
-          commit('SET_USER_INFO', null)
-          Storage.remove('token')
-          Storage.remove('uid')
-          resolve()
-        }).catch(error => {
-          reject(error)
-        })
+        commit('SET_TOKEN', '')
+        commit('SET_USER_INFO', null)
+        Storage.removeToken()
+        resolve()
+        // SystemAPI.logout(state.token).then(() => {
+        //   commit('SET_TOKEN', '')
+        //   commit('SET_USER_INFO', null)
+        //   Storage.removeToken()
+        //   resolve()
+        // }).catch(error => {
+        //   reject(error)
+        // })
       })
     },
 
