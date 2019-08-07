@@ -25,11 +25,16 @@ service.interceptors.request.use(config => {
 })
 service.interceptors.response.use(({data}) => {
   if (data.code === 1002) { // invalid token
-    Storage.remove('token')
+    Storage.removeToken()
     Router.push({path: '/login'})
   }
   return data
 }, error => {
+  const err = error.toString() || ''
+  if (err.includes('401')) {
+    Storage.removeToken()
+    Router.push({path: '/login'})
+  }
   Promise.reject(error)
 })
 
