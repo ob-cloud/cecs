@@ -4,7 +4,7 @@ export const USER_ID_KEY = 'mip.web.sys:user:id'
 
 
 export const PAGINATION_PAGENO = 1
-export const PAGINATION_PAGESIZE = 50
+export const PAGINATION_PAGESIZE = 10
 export const PAGINATION_PAGETOTAL = 0
 
 export const QINIU_REQUEST_BASEURL = 'http://ox2m2b48s.bkt.clouddn.com/'

@@ -13,12 +13,12 @@
 
       <slot>
         <template slot="caption">
-          <el-input @keyup.enter.native="handleSearch" class="caption-item" placeholder="序列号" v-model="search.serialId"></el-input>
+          <el-input @keyup.enter.native="handleSearch" class="caption-item" placeholder="序列号" v-model="search.obox_serial_id"></el-input>
           <el-input @keyup.enter.native="handleSearch" class="caption-item" placeholder="名称" v-model="search.obox_name"></el-input>
-          <el-select clearable class="caption-item" placeholder="全部" v-model="search.scene_number">
+          <el-select clearable class="caption-item" placeholder="全部" v-model="search.obox_status">
             <el-option label='全部' value=''></el-option>
-            <el-option label='在线' :value='0'></el-option>
-            <el-option label='不在线' :value='1'></el-option>
+            <el-option label='在线' :value='1'></el-option>
+            <el-option label='不在线' :value='0'></el-option>
           </el-select>
           <el-button type="primary" icon="el-icon-search" @click="handleSearch">查询</el-button>
         </template>
@@ -40,6 +40,7 @@ export default {
       search: {
         serialId: '',
         obox_name: '',
+        obox_status: '',
         pageNo: PAGINATION_PAGENO,
         pageSize: PAGINATION_PAGESIZE
       },
@@ -80,7 +81,10 @@ export default {
       }, {
         label: 'OBOX状态',
         prop: 'obox_status',
-        align: 'center'
+        align: 'center',
+        formatter (val) {
+          return val ? '在线' : '不在线'
+        }
       }, {
         label: '操作',
         align: 'center',
@@ -127,6 +131,19 @@ export default {
     },
     handleUpgrade (row) {
       console.log('upgrade ', row)
+      this.$confirm('即将进行升级，请再次确认', '确认提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning',
+        closeOnClickModal: false
+      }).then(() => {
+        this.doUpgrade()
+      }).catch(() => {
+        console.log('取消删除')
+      })
+    },
+    doUpgrade () {
+      console.log('升级操作')
     }
   }
 }
