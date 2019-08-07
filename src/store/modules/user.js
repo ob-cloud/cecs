@@ -2,7 +2,7 @@
  * @Author: eamiear
  * @Date: 2019-02-06 18:37:25
  * @Last Modified by: eamiear
- * @Last Modified time: 2019-08-06 18:03:30
+ * @Last Modified time: 2019-08-07 15:04:10
  */
 
 import {
@@ -16,18 +16,18 @@ import {
 } from '../mutation-types'
 // import UserAPI from '@/api/user'
 import SystemAPI from '@/api/system'
-import Storage from '@/common/cache'
+import Storage, {cacher} from '@/common/cache'
 import md5 from 'md5'
 
 const user = {
   state: {
     user: '',
     token: Storage.getToken(),
-    name: '',
+    name: cacher.setStrategy('sessionStorage').get('name'),
     avatar: '',
     introduction: '',
     userInfo: null,
-    pwd: ''
+    pwd: cacher.setStrategy('sessionStorage').get('pk')
   },
   mutations: {
     [SET_TOKEN] (state, token) {
@@ -60,7 +60,8 @@ const user = {
           if (data) {
             const token = data.access_token
             Storage.setToken(token)
-            // cache.setStrategy('sessionStorage').set('pk', password)
+            cacher.setStrategy('sessionStorage').set('pk', password)
+            cacher.setStrategy('sessionStorage').set('name', userInfo.account.trim())
             commit('SET_TOKEN', token)
             commit('SET_NAME', userInfo.account.trim())
             commit('SET_USER_INFO', data)
@@ -101,6 +102,8 @@ const user = {
         commit('SET_NAME', '')
         commit('SET_PWD', '')
         Storage.removeToken()
+        cacher.setStrategy('sessionStorage').remove('pk')
+        cacher.setStrategy('sessionStorage').remove('name')
         resolve()
         // SystemAPI.logout(state.token).then(() => {
         //   commit('SET_TOKEN', '')
