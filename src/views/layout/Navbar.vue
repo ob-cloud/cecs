@@ -39,7 +39,7 @@
         </el-form>
         <div slot="footer" class="dialog-footer text-center" >
           <el-button @click="passwordModelVisible = false">取 消</el-button>
-          <el-button type="primary" @click="doresetPassword()">确 认</el-button>
+          <el-button type="primary" :loading="loading" @click="doresetPassword()">确 认</el-button>
         </div>
       </el-dialog>
     </nav>
@@ -73,6 +73,7 @@ export default {
       }
     }
     return {
+      loading: false,
       passwordModelVisible: false,
       passwordModel: {
         oldPassword: '',
@@ -121,9 +122,11 @@ export default {
     doresetPassword () {
       this.$refs.passwordRef.validate(valid => {
         if (valid) {
+          this.loading = true
           let pwd = this.passwordModel.rePassword
           pwd = md5(btoa(pwd) + pwd)
           SystemAPI.resetPassword(pwd).then(response => {
+            this.loading = false
             if (response.message.includes('update success')) {
               this.$message({
                 type: 'success',
@@ -132,13 +135,19 @@ export default {
               setTimeout(() => {
                 this.passwordModelVisible = false
                 this.logout()
-              }, 1000)
+              }, 1500)
             } else {
               this.$message({
                 type: 'error',
                 message: response.msg || '重置失败'
               })
             }
+          }).catch(err => {
+            this.loading = false
+            this.$message({
+              type: 'error',
+              message: '服务出错，请稍后再试~~'
+            })
           })
         }
       })
