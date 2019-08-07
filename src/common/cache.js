@@ -2,7 +2,7 @@
  * @Author: eamiear
  * @Date: 2019-02-19 10:38:07
  * @Last Modified by: eamiear
- * @Last Modified time: 2019-08-06 17:58:05
+ * @Last Modified time: 2019-08-07 15:01:49
  */
 
 import { USER_TOKEN_KEY } from '@/common/constants'
@@ -48,13 +48,13 @@ export const cacher = new Cacher()
 
 const Storage = {
   setToken (value) {
-    cacher.set(USER_TOKEN_KEY, value)
+    cacher.setStrategy('localStorage').set(USER_TOKEN_KEY, value)
   },
   getToken () {
-    return cacher.get(USER_TOKEN_KEY)
+    return cacher.setStrategy('localStorage').get(USER_TOKEN_KEY)
   },
   removeToken () {
-    cacher.remove(USER_TOKEN_KEY)
+    cacher.setStrategy('localStorage').remove(USER_TOKEN_KEY)
   }
 }
 
