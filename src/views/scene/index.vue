@@ -20,7 +20,15 @@
           <el-button type="primary" icon="el-icon-search" @click="handleSearch">查询</el-button>
         </template>
         <template slot="actionBar">
-          <el-button type="primary" icon="el-icon-plus" @click="handleCreate">创建</el-button>
+          <el-dropdown trigger="click" @command="handleSceneCommand">
+            <el-button type="primary">
+              创建<i class="el-icon-arrow-down el-icon--right"></i>
+            </el-button>
+            <el-dropdown-menu slot="dropdown">
+              <el-dropdown-item command="local">本地场景</el-dropdown-item>
+              <el-dropdown-item command="remote">云端场景</el-dropdown-item>
+            </el-dropdown-menu>
+          </el-dropdown>
         </template>
       </slot>
     </base-table>
@@ -131,9 +139,6 @@ export default {
       this.search.pageNo = PAGINATION_PAGENO
       this.getSceneList()
     },
-    handleCreate () {
-
-    },
     view (row) {
       console.log('visit ', row)
     },
@@ -142,6 +147,16 @@ export default {
     },
     remove (row) {
       console.log('remove ', row)
+    },
+    handleSceneCommand (command) {
+      command === 'local' && this.createLocalScene()
+      command === 'remote' && this.createRemoteScene()
+    },
+    createLocalScene () {
+      console.log('本地场景 ')
+    },
+    createRemoteScene () {
+      console.log('云端场景 ')
     }
   }
 }
