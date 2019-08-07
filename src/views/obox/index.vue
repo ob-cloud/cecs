@@ -1,15 +1,140 @@
 <template>
-  <div>
+  <div class="device smart">
+    <base-table
+      :height="tableHeight"
+      :tableData="tableData"
+      :columns="columns"
+      stripe border
+      v-loading="tableLoading"
+      :pageTotal="total"
+      :pageSize="search.pageSize"
+      @on-current-page-change="onCurrentChange"
+      @on-page-size-change="onSizeChange">
 
+      <slot>
+        <template slot="caption">
+          <el-input @keyup.enter.native="handleSearch" class="caption-item" placeholder="序列号" v-model="search.serialId"></el-input>
+          <el-input @keyup.enter.native="handleSearch" class="caption-item" placeholder="名称" v-model="search.obox_name"></el-input>
+          <el-select clearable class="caption-item" placeholder="全部" v-model="search.scene_number">
+            <el-option label='全部' value=''></el-option>
+            <el-option label='在线' :value='0'></el-option>
+            <el-option label='不在线' :value='1'></el-option>
+          </el-select>
+          <el-button type="primary" icon="el-icon-search" @click="handleSearch">查询</el-button>
+        </template>
+      </slot>
+    </base-table>
   </div>
 </template>
 
 <script>
+import BaseTable from '@/assets/package/table-base'
+import OboxAPI from '@/api/obox'
+import { PAGINATION_PAGENO, PAGINATION_PAGESIZE } from '@/common/constants'
+import Helper from '@/common/helper'
 export default {
-
+  data () {
+    return {
+      tableLoading: true,
+      tableHeight: 0,
+      search: {
+        serialId: '',
+        obox_name: '',
+        pageNo: PAGINATION_PAGENO,
+        pageSize: PAGINATION_PAGESIZE
+      },
+      tableData: [],
+      columns: []
+    }
+  },
+  components: { BaseTable },
+  created () {
+    this.columns = this.getColumns()
+    this.getOboxList()
+  },
+  computed: {
+    total () {
+      return this.tableData.length || 0
+    }
+  },
+  mounted () {
+    Helper.windowOnResize(this, this.fixLayout)
+  },
+  methods: {
+    fixLayout () {
+      this.tableHeight = Helper.calculateTableHeight()
+    },
+    getColumns () {
+      return [{
+        label: '序列号',
+        prop: 'obox_serial_id',
+        align: 'center'
+      }, {
+        label: 'OBOX名称',
+        prop: 'obox_name',
+        align: 'center'
+      }, {
+        label: 'OBOX版本',
+        prop: 'obox_version',
+        align: 'center'
+      }, {
+        label: 'OBOX状态',
+        prop: 'obox_status',
+        align: 'center'
+      }, {
+        label: '操作',
+        align: 'center',
+        minWidth: '180px',
+        renderBody: this.getToolboxRender
+      }]
+    },
+    getToolboxRender (h, row) {
+      return [
+        <el-button size="tiny" icon="iconfont icon-shengji" title="升级" onClick={() => this.handleUpgrade(row)}></el-button>
+      ]
+    },
+    getOboxList () {
+      this.tableLoading = true
+      OboxAPI.getOboxList(this.search).then(resp => {
+        if (resp.status === 200) {
+          this.tableData = resp.data.oboxs
+        } else {
+          this.$message({
+            message: resp.message || '场景获取失败'
+          })
+        }
+        this.tableLoading = false
+      }).catch(err => {
+        this.$message({
+          title: '失败',
+          message: err.message || '服务出错',
+          type: 'error'
+        })
+        this.tableLoading = false
+      })
+    },
+    onCurrentChange (pageNo) {
+      this.search.pageNo = pageNo
+      this.getOboxList()
+    },
+    onSizeChange (pageSize) {
+      this.search.pageSize = pageSize
+      this.getOboxList()
+    },
+    handleSearch () {
+      this.search.pageNo = PAGINATION_PAGENO
+      this.getOboxList()
+    },
+    handleUpgrade (row) {
+      console.log('upgrade ', row)
+    }
+  }
 }
 </script>
 
 <style lang="scss" scoped>
-
+.smart{
+  width: 94%;
+  margin: 12px auto;
+}
 </style>

@@ -8,7 +8,7 @@ import ElementUI from 'element-ui'
 // import Icon from '@/assets/package/icon'
 import '@/assets/styles/index.scss'
 import '@/assets/package/style/index.scss'
-import '@/assets/iconfont/iconfont.css'
+import '@/assets/iconfont/index.css'
 Vue.use(ElementUI)
 // Vue.use(Icon)
 Vue.config.productionTip = false
