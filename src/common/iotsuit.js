@@ -2,13 +2,12 @@
  * @Author: eamiear
  * @Date: 2019-08-09 14:30:46
  * @Last Modified by: eamiear
- * @Last Modified time: 2019-08-09 15:27:48
+ * @Last Modified time: 2019-08-09 15:52:03
  */
 
 const Suiter = {
   led: {
     type: {
-      TYPE: '01',
       '01': '灯',
       '0101': '单色调光',
       '0102': '落地灯', // 冷暖色调光，双色灯
@@ -35,6 +34,9 @@ const Suiter = {
       '172': '较亮',
       '215': '非常亮',
       '254': '最大亮度'
+    },
+    group: {
+      root: ['01']
     }
   },
   cooker: { // 电饭煲
@@ -49,7 +51,6 @@ const Suiter = {
   },
   socketSwitch: { // 插座开关
     type: {
-      TYPE: '04',
       '04': '插座/开关',
       '0401': '插座',
       '0402': '面板',
@@ -93,6 +94,7 @@ const Suiter = {
       '11': '保持不变'
     },
     group: { // 类别分组， 状态取值区间相同
+      root: ['04'],
       // 触摸开关，子类型组
       touch: ['21', '22', '23', '24', '25', '26', '28'],
       // 情景面板
@@ -132,7 +134,6 @@ const Suiter = {
   },
   sensors: {
     type: {
-      TYPE: '11',
       "11": "传感器",
       "1101": "ALS",
       "1102": "水浸",
@@ -167,6 +168,7 @@ const Suiter = {
       'ff': '首次上电'
     },
     group: {
+      root: ['11'],
       als: ['01'],
       water: ['02'],
       radar: ['03'],
@@ -225,7 +227,6 @@ const Suiter = {
   },
   doorLock: {
     type: {
-      TYPE: '21',
       "21": "锁",
       "2101": "亚太天能智能门锁",
       "2102": "亿万家智能门锁",
@@ -240,6 +241,9 @@ const Suiter = {
       '04': '遥控开锁',
       '05': '临时用户开锁',
       '-1': '关闭'
+    },
+    group: {
+      root: ['21']
     }
   },
   remoteControlLamp: {
@@ -250,7 +254,6 @@ const Suiter = {
   },
   obox: {
     type: {
-      TYPE: '10',
       '10': 'obox',
       '1010': 'obox'
     },
@@ -263,6 +266,16 @@ const Suiter = {
     }
   }
 }
+
+// 套件类型
+const SuitTypes = (Array.from(Object.keys(Suiter)).reduce((item, next, index)=> {
+  if (index === 1) {
+    item = Suiter[item].type
+  }
+  return {...item, ...(Suiter[next].type)}
+}))
+
+
 const SuitStatus = {
 
 }
