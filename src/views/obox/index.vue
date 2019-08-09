@@ -143,6 +143,13 @@ export default {
       })
     },
     doUpgrade () {
+      const loading = this.$loading({
+        lock: true,
+        text: 'obox升级中...'
+      })
+      setTimeout(() => {
+        loading.close()
+      }, 1500)
       console.log('升级操作')
     }
   }
