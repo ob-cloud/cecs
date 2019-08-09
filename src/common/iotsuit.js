@@ -2,7 +2,7 @@
  * @Author: eamiear
  * @Date: 2019-08-09 14:30:46
  * @Last Modified by: eamiear
- * @Last Modified time: 2019-08-09 16:16:27
+ * @Last Modified time: 2019-08-09 17:46:17
  */
 
  /**
@@ -322,8 +322,79 @@ const Converter = (() => {
   }
 })()
 
- class IotSuit {
-   constructor () {
+class TypeHints {
+  constructor () {
+    this.converter = Converter
+    this.__rootProcessor()
+    this.__subDeviceProcessor()
+  }
+  /**
+   * 判断套件设备一级类型
+   * @param {object} suitsType 套件类型对象
+   * @param {number} type 套件类型
+   * @param [options] {number}  subType 套件子类型
+   */
+  __handler (suitsType, type, subType) {
+    if (!suitsType) return false
+    if (!subType) {
+        return !!suitsType[this.converter.toDecimal(type, 16)]
+    }
+    const typeStr = this.converter.toDecimal(type, 16) + this.converter.toDecimal(subType, 16)
+    return !!suitsType[typeStr]
+  }
+  __handleSubType (group, subType) {
+    return group.includes(this.converter.toDecimal(subType, 16))
+  }
+  /**
+   * 一级设备类型判断方法生成器
+   * this.isSensor = (type, subType) => {}
+   */
+  __rootProcessor () {
+    const typeList = Array.from(Object.keys(Suiter)).map(item => item.slice(0, 1).toUpperCase() + item.slice(1))
+    typeList.forEach(item => {
+      this[`is${item}`] = (deviceType, deviceSubType) => {
+        return this.__handler(Suiter[item.toLocaleLowerCase()], deviceType, deviceSubType)
+      }
+    })
+  }
+  /**
+   * 子设备类型，判断方法生成器
+   * this.isTouchSensor = (deviceSubType) => {}
+   */
+  __subDeviceProcessor () {
+    Array.from(Object.keys(Suiter)).map(item => {
+      const group = Suiter[item].group
+      const itemKey = item.slice(0, 1).toUpperCase() + item.slice(1) // sensors --> Sensors
+      if (!group) return
+      Array.from(Object.keys(group)).map((groupKey) => {
+        const key = groupKey.slice(0, 1).toUpperCase() + groupKey.slice(1) // touch --> Touch
+        this[`is${key}${itemKey}`] = (deviceSubType) => { // this.isTouchSensor = (deviceSubType) => {}
+          return this.__handleSubType(group[groupKey], deviceSubType)
+        }
+      })
+    })
+  }
+}
 
-   }
+ class IotSuit {
+  constructor () {
+    this.converter = Converter
+    this.typeHints = new TypeHints()
+  }
+  /**
+   * 获取主设备类型描述信息
+   * @param {string} deviceType 设备类型
+   */
+  getRootDeviceDescriptor (deviceType) {
+    return SuitTypes[this.converter.toDecimal(deviceType, 16)]
+  }
+  getDeviceTypeDescriptor (deviceType, deviceSubType) {
+    const typeStr = this.converter.toDecimal(deviceType, 16)
+    const subTypeStr = this.converter.toDecimal(deviceSubType, 16)
+    return devicesType[typeStr + subTypeStr]
+  }
+  getStatusDescriptor () {
+
+  }
  }
+
