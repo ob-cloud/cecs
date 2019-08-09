@@ -2,8 +2,14 @@
  * @Author: eamiear
  * @Date: 2019-08-09 14:30:46
  * @Last Modified by: eamiear
- * @Last Modified time: 2019-08-09 15:52:03
+ * @Last Modified time: 2019-08-09 16:05:39
  */
+
+ /**
+  *  type: 设备类型匹配表，由主类型、子类型编码值组成key
+  *  status: 设备状态匹配表， 由主类型码+状态码组成key
+  *  group: 设备类型分组，同组类型状态截码位相同
+  */
 
 const Suiter = {
   led: {
@@ -26,14 +32,14 @@ const Suiter = {
       '0133': '风扇灯'
     },
     status: {
-      '00': '关',
-      '01': '开',
-      '43': '微弱',
-      '86': '弱光',
-      '129': '亮',
-      '172': '较亮',
-      '215': '非常亮',
-      '254': '最大亮度'
+      '0100': '关',
+      '0101': '开',
+      '0143': '微弱',
+      '0186': '弱光',
+      '01129': '亮',
+      '01172': '较亮',
+      '01215': '非常亮',
+      '01254': '最大亮度'
     },
     group: {
       root: ['01']
@@ -88,10 +94,10 @@ const Suiter = {
       '0490': 'WiFi插座',
     },
     status: {
-      '00': '关',
-      '01': '开',
-      '10': '置反',
-      '11': '保持不变'
+      '0400': '关',
+      '0401': '开',
+      '0410': '置反',
+      '0411': '保持不变'
     },
     group: { // 类别分组， 状态取值区间相同
       root: ['04'],
@@ -160,12 +166,12 @@ const Suiter = {
     },
     status: {
       // AC 红外
-      '00': '无人',
-      '01': '有人',
+      '1100': '无人',
+      '1101': '有人',
       // 插卡取电
-      'fe': '通电导通',
-      'fd': '断电',
-      'ff': '首次上电'
+      '11fe': '通电导通',
+      '11fd': '断电',
+      '11ff': '首次上电'
     },
     group: {
       root: ['11'],
@@ -234,13 +240,13 @@ const Suiter = {
       "2104": "OB酒店门锁"
     },
     status: {
-      '00': '指纹开锁',
-      '01': '密码开锁',
-      '02': '卡开锁',
-      '03': '钥匙开锁',
-      '04': '遥控开锁',
-      '05': '临时用户开锁',
-      '-1': '关闭'
+      '2100': '指纹开锁',
+      '2101': '密码开锁',
+      '2102': '卡开锁',
+      '2103': '钥匙开锁',
+      '2104': '遥控开锁',
+      '2105': '临时用户开锁',
+      '21-1': '关闭'
     },
     group: {
       root: ['21']
@@ -257,9 +263,9 @@ const Suiter = {
       '10': 'obox',
       '1010': 'obox'
     },
-    satus: {
-      '0': '离线',
-      '1': '在线'
+    satus: { // device_type + status
+      '100': '离线',
+      '101': '在线'
     },
     group: {
       root: ['10']
@@ -275,10 +281,13 @@ const SuitTypes = (Array.from(Object.keys(Suiter)).reduce((item, next, index)=> 
   return {...item, ...(Suiter[next].type)}
 }))
 
-
-const SuitStatus = {
-
-}
+// 套件状态
+const SuitStatus = (Array.from(Object.keys(Suiter)).reduce((item, next, index)=> {
+  if (index === 1) {
+    item = Suiter[item].status
+  }
+  return {...item, ...(Suiter[next].status)}
+}))
 
  class IotSuit {
    constructor () {
