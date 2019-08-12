@@ -2,7 +2,7 @@
  * @Author: eamiear
  * @Date: 2019-08-09 14:30:46
  * @Last Modified by: eamiear
- * @Last Modified time: 2019-08-12 11:07:22
+ * @Last Modified time: 2019-08-12 14:47:53
  */
 
  /**
@@ -623,4 +623,4 @@ class StatusDescriptor {
   }
  }
 
-console.log(new Suit())
+ export default new Suit()
