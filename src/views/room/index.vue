@@ -23,11 +23,15 @@
         </template>
       </slot>
     </base-table>
+    <el-dialog top="10%" width="760px" :title="dialogTitleMap[dialogStatus]" drag :visible.sync="dialogVisible" :close-on-click-modal="false">
+      <room-device :room='currentActiveRoom'></room-device>
+    </el-dialog>
   </div>
 </template>
 
 <script>
 import BaseTable from '@/assets/package/table-base'
+import RoomDevice from './device'
 import RoomAPI from '@/api/room'
 import { PAGINATION_PAGENO, PAGINATION_PAGESIZE } from '@/common/constants'
 import Helper from '@/common/helper'
@@ -44,10 +48,18 @@ export default {
         pageSize: PAGINATION_PAGESIZE
       },
       tableData: [],
-      columns: []
+      columns: [],
+      dialogVisible: false,
+      dialogStatus: '',
+      dialogTitleMap: {
+        device: '房间设备列表',
+        scene: '房间场景列表',
+        edit: '房间编辑'
+      },
+      currentActiveRoom: ''
     }
   },
-  components: { BaseTable },
+  components: { BaseTable, RoomDevice },
   created () {
     this.columns = this.getColumns()
     this.getRoomList()
@@ -128,6 +140,9 @@ export default {
 
     },
     handleDeviceMgr (row) {
+      this.currentActiveRoom = row.room
+      this.dialogStatus = 'device'
+      this.dialogVisible = true
       console.log('设备管理 ', row)
     },
     handleSceneMgr (row) {
