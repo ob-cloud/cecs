@@ -25,6 +25,10 @@
     </base-table>
     <el-dialog top="10%" width="760px" :title="dialogTitleMap[dialogStatus]" drag :visible.sync="dialogVisible" :close-on-click-modal="false">
       <room-device :room='currentActiveRoom'></room-device>
+      <room-scene v-if="dialogStatus === 'scene'"></room-scene>
+    </el-dialog>
+    <el-dialog top="10%" width="760px" :title="dialogTitleMap[dialogStatus]" drag :visible.sync="sceneDialogVisible" :close-on-click-modal="false">
+      <room-scene :room='currentActiveRoom'></room-scene>
     </el-dialog>
   </div>
 </template>
@@ -32,6 +36,7 @@
 <script>
 import BaseTable from '@/assets/package/table-base'
 import RoomDevice from './device'
+import RoomScene from './scene'
 import RoomAPI from '@/api/room'
 import { PAGINATION_PAGENO, PAGINATION_PAGESIZE } from '@/common/constants'
 import Helper from '@/common/helper'
@@ -50,6 +55,7 @@ export default {
       tableData: [],
       columns: [],
       dialogVisible: false,
+      sceneDialogVisible: false,
       dialogStatus: '',
       dialogTitleMap: {
         device: '房间设备列表',
@@ -59,7 +65,7 @@ export default {
       currentActiveRoom: ''
     }
   },
-  components: { BaseTable, RoomDevice },
+  components: { BaseTable, RoomDevice, RoomScene },
   created () {
     this.columns = this.getColumns()
     this.getRoomList()
@@ -146,6 +152,9 @@ export default {
       console.log('设备管理 ', row)
     },
     handleSceneMgr (row) {
+      this.currentActiveRoom = row.room
+      this.dialogStatus = 'scene'
+      this.sceneDialogVisible = true
       console.log('场景管理 ', row)
     },
     handleEdit (row) {

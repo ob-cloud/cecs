@@ -25,7 +25,7 @@ import BaseTable from '@/assets/package/table-base'
 import RoomAPI from '@/api/room'
 import { PAGINATION_PAGENO, PAGINATION_PAGESIZE } from '@/common/constants'
 export default {
-  name: 'room-device',
+  name: 'room-scene',
   props: {
     room: {
       type: String,
@@ -47,7 +47,7 @@ export default {
   },
   watch: {
     room () {
-      this.getRoomDeviceList()
+      this.getRoomSceneList()
     }
   },
   components: { BaseTable },
@@ -58,30 +58,52 @@ export default {
   },
   mounted () {
     this.columns = this.getColumns()
-    this.getRoomDeviceList()
+    this.getRoomSceneList()
   },
   methods: {
     getColumns () {
       return [{
-        label: '设备序号',
-        prop: 'obox_serial_id',
+        label: '场景序号',
+        prop: 'scene_number',
         align: 'center'
       }, {
-        label: '设备名称',
-        prop: 'name',
+        label: '场景名称',
+        prop: 'scene_name',
         align: 'center'
       }, {
-        label: '设备类型',
-        prop: 'device_type',
-        align: 'center'
+        label: '场景类型',
+        prop: 'scene_type',
+        align: 'center',
+        formatter (val) {
+          const type = {
+            '00': '服务器场景',
+            '01': '本地场景',
+            '02': '有人场景',
+            '03': '无人场景',
+            '04': '安防场景'
+          }
+          return type[val] || '服务器场景'
+        }
       }, {
-        label: '子设备类型',
-        prop: 'device_child_type',
-        align: 'center'
+        label: '消息推送',
+        prop: 'msg_alter',
+        align: 'center',
+        formatter (val) {
+          const push = {
+            0: '无推送',
+            1: 'APP推送',
+            2: '短信推送',
+            3: 'APP+短信推送'
+          }
+          return push[val] || '无推送'
+        }
       }, {
-        label: '设备状态',
-        prop: 'state',
-        align: 'center'
+        label: '场景状态',
+        align: 'center',
+        prop: 'scene_status',
+        formatter (val) {
+          return val === 1 ? '启用' : '关闭'
+        }
       }, {
         label: '操作',
         align: 'center',
@@ -91,19 +113,19 @@ export default {
     },
     getToolboxRender (h, row) {
       return [
-        <el-button size="tiny" icon="el-icon-edit" title="编辑" onClick={() => this.handleEdit(row)}></el-button>,
+        <el-button size="tiny" icon="el-icon-view" title="执行场景" onClick={() => this.handleEdit(row)}></el-button>,
         <el-button size="tiny" icon="el-icon-delete" title="删除" onClick={() => this.handleRemove(row)}></el-button>
       ]
     },
-    getRoomDeviceList () {
+    getRoomSceneList () {
       this.tableLoading = true
       this.search.room = this.room
-      RoomAPI.getRoomDeviceList(this.search).then(resp => {
+      RoomAPI.getRoomSceneList(this.search).then(resp => {
         if (resp.status === 200) {
           this.tableData = resp.data.devices
         } else {
           this.$message({
-            message: resp.message || '房间设备获取失败'
+            message: resp.message || '房间场景获取失败'
           })
         }
         this.tableLoading = false
@@ -118,20 +140,20 @@ export default {
     },
     onCurrentChange (pageNo) {
       this.search.pageNo = pageNo
-      this.getRoomDeviceList()
+      this.getRoomSceneList()
     },
     onSizeChange (pageSize) {
       this.search.pageSize = pageSize
-      this.getRoomDeviceList()
+      this.getRoomSceneList()
     },
     handleCreate () {
       console.log('添加')
     },
     handleEdit (row) {
-      console.log('房间编辑 ', row)
+      console.log('执行场景 ', row)
     },
     handleRemove (row) {
-      console.log('删除房间 ', row)
+      console.log('删除场景 ', row)
     }
   }
 }

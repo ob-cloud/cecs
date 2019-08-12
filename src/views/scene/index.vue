@@ -192,12 +192,12 @@ export default {
         type: 'warning',
         closeOnClickModal: false
       }).then(() => {
-        // this.doRmemove(row.scene_status, row.scene_number)
+        // this.doRemove(row.scene_status, row.scene_number)
       }).catch(() => {
         console.log('取消删除')
       })
     },
-    doRmemove (sceneStatus, sceneNumber) {
+    doRemove (sceneStatus, sceneNumber) {
       SceneAPI.removeScene(sceneStatus, sceneNumber).then(res => {
         console.log(res)
       })
