@@ -2,7 +2,7 @@
  * @Author: eamiear
  * @Date: 2019-08-09 14:30:46
  * @Last Modified by: eamiear
- * @Last Modified time: 2019-08-12 10:43:52
+ * @Last Modified time: 2019-08-12 11:07:22
  */
 
  /**
@@ -289,8 +289,6 @@ const SuitStatus = (Array.from(Object.keys(Suiter)).reduce((item, next, index)=>
   return {...item, ...(Suiter[next].status)}
 }))
 
-console.log(SuitStatus)
-
 const Converter = (() => {
   /**
    * 进制转换
@@ -378,6 +376,10 @@ class TypeHints {
   }
 }
 
+/**
+ * @class
+ * @classdesc 状态描述器 命名规则： get[设备类型名称]StatusDescriptor； 设备类型名称与SuiterMap配置表的key字段相同，如led --> getLedStatusDescriptor
+ */
 class StatusDescriptor {
   constructor () {
     this.suitStatus = SuitStatus
@@ -577,10 +579,11 @@ class StatusDescriptor {
   }
 }
 
- class IotSuit {
+ class Suit {
   constructor () {
     this.converter = Converter
     this.typeHints = new TypeHints()
+    this.statusDescriptor = new StatusDescriptor()
   }
   /**
    * 获取主设备类型描述信息
@@ -589,13 +592,35 @@ class StatusDescriptor {
   getRootDeviceDescriptor (deviceType) {
     return SuitTypes[this.converter.toDecimal(deviceType, 16)]
   }
+  /**
+   * 设备子类型
+   * @param {string} deviceType 设备类型
+   * @param {string} deviceSubType 设备子类型
+   */
   getDeviceTypeDescriptor (deviceType, deviceSubType) {
     const typeStr = this.converter.toDecimal(deviceType, 16)
     const subTypeStr = this.converter.toDecimal(deviceSubType, 16)
     return SuitTypes[typeStr + subTypeStr]
   }
-  getStatusDescriptor () {
-
+  /**
+   * 设备状态
+   * @param {string} status 16进制状态码
+   * @param {string} deviceType 设备类型
+   * @param {string} deviceSubType 设备子类型
+   */
+  getStatusDescriptor (status, deviceType, deviceSubType) {
+    let statusDescriptor = ''
+    Array.from(Object.keys(this.typeHints)).forEach(typeHintKey => {
+      if (this.typeHints[typeHintKey].call(this.typeHints, deviceType, deviceSubType)) {
+        const statusMethodName = `get${typeHintKey.replace('is', '')}StatusDescriptor`
+        if (this.statusDescriptor[statusMethodName]) {
+          statusDescriptor = this.statusDescriptor[statusMethodName].call(this.statusDescriptor, status, deviceType, deviceSubType)
+          return statusDescriptor
+        }
+      }
+    })
+    return statusDescriptor
   }
  }
 
+console.log(new Suit())
