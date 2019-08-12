@@ -135,7 +135,7 @@ export default {
       return [
         <el-button size="tiny" icon="el-icon-view" title="执行场景" onClick={() => this.view(row)}></el-button>,
         <el-button size="tiny" icon="el-icon-edit" title="编辑" onClick={() => this.edit(row)}></el-button>,
-        <el-button size="tiny" icon="el-icon-delete" title="删除" onClick={() => this.remove(row)}></el-button>
+        <el-button size="tiny" icon="el-icon-delete" title="删除" onClick={() => this.handleRemove(row)}></el-button>
       ]
     },
     getSceneList () {
@@ -185,8 +185,22 @@ export default {
     edit (row) {
       console.log('edit ', row)
     },
-    remove (row) {
-      console.log('remove ', row)
+    handleRemove (row) {
+      this.$confirm('确认删除场景？', '确认提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning',
+        closeOnClickModal: false
+      }).then(() => {
+        // this.doRmemove(row.scene_status, row.scene_number)
+      }).catch(() => {
+        console.log('取消删除')
+      })
+    },
+    doRmemove (sceneStatus, sceneNumber) {
+      SceneAPI.removeScene(sceneStatus, sceneNumber).then(res => {
+        console.log(res)
+      })
     },
     handleSceneCommand (command) {
       command === 'local' && this.createLocalScene()
