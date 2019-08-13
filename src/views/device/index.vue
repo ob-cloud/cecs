@@ -26,6 +26,9 @@
         </template>
       </slot>
     </base-table>
+    <!-- <el-dialog top="10%" width="760px" title="添加设备" :visible.sync="dialogVisible" :close-on-click-modal="false">
+
+    </el-dialog> -->
   </div>
 </template>
 
