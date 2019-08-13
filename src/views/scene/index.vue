@@ -15,6 +15,8 @@
         <template slot="caption">
           <el-select clearable class="caption-item" placeholder="所有场景" v-model="search.scene_number">
             <el-option label='所有场景' value=''></el-option>
+            <el-option label='本地场景' value='01'></el-option>
+            <el-option label='云端场景' value='00'></el-option>
           </el-select>
           <el-input @keyup.enter.native="handleSearch" class="caption-item" placeholder="场景名称" v-model="search.scene_name"></el-input>
           <el-button type="primary" icon="el-icon-search" @click="handleSearch">查询</el-button>
@@ -88,13 +90,13 @@ export default {
         align: 'center',
         formatter (val) {
           const type = {
-            '00': '服务器场景',
+            '00': '云端场景',
             '01': '本地场景',
             '02': '有人场景',
             '03': '无人场景',
             '04': '安防场景'
           }
-          return type[val] || '服务器场景'
+          return type[val] || '云端场景'
         }
       }, {
         label: '消息推送',
@@ -133,7 +135,7 @@ export default {
     },
     getToolboxRender (h, row) {
       return [
-        <el-button size="tiny" icon="el-icon-view" title="执行场景" onClick={() => this.view(row)}></el-button>,
+        <el-button size="tiny" icon="el-icon-view" title="执行场景" onClick={() => this.execute(row)}></el-button>,
         <el-button size="tiny" icon="el-icon-edit" title="编辑" onClick={() => this.edit(row)}></el-button>,
         <el-button size="tiny" icon="el-icon-delete" title="删除" onClick={() => this.handleRemove(row)}></el-button>
       ]
@@ -172,8 +174,25 @@ export default {
     },
     handleChangeStatus (row) {
       row.scene_status = 1 - row.scene_status
+      SceneAPI.executeScene(`0${row.scene_status}`, row.scene_number).then(res => {
+        let message = '场景状态更新失败'
+        let type = 'error'
+        if (res.message.includes('success')) {
+          type = 'success'
+          message = '场景状态更新成功'
+        }
+        this.$message({
+          type,
+          message
+        })
+      }).catch(err => {
+        this.$message({
+          type: 'error',
+          message: '场景状态更新失败'
+        })
+      })
     },
-    view (row) {
+    execute (row) {
       const loading = this.$loading({
         lock: true,
         text: '正在执行场景...'
@@ -192,13 +211,13 @@ export default {
         type: 'warning',
         closeOnClickModal: false
       }).then(() => {
-        // this.doRemove(row.scene_status, row.scene_number)
+        // this.doRemove(row.scene_number)
       }).catch(() => {
         console.log('取消删除')
       })
     },
-    doRemove (sceneStatus, sceneNumber) {
-      SceneAPI.removeScene(sceneStatus, sceneNumber).then(res => {
+    doRemove (sceneNumber) {
+      SceneAPI.removeScene(sceneNumber).then(res => {
         console.log(res)
       })
     },

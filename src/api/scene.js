@@ -2,7 +2,7 @@
  * @Author: eamiear
  * @Date: 2019-08-07 15:19:34
  * @Last Modified by: eamiear
- * @Last Modified time: 2019-08-12 15:48:08
+ * @Last Modified time: 2019-08-13 17:22:09
  */
 
 import {request} from '@/common/request'
@@ -20,10 +20,17 @@ const SceneAPI = {
       ...params
     })
   },
-  removeScene (sceneStatus, sceneNumber) {
+  executeScene (sceneStatus, sceneNumber) {
     return request.get('/consumer/common', {
       CMD: 'execute_sc',
       scene_status: sceneStatus,
+      scene_number: sceneNumber
+    })
+  },
+  removeScene (sceneNumber) {
+    return request.get('/consumer/common', {
+      CMD: 'execute_sc',
+      scene_status: '03',
       scene_number: sceneNumber
     })
   }
