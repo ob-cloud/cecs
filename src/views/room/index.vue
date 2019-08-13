@@ -30,6 +30,23 @@
     <el-dialog top="10%" width="760px" :title="dialogTitleMap[dialogStatus]" drag :visible.sync="sceneDialogVisible" :close-on-click-modal="false">
       <room-scene :room='currentActiveRoom'></room-scene>
     </el-dialog>
+    <el-dialog top="10%" width="660px" :title="dialogTitleMap[dialogStatus]" drag :visible.sync="createDialogVisible" :close-on-click-modal="false">
+      <el-form ref="creation" :rules="creationRules" :model="roomModel" label-position="left" label-width="70px" style="width: 80%; margin: 0 auto;">
+        <el-form-item label="楼栋名称" prop="name">
+          <el-input v-model="roomModel.building" autoComplete="on" placeholder="请输入楼栋值"></el-input>
+        </el-form-item>
+        <el-form-item label="楼层名称" prop="name">
+          <el-input v-model="roomModel.layer" placeholder="请输入楼层值"></el-input>
+        </el-form-item>
+        <el-form-item label="房间名称" prop="name">
+          <el-input v-model="roomModel.room" placeholder="请输入房间号"></el-input>
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="createDialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="doCreateRoom(dialogStatus)">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -60,9 +77,28 @@ export default {
       dialogTitleMap: {
         device: '房间设备列表',
         scene: '房间场景列表',
-        edit: '房间编辑'
+        edit: '房间编辑',
+        create: '创建房间'
       },
-      currentActiveRoom: ''
+      // 当前选中房间号
+      currentActiveRoom: '',
+      roomModel: {
+        room: '',
+        building: '',
+        layer: ''
+      },
+      createDialogVisible: false,
+      creationRules: {
+        building: [
+          { required: true, message: '楼栋不可为空', trigger: 'blur' }
+        ],
+        layer: [
+          { required: true, message: '楼层名称不可为空', trigger: 'blur' }
+        ],
+        room: [
+          { required: true, message: '房间名称不可为空', trigger: 'blur' }
+        ]
+      }
     }
   },
   components: { BaseTable, RoomDevice, RoomScene },
@@ -143,25 +179,94 @@ export default {
       this.getRoomList()
     },
     handleCreate () {
-
+      this.dialogStatus = 'create'
+      this.createDialogVisible = true
+    },
+    doCreateRoom (type) {
+      this.$refs.creation.validate(valid => {
+        if (valid) {
+          type === 'create' ? this.createAction() : this.editAction()
+          this.createDialogVisible = false
+        }
+      })
+    },
+    createAction () {
+      RoomAPI.createRoom(this.roomModel).then(response => {
+        if (response.status === 200) {
+          this.getRoomList()
+        } else {
+          this.$message({
+            type: 'error',
+            message: '添加失败!'
+          })
+        }
+      }).catch(() => {
+        this.$message({
+          type: 'error',
+          message: '新增失败'
+        })
+      })
+    },
+    editAction () {
+      RoomAPI.editRoom(this.roomModel).then(response => {
+        if (response.status === 200) {
+          this.getRoomList()
+        } else {
+          this.$message({
+            type: 'error',
+            message: '编辑失败!'
+          })
+        }
+      }).catch(() => {
+        this.$message({
+          type: 'error',
+          message: '编辑失败'
+        })
+      })
     },
     handleDeviceMgr (row) {
       this.currentActiveRoom = row.room
       this.dialogStatus = 'device'
       this.dialogVisible = true
-      console.log('设备管理 ', row)
     },
     handleSceneMgr (row) {
       this.currentActiveRoom = row.room
       this.dialogStatus = 'scene'
       this.sceneDialogVisible = true
-      console.log('场景管理 ', row)
     },
     handleEdit (row) {
-      console.log('房间编辑 ', row)
+      this.dialogStatus = 'edit'
+      this.createDialogVisible = true
+      this.roomModel = row
     },
     handleRemove (row) {
-      console.log('删除房间 ', row)
+      this.$confirm('确认删除房间？', '确认提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning',
+        closeOnClickModal: false
+      }).then(() => {
+        this.doDelete(row)
+      }).catch(() => {
+        console.log('取消删除')
+      })
+    },
+    doDelete (row) {
+      RoomAPI.deleteRoom(row).then(response => {
+        if (response.status === 200) {
+          this.getRoomList()
+        } else {
+          this.$message({
+            type: 'error',
+            message: '删除失败!'
+          })
+        }
+      }).catch(() => {
+        this.$message({
+          type: 'error',
+          message: '删除失败~~'
+        })
+      })
     }
   }
 }
