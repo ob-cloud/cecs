@@ -23,14 +23,13 @@
         </template>
       </slot>
     </base-table>
-    <el-dialog top="10%" width="760px" :title="dialogTitleMap[dialogStatus]" drag :visible.sync="dialogVisible" :close-on-click-modal="false">
-      <room-device :room='currentActiveRoom'></room-device>
-      <room-scene v-if="dialogStatus === 'scene'"></room-scene>
+    <el-dialog top="10%" width="760px" :title="dialogTitleMap[dialogStatus]" :visible.sync="dialogVisible" :close-on-click-modal="false">
+      <room-device :room='deviceActiveRoom'></room-device>
     </el-dialog>
-    <el-dialog top="10%" width="760px" :title="dialogTitleMap[dialogStatus]" drag :visible.sync="sceneDialogVisible" :close-on-click-modal="false">
-      <room-scene :room='currentActiveRoom'></room-scene>
+    <el-dialog top="10%" width="760px" :title="dialogTitleMap[dialogStatus]" :visible.sync="sceneDialogVisible" :close-on-click-modal="false">
+      <room-scene :room='sceneActiveRoom'></room-scene>
     </el-dialog>
-    <el-dialog top="10%" width="660px" :title="dialogTitleMap[dialogStatus]" drag :visible.sync="createDialogVisible" :close-on-click-modal="false">
+    <el-dialog top="10%" width="660px" :title="dialogTitleMap[dialogStatus]" :visible.sync="createDialogVisible" :close-on-click-modal="false">
       <el-form ref="creation" :rules="creationRules" :model="roomModel" label-position="left" label-width="70px" style="width: 80%; margin: 0 auto;">
         <el-form-item label="楼栋名称" prop="name">
           <el-input v-model="roomModel.building" autoComplete="on" placeholder="请输入楼栋值"></el-input>
@@ -81,7 +80,8 @@ export default {
         create: '创建房间'
       },
       // 当前选中房间号
-      currentActiveRoom: '',
+      deviceActiveRoom: '',
+      sceneActiveRoom: '',
       roomModel: {
         room: '',
         building: '',
@@ -233,12 +233,12 @@ export default {
       })
     },
     handleDeviceMgr (row) {
-      this.currentActiveRoom = row.room
+      this.deviceActiveRoom = row.room
       this.dialogStatus = 'device'
       this.dialogVisible = true
     },
     handleSceneMgr (row) {
-      this.currentActiveRoom = row.room
+      this.sceneActiveRoom = row.room
       this.dialogStatus = 'scene'
       this.sceneDialogVisible = true
     },
