@@ -175,21 +175,21 @@ export default {
     handleChangeStatus (row) {
       row.scene_status = 1 - row.scene_status
       SceneAPI.executeScene(`0${row.scene_status}`, row.scene_number).then(res => {
-        let message = '场景状态更新失败'
-        let type = 'error'
-        if (res.message.includes('success')) {
-          type = 'success'
-          message = '场景状态更新成功'
-        }
-        this.$message({
-          type,
-          message
-        })
+        this.responseHandler(res, '场景状态更新')
       }).catch(err => {
-        this.$message({
-          type: 'error',
-          message: '场景状态更新失败'
-        })
+        this.responseHandler('error', '场景状态更新')
+      })
+    },
+    responseHandler (res, msg) {
+      let message = `${msg}失败`
+      let type = 'error'
+      if (res.message.includes('success')) {
+        type = 'success'
+        message = `${msg}成功`
+      }
+      this.$message({
+        type,
+        message
       })
     },
     execute (row) {
@@ -211,14 +211,19 @@ export default {
         type: 'warning',
         closeOnClickModal: false
       }).then(() => {
-        // this.doRemove(row.scene_number)
+        this.doRemove(row.scene_number)
       }).catch(() => {
         console.log('取消删除')
       })
     },
     doRemove (sceneNumber) {
       SceneAPI.removeScene(sceneNumber).then(res => {
-        console.log(res)
+        this.responseHandler(res, '场景删除')
+        if (res.message.includes('success')) {
+          this.getSceneList()
+        }
+      }).catch(() => {
+        this.responseHandler('error', '场景删除')
       })
     },
     handleSceneCommand (command) {
