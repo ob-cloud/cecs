@@ -178,9 +178,17 @@ export default {
       this.search.pageNo = PAGINATION_PAGENO
       this.getRoomList()
     },
+    resetRoomModel () {
+      this.roomModel = {
+        room: '',
+        building: '',
+        layer: ''
+      }
+    },
     handleCreate () {
       this.dialogStatus = 'create'
       this.createDialogVisible = true
+      this.resetRoomModel()
     },
     doCreateRoom (type) {
       this.$refs.creation.validate(valid => {
