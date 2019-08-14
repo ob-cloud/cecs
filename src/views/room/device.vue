@@ -28,8 +28,7 @@ export default {
   name: 'room-device',
   props: {
     room: {
-      type: String,
-      default: ''
+      type: Number
     }
   },
   data () {

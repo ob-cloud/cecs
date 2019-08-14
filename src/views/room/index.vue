@@ -235,12 +235,12 @@ export default {
       })
     },
     handleDeviceMgr (row) {
-      this.deviceActiveRoom = row.room
+      this.deviceActiveRoom = row.location
       this.dialogStatus = 'device'
       this.dialogVisible = true
     },
     handleSceneMgr (row) {
-      this.sceneActiveRoom = row.room
+      this.sceneActiveRoom = row.location
       this.dialogStatus = 'scene'
       this.sceneDialogVisible = true
     },

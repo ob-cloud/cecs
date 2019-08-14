@@ -2,7 +2,7 @@
  * @Author: eamiear
  * @Date: 2019-08-07 16:43:10
  * @Last Modified by: eamiear
- * @Last Modified time: 2019-08-14 16:43:46
+ * @Last Modified time: 2019-08-14 17:17:13
  */
 
 import {request} from '@/common/request'
@@ -21,7 +21,7 @@ const RoomAPI = {
     })
   },
   getRoomDeviceList (params) {
-    return request.get('/consumer/common', {
+    return request.postForm('/consumer/common', {
       CMD: 'query_device_location',
       start: params.pageNo,
       count: params.pageSize,
@@ -29,7 +29,7 @@ const RoomAPI = {
     })
   },
   getRoomSceneList (params) {
-    return request.get('/consumer/common', {
+    return request.postForm('/consumer/common', {
       CMD: 'query_scene_location',
       start: params.pageNo,
       count: params.pageSize,

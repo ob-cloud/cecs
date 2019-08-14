@@ -28,8 +28,7 @@ export default {
   name: 'room-scene',
   props: {
     room: {
-      type: String,
-      default: ''
+      type: Number
     }
   },
   data () {
@@ -122,7 +121,7 @@ export default {
       this.search.room = this.room
       RoomAPI.getRoomSceneList(this.search).then(resp => {
         if (resp.status === 200) {
-          this.tableData = resp.data.devices
+          this.tableData = resp.data.scenes
         } else {
           this.$message({
             message: resp.message || '房间场景获取失败'
