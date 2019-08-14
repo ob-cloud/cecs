@@ -2,7 +2,7 @@
  * @Author: eamiear
  * @Date: 2019-08-07 16:43:10
  * @Last Modified by: eamiear
- * @Last Modified time: 2019-08-13 17:43:14
+ * @Last Modified time: 2019-08-14 16:43:46
  */
 
 import {request} from '@/common/request'
@@ -37,7 +37,7 @@ const RoomAPI = {
     })
   },
   createRoom (params) {
-    return request.get('/consumer/common', {
+    return request.postForm('/consumer/common', {
       CMD: 'create_location',
       action: '01',
       building: params.room,

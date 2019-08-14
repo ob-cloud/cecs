@@ -170,6 +170,7 @@ export default {
     },
     handleSearch () {
       this.search.pageNo = PAGINATION_PAGENO
+      this.search.pageSize = PAGINATION_PAGESIZE
       this.getSceneList()
     },
     handleChangeStatus (row) {

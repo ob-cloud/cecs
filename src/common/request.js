@@ -1,5 +1,5 @@
 import axios from 'axios'
-// import QS from 'qs'
+import QS from 'qs'
 import Storage from '@/common/cache'
 import Router from '@/router'
 import envConfig from '@/common/config'
@@ -16,7 +16,7 @@ const service = axios.create({
   timeout: 16000
 })
 service.interceptors.request.use(config => {
-  if (typeof config.params === 'object' && Storage.getToken()) {
+  if (typeof config.params === 'object' && Object.keys(config.params).length && Storage.getToken()) {
     config.params.access_token = Storage.getToken()
   }
   return config
@@ -59,6 +59,12 @@ export const request = {
   },
   post (url, params = {}, headers) {
     return service(_defaults('post', url, params, headers))
+  },
+  postForm (url, params = {}, headers) {
+    if (!headers) headers = {}
+    headers['Content-Type'] = 'application/x-www-form-urlencoded;charset=UTF-8'
+    params.access_token = Storage.getToken()
+    return service(_defaults('post', url, QS.stringify(params), headers))
   }
 }
 export default {

@@ -30,14 +30,14 @@
       <room-scene :room='sceneActiveRoom'></room-scene>
     </el-dialog>
     <el-dialog top="10%" width="660px" :title="dialogTitleMap[dialogStatus]" :visible.sync="createDialogVisible" :close-on-click-modal="false">
-      <el-form ref="creation" :rules="creationRules" :model="roomModel" label-position="left" label-width="70px" style="width: 80%; margin: 0 auto;">
-        <el-form-item label="楼栋名称" prop="name">
+      <el-form ref="creation" autoComplete="on" :rules="creationRules" :model="roomModel" label-position="left" label-width="80px" style="width: 80%; margin: 0 auto;">
+        <el-form-item label="楼栋名称" prop="building">
           <el-input v-model="roomModel.building" autoComplete="on" placeholder="请输入楼栋值"></el-input>
         </el-form-item>
-        <el-form-item label="楼层名称" prop="name">
+        <el-form-item label="楼层名称" prop="layer">
           <el-input v-model="roomModel.layer" placeholder="请输入楼层值"></el-input>
         </el-form-item>
-        <el-form-item label="房间名称" prop="name">
+        <el-form-item label="房间名称" prop="room">
           <el-input v-model="roomModel.room" placeholder="请输入房间号"></el-input>
         </el-form-item>
       </el-form>
@@ -89,15 +89,9 @@ export default {
       },
       createDialogVisible: false,
       creationRules: {
-        building: [
-          { required: true, message: '楼栋不可为空', trigger: 'blur' }
-        ],
-        layer: [
-          { required: true, message: '楼层名称不可为空', trigger: 'blur' }
-        ],
-        room: [
-          { required: true, message: '房间名称不可为空', trigger: 'blur' }
-        ]
+        building: [{ required: true, message: '楼栋不可为空', trigger: 'blur' }],
+        layer: [{ required: true, message: '楼层名称不可为空', trigger: 'blur' }],
+        room: [{ required: true, message: '房间名称不可为空', trigger: 'blur' }]
       }
     }
   },
@@ -109,6 +103,13 @@ export default {
   computed: {
     total () {
       return this.tableData.length || 0
+    }
+  },
+  watch: {
+    createDialogVisible (val) {
+      if (val === false) {
+        this.$refs.creation.resetFields()
+      }
     }
   },
   mounted () {
@@ -176,6 +177,7 @@ export default {
     },
     handleSearch () {
       this.search.pageNo = PAGINATION_PAGENO
+      this.search.pageSize = PAGINATION_PAGESIZE
       this.getRoomList()
     },
     resetRoomModel () {
