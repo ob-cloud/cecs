@@ -17,12 +17,17 @@
         </template>
       </slot>
     </base-table>
+    <el-dialog id="holder" top="10%" width="760px" title="绑定场景" :visible.sync="sceneDialogVisible" :close-on-click-modal="false" append-to-body>
+      <scene-binding @selection="onSelection"></scene-binding>
+    </el-dialog>
   </div>
 </template>
 
 <script>
 import BaseTable from '@/assets/package/table-base'
+import SceneBinding from './scene_binding'
 import RoomAPI from '@/api/room'
+import SceneAPI from '@/api/scene'
 import { PAGINATION_PAGENO, PAGINATION_PAGESIZE } from '@/common/constants'
 export default {
   name: 'room-scene',
@@ -41,7 +46,8 @@ export default {
         pageSize: PAGINATION_PAGESIZE
       },
       tableData: [],
-      columns: []
+      columns: [],
+      sceneDialogVisible: false
     }
   },
   watch: {
@@ -49,7 +55,7 @@ export default {
       this.getRoomSceneList()
     }
   },
-  components: { BaseTable },
+  components: { BaseTable, SceneBinding },
   computed: {
     total () {
       return this.tableData.length || 0
@@ -112,7 +118,7 @@ export default {
     },
     getToolboxRender (h, row) {
       return [
-        <el-button size="tiny" icon="el-icon-view" title="执行场景" onClick={() => this.handleEdit(row)}></el-button>,
+        <el-button size="tiny" icon="el-icon-caret-right" title="执行场景" onClick={() => this.handleExecute(row)}></el-button>,
         <el-button size="tiny" icon="el-icon-delete" title="删除" onClick={() => this.handleRemove(row)}></el-button>
       ]
     },
@@ -145,14 +151,57 @@ export default {
       this.search.pageSize = pageSize
       this.getRoomSceneList()
     },
+    onSelection (selection) {
+      const loader = this.$loading({
+        text: '场景绑定中...'
+      })
+      this.sceneDialogVisible = false
+      const params = {
+        scene_number: selection.scene_number,
+        location: this.room
+      }
+      RoomAPI.setRoomScene(params).then(res => {
+        loader.close()
+        this.responseHandler(res, '场景绑定')
+        if (res.message.includes('success')) {
+          this.getRoomSceneList()
+        }
+      }).catch(() => {
+        loader.close()
+        this.responseHandler('error', '场景绑定')
+      })
+    },
     handleCreate () {
+      this.sceneDialogVisible = true
       console.log('添加')
     },
-    handleEdit (row) {
+    handleExecute (row) {
       console.log('执行场景 ', row)
+      const loader = this.$loading({
+        text: '场景绑定中...'
+      })
+      SceneAPI.executeScene(`0${row.scene_status}`, row.scene_number).then(res => {
+        loader.close()
+        this.responseHandler(res, '场景执行成功')
+      }).catch(() => {
+        loader.close()
+        this.responseHandler('error', '场景执行失败')
+      })
     },
     handleRemove (row) {
       console.log('删除场景 ', row)
+    },
+    responseHandler (res, msg) {
+      let message = `${msg}失败`
+      let type = 'error'
+      if (res.message.includes('success')) {
+        type = 'success'
+        message = `${msg}成功`
+      }
+      this.$message({
+        type,
+        message
+      })
     }
   }
 }

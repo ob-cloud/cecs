@@ -2,7 +2,7 @@
  * @Author: eamiear
  * @Date: 2019-08-07 16:43:10
  * @Last Modified by: eamiear
- * @Last Modified time: 2019-08-14 17:17:13
+ * @Last Modified time: 2019-08-14 17:58:34
  */
 
 import {request} from '@/common/request'
@@ -77,7 +77,7 @@ const RoomAPI = {
   },
   // 绑定场景到房间
   setRoomScene (params) {
-    return request.post('/consumer/common', {
+    return request.postForm('/consumer/common', {
       CMD: 'set_scene_location',
       action: '01',
       scene_number: params.scene_number,

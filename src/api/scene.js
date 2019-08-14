@@ -2,7 +2,7 @@
  * @Author: eamiear
  * @Date: 2019-08-07 15:19:34
  * @Last Modified by: eamiear
- * @Last Modified time: 2019-08-13 17:22:09
+ * @Last Modified time: 2019-08-14 18:15:29
  */
 
 import {request} from '@/common/request'
@@ -21,7 +21,7 @@ const SceneAPI = {
     })
   },
   executeScene (sceneStatus, sceneNumber) {
-    return request.get('/consumer/common', {
+    return request.postForm('/consumer/common', {
       CMD: 'execute_sc',
       scene_status: sceneStatus,
       scene_number: sceneNumber
