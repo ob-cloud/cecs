@@ -178,7 +178,7 @@ export default {
       SceneAPI.executeScene(`0${row.scene_status}`, row.scene_number).then(res => {
         this.responseHandler(res, '场景状态更新')
       }).catch(err => {
-        this.responseHandler('error', '场景状态更新')
+        this.responseHandler({message: 'error'}, '场景状态更新')
       })
     },
     responseHandler (res, msg) {
@@ -224,7 +224,7 @@ export default {
           this.getSceneList()
         }
       }).catch(() => {
-        this.responseHandler('error', '场景删除')
+        this.responseHandler({message: 'error'}, '场景删除')
       })
     },
     handleSceneCommand (command) {

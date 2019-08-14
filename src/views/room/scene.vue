@@ -168,15 +168,13 @@ export default {
         }
       }).catch(() => {
         loader.close()
-        this.responseHandler('error', '场景绑定')
+        this.responseHandler({message: 'error'}, '场景绑定')
       })
     },
     handleCreate () {
       this.sceneDialogVisible = true
-      console.log('添加')
     },
     handleExecute (row) {
-      console.log('执行场景 ', row)
       const loader = this.$loading({
         text: '场景绑定中...'
       })
@@ -185,11 +183,35 @@ export default {
         this.responseHandler(res, '场景执行成功')
       }).catch(() => {
         loader.close()
-        this.responseHandler('error', '场景执行失败')
+        this.responseHandler({message: 'error'}, '场景执行失败')
       })
     },
     handleRemove (row) {
-      console.log('删除场景 ', row)
+      this.$confirm('确认删除场景？', '确认提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning',
+        closeOnClickModal: false
+      }).then(() => {
+        this.doRemove(row.scene_number)
+      }).catch(() => {
+        console.log('取消删除')
+      })
+    },
+    doRemove (sceneNumber) {
+      const loader = this.$loading({
+        text: '场景删除中...'
+      })
+      SceneAPI.removeScene(this.room, sceneNumber).then(res => {
+        loader.close()
+        this.responseHandler(res, '场景删除')
+        if (res.message.includes('success')) {
+          this.getRoomSceneList()
+        }
+      }).catch(() => {
+        loader.close()
+        this.responseHandler({message: 'error'}, '场景删除')
+      })
     },
     responseHandler (res, msg) {
       let message = `${msg}失败`
