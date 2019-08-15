@@ -106,7 +106,7 @@ export default {
     getToolboxRender (h, row) {
       return [
         <el-button size="tiny" icon="el-icon-edit" title="编辑" onClick={() => this.handleEdit(row)}></el-button>,
-        <el-button size="tiny" icon="el-icon-delete" title="删除" onClick={() => this.handleRemove(row)}></el-button>
+        <el-button size="tiny" icon="el-icon-delete" title="解绑设备" onClick={() => this.handleRemove(row)}></el-button>
       ]
     },
     getRoomDeviceList () {
@@ -166,7 +166,36 @@ export default {
       console.log('房间编辑 ', row)
     },
     handleRemove (row) {
-      console.log('删除房间 ', row)
+      this.$confirm('确认删除设备？', '确认提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning',
+        closeOnClickModal: false
+      }).then(() => {
+        this.doRemove(row)
+      }).catch(() => {
+        console.log('取消删除')
+      })
+    },
+    doRemove (row) {
+      const loader = this.$loading({
+        text: '设备删除中...'
+      })
+      const params = {
+        device_type: row.device_type,
+        serialId: row.obox_serial_id,
+        location: this.room
+      }
+      RoomAPI.removeRoomDevice(params).then(res => {
+        loader.close()
+        this.responseHandler(res, '设备删除')
+        if (res.message.includes('success')) {
+          this.getRoomDeviceList()
+        }
+      }).catch(() => {
+        loader.close()
+        this.responseHandler({message: 'error'}, '设备删除')
+      })
     },
     responseHandler (res, msg) {
       let message = `${msg}失败`

@@ -2,7 +2,7 @@
  * @Author: eamiear
  * @Date: 2019-08-07 16:43:10
  * @Last Modified by: eamiear
- * @Last Modified time: 2019-08-15 11:15:23
+ * @Last Modified time: 2019-08-15 17:33:49
  */
 
 import {request} from '@/common/request'
@@ -69,10 +69,10 @@ const RoomAPI = {
       y_axis: 0
     })
   },
-  deleteRoomDevice (params) {
-    return request.post('/consumer/common', {
-      CMD: 'set_device_location',
-      action: '00',
+  removeRoomDevice (params) {
+    return request.postForm('/consumer/common', {
+      CMD: 'delete_device_location',
+      device_type: params.device_type,
       serialId: params.serialId,
       location: params.location
     })
@@ -82,14 +82,6 @@ const RoomAPI = {
     return request.postForm('/consumer/common', {
       CMD: 'set_scene_location',
       action: '01',
-      scene_number: params.scene_number,
-      location: params.location
-    })
-  },
-  deleteRoomScene (params) {
-    return request.post('/consumer/common', {
-      CMD: 'set_scene_location',
-      action: '00',
       scene_number: params.scene_number,
       location: params.location
     })
