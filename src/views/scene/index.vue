@@ -175,7 +175,7 @@ export default {
     },
     handleChangeStatus (row) {
       row.scene_status = 1 - row.scene_status
-      SceneAPI.executeScene(`0${row.scene_status}`, row.scene_number).then(res => {
+      SceneAPI.chageSceneStatus(`0${row.scene_status}`, row.scene_number).then(res => {
         this.responseHandler(res, '场景状态更新')
       }).catch(err => {
         this.responseHandler({message: 'error'}, '场景状态更新')
@@ -194,13 +194,20 @@ export default {
       })
     },
     execute (row) {
-      const loading = this.$loading({
+      const loader = this.$loading({
         lock: true,
-        text: '正在执行场景...'
+        text: '场景执行中...'
       })
-      setTimeout(() => {
-        loading.close()
-      }, 1500)
+      SceneAPI.executeScene(row.scene_number).then(res => {
+        loader.close()
+        this.responseHandler(res, '场景状态更新')
+        if (res.message.includes('success')) {
+          this.getSceneList()
+        }
+      }).catch(err => {
+        loader.close()
+        this.responseHandler({message: 'error'}, '场景状态更新')
+      })
     },
     edit (row) {
       console.log('edit ', row)
