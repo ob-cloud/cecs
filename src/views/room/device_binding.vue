@@ -16,9 +16,11 @@
 </template>
 
 <script>
+const {default: Suit} = require('@/common/suit')
 import BaseTable from '@/assets/package/table-base'
 import DeviceAPI from '@/api/device'
 import { PAGINATION_PAGENO, PAGINATION_PAGESIZE } from '@/common/constants'
+console.log('-- ', Suit)
 export default {
   name: 'room-device-binding',
   data () {

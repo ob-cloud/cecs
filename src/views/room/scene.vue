@@ -112,7 +112,6 @@ export default {
       }, {
         label: '操作',
         align: 'center',
-        minWidth: '180px',
         renderBody: this.getToolboxRender
       }]
     },

@@ -28,6 +28,7 @@ import BaseTable from '@/assets/package/table-base'
 import DeviceBinding from './device_binding'
 import RoomAPI from '@/api/room'
 import { PAGINATION_PAGENO, PAGINATION_PAGESIZE } from '@/common/constants'
+const {default: Suit} = require('@/common/suit')
 export default {
   name: 'room-device',
   props: {
@@ -77,19 +78,28 @@ export default {
       }, {
         label: '设备类型',
         prop: 'device_type',
-        align: 'center'
+        align: 'center',
+        formatter (val) {
+          return Suit.getRootDeviceDescriptor(val)
+        }
       }, {
         label: '子设备类型',
         prop: 'device_child_type',
-        align: 'center'
+        align: 'center',
+        formatter (val, row) {
+          return Suit.getDeviceTypeDescriptor(row.device_type, val)
+        }
       }, {
         label: '设备状态',
         prop: 'state',
-        align: 'center'
+        align: 'center',
+        formatter (status, row) {
+          console.log(status, row.device_type, row.device_child_type)
+          return Suit.getStatusDescriptor(status, row.device_type, row.device_child_type)
+        }
       }, {
         label: '操作',
         align: 'center',
-        minWidth: '180px',
         renderBody: this.getToolboxRender
       }]
     },
@@ -135,7 +145,8 @@ export default {
       this.deviceDialogVisible = false
       const params = {
         serialId: selection.obox_serial_id,
-        location: this.room
+        location: this.room,
+        device_type: selection.device_type
       }
       RoomAPI.setRoomDevice(params).then(res => {
         loader.close()

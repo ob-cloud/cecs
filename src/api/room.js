@@ -2,7 +2,7 @@
  * @Author: eamiear
  * @Date: 2019-08-07 16:43:10
  * @Last Modified by: eamiear
- * @Last Modified time: 2019-08-15 10:57:45
+ * @Last Modified time: 2019-08-15 11:15:23
  */
 
 import {request} from '@/common/request'
@@ -62,9 +62,11 @@ const RoomAPI = {
   setRoomDevice (params) {
     return request.postForm('/consumer/common', {
       CMD: 'set_device_location',
-      action: '01',
+      device_type: params.device_type,
       serialId: params.serialId,
-      location: params.location
+      location: params.location,
+      x_axis: 0,
+      y_axis: 0
     })
   },
   deleteRoomDevice (params) {
