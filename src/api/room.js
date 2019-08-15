@@ -2,7 +2,7 @@
  * @Author: eamiear
  * @Date: 2019-08-07 16:43:10
  * @Last Modified by: eamiear
- * @Last Modified time: 2019-08-14 17:58:34
+ * @Last Modified time: 2019-08-15 10:57:45
  */
 
 import {request} from '@/common/request'
@@ -60,7 +60,7 @@ const RoomAPI = {
   },
   // 添加设备到房间
   setRoomDevice (params) {
-    return request.post('/consumer/common', {
+    return request.postForm('/consumer/common', {
       CMD: 'set_device_location',
       action: '01',
       serialId: params.serialId,
@@ -84,13 +84,20 @@ const RoomAPI = {
       location: params.location
     })
   },
-  // 删除房间场景
   deleteRoomScene (params) {
     return request.post('/consumer/common', {
       CMD: 'set_scene_location',
       action: '00',
       scene_number: params.scene_number,
       location: params.location
+    })
+  },
+  // 删除房间场景
+  removeRoomScene (location, sceneNumber) {
+    return request.postForm('/consumer/common', {
+      CMD: 'delete_scene_location',
+      location,
+      scene_number: sceneNumber
     })
   }
 }

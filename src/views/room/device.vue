@@ -17,11 +17,15 @@
         </template>
       </slot>
     </base-table>
+    <el-dialog id="holder" top="10%" width="760px" title="绑定设备" :visible.sync="deviceDialogVisible" :close-on-click-modal="false" append-to-body>
+      <device-binding @selection="onSelection"></device-binding>
+    </el-dialog>
   </div>
 </template>
 
 <script>
 import BaseTable from '@/assets/package/table-base'
+import DeviceBinding from './device_binding'
 import RoomAPI from '@/api/room'
 import { PAGINATION_PAGENO, PAGINATION_PAGESIZE } from '@/common/constants'
 export default {
@@ -41,7 +45,8 @@ export default {
         pageSize: PAGINATION_PAGESIZE
       },
       tableData: [],
-      columns: []
+      columns: [],
+      deviceDialogVisible: false
     }
   },
   watch: {
@@ -49,7 +54,7 @@ export default {
       this.getRoomDeviceList()
     }
   },
-  components: { BaseTable },
+  components: { BaseTable, DeviceBinding },
   computed: {
     total () {
       return this.tableData.length || 0
@@ -123,14 +128,46 @@ export default {
       this.search.pageSize = pageSize
       this.getRoomDeviceList()
     },
+    onSelection (selection) {
+      const loader = this.$loading({
+        text: '设备绑定中...'
+      })
+      this.deviceDialogVisible = false
+      const params = {
+        serialId: selection.obox_serial_id,
+        location: this.room
+      }
+      RoomAPI.setRoomDevice(params).then(res => {
+        loader.close()
+        this.responseHandler(res, '设备绑定')
+        if (res.message.includes('success')) {
+          this.getRoomDeviceList()
+        }
+      }).catch(() => {
+        loader.close()
+        this.responseHandler({message: 'error'}, '设备绑定')
+      })
+    },
     handleCreate () {
-      console.log('添加')
+      this.deviceDialogVisible = true
     },
     handleEdit (row) {
       console.log('房间编辑 ', row)
     },
     handleRemove (row) {
       console.log('删除房间 ', row)
+    },
+    responseHandler (res, msg) {
+      let message = `${msg}失败`
+      let type = 'error'
+      if (res.message.includes('success')) {
+        type = 'success'
+        message = `${msg}成功`
+      }
+      this.$message({
+        type,
+        message
+      })
     }
   }
 }

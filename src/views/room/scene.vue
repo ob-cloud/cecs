@@ -202,7 +202,7 @@ export default {
       const loader = this.$loading({
         text: '场景删除中...'
       })
-      SceneAPI.removeScene(this.room, sceneNumber).then(res => {
+      RoomAPI.removeRoomScene(this.room, sceneNumber).then(res => {
         loader.close()
         this.responseHandler(res, '场景删除')
         if (res.message.includes('success')) {

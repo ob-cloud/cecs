@@ -2,7 +2,7 @@
  * @Author: eamiear
  * @Date: 2019-08-07 15:19:34
  * @Last Modified by: eamiear
- * @Last Modified time: 2019-08-14 18:22:13
+ * @Last Modified time: 2019-08-15 10:57:19
  */
 
 import {request} from '@/common/request'
@@ -24,13 +24,6 @@ const SceneAPI = {
     return request.postForm('/consumer/common', {
       CMD: 'execute_sc',
       scene_status: sceneStatus,
-      scene_number: sceneNumber
-    })
-  },
-  removeScene (location, sceneNumber) {
-    return request.postForm('/consumer/common', {
-      CMD: 'delete_scene_location',
-      location,
       scene_number: sceneNumber
     })
   }
