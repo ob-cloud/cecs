@@ -14,8 +14,9 @@
       <slot>
         <template slot="caption">
           <el-input @keyup.enter.native="handleSearch" class="caption-item" placeholder="设备序列号" v-model="search.obox_serial_id"></el-input>
-          <el-select clearable class="caption-item" placeholder="所有设备" v-model="search.obxId">
+          <el-select clearable class="caption-item" placeholder="所有设备" v-model="search.oboxId">
             <el-option label='所有设备' value=''></el-option>
+            <el-option :label='item.obox_name' :value='item.obox_serial_id' v-for="(item, index) in oboxList" :key="index"></el-option>
           </el-select>
           <el-input @keyup.enter.native="handleSearch" class="caption-item" placeholder="设备类型" v-model="search.device_type"></el-input>
           <el-input @keyup.enter.native="handleSearch" class="caption-item" placeholder="设备名称" v-model="search.name"></el-input>
@@ -37,6 +38,7 @@ import BaseTable from '@/assets/package/table-base'
 import DeviceAPI from '@/api/device'
 import { PAGINATION_PAGENO, PAGINATION_PAGESIZE } from '@/common/constants'
 import Helper from '@/common/helper'
+const {default: Suit} = require('@/common/suit')
 export default {
   data () {
     return {
@@ -46,16 +48,18 @@ export default {
         obox_serial_id: '',
         name: '',
         device_type: '',
-        obxId: '',
+        oboxId: '',
         pageNo: PAGINATION_PAGENO,
         pageSize: PAGINATION_PAGESIZE
       },
       tableData: [],
-      columns: []
+      columns: [],
+      oboxList: []
     }
   },
   components: { BaseTable },
   created () {
+    this.getOboxList()
     this.columns = this.getColumns()
     this.getDeviceList()
   },
@@ -87,15 +91,25 @@ export default {
       }, {
         label: '设备状态',
         prop: 'state',
-        align: 'center'
+        align: 'center',
+        formatter (status, row) {
+          console.log(status, row.device_type, row.device_child_type)
+          return Suit.getStatusDescriptor(status, row.device_type, row.device_child_type)
+        }
       }, {
         label: '设备类型',
         prop: 'device_type',
-        align: 'center'
+        align: 'center',
+        formatter (val) {
+          return Suit.getRootDeviceDescriptor(val)
+        }
       }, {
         label: '子设备类型',
         prop: 'device_child_type',
-        align: 'center'
+        align: 'center',
+        formatter (val, row) {
+          return Suit.getDeviceTypeDescriptor(row.device_type, val)
+        }
       }, {
         label: '设备版本',
         prop: 'version',
@@ -133,6 +147,13 @@ export default {
           type: 'error'
         })
         this.tableLoading = false
+      })
+    },
+    getOboxList () {
+      DeviceAPI.getOboxList().then(res => {
+        if (res.status === 200) {
+          this.oboxList = res.data.oboxs
+        }
       })
     },
     onCurrentChange (pageNo) {
