@@ -135,7 +135,7 @@ export default {
     },
     getToolboxRender (h, row) {
       return [
-        <el-button size="tiny" icon="el-icon-view" title="执行场景" onClick={() => this.execute(row)}></el-button>,
+        <el-button size="tiny" icon="el-icon-caret-right" title="执行场景" onClick={() => this.execute(row)}></el-button>,
         <el-button size="tiny" icon="el-icon-edit" title="编辑" onClick={() => this.edit(row)}></el-button>,
         <el-button size="tiny" icon="el-icon-delete" title="删除" onClick={() => this.handleRemove(row)}></el-button>
       ]
