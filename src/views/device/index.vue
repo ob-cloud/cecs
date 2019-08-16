@@ -27,14 +27,15 @@
         </template>
       </slot>
     </base-table>
-    <!-- <el-dialog top="10%" width="760px" title="添加设备" :visible.sync="dialogVisible" :close-on-click-modal="false">
-
-    </el-dialog> -->
+    <el-dialog top="10%" width="760px" title="设备操作历史" :visible.sync="dialogVisible" :close-on-click-modal="false">
+      <device-history :serialId="activeRecord.obox_serial_id"></device-history>
+    </el-dialog>
   </div>
 </template>
 
 <script>
 import BaseTable from '@/assets/package/table-base'
+import DeviceHistory from './history'
 import DeviceAPI from '@/api/device'
 import { PAGINATION_PAGENO, PAGINATION_PAGESIZE } from '@/common/constants'
 import Helper from '@/common/helper'
@@ -54,10 +55,12 @@ export default {
       },
       tableData: [],
       columns: [],
-      oboxList: []
+      oboxList: [],
+      dialogVisible: false,
+      activeRecord: {}
     }
   },
-  components: { BaseTable },
+  components: { BaseTable, DeviceHistory },
   created () {
     this.getOboxList()
     this.columns = this.getColumns()
@@ -122,12 +125,17 @@ export default {
       }]
     },
     getToolboxRender (h, row) {
-      return [
-        <el-button size="tiny" icon="el-icon-edit" onClick={() => this.editDevice(row)}></el-button>,
-        <el-button size="tiny" icon="el-icon-setting" onClick={() => this.settingDevice(row)}></el-button>,
-        <el-button size="tiny" icon="el-icon-info" onClick={() => this.checkDeviceInfo(row)}></el-button>,
-        <el-button size="tiny" icon="el-icon-delete" onClick={() => this.removeDevice(row)}></el-button>
-      ]
+      const toolboxs = []
+      const edit = <el-button size="tiny" icon="el-icon-edit" onClick={() => this.editDevice(row)}></el-button>
+      const setting = <el-button size="tiny" icon="el-icon-setting" onClick={() => this.settingDevice(row)}></el-button>
+      const info = <el-button size="tiny" icon="el-icon-info" onClick={() => this.checkDeviceInfo(row)}></el-button>
+      const remove = <el-button size="tiny" icon="el-icon-delete" onClick={() => this.removeDevice(row)}></el-button>
+      console.log(edit, setting)
+      if (Suit.typeHints.isSocketSwitch(row.device_type)) {
+        toolboxs.push(info)
+      }
+      toolboxs.push(remove)
+      return toolboxs
     },
     getDeviceList () {
       this.tableLoading = true
@@ -179,6 +187,8 @@ export default {
     },
     checkDeviceInfo (row) {
       console.log('check ', row)
+      this.dialogVisible = true
+      this.activeRecord = row
     },
     removeDevice (row) {
       console.log('remove ', row)
