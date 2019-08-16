@@ -186,12 +186,47 @@ export default {
       console.log('set ', row)
     },
     checkDeviceInfo (row) {
-      console.log('check ', row)
       this.dialogVisible = true
       this.activeRecord = row
     },
     removeDevice (row) {
-      console.log('remove ', row)
+      this.$confirm('确认删除设备？', '确认提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning',
+        closeOnClickModal: false
+      }).then(() => {
+        this.doRemove(row)
+      }).catch(() => {
+        console.log('取消删除')
+      })
+    },
+    doRemove (row) {
+      const loader = this.$loading({
+        text: '设备删除中...'
+      })
+      DeviceAPI.removeDevice(row.obox_serial_id, row.name).then(res => {
+        loader.close()
+        this.responseHandler(res, '设备删除')
+        if (res.message.includes('success')) {
+          this.getDeviceList()
+        }
+      }).catch(() => {
+        loader.close()
+        this.responseHandler({message: 'error'}, '设备删除')
+      })
+    },
+    responseHandler (res, msg) {
+      let message = `${msg}失败`
+      let type = 'error'
+      if (res.message.includes('success')) {
+        type = 'success'
+        message = `${msg}成功`
+      }
+      this.$message({
+        type,
+        message
+      })
     }
   }
 }

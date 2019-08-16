@@ -2,7 +2,7 @@
  * @Author: eamiear
  * @Date: 2019-08-05 17:32:41
  * @Last Modified by: eamiear
- * @Last Modified time: 2019-08-16 15:52:34
+ * @Last Modified time: 2019-08-16 16:15:01
  */
 
 import {request} from '@/common/request'
@@ -34,6 +34,22 @@ const DeviceAPI = {
       type: '00',
       start: params.pageNo,
       count: params.pageSize
+    })
+  },
+  modifyDeviceName (serialId, name) {
+    return request.postForm('/consumer/common', {
+      CMD: 'modify_device',
+      serialId,
+      operate_type: '01',
+      name
+    })
+  },
+  removeDevice (serialId, name) {
+    return request.postForm('/consumer/common', {
+      CMD: 'modify_device',
+      serialId,
+      operate_type: '00',
+      name
     })
   }
 }
