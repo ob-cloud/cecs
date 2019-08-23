@@ -94,7 +94,7 @@ export default {
     },
     getToolboxRender (h, row) {
       return [
-        <el-button size="tiny" icon="iconfont icon-shengji" title="升级" onClick={() => this.handleUpgrade(row)}></el-button>
+        <el-button size="tiny" icon="obicon obicon-upgrade" title="升级" onClick={() => this.handleUpgrade(row)}></el-button>
       ]
     },
     getOboxList () {

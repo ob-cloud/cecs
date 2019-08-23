@@ -141,8 +141,8 @@ export default {
     },
     getToolboxRender (h, row) {
       return [
-        <el-button size="tiny" icon="iconfont icon-shebeiguanli" title="房间设备" onClick={() => this.handleDeviceMgr(row)}></el-button>,
-        <el-button size="tiny" icon="iconfont icon-changjingguanli" title="房间场景" onClick={() => this.handleSceneMgr(row)}></el-button>,
+        <el-button size="tiny" icon="obicon obicon-device" title="房间设备" onClick={() => this.handleDeviceMgr(row)}></el-button>,
+        <el-button size="tiny" icon="obicon obicon-scene" title="房间场景" onClick={() => this.handleSceneMgr(row)}></el-button>,
         <el-button size="tiny" icon="el-icon-edit" title="编辑" onClick={() => this.handleEdit(row)}></el-button>,
         <el-button size="tiny" icon="el-icon-delete" title="删除" onClick={() => this.handleRemove(row)}></el-button>
       ]
