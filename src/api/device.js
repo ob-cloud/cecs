@@ -2,7 +2,7 @@
  * @Author: eamiear
  * @Date: 2019-08-05 17:32:41
  * @Last Modified by: eamiear
- * @Last Modified time: 2019-08-23 11:14:36
+ * @Last Modified time: 2019-08-23 14:55:55
  */
 
 import {request} from '@/common/request'
@@ -107,7 +107,34 @@ const doorLock = {
 }
 
 const LampAPI = {
-  openLamp () {
+  setLampPower (type, serialId, status) {
+    const maps = {
+      '开': `ff${status.slice(2, (status.length - 1))}2`,
+      '关': `00${status.slice(2, status.length - 1)}2`
+    }
+    return request.postForm('/consumer/common', {
+      CMD: 'setting_node_status',
+      serialId,
+      status: maps[type]
+    })
+  },
+  openLamp (serialId, status) {
+    status = `ff${status.slice(2)}`
+    return request.postForm('/consumer/common', {
+      CMD: 'setting_node_status',
+      serialId,
+      status
+    })
+  },
+  closeLamp (serialId, status) {
+    status = `00${status.slice(2)}`
+    return request.postForm('/consumer/common', {
+      CMD: 'setting_node_status',
+      serialId,
+      status
+    })
+  },
+  adjustBrightness (serialId, status) {
 
   }
 }

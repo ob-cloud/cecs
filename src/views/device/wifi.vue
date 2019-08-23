@@ -14,7 +14,7 @@
         <template slot="caption">
           <el-input @keyup.enter.native="handleSearch" class="caption-item" placeholder="设备序列号" v-model="search.obox_serial_id"></el-input>
           <el-select clearable class="caption-item" placeholder="全部状态" v-model="search.online">
-            <el-option label='全部' value=''></el-option>
+            <el-option label='全部状态' value=''></el-option>
             <el-option label='在线' :value='true'></el-option>
             <el-option label='离线' :value='false'></el-option>
           </el-select>

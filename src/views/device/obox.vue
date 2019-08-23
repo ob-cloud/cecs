@@ -97,7 +97,6 @@ export default {
         prop: 'state',
         align: 'center',
         formatter (status, row) {
-          console.log(status, row.device_type, row.device_child_type)
           return Suit.getStatusDescriptor(status, row.device_type, row.device_child_type)
         }
       }, {
@@ -153,7 +152,7 @@ export default {
     },
     getLampLockActionRender (row) {
       return [
-        <el-button size="tiny" icon="obicon obicon-power" title="灯开关" onClick={() => this.handleDoorLockRecord(row)}></el-button>
+        <el-button size="tiny" icon="obicon obicon-power" title="灯开关" onClick={() => this.handleLampPower(row)}></el-button>
       ]
     },
     getSocketActionRender (row) {
@@ -251,6 +250,23 @@ export default {
       this.$message({
         type,
         message
+      })
+    },
+    handleLampPower (row) {
+      let type = Suit.getStatusDescriptor(row.state, row.device_type, row.device_child_type)
+      type = type === '开' ? '关' : '开'
+      const loader = this.$loading({
+        text: `${type}灯中...`
+      })
+      DeviceAPI.setLampPower(type, row.serialId, row.state).then(res => {
+        loader.close()
+        this.responseHandler(res, `${type}灯`)
+        if (res.message.includes('success')) {
+          this.getDeviceList()
+        }
+      }).catch(() => {
+        loader.close()
+        this.responseHandler({message: 'error'}, `${type}灯`)
       })
     }
   }

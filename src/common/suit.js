@@ -3,7 +3,7 @@
  * @Author: eamiear
  * @Date: 2019-08-12 11:21:09
  * @Last Modified by: eamiear
- * @Last Modified time: 2019-08-23 10:30:37
+ * @Last Modified time: 2019-08-23 11:35:33
  */
 
 /**
@@ -92,7 +92,7 @@ const Converter = {
  * @Author: eamiear
  * @Date: 2019-08-12 11:21:50
  * @Last Modified by: eamiear
- * @Last Modified time: 2019-08-23 10:30:20
+ * @Last Modified time: 2019-08-23 11:10:15
  */
 
 /**
@@ -447,7 +447,7 @@ const Suiter = {
       '21close8': '锁开',
       '21close9': '反锁开',
       '21card': '门卡开锁',
-      'default': '关闭'
+      'default': '关门'
     },
     group: {
       root: ['21']
@@ -638,7 +638,7 @@ var TypeHints$1 = new TypeHints();
  * @Author: eamiear
  * @Date: 2019-08-12 11:25:00
  * @Last Modified by: eamiear
- * @Last Modified time: 2019-08-23 10:27:05
+ * @Last Modified time: 2019-08-23 10:59:47
  */
 /**
  * @class
@@ -735,7 +735,7 @@ class StatusDescriptor {
     let num = +Converter.toDecimal(status.slice(0, 2), 16);
 
     if (TypeHints$1.isSimpleLed(deviceSubType)) {
-      light = num === 0 ? '灯灭' : `${parseInt((num - 128) * 100 / 126)}%`;
+      light = num === 0 ? 0 : `${parseInt((num - 128) * 100 / 126)}%`;
     }
 
     if (TypeHints$1.isColorLed(deviceSubType)) {
@@ -746,7 +746,7 @@ class StatusDescriptor {
       light = `${num}% ${+Converter.toDecimal(status.slice(2, 4), 16)}% ${+Converter.toDecimal(status.slice(4, 6), 16)}%`;
     }
 
-    return light;
+    return light ? '开' : '关';
   }
   /**
    * 获取传感器状态
