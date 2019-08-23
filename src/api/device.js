@@ -2,7 +2,7 @@
  * @Author: eamiear
  * @Date: 2019-08-05 17:32:41
  * @Last Modified by: eamiear
- * @Last Modified time: 2019-08-23 14:55:55
+ * @Last Modified time: 2019-08-23 15:44:52
  */
 
 import {request} from '@/common/request'
@@ -50,6 +50,17 @@ const DeviceAPI = {
       serialId,
       operate_type: '00',
       name
+    })
+  },
+  searchToAddDevice (oboxId, deviceType, deviceSubType) {
+    return request.postForm('/consumer/common', {
+      CMD: 'search_new_device',
+      obox_serial_id: oboxId,
+      serialId: '',
+      device_type: deviceType,
+      device_child_type: deviceSubType,
+      state: '02',
+      timeout: 60
     })
   }
 }

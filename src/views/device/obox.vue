@@ -29,12 +29,21 @@
     <el-dialog top="10%" width="760px" title="设备操作历史" :visible.sync="dialogVisible" :close-on-click-modal="false">
       <device-history :serialId="activeRecord.obox_serial_id"></device-history>
     </el-dialog>
+    <el-dialog top="10%" width="760px" title="添加设备" :visible.sync="addDeviceDialogVisible" :close-on-click-modal="false">
+      <device-create :oboxs="oboxList" @deviceSelected="onDeviceSelected"></device-create>
+      <div slot="footer" class="dialog-footer text-center" >
+        <el-button @click="addDeviceDialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="createDevice">确 认</el-button>
+      </div>
+    </el-dialog>
+
   </div>
 </template>
 
 <script>
 import BaseTable from '@/assets/package/table-base'
 import DeviceHistory from './history'
+import DeviceCreate from './add'
 import DeviceAPI from '@/api/device'
 import { PAGINATION_PAGENO, PAGINATION_PAGESIZE } from '@/common/constants'
 import Helper from '@/common/helper'
@@ -62,10 +71,12 @@ export default {
       columns: [],
       oboxList: [],
       dialogVisible: false,
-      activeRecord: {}
+      activeRecord: {},
+      addDeviceDialogVisible: false,
+      addDeviceSelected: {}
     }
   },
-  components: { BaseTable, DeviceHistory },
+  components: { BaseTable, DeviceHistory, DeviceCreate },
   created () {
     this.getOboxList()
     this.columns = this.getColumns()
@@ -201,7 +212,7 @@ export default {
       this.getDeviceList()
     },
     handleCreate () {
-
+      this.addDeviceDialogVisible = true
     },
     editDevice (row) {
       console.log('edit ', row)
@@ -267,6 +278,32 @@ export default {
       }).catch(() => {
         loader.close()
         this.responseHandler({message: 'error'}, `${type}灯`)
+      })
+    },
+    onDeviceSelected (selected) {
+      console.log('--- ', selected)
+      this.addDeviceSelected = selected
+    },
+    createDevice () {
+      console.log(this.addDeviceSelected)
+      if (!this.addDeviceSelected.oboxId || !this.addDeviceSelected.deviceType) {
+        return this.$message({
+          type: 'warning',
+          message: (!this.addDeviceSelected.oboxId ? 'obox' : '设备') + '不能空!'
+        })
+      }
+      const loader = this.$loading({
+        text: `设备搜索中...`
+      })
+      DeviceAPI.searchToAddDevice(...this.addDeviceSelected).then(res => {
+        loader.close()
+        this.responseHandler(res, `设备添加`)
+        if (res.message.includes('success')) {
+          this.getDeviceList()
+        }
+      }).catch(() => {
+        loader.close()
+        this.responseHandler({message: 'error'}, `设备添加`)
       })
     }
   }
