@@ -15,7 +15,7 @@
           <el-input @keyup.enter.native="handleSearch" class="caption-item" placeholder="设备序列号" v-model="search.obox_serial_id"></el-input>
           <el-select clearable class="caption-item" placeholder="所有设备" v-model="search.oboxId">
             <el-option label='所有设备' value=''></el-option>
-            <el-option :label='item.obox_name' :value='item.obox_serial_id' v-for="(item, index) in oboxList" :key="index"></el-option>
+            <el-option :label='item.obox_name+`(${item.obox_status === 1 ? "在线" : "离线"})`' :value='item.obox_serial_id' v-for="(item, index) in oboxList" :key="index"></el-option>
           </el-select>
           <el-input @keyup.enter.native="handleSearch" class="caption-item" placeholder="设备类型" v-model="search.device_type"></el-input>
           <el-input @keyup.enter.native="handleSearch" class="caption-item" placeholder="设备名称" v-model="search.name"></el-input>
@@ -281,7 +281,6 @@ export default {
       })
     },
     onDeviceSelected (selected) {
-      console.log('--- ', selected)
       this.addDeviceSelected = selected
     },
     createDevice () {
@@ -295,10 +294,15 @@ export default {
       const loader = this.$loading({
         text: `设备搜索中...`
       })
-      DeviceAPI.searchToAddDevice(...this.addDeviceSelected).then(res => {
+      let {deviceType, deviceSubType} = this.addDeviceSelected
+      const {oboxId} = this.addDeviceSelected
+      deviceType = Suit.converter.toDecimal(deviceType, 16)
+      deviceSubType = Suit.converter.toDecimal(deviceSubType, 16)
+      DeviceAPI.searchToAddDevice(oboxId, deviceType, deviceSubType).then(res => {
         loader.close()
         this.responseHandler(res, `设备添加`)
         if (res.message.includes('success')) {
+          this.addDeviceDialogVisible = false
           this.getDeviceList()
         }
       }).catch(() => {

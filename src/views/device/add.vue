@@ -3,7 +3,7 @@
     <div class="header">
       <el-select clearable class="item" placeholder="obox" v-model="oboxId">
         <el-option label='所有设备' value=''></el-option>
-        <el-option :label='item.obox_name' :value='item.obox_serial_id' v-for="(item, index) in oboxs" :key="index"></el-option>
+        <el-option :label='item.obox_name+`(${item.obox_status === 1 ? "在线" : "离线"})`' :value='item.obox_serial_id' v-for="(item, index) in oboxs" :key="index"></el-option>
       </el-select>
       <el-select clearable class="item" filterable placeholder="设备类型" v-model="deviceType">
         <el-option label='设备类型' value=''></el-option>
@@ -38,18 +38,12 @@ export default {
   },
   watch: {
     oboxId (val) {
-      console.log('oboxId ', val)
       this.$emit('deviceSelected', {oboxId: val, deviceType: this.deviceType.slice(0, 2), deviceSubType: this.deviceType.slice(2)})
     },
     deviceType (val) {
-      console.log('deviceType ', val)
       this.$emit('deviceSelected', {oboxId: this.oboxId, deviceType: val.slice(0, 2), deviceSubType: val.slice(2)})
     }
-  },
-  mounted () {
-    console.log('oboxs --++ ', this.oboxs)
-    console.log('deviceTypeList --++ ', this.deviceTypeList)
-  },
+  }
 }
 </script>
 

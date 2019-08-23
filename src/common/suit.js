@@ -3,7 +3,7 @@
  * @Author: eamiear
  * @Date: 2019-08-12 11:21:09
  * @Last Modified by: eamiear
- * @Last Modified time: 2019-08-23 11:35:33
+ * @Last Modified time: 2019-08-23 17:46:03
  */
 
 /**
@@ -92,7 +92,7 @@ const Converter = {
  * @Author: eamiear
  * @Date: 2019-08-12 11:21:50
  * @Last Modified by: eamiear
- * @Last Modified time: 2019-08-23 11:10:15
+ * @Last Modified time: 2019-08-23 15:47:11
  */
 
 /**
@@ -928,7 +928,7 @@ var StatusDescriptor$1 = new StatusDescriptor();
  * @Author: eamiear
  * @Date: 2019-08-12 11:28:24
  * @Last Modified by: eamiear
- * @Last Modified time: 2019-08-23 10:21:18
+ * @Last Modified time: 2019-08-23 17:45:24
  */
 /**
  * 套件类： 使用时主要使用该类中的方法
@@ -968,6 +968,12 @@ class Suit {
      */
 
     this.statusDescriptor = StatusDescriptor$1;
+    /**
+     * 进制转换器
+     * @memberof Suit
+     */
+
+    this.converter = Converter;
   }
   /**
    * 获取主设备类型描述信息
