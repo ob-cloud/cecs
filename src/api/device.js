@@ -2,7 +2,7 @@
  * @Author: eamiear
  * @Date: 2019-08-05 17:32:41
  * @Last Modified by: eamiear
- * @Last Modified time: 2019-08-23 15:44:52
+ * @Last Modified time: 2019-08-29 17:37:44
  */
 
 import {request} from '@/common/request'
@@ -157,4 +157,12 @@ const WifiDeviceAPI = {
     })
   }
 }
-export default {...DeviceAPI, ...doorLock, ...LampAPI, ...WifiDeviceAPI}
+
+const RemotDeviceAPI = {
+  getRemoter () {
+    return request.postForm('/consumer/common', {
+      CMD: 'query_remoter'
+    })
+  }
+}
+export default {...DeviceAPI, ...doorLock, ...LampAPI, ...WifiDeviceAPI, ...RemotDeviceAPI}

@@ -34,12 +34,20 @@
         </template>
       </slot>
     </base-table>
+    <el-dialog top="10%" width="760px" title="添加场景" :visible.sync="createDialogVisible" :close-on-click-modal="false">
+      <scene-create></scene-create>
+      <div slot="footer" class="dialog-footer text-center" >
+        <el-button @click="createDialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="createDialogVisible = false">确 认</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
 <script>
 import BaseTable from '@/assets/package/table-base'
 import SceneAPI from '@/api/scene'
+import SceneCreate from './create'
 import { PAGINATION_PAGENO, PAGINATION_PAGESIZE } from '@/common/constants'
 import Helper from '@/common/helper'
 export default {
@@ -54,10 +62,11 @@ export default {
         pageSize: PAGINATION_PAGESIZE
       },
       tableData: [],
-      columns: []
+      columns: [],
+      createDialogVisible: false
     }
   },
-  components: { BaseTable },
+  components: { BaseTable, SceneCreate },
   created () {
     this.columns = this.getColumns()
     this.getSceneList()
@@ -240,9 +249,11 @@ export default {
     },
     createLocalScene () {
       console.log('本地场景 ')
+      this.createDialogVisible = true
     },
     createRemoteScene () {
       console.log('云端场景 ')
+      this.createDialogVisible = true
     }
   }
 }
