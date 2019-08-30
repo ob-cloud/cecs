@@ -3,7 +3,7 @@
  * @Author: eamiear
  * @Date: 2019-08-12 11:21:09
  * @Last Modified by: eamiear
- * @Last Modified time: 2019-08-23 17:46:03
+ * @Last Modified time: 2019-08-30 17:06:43
  */
 
 /**
@@ -73,7 +73,7 @@ function toDecimal(number, from) {
 function toHex(number, from) {
   const radix = _fn(number, from, 16);
 
-  return +radix < 16 ? '0' + radix : radix;
+  return +radix < 10 ? '0' + radix : radix;
 }
 /**
  * 进制转换器
