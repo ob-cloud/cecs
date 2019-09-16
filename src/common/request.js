@@ -51,6 +51,7 @@ const _defaults = (method, url, params, headers) => {
   return config
 }
 export const request = {
+  axios,
   getRequestUrl (url) {
     return requestBaseUrl + url
   },

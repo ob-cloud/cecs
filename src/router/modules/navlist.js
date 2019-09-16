@@ -2,7 +2,7 @@
  * @Author: eamiear
  * @Date: 2019-02-06 21:24:22
  * @Last Modified by: eamiear
- * @Last Modified time: 2019-08-07 17:53:58
+ * @Last Modified time: 2019-09-12 11:14:47
  */
 
 export default [
@@ -26,5 +26,10 @@ export default [
     path: '/obox/index.html',
     desc: 'OBOX管理',
     component: () => import('views/obox/index.vue')
+  }, {
+    name: '/nvr/index.html',
+    path: '/nvr/index.html',
+    desc: 'NVR管理',
+    component: () => import('views/nvr/index.vue')
   }
 ]
