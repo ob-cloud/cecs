@@ -51,7 +51,6 @@ export default {
   components: { BaseTable, VideoPlayer },
   created () {
     this.columns = this.getColumns()
-    this.getNvrHisotryList()
   },
   computed: {
     total () {
@@ -62,8 +61,8 @@ export default {
     ])
   },
   mounted () {
-    // Helper.windowOnResize(this, this.fixLayout)
-    this.initWebSocket()
+    Helper.windowOnResize(this, this.fixLayout)
+    // this.initWebSocket()
   },
   methods: {
     fixLayout () {
@@ -111,34 +110,11 @@ export default {
       toolboxs.push(play)
       return toolboxs
     },
-    getNvrHisotryList () {
-      // this.tableLoading = true
-      // // console.log(NVRAPI)
-      // NVRAPI.getNvrHisotryList().then(resp => {
-      //   if (resp.status === 200) {
-      //     this.tableData = resp.data.list
-      //   } else {
-      //     this.$message({
-      //       message: resp.message || '设备获取失败'
-      //     })
-      //   }
-      //   this.tableLoading = false
-      // }).catch(err => {
-      //   this.$message({
-      //     title: '失败',
-      //     message: err.message || '服务出错',
-      //     type: 'error'
-      //   })
-      //   this.tableLoading = false
-      // })
-    },
     onCurrentChange (pageNo) {
       this.search.pageNo = pageNo
-      // this.getNvrHisotryList()
     },
     onSizeChange (pageSize) {
       this.search.pageSize = pageSize
-      // this.getNvrHisotryList()
     },
     playVideo (row) {
       this.videoDialogVisible = true
@@ -176,7 +152,7 @@ export default {
     connection () {
       const that = this
       try {
-        const socket = new SockJS('http://192.168.200.254:8901/queueServer')
+        const socket = new SockJS('https://192.168.200.254/queueServer') // http://192.168.200.254:8901/queueServer
         // var socket = new SockJS(process.env.VUE_APP_BASE_API  + "/consumer/queueServer");
         this.stompClient = Stomp.over(socket)
         this.stompClient.connect(

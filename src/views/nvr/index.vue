@@ -1,7 +1,10 @@
 <template>
-  <div class="device smart">
-    <el-tabs v-model="activeName">
-      <el-tab-pane label="推送" name="push">
+  <div class="smart-container">
+    <el-tabs v-model="activeName" tab-position="left">
+      <el-tab-pane label="NVR配置" name="nvr">
+        <nvr-list :height="tableHeight"></nvr-list>
+      </el-tab-pane>
+      <el-tab-pane label="实时推送" name="push">
         <nvr-intime :height="tableHeight"></nvr-intime>
       </el-tab-pane>
       <el-tab-pane label="历史推送" name="history">
@@ -12,6 +15,7 @@
 </template>
 
 <script>
+import NvrList from './list'
 import NvrIntime from './intime'
 import NvrHistory from './history'
 import Helper from '@/common/helper'
@@ -33,7 +37,7 @@ export default {
       stopVideo: false
     }
   },
-  components: { NvrIntime, NvrHistory },
+  components: { NvrIntime, NvrHistory, NvrList },
   created () {
   },
   computed: {
@@ -46,15 +50,15 @@ export default {
   },
   methods: {
     fixLayout () {
-      this.tableHeight = 500 // Helper.calculateTableHeight() - 50
+      this.tableHeight = Helper.calculateTableHeight() - 50
     }
   }
 }
 </script>
 
 <style lang="scss" scoped>
-.smart{
-  width: 94%;
+.smart-container{
   margin: 12px auto;
+  padding-right: 10px;
 }
 </style>

@@ -3,7 +3,7 @@
  * @Author: eamiear
  * @Date: 2019-08-12 11:21:09
  * @Last Modified by: eamiear
- * @Last Modified time: 2019-08-30 17:06:43
+ * @Last Modified time: 2019-09-17 14:15:34
  */
 
 /**
@@ -758,7 +758,7 @@ class StatusDescriptor {
 
   getSensorsStatusDescriptor(status, deviceType, deviceSubType) {
     // ac sensor
-    if (!deviceSubType || TypeHints$1.isAcSensor(deviceSubType)) return SuitStatus[this.__getStatusKey(deviceType, status.slice(8, 10))]; // cardSenseSensor
+    if (!deviceSubType || TypeHints$1.isAcSensors(deviceSubType)) return SuitStatus[this.__getStatusKey(deviceType, status.slice(8, 10))]; // cardSenseSensor
 
     if (TypeHints$1.isCardSenseSensors(deviceSubType)) return SuitStatus[this.__getStatusKey(deviceType, status.slice(0, 2))];
   }

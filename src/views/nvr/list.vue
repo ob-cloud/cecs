@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="page-container">
     <base-table
       :height="height"
       :tableData="tableData"
@@ -10,12 +10,23 @@
       :pageSize="pageSize"
       @on-current-page-change="onCurrentChange"
       @on-page-size-change="onSizeChange">
+      <slot>
+        <template slot="caption">
+          <el-input @keyup.enter.native="handleSearch" class="caption-item" placeholder="设备名称" v-model="searchModel.name"></el-input>
+          <el-button type="primary" icon="el-icon-search" @click="handleSearch">查询</el-button>
+        </template>
+        <template slot="actionBar">
+          <el-button type="primary" icon="el-icon-plus" @click="handleCreate">添加</el-button>
+        </template>
+      </slot>
     </base-table>
-    <el-dialog v-if="videoDialogVisible" top="10%" width="760px" title="录像回放" :visible.sync="videoDialogVisible" :close-on-click-modal="false" @close="closeVideo">
-      <div style="padding: 8px;">
-        <span>录像时段：</span><span>{{`${videoOptions.szStartTime} - ${videoOptions.szEndTime}`}}</span>
+
+    <el-dialog top="10%" width="760px" title="添加NVR" :visible.sync="createNVRVisible" :close-on-click-modal="false">
+
+      <div slot="footer" class="dialog-footer text-center" >
+        <el-button @click="createNVRVisible = false">取 消</el-button>
+        <el-button type="primary" @click="doCreateAction">确 认</el-button>
       </div>
-      <video-player videoId="historyVideo" :playType="2" :stop="stopVideo" :options="videoOptions"></video-player>
     </el-dialog>
   </div>
 </template>
@@ -24,10 +35,9 @@
 import BaseTable from '@/assets/package/table-base'
 import NVRAPI from '@/api/nvr'
 import { PAGINATION_PAGENO, PAGINATION_PAGESIZE } from '@/common/constants'
-import VideoPlayer from '@/components/HKVideoPlayer.vue'
 import Helper from '@/common/helper'
 export default {
-  name: 'nvr-history',
+  name: 'nvr-list',
   props: {
     height: {
       type: Number,
@@ -41,20 +51,19 @@ export default {
       columns: [],
       pageNo: PAGINATION_PAGENO,
       pageSize: PAGINATION_PAGESIZE,
-      videoOptions: {
-        ip: '',
-        iChannelID: 1,
-        szStartTime: '',
-        szEndTime: ''
+      createNVRVisible: false,
+      nvrModel: {
+
       },
-      videoDialogVisible: false,
-      stopVideo: false
+      searchModel: {
+        name: ''
+      }
     }
   },
-  components: { BaseTable, VideoPlayer },
+  components: { BaseTable },
   created () {
     this.columns = this.getColumns()
-    this.getDeviceList()
+    this.getNvrList()
   },
   computed: {
     total () {
@@ -62,7 +71,7 @@ export default {
     }
   },
   mounted () {
-    Helper.windowOnResize(this, this.fixLayout)
+    // Helper.windowOnResize(this, this.fixLayout)
   },
   methods: {
     fixLayout () {
@@ -107,18 +116,20 @@ export default {
     },
     getToolboxRender (h, row) {
       const toolboxs = []
-      const edit = <el-button size="tiny" icon="el-icon-caret-right" onClick={() => this.playback(row)}></el-button>
+      const edit = <el-button size="tiny" icon="el-icon-edit" onClick={() => this.handleEdit(row)}></el-button>
+      const remove = <el-button size="tiny" icon="el-icon-delete" onClick={() => this.handleDelete(row)}></el-button>
       toolboxs.push(edit)
+      toolboxs.push(remove)
       return toolboxs
     },
-    getDeviceList () {
+    getNvrList () {
       this.tableLoading = true
-      NVRAPI.getNvrHisotryList().then(resp => {
+      NVRAPI.getNvrList().then(resp => {
         if (resp.status === 200) {
           this.tableData = resp.data.list
         } else {
           this.$message({
-            message: resp.message || '设备获取失败'
+            message: resp.message || 'NVR 列表获取失败'
           })
         }
         this.tableLoading = false
@@ -133,11 +144,11 @@ export default {
     },
     onCurrentChange (pageNo) {
       this.pageNo = pageNo
-      this.getDeviceList()
+      this.getNvrList()
     },
     onSizeChange (pageSize) {
       this.pageSize = pageSize
-      this.getDeviceList()
+      this.getNvrList()
     },
     responseHandler (res, msg) {
       let message = `${msg}失败`
@@ -151,18 +162,39 @@ export default {
         message
       })
     },
-    playback (row) {
-      this.videoDialogVisible = true
-      this.stopVideo = false
-      this.videoOptions.ip = row.ip
-      this.videoOptions.iChannelID = row.channel || 1
-      this.videoOptions.szStartTime = Helper.parseTime(row.startTime)
-      this.videoOptions.szEndTime = Helper.parseTime(row.endTime)
-      console.log(row.startTime, row.endTime)
-      console.log('回放时段： ', Helper.parseTime(row.startTime), Helper.parseTime(row.endTime))
+    handleSearch () {
+
     },
-    closeVideo () {
-      this.stopVideo = true
+    handleCreate () {
+      this.createNVRVisible = true
+    },
+    doCreateAction () {
+
+    },
+    handleEdit (nvr) {
+
+    },
+    handleDelete (nvr) {
+      this.$confirm('确认删除NVR记录？', '确认提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning',
+        closeOnClickModal: false
+      }).then(() => {
+        this.doRemoveAction(nvr)
+      }).catch(() => {
+        console.log('取消删除')
+      })
+    },
+    doRemoveAction (nvr) {
+      NVRAPI.remove(nvr.id).then(res => {
+        this.responseHandler(res, 'NVR删除')
+        if (res.message.includes('success')) {
+          this.getDeviceList()
+        }
+      }).catch(() => {
+        this.responseHandler({message: 'error'}, 'NVR删除')
+      })
     }
   }
 }
