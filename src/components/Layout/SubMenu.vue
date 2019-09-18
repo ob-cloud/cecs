@@ -1,7 +1,7 @@
 <template>
   <el-submenu
     v-if="menus.children && menus.children.length > 0"
-    :index="timestamp">
+    :index="menus.path">
     <template slot="title">
       <span slot="title" class="el-menu-item-title">{{menus.name}}</span>
     </template>
@@ -11,7 +11,7 @@
       :menus="item"></sub-menu>
   </el-submenu>
   <el-menu-item
-    :index="timestamp"
+    :index="menus.path"
     v-else-if="(!menus.children || (menus.children && menus.children.length === 0))"
     @click="menuEvent(menus.path, $route)">
     <span slot="title" class="el-menu-item-title">{{menus.name}}</span>
