@@ -66,6 +66,9 @@ export const request = {
     headers['Content-Type'] = 'application/x-www-form-urlencoded;charset=UTF-8'
     params.access_token = Storage.getToken()
     return service(_defaults('post', url, QS.stringify(params), headers))
+  },
+  delete (url, params = {}, headers) {
+    return service(_defaults('delete', url, params, headers))
   }
 }
 export default {

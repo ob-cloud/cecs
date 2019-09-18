@@ -7,12 +7,14 @@
       stripe border
       v-loading="tableLoading"
       :pageTotal="total"
-      :pageSize="pageSize"
+      :pageSize="searchModel.pageSize"
       @on-current-page-change="onCurrentChange"
       @on-page-size-change="onSizeChange">
       <slot>
         <template slot="caption">
-          <el-input @keyup.enter.native="handleSearch" class="caption-item" placeholder="设备名称" v-model="searchModel.name"></el-input>
+          <el-input @keyup.enter.native="handleSearch" class="caption-item" placeholder="NVR名称" v-model="searchModel.name"></el-input>
+          <el-input @keyup.enter.native="handleSearch" class="caption-item" placeholder="IP地址" v-model="searchModel.ip"></el-input>
+          <el-input @keyup.enter.native="handleSearch" class="caption-item" placeholder="序列号" v-model="searchModel.serialId"></el-input>
           <el-button type="primary" icon="el-icon-search" @click="handleSearch">查询</el-button>
         </template>
         <template slot="actionBar">
@@ -21,8 +23,27 @@
       </slot>
     </base-table>
 
-    <el-dialog top="10%" width="760px" title="添加NVR" :visible.sync="createNVRVisible" :close-on-click-modal="false">
-
+    <el-dialog top="10%" width="760px" :title="nvrAction" :visible.sync="createNVRVisible" :close-on-click-modal="false">
+      <el-form ref="nvrForm" :rules="nvrModelRules" :model="nvrModel" label-width="100px">
+        <el-form-item label="名称" prop="name">
+          <el-input class="caption-item w8" placeholder="输入NVR名称" v-model="nvrModel.name"></el-input>
+        </el-form-item>
+        <el-form-item label="IP地址" prop="ip">
+          <el-input class="caption-item w8" placeholder="输入NVR IP地址" v-model="nvrModel.ip"></el-input>
+        </el-form-item>
+        <el-form-item label="端口" prop="port">
+          <el-input class="caption-item w8" placeholder="输入NVR 端口" v-model="nvrModel.port"></el-input>
+        </el-form-item>
+        <el-form-item label="账号" prop="user">
+          <el-input class="caption-item w8" placeholder="输入NVR 登录账号" v-model="nvrModel.user"></el-input>
+        </el-form-item>
+        <el-form-item label="密码" prop="pwd">
+          <el-input class="caption-item w8" placeholder="输入NVR登录密码" v-model="nvrModel.pwd"></el-input>
+        </el-form-item>
+        <el-form-item label="序列号" prop="serialId">
+          <el-input class="caption-item w8" placeholder="输入NVR 序列号" :disabled="nvrAction === '编辑NVR'" v-model="nvrModel.serialId"></el-input>
+        </el-form-item>
+      </el-form>
       <div slot="footer" class="dialog-footer text-center" >
         <el-button @click="createNVRVisible = false">取 消</el-button>
         <el-button type="primary" @click="doCreateAction">确 认</el-button>
@@ -49,15 +70,31 @@ export default {
       tableLoading: true,
       tableData: [],
       columns: [],
-      pageNo: PAGINATION_PAGENO,
-      pageSize: PAGINATION_PAGESIZE,
       createNVRVisible: false,
       nvrModel: {
-
+        name: '',
+        ip: '',
+        port: '',
+        user: '',
+        pwd: '',
+        serialId: ''
       },
       searchModel: {
-        name: ''
-      }
+        name: '',
+        ip: '',
+        serialId: '',
+        pageNo: PAGINATION_PAGENO,
+        pageSize: PAGINATION_PAGESIZE
+      },
+      nvrModelRules: {
+        name: [{ required: true, trigger: 'blur', message: 'nvr名称不能为空'}],
+        ip: [{ required: true, trigger: 'blur', message: 'IP不能为空'}],
+        port: [{ required: true, trigger: 'blur', message: '端口不能为空'}],
+        user: [{ required: true, trigger: 'blur', message: '账号不能为空'}],
+        pwd: [{ required: true, trigger: 'blur', message: '密码不能为空'}],
+        serialId: [{ required: true, trigger: 'blur', message: '序列号不能为空'}],
+      },
+      nvrAction: '添加NVR'
     }
   },
   components: { BaseTable },
@@ -71,7 +108,7 @@ export default {
     }
   },
   mounted () {
-    // Helper.windowOnResize(this, this.fixLayout)
+    Helper.windowOnResize(this, this.fixLayout)
   },
   methods: {
     fixLayout () {
@@ -79,12 +116,12 @@ export default {
     },
     getColumns () {
       return [{
-        label: '通道',
-        prop: 'channel',
+        label: '设备名称',
+        prop: 'name',
         align: 'center'
       }, {
-        label: '设备名称',
-        prop: 'deviceName',
+        label: '序列号',
+        prop: 'serialId',
         align: 'center'
       }, {
         label: 'IP',
@@ -95,19 +132,13 @@ export default {
         prop: 'port',
         align: 'center'
       }, {
-        label: '开始时间',
-        prop: 'startTime',
-        align: 'center',
-        formatter (val) {
-          return val ? Helper.parseTime(val) : ''
-        }
+        label: '账号名',
+        prop: 'user',
+        align: 'center'
       }, {
-        label: '结束时间',
-        prop: 'endTime',
-        align: 'center',
-        formatter (val) {
-          return val ? Helper.parseTime(val) : ''
-        }
+        label: '创建时间',
+        prop: 'createTime',
+        align: 'center'
       }, {
         label: '操作',
         align: 'center',
@@ -143,11 +174,11 @@ export default {
       })
     },
     onCurrentChange (pageNo) {
-      this.pageNo = pageNo
+      this.searchModel.pageNo = pageNo
       this.getNvrList()
     },
     onSizeChange (pageSize) {
-      this.pageSize = pageSize
+      this.searchModel.pageSize = pageSize
       this.getNvrList()
     },
     responseHandler (res, msg) {
@@ -163,16 +194,30 @@ export default {
       })
     },
     handleSearch () {
-
+      this.getNvrList(this.nvrModel.ip, this.nvrModel.name, this.nvrModel.serialId)
     },
     handleCreate () {
       this.createNVRVisible = true
+      this.nvrAction = '添加NVR'
     },
     doCreateAction () {
-
+      this.$refs.nvrForm.validate(valid => {
+        if (valid) {
+          NVRAPI.createNvrRecord(this.nvrModel).then(res => {
+            this.responseHandler(res, '添加NVR')
+            if (res.message.includes('success')) {
+              this.createNVRVisible = false
+              this.getNvrList()
+            }
+          }).catch(err => {
+            this.responseHandler({message: 'error'}, '添加NVR')
+          })
+        }
+      })
     },
     handleEdit (nvr) {
-
+      this.createNVRVisible = true
+      this.nvrAction = '编辑NVR'
     },
     handleDelete (nvr) {
       this.$confirm('确认删除NVR记录？', '确认提示', {
@@ -187,10 +232,10 @@ export default {
       })
     },
     doRemoveAction (nvr) {
-      NVRAPI.remove(nvr.id).then(res => {
+      NVRAPI.removeNvrRecord(nvr.serialId).then(res => {
         this.responseHandler(res, 'NVR删除')
         if (res.message.includes('success')) {
-          this.getDeviceList()
+          this.getNvrList()
         }
       }).catch(() => {
         this.responseHandler({message: 'error'}, 'NVR删除')
@@ -204,5 +249,8 @@ export default {
 .smart{
   width: 94%;
   margin: 12px auto;
+}
+.w8{
+  width: 80%;
 }
 </style>

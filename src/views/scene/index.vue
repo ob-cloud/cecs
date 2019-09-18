@@ -34,12 +34,12 @@
         </template>
       </slot>
     </base-table>
-    <el-dialog top="10%" width="760px" title="添加场景" :visible.sync="createDialogVisible" :close-on-click-modal="false">
-      <scene-create></scene-create>
-      <div slot="footer" class="dialog-footer text-center" >
+    <el-dialog v-if="createDialogVisible" top="10%" width="760px" :title="dialogAction" :visible.sync="createDialogVisible" :close-on-click-modal="false">
+      <scene-create @scene-ready="onSceneReady" :scene="sceneData" @close="createDialogVisible = false"></scene-create>
+      <!-- <div slot="footer" class="dialog-footer text-center" >
         <el-button @click="createDialogVisible = false">取 消</el-button>
         <el-button type="primary" @click="createDialogVisible = false">确 认</el-button>
-      </div>
+      </div> -->
     </el-dialog>
   </div>
 </template>
@@ -47,7 +47,7 @@
 <script>
 import BaseTable from '@/assets/package/table-base'
 import SceneAPI from '@/api/scene'
-import SceneCreate from './create'
+import SceneCreate from './camera/create'
 import { PAGINATION_PAGENO, PAGINATION_PAGESIZE } from '@/common/constants'
 import Helper from '@/common/helper'
 export default {
@@ -63,7 +63,9 @@ export default {
       },
       tableData: [],
       columns: [],
-      createDialogVisible: false
+      createDialogVisible: false,
+      dialogAction: '添加场景',
+      sceneData: null
     }
   },
   components: { BaseTable, SceneCreate },
@@ -219,7 +221,9 @@ export default {
       })
     },
     edit (row) {
-      console.log('edit ', row)
+      this.createDialogVisible = true
+      this.dialogAction = '编辑场景'
+      this.sceneData = row
     },
     handleRemove (row) {
       this.$confirm('确认删除场景？', '确认提示', {
@@ -249,11 +253,24 @@ export default {
     },
     createLocalScene () {
       console.log('本地场景 ')
+      this.dialogAction = '添加场景'
       this.createDialogVisible = true
     },
     createRemoteScene () {
       console.log('云端场景 ')
+      this.dialogAction = '添加场景'
       this.createDialogVisible = true
+    },
+    onSceneReady (scene, dialogVisible) {
+      SceneAPI.setScene(scene).then(res => {
+        this.responseHandler(res, '添加场景')
+        if (res.message.includes('success')) {
+          this.createDialogVisible = false
+          this.getSceneList()
+        }
+      }).catch(err => {
+        this.responseHandler({message: 'error'}, '添加场景')
+      })
     }
   }
 }

@@ -2,7 +2,7 @@
  * @Author: eamiear
  * @Date: 2019-08-07 15:19:34
  * @Last Modified by: eamiear
- * @Last Modified time: 2019-08-15 17:51:25
+ * @Last Modified time: 2019-09-18 11:27:55
  */
 
 import {request} from '@/common/request'
@@ -39,6 +39,12 @@ const SceneAPI = {
       CMD: 'execute_sc',
       scene_status: '03',
       scene_number: sceneNumber
+    })
+  },
+  setScene (scene) {
+    return request.get('/consumer/common', {
+      CMD: 'setting_sc_info',
+      scene
     })
   }
 }

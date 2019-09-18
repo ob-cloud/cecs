@@ -22,7 +22,7 @@ import Helper from '@/common/helper'
 export default {
   data () {
     return {
-      activeName: 'push',
+      activeName: 'nvr',
       tableHeight: 0,
       videoDialogVisible: false,
       videoOptions: {
