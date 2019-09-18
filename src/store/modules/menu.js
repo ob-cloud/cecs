@@ -38,7 +38,7 @@ const menu = {
     generateNavibarMenu ({ commit }) {
       return new Promise(resolve => {
         commit('SET_MENU_NAV_LIST', navMenuList)
-        const defaultMenu = navMenuList.find(menu => menu.default === true) || navMenuList[0]
+        const defaultMenu = navMenuList.find(item => item.default === true) || navMenuList[0]
         commit('UPDATE_MENU_NAV_ACTIVE_NAME', defaultMenu.path)
         store.dispatch('getUserInfo').then(userInfo => {
           resolve(userInfo)
