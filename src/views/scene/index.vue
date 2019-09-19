@@ -255,11 +255,13 @@ export default {
       console.log('本地场景 ')
       this.dialogAction = '添加场景'
       this.createDialogVisible = true
+      this.sceneData = null
     },
     createRemoteScene () {
       console.log('云端场景 ')
       this.dialogAction = '添加场景'
       this.createDialogVisible = true
+      this.sceneData = null
     },
     onSceneReady (scene, dialogVisible) {
       SceneAPI.setScene(scene).then(res => {
