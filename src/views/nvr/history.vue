@@ -43,6 +43,7 @@ export default {
       pageSize: PAGINATION_PAGESIZE,
       videoOptions: {
         ip: '',
+        port: '',
         iChannelID: 1,
         szStartTime: '',
         szEndTime: ''
@@ -80,10 +81,6 @@ export default {
       }, {
         label: 'IP',
         prop: 'ip',
-        align: 'center'
-      }, {
-        label: '端口',
-        prop: 'port',
         align: 'center'
       }, {
         label: '开始时间',
@@ -156,9 +153,10 @@ export default {
       this.stopVideo = false
       this.videoOptions.ip = row.ip
       this.videoOptions.iChannelID = row.channel || 1
+      this.videoOptions.port = row.port
       this.videoOptions.szStartTime = Helper.parseTime(row.startTime)
       this.videoOptions.szEndTime = Helper.parseTime(row.endTime)
-      console.log(row.startTime, row.endTime)
+      console.log(row)
       console.log('回放时段： ', Helper.parseTime(row.startTime), Helper.parseTime(row.endTime))
     },
     closeVideo () {

@@ -5,7 +5,7 @@ const NVRAPI = {
   //   return request.axios.get('http://192.168.200.254:8401/test/getNvrRecode')
   // }
   createNvrRecord (nvr) {
-    return request.post('/consumer/nvr', {
+    return request.postForm('/consumer/nvr', {
       ...nvr
     })
   },

@@ -2,7 +2,7 @@
  * @Author: eamiear
  * @Date: 2018-11-27 11:32:42
  * @Last Modified by: eamiear
- * @Last Modified time: 2019-09-17 14:50:01
+ * @Last Modified time: 2019-09-19 09:40:07
  */
 
 const isProduction = process.env.NODE_ENV === 'production'
@@ -13,16 +13,16 @@ module.exports = {
     proxy: {
       '/oauth': {
         // target: 'https://alicloud.on-bright.com',
-        target: 'https://aliiot.on-bright.com',
-        // target: 'https://192.168.200.254:8401',
+        // target: 'https://aliiot.on-bright.com',
+        target: 'https://192.168.200.254:8401',
         // target: 'http://192.168.200.101',
         ws: true,
         changeOrigin: true
       },
       '/consumer': {
         // target: 'https://alicloud.on-bright.com',
-        target: 'https://aliiot.on-bright.com',
-        // target: 'https://192.168.200.254:8401',
+        // target: 'https://aliiot.on-bright.com',
+        target: 'https://192.168.200.254:8401',
         // target: 'http://192.168.200.101',
         ws: true,
         changeOrigin: true

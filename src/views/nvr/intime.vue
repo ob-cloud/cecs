@@ -62,7 +62,7 @@ export default {
   },
   mounted () {
     Helper.windowOnResize(this, this.fixLayout)
-    // this.initWebSocket()
+    this.initWebSocket()
   },
   methods: {
     fixLayout () {
@@ -77,10 +77,6 @@ export default {
         label: 'IP',
         prop: 'ip',
         minWidth: '100px',
-        align: 'center'
-      }, {
-        label: '端口',
-        prop: 'port',
         align: 'center'
       }, {
         label: '开始时间',

@@ -7,7 +7,7 @@
 <script>
 /* eslint-disable no-undef */
 import cheerio from 'cheerio'
-import Helper from '@/common/helper'
+// import Helper from '@/common/helper'
 export default {
   name: 'VideoPlayer',
   props: {
@@ -61,7 +61,8 @@ export default {
     }
   },
   mounted () {
-    this.initWebVideoCtrl()
+    setTimeout(this.initWebVideoCtrl, 0)
+    // this.initWebVideoCtrl()
   },
   watch: {
     videoId (val) {
@@ -96,7 +97,7 @@ export default {
           type: 'warning',
           closeOnClickModal: false
         }).then(() => {
-          window.open('http://192.168.200.101/codebase/WebComponents.exe')
+          // window.open('http://192.168.200.101/codebase/WebComponents.exe')
         }).catch(() => {
 
         })
@@ -104,13 +105,20 @@ export default {
       this.initVideoWnd()
       WebVideoCtrl.I_InsertOBJECTPlugin('HKVideoPlayer')
       // this.checkPluginVersion()
-      this.login().then(res => {
+      console.log(this.options)
+      const loader = this.$loading({
+        text: 'nvr连接中...'
+      })
+      this.login(this.options.ip, 1, 80, 'admin', 'oooo1111').then(res => {
         console.log('promise login ', res)
+        loader.close()
         if (this.playType === 1) {
           this.startRealPlay(this.options.ip, 1, this.options.iChannelID)
         } else {
           this.startPlayBack(this.options.ip, this.options.iChannelID, this.options.szStartTime, this.options.szEndTime)
         }
+      }).catch(() => {
+        this.$message('NVR登陆失败')
       })
     },
     initVideoWnd () {
@@ -131,7 +139,7 @@ export default {
         return this.$message('检测到新的插件版本，双击开发包目录里的WebComponents.exe升级！')
       }
     },
-    login (ip = '192.168.200.101', mode = 1, port = 80, username = 'admin', password = 'oooo1111') {
+    login (ip, mode = 1, port = 80, username = 'admin', password = 'oooo1111') {
       return new Promise((resolve, reject) => {
         const iRet = WebVideoCtrl.I_Login(ip, mode, port, username, password, {
           async: false,
@@ -140,11 +148,9 @@ export default {
             resolve(0)
           },
           error (e) {
-            console.log('error ', e)
             reject(e)
           }
         })
-        console.log('登录 ', iRet)
         if (iRet === 0) {
           resolve(0)
         } else if (iRet === -1) {
@@ -154,12 +160,11 @@ export default {
         }
       })
     },
-    startRealPlay (ip = '192.168.200.101', iStreamType = 1, iChannelID = 1) {
+    startRealPlay (ip, iStreamType = 1, iChannelID = 1) {
       const oWndInfo = WebVideoCtrl.I_GetWindowStatus(this.g_iWndIndex)
       if (oWndInfo != null) { // 已经在播放了，先停止
         WebVideoCtrl.I_Stop()
       }
-      console.log(Helper.parseTime('2019-07-22T16:46:55.922+08:00'))
       return new Promise((resolve, reject) => {
         const ret = WebVideoCtrl.I_StartRealPlay(ip, {
           iStreamType,
@@ -175,7 +180,11 @@ export default {
         }
       })
     },
-    startPlayBack (szIP = '192.168.200.101', iChannelID = 1, szStartTime, szEndTime) {
+    startPlayBack (szIP, iChannelID = 1, szStartTime, szEndTime) {
+      if (!szIP) {
+        console.log('ip 不能为空')
+        return
+      }
       const oWndInfo = WebVideoCtrl.I_GetWindowStatus(this.g_iWndIndex)
       console.log('playback oWndInfo', oWndInfo)
       if (oWndInfo != null) { // 已经在播放了，先停止
