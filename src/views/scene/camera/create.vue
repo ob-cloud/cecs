@@ -55,7 +55,7 @@
     </el-form>
     <!-- 条件类型弹窗 -->
     <el-dialog v-if="conDialogVisible" width="760px" title="条件类型" :visible.sync="conDialogVisible" :close-on-click-modal="false" append-to-body>
-      <scene-condition :isLcal="true" :deviceList="deviceList" @condition-change="onConditionChange"></scene-condition>
+      <scene-condition :isLcal="true" :deviceList="oboxDeviceList" @condition-change="onConditionChange"></scene-condition>
     </el-dialog>
     <div class="footer">
       <el-button @click="close">取 消</el-button>
@@ -91,6 +91,7 @@ export default {
     }
     return {
       name: '',
+      oboxDeviceList: [],
       deviceList: [],
       deviceIdList: '',
       deviceSelectedList: [],
@@ -120,7 +121,8 @@ export default {
   },
   components: {SceneCondition},
   mounted () {
-    this.getDeviceList().then(this.parseSceneData)
+    this.getDeviceList()
+    this.getCameraList().then(this.parseSceneData)
   },
   watch: {
     deviceIdList (serialIds) {
@@ -133,7 +135,14 @@ export default {
     getDeviceList () {
       return DeviceAPI.getDeviceList({pageNo: this.pageNo, pageSize: this.pageSize}).then(res => {
         if (res.status === 200) {
-          this.deviceList = res.data.config
+          this.oboxDeviceList = res.data.config
+        }
+      })
+    },
+    getCameraList () {
+      return DeviceAPI.getCameraList().then(res => {
+        if (res.status === 200) {
+          this.deviceList = res.data.list
         }
       })
     },
@@ -169,9 +178,9 @@ export default {
       return `${type}${condition.selected.name} ${condition.model.action}`
     },
     parseAction (device) {
-      const type = Suit.getDeviceTypeDescriptor(device.device_type, device.device_child_type)
-      if (this.isGateSensors(device)) {
-        return `${type} 拍照`
+      // const type = Suit.getDeviceTypeDescriptor(device.device_type, device.device_child_type)
+      if (device.channel) {
+        return `拍照`
       }
     },
     getModelCondition () {
@@ -196,12 +205,12 @@ export default {
     getModelAction () {
       return this.deviceSelectedList.map(device => {
         const actions = {
-          action: '9b000000000000',
+          action: device.channel,
           actionName: device.name,
           addr: device.addr,
           device_child_type: device.device_child_type,
           device_type: device.device_type,
-          node_type: '04',
+          node_type: '08',
           channel_number: 1,
           obox_serial_id: device.obox_serial_id,
           serialId: device.serialId

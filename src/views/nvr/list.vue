@@ -122,6 +122,7 @@ export default {
       }, {
         label: '序列号',
         prop: 'serialId',
+        minWitdh: '200px',
         align: 'center'
       }, {
         label: 'IP',
@@ -203,6 +204,7 @@ export default {
     doCreateAction () {
       this.$refs.nvrForm.validate(valid => {
         if (valid) {
+          console.log(this.nvrModel)
           NVRAPI.createNvrRecord(this.nvrModel).then(res => {
             this.responseHandler(res, '添加NVR')
             if (res.message.includes('success')) {
@@ -218,6 +220,7 @@ export default {
     handleEdit (nvr) {
       this.createNVRVisible = true
       this.nvrAction = '编辑NVR'
+      this.nvrModel = {...this.nvrModel, ...nvr}
     },
     handleDelete (nvr) {
       this.$confirm('确认删除NVR记录？', '确认提示', {

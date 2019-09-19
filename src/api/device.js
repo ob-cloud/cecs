@@ -2,7 +2,7 @@
  * @Author: eamiear
  * @Date: 2019-08-05 17:32:41
  * @Last Modified by: eamiear
- * @Last Modified time: 2019-08-29 17:37:44
+ * @Last Modified time: 2019-09-19 16:35:18
  */
 
 import {request} from '@/common/request'
@@ -18,6 +18,11 @@ const DeviceAPI = {
       start_index: page,
       count: pageSize,
       ...params
+    })
+  },
+  getCameraList () {
+    return request.get('/consumer/nvr/device', {
+      start_index: 1
     })
   },
   getOboxList (page = 0, pageSize = 300) {
