@@ -1,19 +1,19 @@
 <template>
   <div class="smart">
-    <el-form ref="form" :model="sceneModel" label-width="100px">
-      <el-form-item label="场景名称">
-        <el-input class="caption-item w8" placeholder="场景名称" v-model="name"></el-input>
+    <el-form ref="sceneForm" :rules="sceneModelRules" :model="sceneModel" label-width="100px">
+      <el-form-item label="场景名称" prop="scene_name">
+        <el-input class="caption-item w8" placeholder="场景名称" v-model="sceneModel.scene_name"></el-input>
       </el-form-item>
-      <el-form-item label="消息推送">
-        <el-radio-group v-model="push">
+      <el-form-item label="消息推送" prop="msg_alter">
+        <el-radio-group v-model="sceneModel.msg_alter">
           <el-radio :label="0">无推送</el-radio>
           <el-radio :label="1">APP推送</el-radio>
           <el-radio :label="2">短信推送</el-radio>
           <el-radio :label="3">APP/短息推送</el-radio>
         </el-radio-group>
       </el-form-item>
-      <el-form-item label="行为设备">
-        <el-select v-model="deviceId" multiple placeholder="请选择设备" class="w8">
+      <el-form-item label="行为设备" prop="deviceIdList">
+        <el-select v-model="deviceIdList" multiple placeholder="请选择设备" class="w8">
           <el-option
             v-for="item in deviceList"
             :key="item.id"
@@ -31,23 +31,37 @@
           <div class="">
             <el-tabs class="condition" v-model="conditionsTab" type="border-card">
               <el-tab-pane label="条件1" name="c1" class="panel">
-                <div class="condition-item clearfix">
+                <div class="condition-item clearfix" v-for="(condition, index) in conditionMapList['c1']" :key="index">
                   <i class="el-icon-date fl"></i>
-                  <i class="el-icon-close fr"></i>
-                  <p>定时条件： 星期三 14:45</p>
+                  <i class="el-icon-close fr" @click="removeCondition(index)"></i>
+                  <p>{{condition.model.type}}: {{parseCondition(condition)}}</p>
                 </div>
                 <el-button class="add-btn" size="mini" type="plain" icon="el-icon-plus" @click="addCondition"></el-button>
               </el-tab-pane>
-              <el-tab-pane label="条件2" name="c2">配置管理</el-tab-pane>
-              <el-tab-pane label="条件3" name="c3">角色管理</el-tab-pane>
+              <el-tab-pane label="条件2" name="c2" class="panel">
+                <div class="condition-item clearfix" v-for="(condition, index) in conditionMapList['c2']" :key="index">
+                  <i class="el-icon-date fl"></i>
+                  <i class="el-icon-close fr" @click="removeCondition(index)"></i>
+                  <p>{{condition.model.type}}: {{parseCondition(condition)}}</p>
+                </div>
+                <el-button class="add-btn" size="mini" type="plain" icon="el-icon-plus" @click="addCondition"></el-button>
+              </el-tab-pane>
+              <el-tab-pane label="条件3" name="c3" class="panel">
+                <div class="condition-item clearfix" v-for="(condition, index) in conditionMapList['c3']" :key="index">
+                  <i class="el-icon-date fl"></i>
+                  <i class="el-icon-close fr" @click="removeCondition(index)"></i>
+                  <p>{{condition.model.type}}: {{parseCondition(condition)}}</p>
+                </div>
+                <el-button class="add-btn" size="mini" type="plain" icon="el-icon-plus" @click="addCondition"></el-button>
+              </el-tab-pane>
             </el-tabs>
             <div class="actions">
               <div class="header">动作</div>
               <div class="content">
-                <div class="condition-item clearfix">
+                <div class="condition-item clearfix" v-for="(device, index) in deviceSelectedList" :key="index">
                   <i class="el-icon-date fl"></i>
                   <i class="el-icon-close fr"></i>
-                  <p>定时条件： 星期三 14:45</p>
+                  <p>{{device.name}}： {{parseAction(device)}}</p>
                 </div>
               </div>
             </div>
@@ -56,47 +70,86 @@
       </el-form-item>
     </el-form>
     <!-- 条件类型弹窗 -->
-    <el-dialog width="760px" title="条件类型" :visible.sync="conDialogVisible" :close-on-click-modal="false" append-to-body>
+    <el-dialog v-if="conDialogVisible" width="800px" top="10%" title="条件类型" :visible.sync="conDialogVisible" :close-on-click-modal="false" append-to-body>
       <scene-condition :isLcal="true" :deviceList="deviceList" @condition-change="onConditionChange"></scene-condition>
-      <div slot="footer" class="dialog-footer text-center" >
-        <el-button @click="conDialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="handleSelectedCondition">确 认</el-button>
-      </div>
     </el-dialog>
+    <div class="footer">
+      <el-button @click="close">取 消</el-button>
+      <el-button type="primary" @click="handleSelectedCondition">确 认</el-button>
+    </div>
   </div>
 </template>
 
 <script>
 import SceneCondition from './condition'
 import DeviceAPI from '@/api/device'
-// const {default: Suit} = require('@/common/suit')
+const {default: Suit} = require('@/common/suit')
 import { PAGINATION_PAGENO } from '@/common/constants'
 export default {
   props: {
     isLocal: {
       type: Boolean,
       default: true
+    },
+    scene: {
+      type: Object,
+      default: () => {}
     }
   },
   data () {
+    const that = this
+    const validateAction = (rule, value, callback) => {
+      if (!that.deviceSelectedList.length) {
+        callback(new Error('请选择行为设备'))
+      } else {
+        callback()
+      }
+    }
     return {
       name: '',
+      oboxDeviceList: [],
       deviceList: [],
-      deviceId: '',
+      deviceIdList: '',
+      deviceSelectedList: [],
       pageNo: PAGINATION_PAGENO,
       pageSize: 300,
       push: 0,
       sceneModel: {
-
+        scene_type: '00',
+        scene_status: '01',
+        scene_number: 0, // 新增 0
+        scene_name: '',
+        scene_group: '00',
+        msg_alter: 0,
+        actions: [], // 摄像头设备行为
+        conditions: [] // 联动设备行为条件
       },
       conditionsTab: 'c1',
       conDialogVisible: false,
-      conditionObject: null
+      conditionObject: null,
+      conditionList: [],
+      conditionMapList: {
+        'c1': [],
+        'c2': [],
+        'c3': []
+      },
+      sceneModelRules: {
+        scene_name: [{ required: true, trigger: 'blur', message: '场景名称不能为空'}],
+        msg_alter: [{ required: true, trigger: 'blur', message: '消息推送不能为空'}],
+        deviceIdList: [{ required: true, trigger: 'blur', validator: validateAction}]
+      }
     }
   },
   components: {SceneCondition},
   mounted () {
     this.getDeviceList()
+  },
+  watch: {
+    deviceIdList (serialIds) {
+      this.deviceSelectedList = serialIds.map(serialId => {
+        return this.deviceList.find(device => serialId === device.serialId)
+      })
+    }
   },
   methods: {
     getDeviceList () {
@@ -109,18 +162,152 @@ export default {
     addCondition () {
       this.conDialogVisible = true
     },
-    onConditionChange (condition) {
+    removeCondition (index) {
+      this.conditionList.splice(index, 1)
+      this.conditionMapList[this.conditionsTab].splice(index, 1)
+    },
+    onConditionChange (condition, dialogVisible) {
       console.log(condition)
-      this.conditionObject = condition
+      if (this.conditionMapList[this.conditionsTab].length >= 3) {
+        this.$message({
+          title: '提示',
+          message: '一组最多三个条件',
+          type: 'info'
+        })
+        return
+      }
+      this.conditionList.push(condition)
+      this.conditionMapList[this.conditionsTab].push(condition)
+      this.conDialogVisible = dialogVisible
     },
     handleSelectedCondition () {
-      if (!this.conditionObject) {
-        return this.$message({
-          type: 'warning',
-          message: '请正确选择条件'
+      const actions = this.getModelAction()
+      const conditions = this.getModelCondition()
+      this.sceneModel.actions = actions
+      this.sceneModel.conditions.push(...conditions)
+      console.log(this.sceneModel, conditions)
+      // this.$refs.sceneForm.validate(valid => {
+      //   if (valid) {
+      //     this.$emit('scene-ready', this.sceneModel, false)
+      //   }
+      // })
+    },
+    close () {
+      this.$emit('close')
+    },
+    isGateSensors (device) {
+      return Suit.typeHints.isGateSensors(device.device_child_type)
+    },
+    parseCondition (condition) {
+      let str = ''
+      if (condition.model.type === '1') {
+        str = `定时 ${condition.model.date ? condition.model.date : condition.model.week} ${condition.model.time}`
+      } else if (condition.model.type === '2') {
+        const type = Suit.getDeviceTypeDescriptor(condition.selected.device_type, condition.selected.device_child_type)
+        str = `${type}${condition.selected.name} ${condition.model.action}`
+      }
+      return str
+    },
+    parseAction (device) {
+      // const type = Suit.getDeviceTypeDescriptor(device.device_type, device.device_child_type)
+      if (device.channel) {
+        return `拍照`
+      }
+    },
+    getModelCondition () {
+      const conditions = Object.keys(this.conditionMapList).map(key => {
+        return this.conditionMapList[key].map(condition => {
+          const device = condition.selected
+          let cons = {
+            condition: '',
+            condition_type: condition.model.conditionType,
+          }
+          if (device) {
+            cons = {
+              ...cons,
+              ...{
+                addr: device.addr,
+                conditionID: device.name,
+                device_child_type: device.device_child_type,
+                device_type: device.device_type,
+                obox_serial_id: device.obox_serial_id,
+                serialId: device.serialId
+              }
+            }
+            if (this.isGateSensors(device)) {
+              cons.condition = '4a01000000000000'
+            }
+          }
+          return cons
+        })
+      })
+      console.log('conditions ', conditions)
+      return conditions
+      // return this.conditionList.map(condition => {
+      //   const device = condition.selected
+      //   let cons = {
+      //     condition: '',
+      //     condition_type: '01',
+      //   }
+      //   if (device) {
+      //     cons = {
+      //       ...cons,
+      //       ...{
+      //         addr: device.addr,
+      //         conditionID: device.name,
+      //         device_child_type: device.device_child_type,
+      //         device_type: device.device_type,
+      //         obox_serial_id: device.obox_serial_id,
+      //         serialId: device.serialId
+      //       }
+      //     }
+      //     if (this.isGateSensors(device)) {
+      //       cons.condition = '4a01000000000000'
+      //     }
+      //   }
+      //   return cons
+      // })
+    },
+    getModelAction () {
+      return this.deviceSelectedList.map(device => {
+        const actions = {
+          action: device.channel,
+          actionName: device.name,
+          addr: device.addr,
+          device_child_type: device.device_child_type,
+          device_type: device.device_type,
+          node_type: '08',
+          channel_number: 1,
+          obox_serial_id: device.obox_serial_id,
+          serialId: device.serialId
+        }
+        // if (this.isGateSensors(device)) {
+        //   actions.action = 'xxxxxxx'
+        // }
+        return actions
+      })
+    },
+    parseSceneData () {
+      if (this.scene) {
+        this.sceneModel = {...this.sceneModel, ...this.scene}
+        this.deviceSelectedList = this.scene.actions
+        this.deviceIdList = this.deviceSelectedList.map(device => device.serialId)
+        const conditionArray = this.scene.conditions && this.scene.conditions.length && this.scene.conditions[0]
+        this.conditionList = conditionArray.map(condition => {
+          return {
+            model: {
+              type: '',
+              action: '',
+              pick: '',
+              name: this.scene.scene_name
+            },
+            selected: {
+              name: condition.conditionID,
+              ...condition
+            }
+          }
         })
       }
-      this.conDialogVisible = false
     }
   },
 }
@@ -170,20 +357,24 @@ export default {
 }
 .condition .panel{
   position: relative;
+  padding: 20px 20px 20px 0;
 }
 .condition .panel .add-btn{
   position: absolute;
-  top: 0;
-  right: 20px;
+  top: 26px;
+  right: 10px;
   padding: 5px;
   font-size: 16px;
 }
 .condition-item{
-  width: 80%;
+  width: 90%;
   border: 1px solid #eee;
   padding: 0 10px;
   font-size: 14px;
   color: #777;
+}
+.condition-item + .condition-item{
+  margin-top: 6px;
 }
 .condition-item i{
   line-height: 40px;
@@ -200,6 +391,10 @@ export default {
 }
 .actions .content{
   padding: 10px 20px;
+}
+.footer{
+  padding: 18px 8px 0;
+  text-align: right;
 }
 </style>
 <style lang="css">

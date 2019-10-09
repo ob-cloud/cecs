@@ -1,7 +1,7 @@
 <template>
   <div class="device smart">
     <el-tabs v-model="activeName">
-      <el-tab-pane label="Obox设备" name="obox">
+      <el-tab-pane label="OBOX设备" name="obox">
         <device-obox :height="tableHeight"></device-obox>
       </el-tab-pane>
       <el-tab-pane label="WIFI设备" name="wifi">

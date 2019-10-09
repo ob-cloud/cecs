@@ -6,14 +6,14 @@
             <el-tab-pane label="日期" name="1">
               <el-date-picker
                 class="picker"
-                v-model="conditionModel.timingDate"
+                v-model="conditionModel.date"
                 type="date"
                 value-format="yyyy-MM-dd"
                 placeholder="选择日期">
               </el-date-picker>
               <el-time-picker
                 class="picker"
-                v-model="conditionModel.timingTime"
+                v-model="conditionModel.time"
                 format="HH:mm"
                 value-format="HH:mm"
                 placeholder="选择时间">
@@ -26,7 +26,7 @@
                 </el-radio-group>
                 <el-time-picker
                   class="picker"
-                  v-model="conditionModel.timingTime"
+                  v-model="conditionModel.time"
                   format="HH:mm"
                   value-format="HH:mm"
                   placeholder="选择时间">
@@ -35,28 +35,53 @@
             </el-tab-pane>
           </el-tabs>
       </el-tab-pane>
-      <el-tab-pane label="联动条件" name="2" class="left h200">
+      <el-tab-pane label="联动条件" name="2" class="left h200 chain-list">
         <div class="chain-device" :class="{active: item.serialId === chainActiveDevice.serialId}" v-for="(item, index) in chainDeviceList" :key="index" @click="onChainDeviceClick(item)">
           <p>{{item.name}}</p>
           <p>{{item.serialId}}</p>
-          <p>{{item.online ? '在线' : '离线'}}</p>
+          <p>{{item.device_type | deviceTypeDescriptFilter(item.device_child_type)}}</p>
+          <p style="text-align: right;">{{item.online ? '在线' : '离线'}}</p>
         </div>
         <div class="chain-device-actions">
           <div class="chain-action__item" v-if="isSocket()">
             <p class="title">面板哪个按钮被按下</p>
             <div class="content">
-              <el-radio v-model="conditionModel.socket" label="1" border>情景按钮1</el-radio>
-              <el-radio v-model="conditionModel.socket" label="2" border>情景按钮2</el-radio>
-              <el-radio v-model="conditionModel.socket" label="3" border>情景按钮3</el-radio>
-              <el-radio v-model="conditionModel.socket" label="4" border>挥手感应</el-radio>
+              <el-radio v-model="conditionModel.pick" label="1" border>情景按钮1</el-radio>
+              <el-radio v-model="conditionModel.pick" label="2" border>情景按钮2</el-radio>
+              <el-radio v-model="conditionModel.pick" label="3" border>情景按钮3</el-radio>
+              <el-radio v-model="conditionModel.pick" label="4" border>挥手感应</el-radio>
             </div>
           </div>
-          <div class="chain-action__item" v-if="isLock()">
+          <div class="chain-action__item" v-else-if="isLock()">
             <p class="title">门锁操作</p>
             <div class="content">
-              <el-button type="plain" class="w140px">用户</el-button>
-              <el-button type="plain" class="w140px">远程授权开锁</el-button>
-              <el-button type="plain" class="w140px">卡开锁</el-button>
+              <el-radio v-model="conditionModel.pick" label="1" border>用户</el-radio>
+              <el-radio v-model="conditionModel.pick" label="2" border>远程授权开锁</el-radio>
+              <el-radio v-model="conditionModel.pick" label="3" border>卡开锁</el-radio>
+            </div>
+          </div>
+          <div class="chain-action__item" v-else-if="isGate()">
+            <p class="title">门窗磁操作</p>
+            <div class="content">
+              <el-radio v-model="conditionModel.pick" label="0" border>关</el-radio>
+              <el-radio v-model="conditionModel.pick" label="1" border>开</el-radio>
+            </div>
+          </div>
+          <div class="chain-action__item" v-else-if="isHumidifier()">
+            <p class="title">
+              <el-radio-group v-model="templureAction">
+                <el-radio-button type="plain" disabled label="0">温度</el-radio-button>
+                <el-radio-button type="plain" disabled label="1">湿度</el-radio-button>
+              </el-radio-group>
+            </p>
+            <div class="content">
+              <el-radio v-model="conditionModel.symbol" :label="item" border v-for="(item, key) in templureCondition" :key="item">{{key}}</el-radio>
+            </div>
+            <div class="content" v-if="templureAction === '0' && conditionModel.symbol && conditionModel.symbol !== 'x'">
+              <el-radio class="templure-value" v-model="conditionModel.templure" :label="item" border v-for="(item, index) in templureValue" :key="index">{{item}}</el-radio>
+            </div>
+            <div class="content" v-if="templureAction === '1' && conditionModel.symbol && conditionModel.symbol !== 'x'">
+              <el-radio class="templure-value" v-model="conditionModel.humidifier" :label="item" border v-for="(item, index) in humidifierValue" :key="index">{{item}}</el-radio>
             </div>
           </div>
         </div>
@@ -65,6 +90,9 @@
 
       </el-tab-pane>
     </el-tabs>
+    <div class="footer">
+      <el-button type="primary" @click="handleSelectedCondition">确 认</el-button>
+    </div>
   </div>
 </template>
 
@@ -88,16 +116,31 @@ export default {
       conditionType: '1',
       conditionTimeType: '1',
       conditionModel: {
-        timingDate: '',
-        timingTime: '',
+        date: '',
+        time: '',
         week: '',
-        socket: '',
-        mainterm: '',
-        subterm: ''
+        pick: '',
+        name: '',
+        type: '联动条件',
+        action: '',
+        symbol: 'x',
+        templure: '',
+        humidifier: '',
+        conditionType: '',
+        condition: ''
       },
       weeks: [{label: '星期一', value: '40'}, {label: '星期二', value: '20'}, {label: '星期三', value: '10'}, {label: '星期四', value: '08'}, {label: '星期五', value: '04'}, {label: '星期六', value: '02'}, {label: '星期日', value: '7f'}, {label: '每日', value: '80'}],
+      templureCondition: {'>': '49', '=': '4a', '>=': '4b', '<': '4c', '<=': '4e', '无': ''},
+      templureValue: [],
+      humidifierValue: [],
+      templureAction: '0',
       chainDeviceList: [],
       chainActiveDevice: ''
+    }
+  },
+  filters: {
+    deviceTypeDescriptFilter (val, deviceSubType) {
+      return Suit.getDeviceTypeDescriptor(val, deviceSubType)
     }
   },
   watch: {
@@ -105,26 +148,20 @@ export default {
       deep: true,
       handler (val) {
         if (this.conditionType === '1') { // 时间
-          let isValid = false
-          const condition = new Array(8).fill('00', 0, 8)
-          condition[1] = '08'
-          if (this.conditionTimeType === '1') { // 日期
-            if (val.timingDate) {
-              const dateList = val.timingDate.split('-')
-              condition[2] = Suit.converter.toHex(dateList[0].slice(2))
-              condition[3] = Suit.converter.toHex(dateList[1])
-              condition[4] = Suit.converter.toHex(dateList[2])
-            }
-          } else if (this.conditionTimeType === '2') { // 星期
-            val.week && (condition[0] = this.weeks.find(item => item.label === val.week).value)
-          }
-          val.timingTime && (condition[5] = Suit.converter.toHex(val.timingTime.split(':')[0]))
-          val.timingTime && (condition[6] = Suit.converter.toHex(val.timingTime.split(':')[1]))
-          isValid = (val.timingDate || val.week) && val.timingTime
-          this.$emit('condition-change', isValid ? {condition: condition.join(''), 'condition-type': '00'} : null)
+
         } else if (this.conditionType === '2') { // 联动
 
         }
+      }
+    },
+    'conditionModel.symbol' (val) {
+      if (!val) {
+        this.templureAction = '1'
+      }
+    },
+    'conditionModel.templure' (val) {
+      if (val) {
+        this.templureAction = '1'
       }
     }
   },
@@ -146,6 +183,16 @@ export default {
       const actionType = +e.target.dataset.type
       // this.conDialogVisible = false
       console.log(actionType)
+    },
+    getTemplureValue () {
+      for (let i = 0; i < 52; i++) {
+        this.templureValue[i] = '' + (-11 + i)
+      }
+    },
+    getHumidifierValue () {
+      for (let i = 0; i < 20; i++) {
+        this.humidifierValue[i] = '' + (i * 5)
+      }
     },
     onConditionTabClick (tab) {
       if (tab.name === '2') {
@@ -170,8 +217,12 @@ export default {
     },
     onChainDeviceClick (device) {
       this.chainActiveDevice = device
-      if (Suit.typeHints.isSocketSwitch(device.device_type)) {
-        console.log()
+      // if (Suit.typeHints.isSocketSwitch(device.device_type)) {
+      //   console.log()
+      // }
+      if (this.isHumidifier()) {
+        this.getTemplureValue()
+        this.getHumidifierValue()
       }
     },
     isSocket () {
@@ -179,6 +230,70 @@ export default {
     },
     isLock () {
       return Suit.typeHints.isDoorLock(this.chainActiveDevice.device_type)
+    },
+    isGate () {
+      return Suit.typeHints.isGateSensors(this.chainActiveDevice.device_child_type)
+    },
+    isHumidifier () {
+      return Suit.typeHints.isHumidifierSensors(this.chainActiveDevice.device_child_type)
+    },
+    getDateTimeCondition () {
+      let isValid = false
+      const condition = new Array(8).fill('00', 0, 8)
+      condition[1] = '08'
+      const val = this.conditionModel
+      if (this.conditionTimeType === '1') { // 日期
+        if (val.date) {
+          const dateList = val.date.split('-')
+          condition[2] = Suit.converter.toHex(dateList[0].slice(2))
+          condition[3] = Suit.converter.toHex(dateList[1])
+          condition[4] = Suit.converter.toHex(dateList[2])
+        }
+      } else if (this.conditionTimeType === '2') { // 星期
+        val.week && (condition[0] = this.weeks.find(item => item.label === val.week).value)
+      }
+      val.time && (condition[5] = Suit.converter.toHex(val.time.split(':')[0]))
+      val.time && (condition[6] = Suit.converter.toHex(val.time.split(':')[1]))
+      isValid = (val.date || val.week) && val.time
+      return isValid && condition.join('')
+    },
+    getDeviceCondition () {
+      if (this.isHumidifier()) {
+        let condition = ''
+        if (this.templureAction === '0') {
+          condition += this.conditionModel.symbol ? this.conditionModel.symbol + Suit.converter.toHex(+this.conditionModel.templure + 30) : '4CFF'
+        } else {
+          condition += this.conditionModel.symbol ? this.conditionModel.symbol + Suit.converter.toHex(+this.conditionModel.humidifier) : '0000'
+        }
+        condition += '000000000000'
+        return condition
+      }
+    },
+    handleSelectedCondition () {
+      if (this.conditionType === '1') {
+        this.conditionModel.type = '1'
+        this.conditionModel.conditionType = '00'
+        this.conditionModel.condition = this.getDateTimeCondition()
+        this.$emit('condition-change', {model: this.conditionModel, selected: null}, false)
+      } else if (this.conditionType === '2') {
+        // if (!(this.chainActiveDevice && this.conditionModel.pick)) {
+        //   return this.$message({
+        //     type: 'warning',
+        //     message: '请正确选择条件'
+        //   })
+        // }
+        if (this.isHumidifier()) {
+          this.conditionModel.condition = this.getDeviceCondition()
+        }
+        this.conditionModel.type = '2'
+        this.conditionModel.conditionType = '01'
+        if (this.isGate()) {
+          this.conditionModel.action = this.conditionModel.pick === '0' ? '当门窗关闭' : '当门窗打开'
+        }
+        this.$emit('condition-change', {model: this.conditionModel, selected: this.chainActiveDevice}, false)
+      } else {
+        console.log(2)
+      }
     }
   },
 }
@@ -244,6 +359,10 @@ export default {
   margin-top: 10px;
   margin-right: 10px;
 }
+.chain-list{
+  // max-height: 570px;
+  // overflow-y: auto;
+}
 .chain-device{
   display: inline-block;
   width: 130px;
@@ -255,6 +374,8 @@ export default {
   margin-top: 10px;
   transition: all .3s;
   cursor: pointer;
+  min-height: 120px;
+  vertical-align: top;
 }
 .chain-device.active,
 .chain-device:hover{
@@ -282,6 +403,18 @@ export default {
 }
 .chain-action__item .content .el-radio{
   margin-right: 15px;
+}
+.chain-action__item .content .templure-value{
+  height: 25px;
+  width: 60px;
+  margin-right: 0;
+  margin-left: 5px;
+  padding: 5px;
+  margin-top: 5px;
+}
+.footer{
+  padding: 18px 8px 0;
+  text-align: right;
 }
 </style>
 <style lang="css">

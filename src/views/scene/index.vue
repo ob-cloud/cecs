@@ -47,7 +47,7 @@
 <script>
 import BaseTable from '@/assets/package/table-base'
 import SceneAPI from '@/api/scene'
-import SceneCreate from './camera/create'
+import SceneCreate from './create'
 import { PAGINATION_PAGENO, PAGINATION_PAGESIZE } from '@/common/constants'
 import Helper from '@/common/helper'
 export default {
@@ -59,7 +59,7 @@ export default {
         scene_number: '',
         scene_name: '',
         pageNo: PAGINATION_PAGENO,
-        pageSize: PAGINATION_PAGESIZE
+        pageSize: 500 || PAGINATION_PAGESIZE
       },
       tableData: [],
       columns: [],
