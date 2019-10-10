@@ -45,7 +45,15 @@
         <div class="chain-device-actions">
           <div class="chain-action__item" v-if="isSocket()">
             <p class="title">面板哪个按钮被按下</p>
-            <div class="content">
+            <div class="content" v-if="isSixScenePanelSocket()">
+              <el-radio v-model="conditionModel.pick" label="1" border>情景按钮1</el-radio>
+              <el-radio v-model="conditionModel.pick" label="2" border>情景按钮2</el-radio>
+              <el-radio v-model="conditionModel.pick" label="3" border>情景按钮3</el-radio>
+              <el-radio v-model="conditionModel.pick" label="4" border>情景按钮4</el-radio>
+              <el-radio v-model="conditionModel.pick" label="5" border>情景按钮5</el-radio>
+              <el-radio v-model="conditionModel.pick" label="6" border>情景按钮6</el-radio>
+            </div>
+            <div class="content" v-else>
               <el-radio v-model="conditionModel.pick" label="1" border>情景按钮1</el-radio>
               <el-radio v-model="conditionModel.pick" label="2" border>情景按钮2</el-radio>
               <el-radio v-model="conditionModel.pick" label="3" border>情景按钮3</el-radio>
@@ -75,12 +83,12 @@
               </el-radio-group>
             </p>
             <div class="content">
-              <el-radio v-model="conditionModel.symbol" :label="item" border v-for="(item, key) in templureCondition" :key="item">{{key}}</el-radio>
+              <el-radio v-model="conditionModel.symbol" :label="key" border v-for="(item, key) in templureCondition" :key="item">{{key}}</el-radio>
             </div>
-            <div class="content" v-if="templureAction === '0' && conditionModel.symbol && conditionModel.symbol !== 'x'">
+            <div class="content" v-if="templureAction === '0' && conditionModel.symbol && conditionModel.symbol !== '无'">
               <el-radio class="templure-value" v-model="conditionModel.templure" :label="item" border v-for="(item, index) in templureValue" :key="index">{{item}}</el-radio>
             </div>
-            <div class="content" v-if="templureAction === '1' && conditionModel.symbol && conditionModel.symbol !== 'x'">
+            <div class="content" v-if="templureAction === '1' && conditionModel.symbol && conditionModel.symbol !== '无'">
               <el-radio class="templure-value" v-model="conditionModel.humidifier" :label="item" border v-for="(item, index) in humidifierValue" :key="index">{{item}}</el-radio>
             </div>
           </div>
@@ -123,7 +131,7 @@ export default {
         name: '',
         type: '联动条件',
         action: '',
-        symbol: 'x',
+        symbol: null,
         templure: '',
         humidifier: '',
         conditionType: '',
@@ -134,6 +142,7 @@ export default {
       templureValue: [],
       humidifierValue: [],
       templureAction: '0',
+      tempHumCondition: [],
       chainDeviceList: [],
       chainActiveDevice: ''
     }
@@ -155,19 +164,41 @@ export default {
       }
     },
     'conditionModel.symbol' (val) {
-      if (!val) {
-        this.templureAction = '1'
+      if (this.templureAction === '0') {
+        if (this.templureCondition[val]) {
+          this.tempHumCondition[0] = this.templureCondition[val]
+        } else {
+          this.tempHumCondition[0] = '4C'
+          this.tempHumCondition[1] = 'FF'
+          this.templureAction = '1'
+        }
+      } else if (this.templureAction === '1'){
+        if (this.templureCondition[val]) {
+          this.tempHumCondition[2] = this.templureCondition[val]
+        } else {
+          this.tempHumCondition[2] = '00'
+          this.tempHumCondition[3] = '00'
+        }
       }
+      this.tempHumCondition[4] = '000000000000'
     },
     'conditionModel.templure' (val) {
       if (val) {
+        this.tempHumCondition[1] = Suit.converter.toHex(+val + 30, 10)
         this.templureAction = '1'
+        this.conditionModel.symbol = null
+      }
+    },
+    'conditionModel.humidifier' (val) {
+      if (val) {
+        this.tempHumCondition[3] = Suit.converter.toHex(val, 10)
       }
     }
   },
   methods: {
     getChainDeviceList () {
       if (this.chainDeviceList.length) return
+      console.log('--++ ', this.deviceList)
       const chainList = this.deviceList.filter(item => {
         return this.isChainType(item.device_type, item.device_child_type, this.isLocal)
       })
@@ -217,9 +248,6 @@ export default {
     },
     onChainDeviceClick (device) {
       this.chainActiveDevice = device
-      // if (Suit.typeHints.isSocketSwitch(device.device_type)) {
-      //   console.log()
-      // }
       if (this.isHumidifier()) {
         this.getTemplureValue()
         this.getHumidifierValue()
@@ -237,6 +265,11 @@ export default {
     isHumidifier () {
       return Suit.typeHints.isHumidifierSensors(this.chainActiveDevice.device_child_type)
     },
+    isSixScenePanelSocket () {
+      const type = `${Suit.converter.toDecimal(this.chainActiveDevice.device_type, 16)}${Suit.converter.toDecimal(this.chainActiveDevice.device_child_type, 16)}`
+      console.log('++++    ', type, this.chainActiveDevice)
+      return type === '0436'
+    },
     getDateTimeCondition () {
       let isValid = false
       const condition = new Array(8).fill('00', 0, 8)
@@ -245,27 +278,32 @@ export default {
       if (this.conditionTimeType === '1') { // 日期
         if (val.date) {
           const dateList = val.date.split('-')
-          condition[2] = Suit.converter.toHex(dateList[0].slice(2))
-          condition[3] = Suit.converter.toHex(dateList[1])
-          condition[4] = Suit.converter.toHex(dateList[2])
+          condition[2] = Suit.converter.toHex(dateList[0].slice(2), 10)
+          condition[3] = Suit.converter.toHex(dateList[1], 10)
+          condition[4] = Suit.converter.toHex(dateList[2], 10)
         }
       } else if (this.conditionTimeType === '2') { // 星期
         val.week && (condition[0] = this.weeks.find(item => item.label === val.week).value)
       }
-      val.time && (condition[5] = Suit.converter.toHex(val.time.split(':')[0]))
-      val.time && (condition[6] = Suit.converter.toHex(val.time.split(':')[1]))
+      val.time && (condition[5] = Suit.converter.toHex(val.time.split(':')[0], 10))
+      val.time && (condition[6] = Suit.converter.toHex(val.time.split(':')[1], 10))
       isValid = (val.date || val.week) && val.time
       return isValid && condition.join('')
     },
     getDeviceCondition () {
-      if (this.isHumidifier()) {
-        let condition = ''
-        if (this.templureAction === '0') {
-          condition += this.conditionModel.symbol ? this.conditionModel.symbol + Suit.converter.toHex(+this.conditionModel.templure + 30) : '4CFF'
-        } else {
-          condition += this.conditionModel.symbol ? this.conditionModel.symbol + Suit.converter.toHex(+this.conditionModel.humidifier) : '0000'
-        }
-        condition += '000000000000'
+      let condition = ''
+      if (this.isSocket()) {
+        const conditionPrefix = {
+          0: '4a01',
+          1: '4a02',
+          2: '4a04',
+          3: '4a08',
+          4: '4a10',
+          5: '4a20',
+          6: '4a40',
+          7: '4a80'
+        }[this.conditionModel.pick]
+        condition += conditionPrefix + '00000000'
         return condition
       }
     },
@@ -283,13 +321,16 @@ export default {
         //   })
         // }
         if (this.isHumidifier()) {
+          this.conditionModel.condition = this.tempHumCondition.join('')
+        }
+        if (this.isSocket()) {
           this.conditionModel.condition = this.getDeviceCondition()
         }
-        this.conditionModel.type = '2'
-        this.conditionModel.conditionType = '01'
         if (this.isGate()) {
           this.conditionModel.action = this.conditionModel.pick === '0' ? '当门窗关闭' : '当门窗打开'
         }
+        this.conditionModel.type = '2'
+        this.conditionModel.conditionType = '01'
         this.$emit('condition-change', {model: this.conditionModel, selected: this.chainActiveDevice}, false)
       } else {
         console.log(2)
@@ -402,15 +443,19 @@ export default {
   padding: 10px;
 }
 .chain-action__item .content .el-radio{
-  margin-right: 15px;
+  margin-right: 10px;
+  margin-top: 5px;
+}
+.el-radio.is-bordered + .el-radio.is-bordered{
+  margin-left: 0;
 }
 .chain-action__item .content .templure-value{
   height: 25px;
   width: 60px;
-  margin-right: 0;
-  margin-left: 5px;
+  // margin-right: 0;
+  // margin-left: 5px;
   padding: 5px;
-  margin-top: 5px;
+  // margin-top: 5px;
 }
 .footer{
   padding: 18px 8px 0;

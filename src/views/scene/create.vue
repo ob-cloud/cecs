@@ -15,7 +15,7 @@
       <el-form-item label="行为设备" prop="deviceIdList">
         <el-select v-model="deviceIdList" multiple placeholder="请选择设备" class="w8">
           <el-option
-            v-for="item in deviceList"
+            v-for="item in deviceActionList"
             :key="item.id"
             :label="item.name"
             :value="item.serialId">
@@ -70,7 +70,7 @@
       </el-form-item>
     </el-form>
     <!-- 条件类型弹窗 -->
-    <el-dialog v-if="conDialogVisible" width="800px" top="10%" title="条件类型" :visible.sync="conDialogVisible" :close-on-click-modal="false" append-to-body>
+    <el-dialog v-if="conDialogVisible" width="950px" top="10%" title="条件类型" :visible.sync="conDialogVisible" :close-on-click-modal="false" append-to-body>
       <scene-condition :isLcal="true" :deviceList="deviceList" @condition-change="onConditionChange"></scene-condition>
     </el-dialog>
     <div class="footer">
@@ -107,7 +107,7 @@ export default {
     }
     return {
       name: '',
-      oboxDeviceList: [],
+      deviceActionList: [],
       deviceList: [],
       deviceIdList: '',
       deviceSelectedList: [],
@@ -152,10 +152,25 @@ export default {
     }
   },
   methods: {
+    isActionDevice (deviceType, deviceSubType, isLocal) {
+      return !Suit.typeHints.isSensors(deviceType)
+        && !Suit.typeHints.isFinger(deviceType)
+        && !Suit.typeHints.isDoorLock(deviceType)
+        && !Suit.typeHints.isCamera(deviceType)
+        && !(Suit.typeHints.isSocketSwitch(deviceType) && Suit.typeHints.isSceneSocketSwitch(deviceSubType))
+        && !(Suit.typeHints.isSocketSwitch(deviceType) && Suit.typeHints.isMixSocketSwitch(deviceSubType))
+    },
+    getActionDeviceList (deviceList) {
+      const actionList = deviceList.filter(item => {
+        return this.isActionDevice(item.device_type, item.device_child_type)
+      })
+      this.deviceActionList = actionList
+    },
     getDeviceList () {
       DeviceAPI.getDeviceList({pageNo: this.pageNo, pageSize: this.pageSize}).then(res => {
         if (res.status === 200) {
           this.deviceList = res.data.config
+          this.getActionDeviceList(this.deviceList)
         }
       })
     },
@@ -219,7 +234,7 @@ export default {
         return this.conditionMapList[key].map(condition => {
           const device = condition.selected
           let cons = {
-            condition: '',
+            condition: condition.model.condition,
             condition_type: condition.model.conditionType,
           }
           if (device) {
