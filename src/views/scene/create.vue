@@ -12,7 +12,7 @@
           <el-radio :label="3">APP/短息推送</el-radio>
         </el-radio-group>
       </el-form-item>
-      <el-form-item label="行为设备" prop="deviceIdList">
+      <!-- <el-form-item label="行为设备" prop="deviceIdList">
         <el-select v-model="deviceIdList" multiple placeholder="请选择设备" class="w8">
           <el-option
             v-for="item in deviceActionList"
@@ -21,7 +21,7 @@
             :value="item.serialId">
           </el-option>
         </el-select>
-      </el-form-item>
+      </el-form-item> -->
       <el-form-item label="设备条件">
         <el-card class="box-card w8">
           <div slot="header" class="clearfix">
@@ -55,7 +55,7 @@
                 <el-button class="add-btn" size="mini" type="plain" icon="el-icon-plus" @click="addCondition"></el-button>
               </el-tab-pane>
             </el-tabs>
-            <div class="actions">
+            <!-- <div class="actions">
               <div class="header">动作</div>
               <div class="content">
                 <div class="condition-item clearfix" v-for="(device, index) in deviceSelectedList" :key="index">
@@ -64,9 +64,29 @@
                   <p>{{device.name}}： {{parseAction(device)}}</p>
                 </div>
               </div>
-            </div>
+            </div> -->
           </div>
         </el-card>
+      </el-form-item>
+      <el-form-item label="设备行为">
+        <div class="action-content">
+          <div class="condition-item clearfix">
+            <i class="el-icon-close fr"></i>
+            <div class="action-item">
+              <el-input-number v-model="deviceAction.second" controls-position="right" :min="0"></el-input-number>
+              <el-select placeholder="请选择栋" v-model="deviceAction.building">
+                <el-option v-for="item in ['1', '12', '2', '3', '4']" :key="item" :label="item + '栋'" :value="item"></el-option>
+              </el-select>
+              <el-select placeholder="请选择层" v-model="deviceAction.floor">
+                <el-option v-for="item in ['1', '2', '2', '3', '4']" :key="item" :label="item + '层'" :value="item"></el-option>
+              </el-select>
+              <el-select placeholder="请选择设备类型" v-model="deviceAction.type">
+                <el-option v-for="(item, index) in ['开关', '红外']" :key="index" :label="item" :value="item"></el-option>
+              </el-select>
+            </div>
+          </div>
+          <el-button class="add-btn" size="mini" type="plain" icon="el-icon-plus"></el-button>
+        </div>
       </el-form-item>
     </el-form>
     <!-- 条件类型弹窗 -->
@@ -97,14 +117,14 @@ export default {
     }
   },
   data () {
-    const that = this
-    const validateAction = (rule, value, callback) => {
-      if (!that.deviceSelectedList.length) {
-        callback(new Error('请选择行为设备'))
-      } else {
-        callback()
-      }
-    }
+    // const that = this
+    // const validateAction = (rule, value, callback) => {
+    //   if (!that.deviceSelectedList.length) {
+    //     callback(new Error('请选择行为设备'))
+    //   } else {
+    //     callback()
+    //   }
+    // }
     return {
       name: '',
       deviceActionList: [],
@@ -124,6 +144,13 @@ export default {
         actions: [], // 摄像头设备行为
         conditions: [] // 联动设备行为条件
       },
+      deviceAction: {
+        second: 0,
+        building: '',
+        floor: '',
+        type: '',
+        action: ''
+      },
       conditionsTab: 'c1',
       conDialogVisible: false,
       conditionObject: null,
@@ -136,7 +163,7 @@ export default {
       sceneModelRules: {
         scene_name: [{ required: true, trigger: 'blur', message: '场景名称不能为空'}],
         msg_alter: [{ required: true, trigger: 'blur', message: '消息推送不能为空'}],
-        deviceIdList: [{ required: true, trigger: 'blur', validator: validateAction}]
+        // deviceIdList: [{ required: true, trigger: 'blur', validator: validateAction}]
       }
     }
   },
@@ -258,30 +285,6 @@ export default {
       })
       console.log('conditions ', conditions)
       return conditions
-      // return this.conditionList.map(condition => {
-      //   const device = condition.selected
-      //   let cons = {
-      //     condition: '',
-      //     condition_type: '01',
-      //   }
-      //   if (device) {
-      //     cons = {
-      //       ...cons,
-      //       ...{
-      //         addr: device.addr,
-      //         conditionID: device.name,
-      //         device_child_type: device.device_child_type,
-      //         device_type: device.device_type,
-      //         obox_serial_id: device.obox_serial_id,
-      //         serialId: device.serialId
-      //       }
-      //     }
-      //     if (this.isGateSensors(device)) {
-      //       cons.condition = '4a01000000000000'
-      //     }
-      //   }
-      //   return cons
-      // })
     },
     getModelAction () {
       return this.deviceSelectedList.map(device => {
@@ -381,6 +384,30 @@ export default {
   padding: 5px;
   font-size: 16px;
 }
+.action-content{
+  position: relative;
+}
+.action-content .add-btn{
+  position: absolute;
+  top: 10px;
+  right: -10px;
+  padding: 5px;
+}
+.action-content .condition-item{
+  width: 96%;
+  padding: 5px;
+  // margin: 0 auto;
+}
+.condition-item .action-item > div{
+  width: 110px;
+  margin-right: 5px;
+}
+.condition-item .action-item > div:first-of-type{
+  width: 70px;
+}
+.condition-item .action-item > div:last-of-type{
+  width: 150px;
+}
 .condition-item{
   width: 90%;
   border: 1px solid #eee;
@@ -388,6 +415,7 @@ export default {
   font-size: 14px;
   color: #777;
 }
+
 .condition-item + .condition-item{
   margin-top: 6px;
 }
@@ -432,8 +460,14 @@ export default {
   width: 80px;
   border-radius: 4px;
 }
-
 .timing .el-radio-button__orig-radio:checked + .el-radio-button__inner{
   border-left-color: #409EFF;
+}
+.action-content .el-input-number__increase, .action-content .el-input-number__decrease{
+  width: 30px;
+}
+.action-content .el-input-number.is-controls-right .el-input__inner{
+  padding-left: 2px;
+  padding-right: 30px;
 }
 </style>

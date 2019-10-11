@@ -172,7 +172,7 @@ export default {
           this.tempHumCondition[1] = 'FF'
           this.templureAction = '1'
         }
-      } else if (this.templureAction === '1'){
+      } else if (this.templureAction === '1') {
         if (this.templureCondition[val]) {
           this.tempHumCondition[2] = this.templureCondition[val]
         } else {

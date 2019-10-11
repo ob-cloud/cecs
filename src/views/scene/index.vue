@@ -22,15 +22,7 @@
           <el-button type="primary" icon="el-icon-search" @click="handleSearch">查询</el-button>
         </template>
         <template slot="actionBar">
-          <el-dropdown trigger="click" @command="handleSceneCommand">
-            <el-button type="primary">
-              创建<i class="el-icon-arrow-down el-icon--right"></i>
-            </el-button>
-            <el-dropdown-menu slot="dropdown">
-              <el-dropdown-item command="local">本地场景</el-dropdown-item>
-              <el-dropdown-item command="remote">云端场景</el-dropdown-item>
-            </el-dropdown-menu>
-          </el-dropdown>
+          <el-button type="primary" @click="createRemoteScene">创建场景</el-button>
         </template>
       </slot>
     </base-table>
@@ -247,18 +239,7 @@ export default {
         this.responseHandler({message: 'error'}, '场景删除')
       })
     },
-    handleSceneCommand (command) {
-      command === 'local' && this.createLocalScene()
-      command === 'remote' && this.createRemoteScene()
-    },
-    createLocalScene () {
-      console.log('本地场景 ')
-      this.dialogAction = '添加场景'
-      this.createDialogVisible = true
-      this.sceneData = null
-    },
     createRemoteScene () {
-      console.log('云端场景 ')
       this.dialogAction = '添加场景'
       this.createDialogVisible = true
       this.sceneData = null

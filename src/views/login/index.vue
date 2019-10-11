@@ -20,7 +20,6 @@
       </el-form>
       <div class="ura-login-footer">
         <el-button class="btn" type="primary" :loading="loading" @click.native.prevent="handleLogin">登录</el-button>
-        <div class="ura-login-way">验证码登录</div>
       </div>
     </div>
 
