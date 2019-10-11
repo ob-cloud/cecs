@@ -59,7 +59,7 @@ export default {
         scene_number: '',
         scene_name: '',
         pageNo: PAGINATION_PAGENO,
-        pageSize: 500 || PAGINATION_PAGESIZE
+        pageSize: PAGINATION_PAGESIZE
       },
       tableData: [],
       columns: [],

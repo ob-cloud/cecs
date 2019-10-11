@@ -2,7 +2,7 @@
  * @Author: eamiear
  * @Date: 2019-02-06 21:24:22
  * @Last Modified by: eamiear
- * @Last Modified time: 2019-09-12 11:14:47
+ * @Last Modified time: 2019-10-11 09:50:17
  */
 
 export default [
@@ -31,5 +31,10 @@ export default [
     path: '/nvr/index.html',
     desc: 'NVR管理',
     component: () => import('views/nvr/index.vue')
+  }, {
+    name: '/system/logs.html',
+    path: '/system/logs.html',
+    desc: '日志管理',
+    component: () => import('views/system/logs.vue')
   }
 ]

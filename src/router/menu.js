@@ -16,9 +16,15 @@ export const navMenuList = [
     id: 4,
     name: 'OBOX管理',
     path: '/obox/index.html'
-  }, {
+  },
+  // {
+  //   id: 5,
+  //   name: 'NVR管理',
+  //   path: '/nvr/index.html'
+  // },
+  {
     id: 5,
-    name: 'NVR管理',
-    path: '/nvr/index.html'
+    name: '日志管理',
+    path: '/system/logs.html'
   }
 ]

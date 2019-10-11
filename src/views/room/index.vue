@@ -19,6 +19,25 @@
           <el-button type="primary" icon="el-icon-search" @click="handleSearch">查询</el-button>
         </template>
         <template slot="actionBar">
+          <div class="switcher" v-if="switchGate">
+            <el-switch
+              class="switch"
+              v-model="panelSwitch"
+              active-color="#409EFF"
+              inactive-color="#C0CCDA"
+              active-text=""
+              inactive-text="面板">
+            </el-switch>
+            <el-switch
+              class="switch"
+              v-model="AcSwitch"
+              active-color="#409EFF"
+              inactive-color="#C0CCDA"
+              active-text=""
+              inactive-text="红外">
+            </el-switch>
+          </div>
+          <el-button type="plain" @click="handleSwitchGate">{{switchGate ? '收起' : '开关总闸'}}</el-button>
           <el-button type="primary" icon="el-icon-plus" @click="handleCreate">创建</el-button>
         </template>
       </slot>
@@ -92,7 +111,10 @@ export default {
         building: [{ required: true, message: '楼栋不可为空', trigger: 'blur' }],
         layer: [{ required: true, message: '楼层名称不可为空', trigger: 'blur' }],
         room: [{ required: true, message: '房间名称不可为空', trigger: 'blur' }]
-      }
+      },
+      switchGate: 0,
+      panelSwitch: 0,
+      AcSwitch: 0
     }
   },
   components: { BaseTable, RoomDevice, RoomScene },
@@ -186,6 +208,9 @@ export default {
         building: '',
         layer: ''
       }
+    },
+    handleSwitchGate () {
+      this.switchGate = !this.switchGate
     },
     handleCreate () {
       this.dialogStatus = 'create'
@@ -286,5 +311,19 @@ export default {
 .smart{
   width: 94%;
   margin: 12px auto;
+}
+.switcher{
+  display: inline-block;
+  margin-right: 5px;
+  border: 1px solid #ccc;
+  background: #fff;
+  border-radius: 4px;
+  padding-left: 5px;
+  .switch{
+    margin-right: 5px;
+  }
+  .switch + .switch{
+    margin-left: 10px;
+  }
 }
 </style>
