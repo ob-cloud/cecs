@@ -34,12 +34,12 @@
       <el-form class="ob-form" ref="creation" autoComplete="on" :rules="creationRules" :model="roomModel" label-position="left" label-width="80px">
         <el-form-item label="楼栋名称" prop="building">
           <el-select placeholder="请选择楼栋" v-model="roomModel.building">
-            <el-option v-for="item in ['1', '12', '2', '3', '4']" :key="item" :label="item + '栋'" :value="item"></el-option>
+            <el-option v-for="item in buildingList" :key="item" :label="item + '栋'" :value="item"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="楼层名称" prop="layer">
           <el-select placeholder="请选择楼层" v-model="roomModel.layer">
-            <el-option v-for="item in ['1', '2', '22', '3', '4']" :key="item" :label="item + '层'" :value="item"></el-option>
+            <el-option v-for="item in layerList" :key="item" :label="item + '层'" :value="item"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="房间名称" prop="room">
@@ -70,6 +70,8 @@ export default {
     return {
       loading: true,
       roomList: [],
+      buildingList: [],
+      layerList: [],
       search: {
         building: '',
         layer: '',
@@ -103,6 +105,8 @@ export default {
   components: { RoomDevice, RoomScene },
   created () {
     this.getRoomList()
+    this.getBuildingList()
+    this.getLayerList()
   },
   watch: {
     createDialogVisible (val) {
@@ -112,6 +116,12 @@ export default {
     }
   },
   methods: {
+    getBuildingList () {
+      this.buildingList = ['1', '12', '2', '3', '4']
+    },
+    getLayerList () {
+      this.layerList = ['1', '2', '22', '3', '4']
+    },
     getRoomList () {
       this.loading = true
       RoomAPI.getRoomList(this.search).then(resp => {
