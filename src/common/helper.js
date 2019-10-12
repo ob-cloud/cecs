@@ -2,7 +2,7 @@
  * @Author: eamiear
  * @Date: 2019-02-19 10:38:33
  * @Last Modified by: eamiear
- * @Last Modified time: 2019-08-16 16:03:04
+ * @Last Modified time: 2019-10-12 17:04:40
  */
 
 const _toString = Object.prototype.toString
@@ -76,7 +76,8 @@ export const Helper = {
   calculateTableHeight () {
     const winH = document.body.clientHeight
     const navH = 50
-    const searchBarH = document.querySelector('.el-table-plus__header').clientHeight
+    const tableHeader = document.querySelector('.el-table-plus__header')
+    const searchBarH = (tableHeader && tableHeader.clientHeight) || 0
     const paginationH = 60
     return winH - navH - searchBarH - paginationH - 50
   },

@@ -21,7 +21,7 @@
           <i class="icon el-icon-delete" title="删除" @click="handleRemove(item)"></i>
         </div>
         <div class="content">
-          <i class="building-sign obicon obicon-building"></i>
+          <i class="building-sign obicon obicon-building-o"></i>
           <p class="text">BA-01 {{item}}</p>
         </div>
       </div>
