@@ -10,6 +10,7 @@
               <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown">
                 <img v-if="avatar" :src="avatar" class="user-image" alt="User Image">
                 <span class="hidden-xs">{{name}}</span>
+                <i class="el-icon-arrow-down el-icon--right"></i>
               </a>
             </div>
           </el-button>

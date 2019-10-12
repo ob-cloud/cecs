@@ -78,7 +78,7 @@
                 <el-option v-for="item in ['1', '12', '2', '3', '4']" :key="item" :label="item + '栋'" :value="item"></el-option>
               </el-select>
               <el-select placeholder="请选择层" v-model="deviceAction.floor">
-                <el-option v-for="item in ['1', '2', '2', '3', '4']" :key="item" :label="item + '层'" :value="item"></el-option>
+                <el-option v-for="item in ['1', '2', '22', '3', '4']" :key="item" :label="item + '层'" :value="item"></el-option>
               </el-select>
               <el-select placeholder="请选择设备类型" v-model="deviceAction.type">
                 <el-option v-for="(item, index) in ['开关', '红外']" :key="index" :label="item" :value="item"></el-option>
