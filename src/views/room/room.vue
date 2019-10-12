@@ -25,7 +25,7 @@
           <i class="icon el-icon-delete" title="删除" @click="handleRemove(item)"></i>
         </div>
         <div class="content">
-          <i class="building-sign obicon obicon-classroom"></i>
+          <i class="building-sign obicon obicon-classroom" :class="{'is-active': index === 2}"></i>
           <p class="text">{{item.building}}栋{{item.layer}}层{{item.room}}房</p>
         </div>
       </div>
@@ -303,7 +303,7 @@ export default {
     padding: 5px;
 
     &.is-active{
-      color: #afaf1e;
+      color: #d8d815;
     }
   }
   .text{
