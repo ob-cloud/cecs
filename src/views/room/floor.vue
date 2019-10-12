@@ -21,11 +21,22 @@
           <i class="icon el-icon-delete" title="删除" @click="handleRemove(item)"></i>
         </div>
         <div class="content">
-          <i class="building-sign obicon obicon-building"></i>
-          <p class="text">BA-01 {{item}}</p>
+          <i class="building-sign obicon obicon-building" :class="{'is-active': item === 2}"></i>
+          <p class="text">{{item}}楼层</p>
         </div>
       </div>
     </div>
+    <el-dialog  v-if="createDialogVisible" top="10%" width="660px" :title="dialogTitleMap[dialogStatus]" :visible.sync="createDialogVisible" :close-on-click-modal="false">
+      <el-form class="ob-form" ref="creation" autoComplete="on" :rules="creationRules" :model="createModel" label-position="left" label-width="80px">
+        <el-form-item label="楼层名称" prop="layer">
+          <el-input v-model="createModel.layer" placeholder="请输入楼层"></el-input>
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="createDialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="checkCreate(dialogStatus)">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -33,39 +44,101 @@
 export default {
   data () {
     return {
-      loading: true
+      loading: true,
+      layerList: [],
+      createDialogVisible: false,
+      dialogStatus: '',
+      dialogTitleMap: {
+        edit: '编辑楼层',
+        create: '创建楼层'
+      },
+      createModel: {
+        layer: ''
+      },
+      creationRules: {
+        layer: [{ required: true, message: '楼层不可为空', trigger: 'blur' }]
+      }
     }
   },
   created () {
-    this.getBuildingList()
+    this.getLayerList()
   },
   methods: {
-    getBuildingList () {
+    getLayerList () {
       this.loading = true
       setTimeout(() => {
         this.loading = false
+        this.layerList = 20
       }, 3000)
     },
     handleRefresh () {
-      this.getBuildingList()
+      this.getLayerList()
     },
     handleCreate () {
-
+      this.dialogStatus = 'create'
+      this.createDialogVisible = true
+    },
+    checkCreate () {
+      this.$refs.creation.validate(valid => {
+        if (valid) {
+          // TODO
+          // type === 'create' ? this.createAction() : this.editAction()
+          this.createDialogVisible = false
+        }
+      })
     },
     handleSearch () {
-
+      this.getLayerList()
     },
     handleMainSwitch () {
-
+      this.$confirm('即将关闭所有楼栋开关', '确认提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning',
+        closeOnClickModal: false
+      }).then(() => {
+        this.doHandleSwitch()
+      }).catch(() => {
+        console.log('取消删除')
+      })
+    },
+    doHandleSwitch (id) {
+      const loading = this.$loading({
+        lock: true,
+        text: '正在关闭开关...'
+      })
+      setTimeout(() => {
+        loading.close()
+      }, 1500)
     },
     handlePower (item) {
-
+      this.$confirm('即将关闭该楼栋所有开关', '确认提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning',
+        closeOnClickModal: false
+      }).then(() => {
+        // TODO
+      }).catch(() => {
+        console.log('取消删除')
+      })
     },
     handleEdit (item) {
-
+      this.dialogStatus = 'edit'
+      this.createDialogVisible = true
+      this.createModel.layer = item
     },
     handleRemove (item) {
-
+      this.$confirm('确认删除楼栋？', '确认提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning',
+        closeOnClickModal: false
+      }).then(() => {
+        // this.doDelete(row)
+      }).catch(() => {
+        console.log('取消删除')
+      })
     }
   },
 }
@@ -145,7 +218,7 @@ export default {
     padding: 5px;
 
     &.is-active{
-      color: #afaf1e;
+      color: #d8d815;
     }
   }
   .text{
@@ -153,6 +226,14 @@ export default {
     display: inline-block;
     margin-left: 5px;
   }
+}
+.ob-form{
+ width: 80%;
+ margin: 0 auto;
+ .el-select,
+ .el-input{
+   width: 300px;
+ }
 }
 </style>
 <style lang="scss">

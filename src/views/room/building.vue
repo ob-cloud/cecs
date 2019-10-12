@@ -21,7 +21,7 @@
           <i class="icon el-icon-delete" title="删除" @click="handleRemove(item)"></i>
         </div>
         <div class="content">
-          <i class="building-sign obicon obicon-building-o"></i>
+          <i class="building-sign obicon obicon-building-o" :class="{'is-active': item === 2}"></i>
           <p class="text">{{item}}栋</p>
         </div>
       </div>
@@ -226,7 +226,7 @@ export default {
     padding: 5px;
 
     &.is-active{
-      color: #afaf1e;
+      color: #d8d815;
     }
   }
   .text{
