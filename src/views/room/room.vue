@@ -30,7 +30,7 @@
         </div>
       </div>
     </div>
-    <el-dialog top="10%" width="660px" :title="dialogTitleMap[dialogStatus]" :visible.sync="createDialogVisible" :close-on-click-modal="false">
+    <el-dialog v-if="createDialogVisible" top="10%" width="660px" :title="dialogTitleMap[dialogStatus]" :visible.sync="createDialogVisible" :close-on-click-modal="false">
       <el-form class="ob-form" ref="creation" autoComplete="on" :rules="creationRules" :model="roomModel" label-position="left" label-width="80px">
         <el-form-item label="楼栋名称" prop="building">
           <el-select placeholder="请选择楼栋" v-model="roomModel.building">
@@ -52,10 +52,10 @@
       </span>
     </el-dialog>
 
-    <el-dialog top="10%" width="760px" :title="dialogTitleMap[dialogStatus]" :visible.sync="deviceDialogVisible" :close-on-click-modal="false">
+    <el-dialog v-if="deviceDialogVisible" top="10%" width="760px" :title="dialogTitleMap[dialogStatus]" :visible.sync="deviceDialogVisible" :close-on-click-modal="false">
       <room-device :room='deviceActiveRoom'></room-device>
     </el-dialog>
-    <el-dialog top="10%" width="760px" :title="dialogTitleMap[dialogStatus]" :visible.sync="sceneDialogVisible" :close-on-click-modal="false">
+    <el-dialog v-if="sceneDialogVisible" top="10%" width="760px" :title="dialogTitleMap[dialogStatus]" :visible.sync="sceneDialogVisible" :close-on-click-modal="false">
       <room-scene :room='sceneActiveRoom'></room-scene>
     </el-dialog>
   </div>
