@@ -71,15 +71,15 @@ export default {
         prop: 'obox_serial_id',
         align: 'center'
       }, {
-        label: 'OBOX名称',
+        label: '名称',
         prop: 'obox_name',
         align: 'center'
       }, {
-        label: 'OBOX版本',
+        label: '版本',
         prop: 'obox_version',
         align: 'center'
       }, {
-        label: 'OBOX状态',
+        label: '状态',
         prop: 'obox_status',
         align: 'center',
         formatter (val) {
@@ -88,13 +88,12 @@ export default {
       }, {
         label: '操作',
         align: 'center',
-        minWidth: '180px',
         renderBody: this.getToolboxRender
       }]
     },
     getToolboxRender (h, row) {
       return [
-        <el-button size="tiny" icon="obicon obicon-upgrade" title="升级" onClick={() => this.handleUpgrade(row)}></el-button>
+        <el-button size="tiny" icon="obicon obicon-trash" title="删除" onClick={() => this.handleRemove(row)}></el-button>
       ]
     },
     getOboxList () {
@@ -129,28 +128,27 @@ export default {
       this.search.pageNo = PAGINATION_PAGENO
       this.getOboxList()
     },
-    handleUpgrade (row) {
-      console.log('upgrade ', row)
-      this.$confirm('即将进行升级，请再次确认', '确认提示', {
+    handleRemove (row) {
+      this.$confirm('确认删除OBOX？', '确认提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning',
         closeOnClickModal: false
       }).then(() => {
-        this.doUpgrade()
+        this.doRemove()
       }).catch(() => {
         console.log('取消删除')
       })
     },
-    doUpgrade () {
-      const loading = this.$loading({
-        lock: true,
-        text: 'obox升级中...'
-      })
-      setTimeout(() => {
-        loading.close()
-      }, 1500)
-      console.log('升级操作')
+    doRemove () {
+      // const loading = this.$loading({
+      //   lock: true,
+      //   text: 'obox升级中...'
+      // })
+      // setTimeout(() => {
+      //   loading.close()
+      // }, 1500)
+      // console.log('升级操作')
     }
   }
 }
