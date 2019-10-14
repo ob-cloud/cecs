@@ -3,9 +3,9 @@
     <div class="search-bar">
       <div class="caption is-right">
         <el-button-group>
-          <el-button type="plain" icon="btn-icon el-icon-refresh" title="刷新" @click="handleRefresh"></el-button>
-          <el-button type="plain" icon="btn-icon el-icon-circle-plus-outline" title="添加" @click="handleCreate"></el-button>
-          <el-button type="plain" icon="btn-icon obicon obicon-switch-btn" title="开关总闸" @click="handleMainSwitch"></el-button>
+          <el-button type="primary" icon="btn-icon el-icon-refresh" title="刷新" @click="handleRefresh"></el-button>
+          <el-button type="primary" icon="btn-icon el-icon-circle-plus-outline" title="添加" @click="handleCreate"></el-button>
+          <el-button type="primary" icon="btn-icon obicon obicon-switch-btn" title="开关总闸" @click="handleMainSwitch"></el-button>
         </el-button-group>
       </div>
       <div class="caption">
@@ -245,8 +245,7 @@ export default {
 }
 </style>
 <style lang="scss">
-.caption .btn-icon{
-  font-size: 30px;
-  color: #444;
-}
+// .caption .btn-icon{
+//   font-size: 30px;
+// }
 </style>
