@@ -23,18 +23,18 @@ export const navMenuList = [
   //   path: '/nvr/index.html'
   // },
   {
-    id: 5,
-    name: '日志管理',
-    path: '/system/logs.html'
-  },
-  {
     id: 6,
     name: '电子地图',
-    path: '/system/logs.html'
+    path: '/system/map.html'
   },
   {
     id: 7,
     name: '用户管理',
+    path: '/system/user.html'
+  },
+  {
+    id: 5,
+    name: '日志管理',
     path: '/system/logs.html'
   }
 ]

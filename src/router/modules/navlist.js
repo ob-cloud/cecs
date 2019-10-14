@@ -2,7 +2,7 @@
  * @Author: eamiear
  * @Date: 2019-02-06 21:24:22
  * @Last Modified by: eamiear
- * @Last Modified time: 2019-10-11 09:50:17
+ * @Last Modified time: 2019-10-14 10:11:18
  */
 
 export default [
@@ -36,5 +36,15 @@ export default [
     path: '/system/logs.html',
     desc: '日志管理',
     component: () => import('views/system/logs.vue')
+  }, {
+    name: '/system/map.html',
+    path: '/system/map.html',
+    desc: '电子地图',
+    component: () => import('views/system/map.vue')
+  }, {
+    name: '/system/user.html',
+    path: '/system/user.html',
+    desc: '用户管理',
+    component: () => import('views/system/user.vue')
   }
 ]
