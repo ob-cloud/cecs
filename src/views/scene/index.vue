@@ -26,7 +26,7 @@
         </template>
       </slot>
     </base-table>
-    <el-dialog v-if="createDialogVisible" top="10%" width="760px" :title="dialogAction" :visible.sync="createDialogVisible" :close-on-click-modal="false">
+    <el-dialog v-if="createDialogVisible" top="10%" width="860px" :title="dialogAction" :visible.sync="createDialogVisible" :close-on-click-modal="false">
       <scene-create @scene-ready="onSceneReady" :scene="sceneData" @close="createDialogVisible = false"></scene-create>
       <!-- <div slot="footer" class="dialog-footer text-center" >
         <el-button @click="createDialogVisible = false">取 消</el-button>

@@ -70,28 +70,37 @@
       </el-form-item>
       <el-form-item label="设备行为">
         <div class="action-content">
-          <div class="condition-item clearfix">
-            <i class="el-icon-close fr"></i>
+          <div class="condition-item clearfix" v-for="(deviceAction, index) in deviceActionModel" :key="index">
+            <i class="el-icon-close fr" @click="handleRemoveAction(index)"></i>
             <div class="action-item">
-              <el-input-number v-model="deviceAction.second" controls-position="right" :min="0"></el-input-number>
+              <el-tooltip content="行为执行时间(单位秒)" placement="top">
+                <el-input-number v-model="deviceAction.second" controls-position="right" :min="0"></el-input-number>
+              </el-tooltip>
               <el-select placeholder="请选择栋" v-model="deviceAction.building">
-                <el-option v-for="item in ['1', '12', '2', '3', '4']" :key="item" :label="item + '栋'" :value="item"></el-option>
+                <el-option v-for="item in buildingList" :key="item" :label="item + '栋'" :value="item"></el-option>
               </el-select>
               <el-select placeholder="请选择层" v-model="deviceAction.floor">
-                <el-option v-for="item in ['1', '2', '22', '3', '4']" :key="item" :label="item + '层'" :value="item"></el-option>
+                <el-option v-for="item in layerList" :key="item" :label="item + '层'" :value="item"></el-option>
               </el-select>
-              <el-select placeholder="请选择设备类型" v-model="deviceAction.type">
-                <el-option v-for="(item, index) in ['开关', '红外']" :key="index" :label="item" :value="item"></el-option>
+              <el-select placeholder="请选择设备类型" v-model="deviceAction.serialId" @change="onSelectDevice(deviceAction.serialId, index)">
+                <el-option v-for="(item, index) in deviceTypeList" :key="index" :label="item.device_type | deviceTypeFilter(item.device_child_type)" :value="item.serialId"></el-option>
               </el-select>
+              <div v-if="deviceAction.serialId" class="action-item__behavior" @click="actionDialogVisible=true">
+                <p>{{deviceAction.actionDescriptor || '配置设备动作'}}</p>
+              </div>
             </div>
           </div>
-          <el-button class="add-btn" size="mini" type="plain" icon="el-icon-plus"></el-button>
+          <el-button class="add-btn" size="mini" type="plain" icon="el-icon-plus" @click="handleAddAction"></el-button>
         </div>
       </el-form-item>
     </el-form>
     <!-- 条件类型弹窗 -->
     <el-dialog v-if="conDialogVisible" width="950px" top="10%" title="条件类型" :visible.sync="conDialogVisible" :close-on-click-modal="false" append-to-body>
       <scene-condition :isLcal="true" :deviceList="deviceList" @condition-change="onConditionChange"></scene-condition>
+    </el-dialog>
+    <!-- action -->
+    <el-dialog v-if="actionDialogVisible" width="600px" title="设备行为配置" :visible.sync="actionDialogVisible" :close-on-click-modal="false" append-to-body>
+      <scene-action :actionObject="activeDevice" @action-change="onActionChange"></scene-action>
     </el-dialog>
     <div class="footer">
       <el-button @click="close">取 消</el-button>
@@ -102,6 +111,7 @@
 
 <script>
 import SceneCondition from './condition'
+import SceneAction from './action'
 import DeviceAPI from '@/api/device'
 const {default: Suit} = require('@/common/suit')
 import { PAGINATION_PAGENO } from '@/common/constants'
@@ -144,13 +154,16 @@ export default {
         actions: [], // 摄像头设备行为
         conditions: [] // 联动设备行为条件
       },
-      deviceAction: {
+      deviceActionModel: [{
         second: 0,
         building: '',
         floor: '',
-        type: '',
+        serialId: '',
+        actionDescriptor: '',
         action: ''
-      },
+      }],
+      currentAction: null, // 当前操作action项
+      activeDevice: null, // 当前选中设备类型对象
       conditionsTab: 'c1',
       conDialogVisible: false,
       conditionObject: null,
@@ -164,12 +177,32 @@ export default {
         scene_name: [{ required: true, trigger: 'blur', message: '场景名称不能为空'}],
         msg_alter: [{ required: true, trigger: 'blur', message: '消息推送不能为空'}],
         // deviceIdList: [{ required: true, trigger: 'blur', validator: validateAction}]
-      }
+      },
+      deviceTypeList: [{
+        serialId: 1,
+        name: '面板',
+        device_type: '04',
+        device_child_type: '21'
+      }, {
+        serialId: '17e25c3a7d',
+        name: '红外',
+        device_type: '51'
+      }],
+      actionDialogVisible: false,
+      buildingList: [],
+      layerList: []
     }
   },
-  components: {SceneCondition},
+  filters: {
+    deviceTypeFilter (type, subtype) {
+      return subtype ? Suit.getDeviceTypeDescriptor(type, subtype) : Suit.getRootDeviceDescriptor(type)
+    }
+  },
+  components: {SceneCondition, SceneAction},
   mounted () {
     this.getDeviceList()
+    this.getBuildingList()
+    this.getLayerList()
   },
   watch: {
     deviceIdList (serialIds) {
@@ -179,6 +212,12 @@ export default {
     }
   },
   methods: {
+    getBuildingList () {
+      this.buildingList = ['1', '12', '2', '3', '4']
+    },
+    getLayerList () {
+      this.layerList = ['1', '2', '22', '3', '4']
+    },
     isActionDevice (deviceType, deviceSubType, isLocal) {
       return !Suit.typeHints.isSensors(deviceType)
         && !Suit.typeHints.isFinger(deviceType)
@@ -192,6 +231,7 @@ export default {
         return this.isActionDevice(item.device_type, item.device_child_type)
       })
       this.deviceActionList = actionList
+      console.log('action List ', this.deviceActionList)
     },
     getDeviceList () {
       DeviceAPI.getDeviceList({pageNo: this.pageNo, pageSize: this.pageSize}).then(res => {
@@ -222,12 +262,34 @@ export default {
       this.conditionMapList[this.conditionsTab].push(condition)
       this.conDialogVisible = dialogVisible
     },
+    onActionChange (actionData, dialogVisible) {
+      this.actionDialogVisible = dialogVisible
+      this.currentAction.actionDescriptor = actionData.extra.map(item => (item ? '开' : '关')).join('/')
+      this.currentAction.action = actionData.action
+    },
+    onSelectDevice (serialId, index) {
+      this.activeDevice = this.deviceTypeList.find(item => item.serialId === serialId)
+      this.currentAction = this.deviceActionModel[index]
+    },
+    handleRemoveAction (index) {
+      this.deviceActionModel.splice(index, 1)
+    },
+    handleAddAction () {
+      this.deviceActionModel.push({
+        second: 0,
+        building: '',
+        floor: '',
+        serialId: '',
+        actionDescriptor: '',
+        action: ''
+      })
+    },
     handleSelectedCondition () {
       const actions = this.getModelAction()
       const conditions = this.getModelCondition()
       this.sceneModel.actions = actions
       this.sceneModel.conditions.push(...conditions)
-      console.log(this.sceneModel, conditions)
+      console.log(this.sceneModel)
       // this.$refs.sceneForm.validate(valid => {
       //   if (valid) {
       //     this.$emit('scene-ready', this.sceneModel, false)
@@ -287,23 +349,24 @@ export default {
       return conditions
     },
     getModelAction () {
-      return this.deviceSelectedList.map(device => {
-        const actions = {
-          action: device.channel,
-          actionName: device.name,
-          addr: device.addr,
-          device_child_type: device.device_child_type,
-          device_type: device.device_type,
-          node_type: '08',
-          channel_number: 1,
-          obox_serial_id: device.obox_serial_id,
-          serialId: device.serialId
-        }
-        // if (this.isGateSensors(device)) {
-        //   actions.action = 'xxxxxxx'
-        // }
-        return actions
-      })
+      // return this.deviceSelectedList.map(device => {
+      //   const actions = {
+      //     action: device.channel,
+      //     actionName: device.name,
+      //     addr: device.addr,
+      //     device_child_type: device.device_child_type,
+      //     device_type: device.device_type,
+      //     node_type: '08',
+      //     channel_number: 1,
+      //     obox_serial_id: device.obox_serial_id,
+      //     serialId: device.serialId
+      //   }
+      //   // if (this.isGateSensors(device)) {
+      //   //   actions.action = 'xxxxxxx'
+      //   // }
+      //   return actions
+      // })
+      return this.deviceActionModel.map(item => item.action)
     },
     parseSceneData () {
       if (this.scene) {
@@ -389,13 +452,16 @@ export default {
 }
 .action-content .add-btn{
   position: absolute;
-  top: 10px;
+  // top: 10px;
+  top: 22px;
   right: -10px;
   padding: 5px;
 }
 .action-content .condition-item{
   width: 96%;
-  padding: 5px;
+  padding: 14px 5px;
+  border-radius: 4px;
+  // padding: 5px;
   // margin: 0 auto;
 }
 .condition-item .action-item > div{
@@ -407,6 +473,13 @@ export default {
 }
 .condition-item .action-item > div:last-of-type{
   width: 150px;
+}
+.action-item__behavior{
+  display: inline-block;
+  border: 1px dashed #ccc;
+  border-radius: 4px;
+  color: #ccc;
+  cursor: pointer;
 }
 .condition-item{
   width: 90%;
@@ -439,6 +512,7 @@ export default {
   padding: 18px 8px 0;
   text-align: right;
 }
+
 </style>
 <style lang="css">
 .condition-type.el-tabs--border-card,

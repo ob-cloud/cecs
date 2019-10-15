@@ -3,7 +3,7 @@
  * @Author: eamiear
  * @Date: 2019-08-12 11:21:09
  * @Last Modified by: eamiear
- * @Last Modified time: 2019-10-10 11:37:14
+ * @Last Modified time: 2019-10-15 17:28:26
  */
 
 /**
@@ -471,7 +471,7 @@ const Suiter = {
   },
   wifiIr: {
     type: {
-      '81': '单品wifi红外转发器，不存储版本'
+      '81': '红外转发器'
     }
   },
   obox: {

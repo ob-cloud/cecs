@@ -74,11 +74,11 @@ export default {
         prop: 'type',
         align: 'center'
       }, {
-        label: '操作',
+        label: '操作行为',
         prop: 'action',
         align: 'center'
       }, {
-        label: '时间',
+        label: '操作时间',
         prop: 'time',
         align: 'center'
       }, {

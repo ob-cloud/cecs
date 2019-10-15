@@ -2,7 +2,7 @@
  * @Author: eamiear
  * @Date: 2019-08-05 17:32:41
  * @Last Modified by: eamiear
- * @Last Modified time: 2019-09-19 16:35:18
+ * @Last Modified time: 2019-10-15 17:39:24
  */
 
 import {request} from '@/common/request'
@@ -159,6 +159,13 @@ const WifiDeviceAPI = {
   getWifiDeviceList () {
     return request.postForm('/consumer/common', {
       CMD: 'query_ali_dev'
+    })
+  },
+  // 红外转发器下的设备
+  getTransponderDevice (serialId) {
+    return request.get('/consumer/common', {
+      CMD: 'query_ir_device',
+      serialId
     })
   }
 }
