@@ -37,3 +37,27 @@ export const changeSwitchButtonToAction = (value, device) => {
   })
   return toAction(byteArrayToHexString(status), device)
 }
+
+export const changeAirConditionToAction = (action, device) => {
+  return toAction(action, {'device_child_type': '01', addr: 'fe', ...device, node_type: '07'})
+}
+
+export const getAirConditionKeys = (templure, mode, speed, windVertical, windHorizon) => {
+  const modeMap = {0: 'a', 1: 'r', 2: 'd', 3: 'w', 4: 'h'}
+  const speedMap = {0: 's0', 1: 's1', 2: 's2', 3: 's3'}
+  const windVerticalMap = {0: 'u0', 1: 'u1'}
+  const windHorizonMap = {0: 'l0', 1: 'l1'}
+  return `${modeMap[mode]}_${speedMap[speed]}_${[1, 3, 4].includes(mode) && templure}_${windVerticalMap[windVertical]}_${windHorizonMap[windHorizon]}_p0`
+}
+
+export const hasVerticalWind = keys => {
+  if (!keys || !keys.length) return false
+  const key = keys[0].key
+  return key.includes('_') && (key.includes('u0') || key.includes('u1')) && !key.includes('*')
+}
+
+export const hasHorizontalWind = keys => {
+  if (!keys || !keys.length) return false
+  const key = keys[0].key
+  return key.includes('_') && (key.includes('l0') || key.includes('l1')) && !key.includes('*')
+}

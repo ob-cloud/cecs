@@ -85,7 +85,7 @@
               <el-select placeholder="请选择设备类型" v-model="deviceAction.serialId" @change="onSelectDevice(deviceAction.serialId, index)">
                 <el-option v-for="(item, index) in deviceTypeList" :key="index" :label="item.device_type | deviceTypeFilter(item.device_child_type)" :value="item.serialId"></el-option>
               </el-select>
-              <div v-if="deviceAction.serialId" class="action-item__behavior" @click="actionDialogVisible=true">
+              <div v-if="deviceAction.serialId" class="action-item__behavior" @click="settingAction(deviceAction.serialId, index)" :title="deviceAction.actionDescriptor">
                 <p>{{deviceAction.actionDescriptor || '配置设备动作'}}</p>
               </div>
             </div>
@@ -99,7 +99,7 @@
       <scene-condition :isLcal="true" :deviceList="deviceList" @condition-change="onConditionChange"></scene-condition>
     </el-dialog>
     <!-- action -->
-    <el-dialog v-if="actionDialogVisible" width="600px" title="设备行为配置" :visible.sync="actionDialogVisible" :close-on-click-modal="false" append-to-body>
+    <el-dialog v-if="actionDialogVisible" :width="activeDevice.device_type === '51' ? '96%' : '600px'" title="设备行为配置" :visible.sync="actionDialogVisible" :close-on-click-modal="false" append-to-body>
       <scene-action :actionObject="activeDevice" @action-change="onActionChange"></scene-action>
     </el-dialog>
     <div class="footer">
@@ -241,6 +241,10 @@ export default {
         }
       })
     },
+    settingAction (serialId, index) {
+      this.actionDialogVisible = true
+      this.onSelectDevice(serialId, index)
+    },
     addCondition () {
       this.conDialogVisible = true
     },
@@ -264,7 +268,7 @@ export default {
     },
     onActionChange (actionData, dialogVisible) {
       this.actionDialogVisible = dialogVisible
-      this.currentAction.actionDescriptor = actionData.extra.map(item => (item ? '开' : '关')).join('/')
+      this.currentAction.actionDescriptor = actionData.extra // .map(item => (item ? '开' : '关')).join('/')
       this.currentAction.action = actionData.action
     },
     onSelectDevice (serialId, index) {
@@ -473,6 +477,12 @@ export default {
 }
 .condition-item .action-item > div:last-of-type{
   width: 150px;
+  vertical-align: bottom;
+  & p{
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
 }
 .action-item__behavior{
   display: inline-block;
@@ -499,7 +509,8 @@ export default {
   cursor: pointer;
 }
 .condition-item p{
-  padding: 0 30px 0 20px;
+  // padding: 0 30px 0 20px;
+  padding: 0 10px 0 10px;
 }
 .actions .header{
   padding: 0 20px;
