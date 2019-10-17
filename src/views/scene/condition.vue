@@ -76,26 +76,38 @@
             </div>
           </div>
           <div class="chain-action__item" v-else-if="isHumidifier()">
-            <p class="title">
+            <div class="title">
               <el-radio-group v-model="templureAction">
-                <el-radio-button type="plain" disabled label="0">温度</el-radio-button>
-                <el-radio-button type="plain" disabled label="1">湿度</el-radio-button>
+                <el-radio-button type="plain" label="0">温度</el-radio-button>
+                <el-radio-button type="plain" label="1">湿度</el-radio-button>
               </el-radio-group>
-            </p>
-            <div class="content">
-              <el-radio v-model="conditionModel.symbol" :label="key" border v-for="(item, key) in templureCondition" :key="item">{{key}}</el-radio>
+              <div class="humidifier-text">
+                <div>
+                  <span>温度</span>
+                  {{conditionModel.symbolT && conditionModel.symbolT !== '无' ? `${conditionModel.symbolT} ${conditionModel.templure}℃` : '无'}}
+                </div>
+                <div>
+                  <span>湿度</span>
+                  {{conditionModel.symbolH && conditionModel.symbolH !== '无' ? `${conditionModel.symbolH} ${conditionModel.humidifier}%` : '无'}}
+                </div>
+              </div>
             </div>
-            <div class="content" v-if="templureAction === '0' && conditionModel.symbol && conditionModel.symbol !== '无'">
+            <div class="content">
+              <template v-if="templureAction === '0'">
+                <el-radio v-model="conditionModel.symbolT" :label="key" border v-for="(item, key) in templureCondition" :key="item">{{key}}</el-radio>
+              </template>
+              <template v-if="templureAction === '1'">
+                <el-radio v-model="conditionModel.symbolH" :label="key" border v-for="(item, key) in templureCondition" :key="item">{{key}}</el-radio>
+              </template>
+            </div>
+            <div class="content" v-if="templureAction === '0' && conditionModel.symbolT && conditionModel.symbolT !== '无'">
               <el-radio class="templure-value" v-model="conditionModel.templure" :label="item" border v-for="(item, index) in templureValue" :key="index">{{item}}</el-radio>
             </div>
-            <div class="content" v-if="templureAction === '1' && conditionModel.symbol && conditionModel.symbol !== '无'">
+            <div class="content" v-if="templureAction === '1' && conditionModel.symbolH && conditionModel.symbolH !== '无'">
               <el-radio class="templure-value" v-model="conditionModel.humidifier" :label="item" border v-for="(item, index) in humidifierValue" :key="index">{{item}}</el-radio>
             </div>
           </div>
         </div>
-      </el-tab-pane>
-      <el-tab-pane label="遥控器" name="3" class="h200">
-
       </el-tab-pane>
     </el-tabs>
     <div class="footer">
@@ -105,7 +117,6 @@
 </template>
 
 <script>
-import DeviceAPI from '@/api/device'
 const {default: Suit} = require('@/common/suit')
 export default {
   name: 'scene-condition',
@@ -131,7 +142,8 @@ export default {
         name: '',
         type: '联动条件',
         action: '',
-        symbol: null,
+        symbolT: '',
+        symbolH: '',
         templure: '',
         humidifier: '',
         conditionType: '',
@@ -163,22 +175,22 @@ export default {
         }
       }
     },
-    'conditionModel.symbol' (val) {
-      if (this.templureAction === '0') {
-        if (this.templureCondition[val]) {
-          this.tempHumCondition[0] = this.templureCondition[val]
-        } else {
-          this.tempHumCondition[0] = '4C'
-          this.tempHumCondition[1] = 'FF'
-          this.templureAction = '1'
-        }
-      } else if (this.templureAction === '1') {
-        if (this.templureCondition[val]) {
-          this.tempHumCondition[2] = this.templureCondition[val]
-        } else {
-          this.tempHumCondition[2] = '00'
-          this.tempHumCondition[3] = '00'
-        }
+    'conditionModel.symbolT' (val) {
+      if (this.templureCondition[val]) {
+        this.tempHumCondition[0] = this.templureCondition[val]
+      } else {
+        this.tempHumCondition[0] = '4C'
+        this.tempHumCondition[1] = 'FF'
+        this.templureAction = '1'
+      }
+      this.tempHumCondition[4] = '000000000000'
+    },
+    'conditionModel.symbolH' (val) {
+      if (this.templureCondition[val]) {
+        this.tempHumCondition[2] = this.templureCondition[val]
+      } else {
+        this.tempHumCondition[2] = '00'
+        this.tempHumCondition[3] = '00'
       }
       this.tempHumCondition[4] = '000000000000'
     },
@@ -186,7 +198,6 @@ export default {
       if (val) {
         this.tempHumCondition[1] = Suit.converter.toHex(+val + 30, 10)
         this.templureAction = '1'
-        this.conditionModel.symbol = null
       }
     },
     'conditionModel.humidifier' (val) {
@@ -198,7 +209,6 @@ export default {
   methods: {
     getChainDeviceList () {
       if (this.chainDeviceList.length) return
-      console.log('--++ ', this.deviceList)
       const chainList = this.deviceList.filter(item => {
         return this.isChainType(item.device_type, item.device_child_type, this.isLocal)
       })
@@ -228,22 +238,6 @@ export default {
     onConditionTabClick (tab) {
       if (tab.name === '2') {
         this.getChainDeviceList()
-      } else if (tab.name === '3') {
-        DeviceAPI.getRemoter().then(res => {
-          if (res.message.includes('success')) {
-            console.log(res)
-          } else {
-            this.$message({
-              type: 'error',
-              message: res.message
-            })
-          }
-        }).catch(() => {
-          this.$message({
-            type: 'error',
-            message: '服务异常'
-          })
-        })
       }
     },
     onChainDeviceClick (device) {
@@ -267,7 +261,6 @@ export default {
     },
     isSixScenePanelSocket () {
       const type = `${Suit.converter.toDecimal(this.chainActiveDevice.device_type, 16)}${Suit.converter.toDecimal(this.chainActiveDevice.device_child_type, 16)}`
-      console.log('++++    ', type, this.chainActiveDevice)
       return type === '0436'
     },
     getDateTimeCondition () {
@@ -309,6 +302,12 @@ export default {
     },
     handleSelectedCondition () {
       if (this.conditionType === '1') {
+        if (!((this.conditionModel.date || this.conditionModel.week) && this.conditionModel.time)) {
+          return this.$message({
+            type: 'warning',
+            message: '请正确选择条件'
+          })
+        }
         this.conditionModel.type = '1'
         this.conditionModel.conditionType = '00'
         this.conditionModel.condition = this.getDateTimeCondition()
@@ -322,6 +321,7 @@ export default {
         // }
         if (this.isHumidifier()) {
           this.conditionModel.condition = this.tempHumCondition.join('')
+          this.conditionModel.action = `(温度${this.conditionModel.symbolT}${this.conditionModel.templure} / 湿度${this.conditionModel.symbolH}${this.conditionModel.humidifier})`
         }
         if (this.isSocket()) {
           this.conditionModel.condition = this.getDeviceCondition()
@@ -331,6 +331,7 @@ export default {
         }
         this.conditionModel.type = '2'
         this.conditionModel.conditionType = '01'
+        console.log('model ', this.conditionModel)
         this.$emit('condition-change', {model: this.conditionModel, selected: this.chainActiveDevice}, false)
       } else {
         console.log(2)
@@ -438,6 +439,22 @@ export default {
   color: #555;
   padding: 5px;
   border-bottom: 1px solid #eee;
+  & .humidifier-text{
+    float: right;
+    background: #fff;
+    border: 1px solid #eee;
+    padding: 10px;
+    border-radius: 4px;
+    box-shadow: 1px 1px 1px 0px #f2f2f2;
+    div{
+      display: inline-block;
+      padding: 0 10px;
+      color: #999;
+    }
+    span{
+      color: #666;
+    }
+  }
 }
 .chain-action__item .content{
   padding: 10px;

@@ -26,31 +26,31 @@
         <el-card class="box-card w8">
           <div slot="header" class="clearfix">
             <span>条件</span>
-            <i class="close fr el-icon-close"></i>
+            <!-- <i class="close fr el-icon-close"></i> -->
           </div>
           <div class="">
             <el-tabs class="condition" v-model="conditionsTab" type="border-card">
               <el-tab-pane label="条件1" name="c1" class="panel">
                 <div class="condition-item clearfix" v-for="(condition, index) in conditionMapList['c1']" :key="index">
-                  <i class="el-icon-date fl"></i>
+                  <i class="obicon obicon-node fl"></i>
                   <i class="el-icon-close fr" @click="removeCondition(index)"></i>
-                  <p>{{condition.model.type}}: {{parseCondition(condition)}}</p>
+                  <p>{{parseCondition(condition)}}</p>
                 </div>
                 <el-button class="add-btn" size="mini" type="plain" icon="el-icon-plus" @click="addCondition"></el-button>
               </el-tab-pane>
               <el-tab-pane label="条件2" name="c2" class="panel">
                 <div class="condition-item clearfix" v-for="(condition, index) in conditionMapList['c2']" :key="index">
-                  <i class="el-icon-date fl"></i>
+                  <i class="obicon obicon-node fl"></i>
                   <i class="el-icon-close fr" @click="removeCondition(index)"></i>
-                  <p>{{condition.model.type}}: {{parseCondition(condition)}}</p>
+                  <p>{{parseCondition(condition)}}</p>
                 </div>
                 <el-button class="add-btn" size="mini" type="plain" icon="el-icon-plus" @click="addCondition"></el-button>
               </el-tab-pane>
               <el-tab-pane label="条件3" name="c3" class="panel">
                 <div class="condition-item clearfix" v-for="(condition, index) in conditionMapList['c3']" :key="index">
-                  <i class="el-icon-date fl"></i>
+                  <i class="obicon obicon-node fl"></i>
                   <i class="el-icon-close fr" @click="removeCondition(index)"></i>
-                  <p>{{condition.model.type}}: {{parseCondition(condition)}}</p>
+                  <p>{{parseCondition(condition)}}</p>
                 </div>
                 <el-button class="add-btn" size="mini" type="plain" icon="el-icon-plus" @click="addCondition"></el-button>
               </el-tab-pane>
@@ -76,10 +76,10 @@
               <el-tooltip content="行为执行时间(单位秒)" placement="top">
                 <el-input-number v-model="deviceAction.second" controls-position="right" :min="0"></el-input-number>
               </el-tooltip>
-              <el-select placeholder="请选择栋" v-model="deviceAction.building">
+              <el-select placeholder="请选择栋" v-model="deviceAction.building" filterable>
                 <el-option v-for="item in buildingList" :key="item" :label="item + '栋'" :value="item"></el-option>
               </el-select>
-              <el-select placeholder="请选择层" v-model="deviceAction.floor">
+              <el-select placeholder="请选择层" v-model="deviceAction.floor" filterable>
                 <el-option v-for="item in layerList" :key="item" :label="item + '层'" :value="item"></el-option>
               </el-select>
               <el-select placeholder="请选择设备类型" v-model="deviceAction.serialId" @change="onSelectDevice(deviceAction.serialId, index)">
@@ -99,7 +99,7 @@
       <scene-condition :isLcal="true" :deviceList="deviceList" @condition-change="onConditionChange"></scene-condition>
     </el-dialog>
     <!-- action -->
-    <el-dialog v-if="actionDialogVisible" :width="activeDevice.device_type === '51' ? '86%' : '600px'" title="设备行为配置" :visible.sync="actionDialogVisible" :close-on-click-modal="false" append-to-body>
+    <el-dialog v-if="actionDialogVisible" :width="activeDevice.device_type === '51' ? '80%' : '600px'" title="设备行为配置" :visible.sync="actionDialogVisible" :close-on-click-modal="false" append-to-body>
       <scene-action :actionObject="activeDevice" @action-change="onActionChange"></scene-action>
     </el-dialog>
     <div class="footer">
@@ -308,11 +308,12 @@ export default {
     },
     parseCondition (condition) {
       let str = ''
+      console.log('---- ', condition)
       if (condition.model.type === '1') {
-        str = `定时 ${condition.model.date ? condition.model.date : condition.model.week} ${condition.model.time}`
+        str = `定时 ${condition.model.date ? condition.model.date : condition.model.week || ''} ${condition.model.time || ''}`
       } else if (condition.model.type === '2') {
         const type = Suit.getDeviceTypeDescriptor(condition.selected.device_type, condition.selected.device_child_type)
-        str = `${type}${condition.selected.name} ${condition.model.action}`
+        str = `联动 ${type} ${condition.model.action}`
       }
       return str
     },
@@ -353,23 +354,6 @@ export default {
       return conditions
     },
     getModelAction () {
-      // return this.deviceSelectedList.map(device => {
-      //   const actions = {
-      //     action: device.channel,
-      //     actionName: device.name,
-      //     addr: device.addr,
-      //     device_child_type: device.device_child_type,
-      //     device_type: device.device_type,
-      //     node_type: '08',
-      //     channel_number: 1,
-      //     obox_serial_id: device.obox_serial_id,
-      //     serialId: device.serialId
-      //   }
-      //   // if (this.isGateSensors(device)) {
-      //   //   actions.action = 'xxxxxxx'
-      //   // }
-      //   return actions
-      // })
       return this.deviceActionModel.map(item => item.action)
     },
     parseSceneData () {
@@ -504,6 +488,8 @@ export default {
 }
 .condition-item i{
   line-height: 40px;
+  font-size: 14px;
+  padding-right: 5px;
 }
 .condition-item i:last-of-type{
   cursor: pointer;
