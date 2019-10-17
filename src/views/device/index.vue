@@ -7,6 +7,9 @@
       <el-tab-pane label="WIFI设备" name="wifi">
         <device-wifi :height="tableHeight"></device-wifi>
       </el-tab-pane>
+      <el-tab-pane label="网关" name="gateway">
+        <gateway :height="tableHeight"></gateway>
+      </el-tab-pane>
     </el-tabs>
   </div>
 </template>
@@ -14,6 +17,7 @@
 <script>
 import DeviceObox from './obox'
 import DeviceWifi from './wifi'
+import Gateway from './gateway'
 import Helper from '@/common/helper'
 export default {
   data () {
@@ -22,7 +26,7 @@ export default {
       tableHeight: 0
     }
   },
-  components: { DeviceObox, DeviceWifi },
+  components: { DeviceObox, DeviceWifi, Gateway },
   created () {
   },
   computed: {

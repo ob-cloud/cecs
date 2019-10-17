@@ -99,7 +99,7 @@
       <scene-condition :isLcal="true" :deviceList="deviceList" @condition-change="onConditionChange"></scene-condition>
     </el-dialog>
     <!-- action -->
-    <el-dialog v-if="actionDialogVisible" :width="activeDevice.device_type === '51' ? '96%' : '600px'" title="设备行为配置" :visible.sync="actionDialogVisible" :close-on-click-modal="false" append-to-body>
+    <el-dialog v-if="actionDialogVisible" :width="activeDevice.device_type === '51' ? '86%' : '600px'" title="设备行为配置" :visible.sync="actionDialogVisible" :close-on-click-modal="false" append-to-body>
       <scene-action :actionObject="activeDevice" @action-change="onActionChange"></scene-action>
     </el-dialog>
     <div class="footer">

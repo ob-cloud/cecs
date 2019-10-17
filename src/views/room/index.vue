@@ -1,6 +1,9 @@
 <template>
   <div class="device smart">
     <el-tabs v-model="activeName" tab-position="left" class="room-container">
+      <el-tab-pane label="地图" name="map">
+        <i-map :height="tableHeight"></i-map>
+      </el-tab-pane>
       <el-tab-pane label="房间" name="room">
         <room :height="tableHeight"></room>
       </el-tab-pane>
@@ -18,15 +21,16 @@
 import Building from './building'
 import Floor from './floor'
 import Room from './room'
+import iMap from './map'
 import Helper from '@/common/helper'
 export default {
   data () {
     return {
-      activeName: 'room',
+      activeName: 'map',
       tableHeight: 0
     }
   },
-  components: { Building, Floor, Room },
+  components: { Building, Floor, Room, iMap },
   created () {
   },
   mounted () {

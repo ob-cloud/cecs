@@ -9,6 +9,7 @@
         </el-button-group>
       </div>
       <div class="caption">
+        <el-input class="caption-item" @keyup.enter.native="handleSearch" placeholder="请输入楼栋"></el-input>
         <el-input class="caption-item" @keyup.enter.native="handleSearch" placeholder="请输入楼层"></el-input>
         <el-button type="primary" icon="el-icon-search" @click="handleSearch">查询</el-button>
       </div>
@@ -22,7 +23,7 @@
         </div>
         <div class="content">
           <i class="building-sign obicon obicon-building" :class="{'is-active': item === 2}"></i>
-          <p class="text">{{item}}楼层</p>
+          <p class="text">{{item}}栋-{{item}}楼层</p>
         </div>
       </div>
     </div>

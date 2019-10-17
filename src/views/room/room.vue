@@ -63,8 +63,8 @@
 
 <script>
 import RoomAPI from '@/api/room'
-import RoomDevice from './device'
-import RoomScene from './scene'
+import RoomDevice from './components/device'
+import RoomScene from './components/scene'
 export default {
   data () {
     return {

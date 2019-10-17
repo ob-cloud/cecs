@@ -2,7 +2,7 @@
  * @Author: eamiear
  * @Date: 2019-08-05 11:26:26
  * @Last Modified by: eamiear
- * @Last Modified time: 2019-08-07 17:48:00
+ * @Last Modified time: 2019-10-17 10:09:33
  */
 
 import common from './common'
@@ -17,7 +17,7 @@ const menuRoutes = {
     {
       name: 'dashboard',
       path: '/dashboard',
-      redirect: { path: '/device/index.html' },
+      redirect: { path: '/room/index.html' },
       component: () => import('views/dashboard/index.vue')
     },
     ...navlist,
