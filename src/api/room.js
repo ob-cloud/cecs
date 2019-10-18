@@ -2,7 +2,7 @@
  * @Author: eamiear
  * @Date: 2019-08-07 16:43:10
  * @Last Modified by: eamiear
- * @Last Modified time: 2019-08-15 17:33:49
+ * @Last Modified time: 2019-10-18 15:29:32
  */
 
 import {request} from '@/common/request'
@@ -93,6 +93,44 @@ const RoomAPI = {
       location,
       scene_number: sceneNumber
     })
+  },
+  triggerGlobalSwitch (deviceType) {
+    return request.postForm('/consumer/common', {
+      CMD: 'tigger_room_device',
+      device: JSON.stringify({deviceType})
+    })
+  },
+  triggerSwitch (device) {
+    return request.postForm('/consumer/common', {
+      CMD: 'tigger_room_device',
+      device: JSON.stringify(device)
+    })
   }
 }
-export default RoomAPI
+const BuildingAPI = {
+  getBuildingList (building = {}) {
+    return request.get('/consumer/common', {
+      CMD: 'get_building',
+      building: JSON.stringify(building)
+    })
+  },
+  addBuilding (building = {}) {
+    return request.postForm('/consumer/common', {
+      CMD: 'add_building',
+      building: JSON.stringify(building)
+    })
+  },
+  updateBuilding (building = {}) {
+    return request.postForm('/consumer/common', {
+      CMD: 'update_building',
+      building: JSON.stringify(building)
+    })
+  },
+  removeBuilding (building = {}) {
+    return request.postForm('/consumer/common', {
+      CMD: 'delete_building',
+      building: JSON.stringify(building)
+    })
+  }
+}
+export default {...RoomAPI, ...BuildingAPI}
