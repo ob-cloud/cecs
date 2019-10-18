@@ -9,14 +9,14 @@
         </el-button-group>
       </div>
       <div class="caption">
-        <el-input class="caption-item" @keyup.enter.native="handleSearch" placeholder="请输入楼栋"></el-input>
-        <el-input class="caption-item" @keyup.enter.native="handleSearch" placeholder="请输入楼层"></el-input>
-        <el-input class="caption-item" @keyup.enter.native="handleSearch" placeholder="请输入房号"></el-input>
+        <el-input class="caption-item" @keyup.enter.native="handleSearch" v-model="searchModel.buildName" placeholder="请输入楼栋"></el-input>
+        <el-input class="caption-item" @keyup.enter.native="handleSearch" v-model="searchModel.floorName" placeholder="请输入楼层"></el-input>
+        <el-input class="caption-item" @keyup.enter.native="handleSearch" v-model="searchModel.roomName" placeholder="请输入房号"></el-input>
         <el-button type="primary" icon="el-icon-search" @click="handleSearch">查询</el-button>
       </div>
     </div>
-    <div class="building-list" v-loading.lock="loading">
-      <div class="building-item" v-for="(item, index) in roomList" :key="index">
+    <div class="building-list" v-loading.lock="loading" :style="{height: `${containerHeight}px`}">
+      <div class="building-item" v-for="(item, index) in roomList" :key="item.id">
         <div class="header">
           <i class="icon obicon obicon-device" title="房间设备" @click="handleDevice(item)"></i>
           <i class="icon obicon obicon-scene" title="房间场景" @click="handleScene(item)"></i>
@@ -26,24 +26,34 @@
         </div>
         <div class="content">
           <i class="building-sign obicon obicon-classroom" :class="{'is-active': index === 2}"></i>
-          <p class="text">{{item.building}}栋{{item.layer}}层{{item.room}}房</p>
+          <p class="text">{{item.buildName}}栋{{item.floorName}}层{{item.roomName}}房</p>
         </div>
       </div>
+      <el-pagination
+        class="pagination"
+        prev-text="上一屏"
+        next-text="下一屏"
+        :page-size="searchModel.pageSize"
+        :total="total"
+        layout="prev, next"
+        @current-change="onCurrentChange"
+        @size-change="onSizeChange">
+      </el-pagination>
     </div>
     <el-dialog v-if="createDialogVisible" top="10%" width="660px" :title="dialogTitleMap[dialogStatus]" :visible.sync="createDialogVisible" :close-on-click-modal="false">
       <el-form class="ob-form" ref="creation" autoComplete="on" :rules="creationRules" :model="roomModel" label-position="left" label-width="80px">
-        <el-form-item label="楼栋名称" prop="building">
-          <el-select placeholder="请选择楼栋" v-model="roomModel.building">
-            <el-option v-for="item in buildingList" :key="item" :label="item + '栋'" :value="item"></el-option>
+        <el-form-item label="楼栋名称" prop="buildingId">
+          <el-select placeholder="请选择楼栋" v-model="roomModel.buildingId">
+            <el-option v-for="item in buildingList" :key="item.id" :label="item.buildName + '栋'" :value="item.buildingId"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="楼层名称" prop="layer">
-          <el-select placeholder="请选择楼层" v-model="roomModel.layer">
-            <el-option v-for="item in layerList" :key="item" :label="item + '层'" :value="item"></el-option>
+        <el-form-item label="楼层名称" prop="floorId">
+          <el-select placeholder="请选择楼层" v-model="roomModel.floorId">
+            <el-option v-for="item in layerList" :key="item.id" :label="item.floorName + '层'" :value="item.floorId"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="房间名称" prop="room">
-          <el-input v-model="roomModel.room" placeholder="请输入房间号"></el-input>
+        <el-form-item label="房间名称" prop="roomName">
+          <el-input v-model="roomModel.roomName" placeholder="请输入房间号"></el-input>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -65,27 +75,38 @@
 import RoomAPI from '@/api/room'
 import RoomDevice from './components/device'
 import RoomScene from './components/scene'
+import Helper from '@/common/helper'
 export default {
+   props: {
+    roomPreload: {
+      type: Boolean,
+      default: false
+    }
+  },
   data () {
     return {
-      loading: true,
+      loading: false,
+      containerHeight: 500,
       roomList: [],
+      total: 0,
       buildingList: [],
       layerList: [],
-      search: {
-        building: '',
-        layer: '',
-        room: ''
+      searchModel: {
+        roomName: '',
+        buildName: '',
+        floorName: '',
+        pageNo: 1,
+        pageSize: 10
       },
       roomModel: {
-        room: '',
-        building: '',
-        layer: ''
+        roomName: '',
+        buildingId: '',
+        floorId: ''
       },
       creationRules: {
-        building: [{ required: true, message: '楼栋不可为空', trigger: 'blur' }],
-        layer: [{ required: true, message: '楼层名称不可为空', trigger: 'blur' }],
-        room: [{ required: true, message: '房间名称不可为空', trigger: 'blur' }]
+        buildingId: [{ required: true, message: '楼栋不可为空', trigger: 'blur' }],
+        floorId: [{ required: true, message: '楼层名称不可为空', trigger: 'blur' }],
+        roomName: [{ required: true, message: '房间名称不可为空', trigger: 'blur' }]
       },
       createDialogVisible: false,
       deviceDialogVisible: false,
@@ -103,30 +124,47 @@ export default {
     }
   },
   components: { RoomDevice, RoomScene },
-  created () {
+  mounted () {
     this.getRoomList()
     this.getBuildingList()
-    this.getLayerList()
+    Helper.windowOnResize(this, this.fixLayout)
   },
   watch: {
     createDialogVisible (val) {
       if (val === false) {
         this.$refs.creation.resetFields()
       }
+    },
+    'roomModel.buildingId' (val) {
+      val && this.getLayerList(val)
     }
   },
   methods: {
-    getBuildingList () {
-      this.buildingList = ['1', '12', '2', '3', '4']
+    fixLayout () {
+      this.containerHeight = Helper.calculateTableHeight() - 20
     },
-    getLayerList () {
-      this.layerList = ['1', '2', '22', '3', '4']
+    getBuildingList () {
+      RoomAPI.getBuildingList({buildName: ''}).then(res => {
+        if (res.status === 0) {
+          const {data} = res
+          this.buildingList = data.records
+        }
+      })
+    },
+    getLayerList (buildingId) {
+      RoomAPI.getFloorByBuildingId(buildingId).then(res => {
+        if (res.status === 0) {
+          const {data} = res
+          this.layerList = data.records
+        }
+      })
     },
     getRoomList () {
       this.loading = true
-      RoomAPI.getRoomList(this.search).then(resp => {
-        if (resp.status === 200) {
-          this.roomList = resp.data.locations
+      RoomAPI.getRoomListV2(this.searchModel).then(resp => {
+        if (resp.status === 0) {
+          this.roomList = resp.data.records
+          this.total = resp.total
         } else {
           this.$message({
             message: resp.message || '房间获取失败'
@@ -143,17 +181,25 @@ export default {
       })
     },
     handleRefresh () {
-      this.search.building = ''
-      this.search.layer = ''
-      this.search.room = ''
+      this.searchModel.buildName = ''
+      this.searchModel.floorName = ''
+      this.searchModel.roomName = ''
       this.getRoomList()
     },
     resetRoomModel () {
       this.roomModel = {
-        room: '',
-        building: '',
-        layer: ''
+        roomName: '',
+        buildingId: '',
+        floorId: ''
       }
+    },
+    onCurrentChange (pageNo) {
+      this.searchModel.pageNo = pageNo
+      this.getRoomList()
+    },
+    onSizeChange (pageSize) {
+      this.searchModel.pageSize = pageSize
+      this.getRoomList()
     },
     handleCreate () {
       this.dialogStatus = 'create'
@@ -180,9 +226,17 @@ export default {
         lock: true,
         text: '正在关闭教室开关...'
       })
-      setTimeout(() => {
-        loading.close()
-      }, 1500)
+      RoomAPI.triggerGlobalSwitch(1).then(res => {
+        if (res.status === 0) {
+          this.getRoomList()
+          loading.close()
+        } else {
+          this.$message({
+            type: 'error',
+            message: '开关操作失败!'
+          })
+        }
+      })
     },
     handleDevice (row) {
       this.deviceActiveRoom = row.location
@@ -220,7 +274,22 @@ export default {
     doCreateRoom (type) {
       this.$refs.creation.validate(valid => {
         if (valid) {
-          // type === 'create' ? this.createAction() : this.editAction()
+          const action = type === 'create' ? 'addRoomV2' : 'updateRoomV2'
+          RoomAPI[action](this.roomModel).then(response => {
+            if (response.status === 0) {
+              this.getRoomList()
+            } else {
+              this.$message({
+                type: 'error',
+                message: (type === 'create' ? '添加' : '编辑') + '失败!'
+              })
+            }
+          }).catch(() => {
+            this.$message({
+              type: 'error',
+              message: '操作失败'
+            })
+          })
           this.createDialogVisible = false
         }
       })
@@ -253,6 +322,21 @@ export default {
   .caption-item{
     width: 150px;
     margin-right: 10px;
+  }
+}
+.building-list{
+  position: relative;
+  padding-right: 70px;
+  .pagination{
+    display: inline-block;
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    border-radius: 6px;
+    box-shadow: 0 0 1px 1px #f2f2f2;
+    background: #fff;
+    padding: 0;
   }
 }
 .building-item{
@@ -325,5 +409,16 @@ export default {
 .caption .btn-icon{
   font-size: 30px;
   // color: #444;
+}
+.building-list{
+  .pagination > button{
+    display: block;
+    padding: 5px 10px;
+    height: 40px;
+    background-color: transparent;
+    &:last-of-type{
+      border-top: 1px solid #eee;
+    }
+  }
 }
 </style>

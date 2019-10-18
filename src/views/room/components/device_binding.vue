@@ -20,6 +20,7 @@
 import BaseTable from '@/assets/package/table-base'
 import DeviceAPI from '@/api/device'
 import { PAGINATION_PAGENO, PAGINATION_PAGESIZE } from '@/common/constants'
+const {default: Suit} = require('@/common/suit')
 export default {
   name: 'room-device-binding',
   data () {
@@ -65,15 +66,24 @@ export default {
       }, {
         label: '设备状态',
         prop: 'state',
-        align: 'center'
+        align: 'center',
+        formatter (status, row) {
+          return Suit.getStatusDescriptor(status, row.device_type, row.device_child_type)
+        }
       }, {
         label: '设备类型',
         prop: 'device_type',
-        align: 'center'
+        align: 'center',
+        formatter (val) {
+          return Suit.getRootDeviceDescriptor(val)
+        }
       }, {
         label: '子设备类型',
         prop: 'device_child_type',
-        align: 'center'
+        align: 'center',
+        formatter (val, row) {
+          return Suit.getDeviceTypeDescriptor(row.device_type, val)
+        }
       }]
     },
     getDeviceList () {

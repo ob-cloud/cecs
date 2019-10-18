@@ -14,7 +14,7 @@
         <el-button type="primary" icon="el-icon-search" @click="handleSearch">查询</el-button>
       </div>
     </div>
-    <div class="building-list" v-loading.lock="loading">
+    <div class="building-list" v-loading.lock="loading" :style="{height: `${containerHeight}px`}">
       <div class="building-item" v-for="item in layerList" :key="item.id">
         <div class="header">
           <i class="icon obicon obicon-power" title="电源" @click="handlePower(item)"></i>
@@ -61,9 +61,16 @@
 import RoomAPI from '@/api/room'
 import Helper from '@/common/helper'
 export default {
+  props: {
+    preload: {
+      type: Boolean,
+      default: false
+    }
+  },
   data () {
     return {
-      loading: true,
+      loading: false,
+      containerHeight: 500,
       buildingList: [],
       layerList: [],
       total: 0,

@@ -2,7 +2,7 @@
  * @Author: eamiear
  * @Date: 2019-08-07 16:43:10
  * @Last Modified by: eamiear
- * @Last Modified time: 2019-10-18 15:56:58
+ * @Last Modified time: 2019-10-18 17:10:07
  */
 
 import {request} from '@/common/request'
@@ -94,6 +94,36 @@ const RoomAPI = {
       scene_number: sceneNumber
     })
   },
+  getRoomListV2 (room = {}) {
+    return request.get('/consumer/common', {
+      CMD: 'get_room',
+      room: JSON.stringify(room)
+    })
+  },
+  addRoomV2 (room) {
+    return request.postForm('/consumer/common', {
+      CMD: 'add_room',
+      room: JSON.stringify(room)
+    })
+  },
+  updateRoomV2 (room) {
+    return request.postForm('/consumer/common', {
+      CMD: 'update_room',
+      room: JSON.stringify(room)
+    })
+  },
+  removeRoomV2 (id) {
+    return request.postForm('/consumer/common', {
+      CMD: 'delete_room',
+      room: JSON.stringify({id})
+    })
+  },
+  bindDeviceToRoomV2 (roomId, deviceId) {
+    return request.postForm('/consumer/common', {
+      CMD: 'bind_room_device',
+      device: JSON.stringify({roomId, deviceId})
+    })
+  },
   triggerGlobalSwitch (deviceType) {
     return request.postForm('/consumer/common', {
       CMD: 'tigger_room_device',
@@ -138,6 +168,12 @@ const FloorAPI = {
     return request.get('/consumer/common', {
       CMD: 'get_floor',
       floor: JSON.stringify(floor)
+    })
+  },
+  getFloorByBuildingId (buildingId) {
+    return request.get('/consumer/common', {
+      CMD: 'get_building_floor',
+      floor: JSON.stringify({buildingId})
     })
   },
   addFloor (floor = {}) {

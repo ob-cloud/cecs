@@ -55,9 +55,15 @@ import RoomAPI from '@/api/room'
 // import { PAGINATION_PAGENO, PAGINATION_PAGESIZE } from '@/common/constants'
 import Helper from '@/common/helper'
 export default {
+  props: {
+    preload: {
+      type: Boolean,
+      default: false
+    }
+  },
   data () {
     return {
-      loading: true,
+      loading: false,
       containerHeight: 500,
       buildingList: [],
       createDialogVisible: false,

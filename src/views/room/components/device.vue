@@ -143,6 +143,7 @@ export default {
         text: '设备绑定中...'
       })
       this.deviceDialogVisible = false
+      // RoomAPI.bindDeviceToRoomV2()
       const params = {
         serialId: selection.obox_serial_id,
         location: this.room,

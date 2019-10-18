@@ -5,13 +5,13 @@
         <i-map :height="tableHeight"></i-map>
       </el-tab-pane>
       <el-tab-pane label="房间" name="room">
-        <room :height="tableHeight"></room>
+        <room :height="tableHeight" :roomPreload="roomPreload"></room>
       </el-tab-pane>
       <el-tab-pane label="楼栋" name="building">
-        <building :height="tableHeight"></building>
+        <building :height="tableHeight" :preload="buildingPreload"></building>
       </el-tab-pane>
       <el-tab-pane label="楼层" name="floor">
-        <floor :height="tableHeight"></floor>
+        <floor :height="tableHeight" :preload="floorPreload"></floor>
       </el-tab-pane>
     </el-tabs>
   </div>
@@ -27,12 +27,25 @@ export default {
   data () {
     return {
       activeName: 'map',
-      tableHeight: 0
+      tableHeight: 0,
+      roomPreload: false,
+      buildingPreload: false,
+      floorPreload: false
     }
   },
   components: { Building, Floor, Room, iMap },
   created () {
   },
+  // watch: {
+  //   activeName (val) {
+  //     if (!val) return
+  //     // this.mapPreload = val === 'map'
+  //     this.roomPreload = val === 'room'
+  //     this.buildingPreload = val === 'building'
+  //     this.floorPreload = val === 'floor'
+  //     console.log(this.roomPreload)
+  //   }
+  // },
   mounted () {
     Helper.windowOnResize(this, this.fixLayout)
   },
