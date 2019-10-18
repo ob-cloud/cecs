@@ -2,7 +2,7 @@
  * @Author: eamiear
  * @Date: 2019-08-05 17:32:41
  * @Last Modified by: eamiear
- * @Last Modified time: 2019-10-15 17:39:24
+ * @Last Modified time: 2019-10-17 16:22:52
  */
 
 import {request} from '@/common/request'
@@ -66,6 +66,15 @@ const DeviceAPI = {
       device_child_type: deviceSubType,
       state: '02',
       timeout: 60
+    })
+  },
+  getDeviceStatusHistory (serialId, fromDate, toDate, type = '02') {
+    return request.postForm('/consumer/common', {
+      CMD: 'query_device_status_history',
+      serialId,
+      from_data: fromDate,
+      to_data: toDate,
+      type
     })
   }
 }

@@ -2,7 +2,7 @@
  * @Author: eamiear
  * @Date: 2018-11-27 11:32:42
  * @Last Modified by: eamiear
- * @Last Modified time: 2019-09-25 17:38:17
+ * @Last Modified time: 2019-10-18 11:21:44
  */
 
 const isProduction = process.env.NODE_ENV === 'production'
@@ -42,5 +42,9 @@ module.exports = {
         'views': '@/views'
       }
     }
-  })
+  }),
+  transpileDependencies: [
+    'vue-echarts',
+    'resize-detector'
+  ]
 }

@@ -44,6 +44,7 @@
 import BaseTable from '@/assets/package/table-base'
 import DeviceHistory from './history'
 import DeviceCreate from './add'
+import HumifierChart from './components/humifier-chart'
 import DeviceAPI from '@/api/device'
 import { PAGINATION_PAGENO, PAGINATION_PAGESIZE } from '@/common/constants'
 import Helper from '@/common/helper'
@@ -73,10 +74,15 @@ export default {
       dialogVisible: false,
       activeRecord: {},
       addDeviceDialogVisible: false,
-      addDeviceSelected: {}
+      addDeviceSelected: {},
+      humidifierMap: {
+        tableLoading: true,
+        list: [],
+        chartList: []
+      }
     }
   },
-  components: { BaseTable, DeviceHistory, DeviceCreate },
+  components: { BaseTable, DeviceHistory, DeviceCreate, HumifierChart },
   created () {
     this.getOboxList()
     this.columns = this.getColumns()
@@ -95,7 +101,63 @@ export default {
       this.tableHeight = Helper.calculateTableHeight() - 50
     },
     getColumns () {
+      const that = this
       return [{
+        type: 'expand',
+        renderBody (h, row) {
+          if (Suit.typeHints.isHumidifierSensors(row.device_child_type)) {
+            !that.humidifierMap.list.length && that.getHumidifierStatusHistoryByDay(row.serialId)
+            const tableData = that.humidifierMap.list
+            !that.humidifierMap.chartList.length && that.getHumidifierStatusHistoryByWeek(row.serialId)
+            let labels = []
+            const series = []
+            if (that.humidifierMap.chartList.length) {
+              labels = that.humidifierMap.chartList.map(item => item.time)
+              const temperature = that.humidifierMap.chartList.map(item => item.temperature)
+              const humidifier = that.humidifierMap.chartList.map(item => item.humidifier)
+              series.push({
+                name: '温度',
+                type: 'line',
+                data: temperature
+              })
+              series.push({
+                name: '湿度',
+                type: 'bar',
+                data: humidifier
+              })
+            }
+            return [
+              <div class="expand humidifier">
+                <div class="humidifier-status">
+                  <div class="item">
+                    <p><i class="obicon obicon-temperature-o"></i><span>温度</span></p>
+                    <span>23℃</span>
+                  </div>
+                  <div class="item">
+                    <p><i class="obicon obicon-humidity"></i><span>湿度</span></p>
+                    <span>33%</span>
+                  </div>
+                </div>
+                <el-tabs tab-position="right" class="humidifier-table">
+                  <el-tab-pane label="历史数据">
+                    <BaseTable
+                      v-loading={that.humidifierMap.tableLoading}
+                      stripe border
+                      height="360px"
+                      showPagination={false}
+                      tableData={tableData}
+                      columns={[{label: '温度', prop: 'temperature', align: 'center'}, {label: '湿度', prop: 'humidifier', align: 'center'}, {label: '时间', prop: 'time', align: 'center'}]}>
+                    </BaseTable>
+                  </el-tab-pane>
+                  <el-tab-pane label="一周数据" style="max-height: 400px;">
+                    {that.humidifierMap.chartList.length && <HumifierChart data={series} xAxis={labels} style="margin: 0 auto;"></HumifierChart>}
+                  </el-tab-pane>
+                </el-tabs>
+              </div>
+            ]
+          }
+        }
+      }, {
         label: '设备序号',
         prop: 'obox_serial_id',
         align: 'center'
@@ -196,6 +258,41 @@ export default {
       DeviceAPI.getOboxList().then(res => {
         if (res.status === 200) {
           this.oboxList = res.data.oboxs
+        }
+      })
+    },
+    getHumidifierStatusHistoryByWeek (serialId) {
+      const now = new Date().getTime()
+      const toDate = parseInt(now / 1000)
+      const fromDate = parseInt((now - (6 * 24 * 60 * 60 * 1000)) / 1000)
+      DeviceAPI.getDeviceStatusHistory(serialId, fromDate, toDate, '02').then(({data}) => {
+        this.humidifierMap.chartList = this.parseHumidifierHistoryByDay(data.history, '{m}-{d}')
+      })
+    },
+    getHumidifierStatusHistoryByDay (serialId) {
+      const date = new Date()
+      const dateObj = {
+        y: date.getFullYear(),
+        m: date.getMonth() + 1,
+        d: date.getDate()
+      }
+      const fromDate = parseInt(new Date(`${dateObj.y}-${dateObj.m}-${dateObj.d} 00:00`).getTime() / 1000)
+      const toDate = parseInt(new Date(`${dateObj.y}-${dateObj.m}-${dateObj.d} 23:59`).getTime() / 1000)
+      this.humidifierMap.tableLoading = true
+      DeviceAPI.getDeviceStatusHistory(serialId, fromDate, toDate, '01').then(({data}) => {
+        this.humidifierMap.tableLoading = false
+        this.humidifierMap.list = this.parseHumidifierHistoryByDay(data.history)
+      })
+    },
+    parseHumidifierHistoryByDay (list, fmt) {
+      return Array.from(list.concat(list)).map(item => {
+        const temperature = +parseInt(item.status.slice(2, 4), 16).toString(10) - 30
+        const humidifier = +parseInt(item.status.slice(6, 8), 16).toString(10)
+        const time = Helper.parseTime(new Date(item.time * 1000), fmt || '{h}:{i}')
+        return {
+          temperature,
+          humidifier,
+          time
         }
       })
     },
@@ -318,5 +415,61 @@ export default {
 .smart{
   width: 94%;
   margin: 12px auto;
+}
+</style>
+<style lang="scss">
+.expand.humidifier {
+  padding: 20px 10px;
+  // background: rgba(7, 16, 33, 0.24);
+  border-radius: 20px;
+  box-shadow: 0 0 2px 1px #ababab;
+  position: relative;
+
+  .humidifier-status{
+    width: 30%;
+    display: inline-block;
+    // border: 1px solid #eee;
+    vertical-align: top;
+    // box-shadow: 0 0 2px 1px #f2f2f2;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+
+    .item {
+      display: inline-block;
+      width: 50%;
+      // padding: 10px;
+      padding: 50px;
+      text-align: center;
+      border-right: 1px solid #eee;
+      &:last-of-type{
+        border-right: none;
+      }
+    }
+    .item p{
+      padding: 5px;
+      color: #666;
+      span{
+        font-size: 12px;
+      }
+    }
+    .item i {
+      font-size: 32px;
+      color: rgba(5, 100, 184, 0.9);
+    }
+    .item > span{
+      display: inline-block;
+      padding: 5px;
+      font-size: 20px;
+    }
+
+  }
+  .humidifier-table{
+    display: inline-block;
+    // width: 70%;
+    // padding-left: 5px;
+    width: 100%;
+    padding-left: 30%;
+  }
 }
 </style>
