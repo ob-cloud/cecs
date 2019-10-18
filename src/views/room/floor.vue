@@ -9,13 +9,13 @@
         </el-button-group>
       </div>
       <div class="caption">
-        <el-input class="caption-item" @keyup.enter.native="handleSearch" placeholder="请输入楼栋"></el-input>
-        <el-input class="caption-item" @keyup.enter.native="handleSearch" placeholder="请输入楼层"></el-input>
+        <el-input class="caption-item" @keyup.enter.native="handleSearch" v-model="searchModel.buildName" placeholder="请输入楼栋"></el-input>
+        <el-input class="caption-item" @keyup.enter.native="handleSearch" v-model="searchModel.floorName" placeholder="请输入楼层"></el-input>
         <el-button type="primary" icon="el-icon-search" @click="handleSearch">查询</el-button>
       </div>
     </div>
     <div class="building-list" v-loading.lock="loading">
-      <div class="building-item" v-for="item in 20" :key="item">
+      <div class="building-item" v-for="item in layerList" :key="item.id">
         <div class="header">
           <i class="icon obicon obicon-power" title="电源" @click="handlePower(item)"></i>
           <i class="icon el-icon-edit" title="编辑" @click="handleEdit(item)"></i>
@@ -23,14 +23,30 @@
         </div>
         <div class="content">
           <i class="building-sign obicon obicon-building" :class="{'is-active': item === 2}"></i>
-          <p class="text">{{item}}栋-{{item}}楼层</p>
+          <p class="text">{{item.buildingName}}栋-{{item.floorName}}层</p>
         </div>
       </div>
+      <el-pagination
+        class="pagination"
+        prev-text="上一屏"
+        next-text="下一屏"
+        :page-size="searchModel.pageSize"
+        :total="total"
+        layout="prev, next"
+        @current-change="onCurrentChange"
+        @size-change="onSizeChange">
+      </el-pagination>
     </div>
     <el-dialog  v-if="createDialogVisible" top="10%" width="660px" :title="dialogTitleMap[dialogStatus]" :visible.sync="createDialogVisible" :close-on-click-modal="false">
       <el-form class="ob-form" ref="creation" autoComplete="on" :rules="creationRules" :model="createModel" label-position="left" label-width="80px">
-        <el-form-item label="楼层名称" prop="layer">
-          <el-input v-model="createModel.layer" placeholder="请输入楼层"></el-input>
+
+        <el-form-item label="楼栋名称" prop="buildingId">
+          <el-select clearable class="item" placeholder="请选择楼栋" v-model="createModel.buildingId">
+            <el-option :label='item.buildName' :value='item.id' v-for="item in buildingList" :key="item.id"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="楼层名称" prop="floorName">
+          <el-input v-model="createModel.floorName" placeholder="请输入楼层"></el-input>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -42,48 +58,115 @@
 </template>
 
 <script>
+import RoomAPI from '@/api/room'
+import Helper from '@/common/helper'
 export default {
   data () {
     return {
       loading: true,
+      buildingList: [],
       layerList: [],
+      total: 0,
       createDialogVisible: false,
       dialogStatus: '',
       dialogTitleMap: {
         edit: '编辑楼层',
         create: '创建楼层'
       },
+      searchModel: {
+        buildName: '',
+        floorName: '',
+        pageNo: 1,
+        pageSize: 10
+      },
       createModel: {
-        layer: ''
+        floorName: '',
+        buildingId: ''
       },
       creationRules: {
-        layer: [{ required: true, message: '楼层不可为空', trigger: 'blur' }]
+        floorName: [{ required: true, message: '楼层不可为空', trigger: 'blur' }],
+        buildingId: [{ required: true, message: '楼栋不可为空', trigger: 'blur' }]
       }
     }
   },
   created () {
     this.getLayerList()
+    this.getBuildingList()
+  },
+  watch: {
+    createDialogVisible (val) {
+      if (val === false) {
+        this.$refs.creation.resetFields()
+      }
+    }
+  },
+  mounted () {
+    Helper.windowOnResize(this, this.fixLayout)
   },
   methods: {
+    fixLayout () {
+      this.containerHeight = Helper.calculateTableHeight() - 20
+    },
+    getBuildingList () {
+      RoomAPI.getBuildingList({buildName: ''}).then(res => {
+        if (res.status === 0) {
+          const {data} = res
+          this.buildingList = data.records
+        }
+      })
+    },
     getLayerList () {
       this.loading = true
-      setTimeout(() => {
+      RoomAPI.getFloorList(this.searchModel).then(res => {
+        if (res.status === 0) {
+          const {data} = res
+          this.layerList = data.records
+          this.total = res.total
+        }
         this.loading = false
-        this.layerList = 20
-      }, 3000)
+      })
     },
     handleRefresh () {
       this.getLayerList()
     },
+    onCurrentChange (pageNo) {
+      this.searchModel.pageNo = pageNo
+      this.getLayerList()
+    },
+    onSizeChange (pageSize) {
+      this.searchModel.pageSize = pageSize
+      this.getLayerList()
+    },
+    resetModel () {
+      this.createModel = {
+        floorName: '',
+        buildingId: ''
+      }
+    },
     handleCreate () {
       this.dialogStatus = 'create'
       this.createDialogVisible = true
+      this.resetModel()
     },
-    checkCreate () {
+    checkCreate (type) {
       this.$refs.creation.validate(valid => {
         if (valid) {
-          // TODO
-          // type === 'create' ? this.createAction() : this.editAction()
+          const action = type === 'create' ? 'addFloor' : 'updateFloor'
+          RoomAPI[action](this.createModel).then(response => {
+            if (response.status === 0) {
+              this.getLayerList()
+            } else {
+              this.$message({
+                type: 'error',
+                message: (type === 'create' ? '添加' : '编辑') + '失败!'
+              })
+            }
+          }).catch(() => {
+            this.$message({
+              type: 'error',
+              message: '操作失败'
+            })
+          })
           this.createDialogVisible = false
         }
       })
@@ -108,9 +191,17 @@ export default {
         lock: true,
         text: '正在关闭开关...'
       })
-      setTimeout(() => {
-        loading.close()
-      }, 1500)
+      RoomAPI.triggerGlobalSwitch(1).then(res => {
+        if (res.status === 0) {
+          this.getLayerList()
+          loading.close()
+        } else {
+          this.$message({
+            type: 'error',
+            message: '开关操作失败!'
+          })
+        }
+      })
     },
     handlePower (item) {
       this.$confirm('即将关闭该楼栋所有开关', '确认提示', {
@@ -119,7 +210,16 @@ export default {
         type: 'warning',
         closeOnClickModal: false
       }).then(() => {
-        // TODO
+        RoomAPI.triggerSwitch({floorId: item.id, deviceType: 1}).then(res => {
+          if (res.status === 0) {
+            this.getLayerList()
+          } else {
+            this.$message({
+              type: 'error',
+              message: '开关操作失败!'
+            })
+          }
+        })
       }).catch(() => {
         console.log('取消删除')
       })
@@ -127,7 +227,7 @@ export default {
     handleEdit (item) {
       this.dialogStatus = 'edit'
       this.createDialogVisible = true
-      this.createModel.layer = item
+      this.createModel = {buildingId: item.buildingId, id: item.id, floorName: item.floorName}
     },
     handleRemove (item) {
       this.$confirm('确认删除楼栋？', '确认提示', {
@@ -136,7 +236,21 @@ export default {
         type: 'warning',
         closeOnClickModal: false
       }).then(() => {
-        // this.doDelete(row)
+        RoomAPI.removeFloor(item.id).then(response => {
+          if (response.status === 0) {
+            this.getLayerList()
+          } else {
+            this.$message({
+              type: 'error',
+              message: '删除失败!'
+            })
+          }
+        }).catch(() => {
+          this.$message({
+            type: 'error',
+            message: '删除失败'
+          })
+        })
       }).catch(() => {
         console.log('取消删除')
       })
@@ -169,6 +283,21 @@ export default {
   .caption-item{
     width: 200px;
     margin-right: 20px;
+  }
+}
+.building-list{
+  position: relative;
+  padding-right: 70px;
+  .pagination{
+    display: inline-block;
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    border-radius: 6px;
+    box-shadow: 0 0 1px 1px #f2f2f2;
+    background: #fff;
+    padding: 0;
   }
 }
 .building-item{
@@ -238,8 +367,15 @@ export default {
 }
 </style>
 <style lang="scss">
-// .caption .btn-icon{
-//   font-size: 30px;
-//   // color: #444;
-// }
+.building-list{
+  .pagination > button{
+    display: block;
+    padding: 5px 10px;
+    height: 40px;
+    background-color: transparent;
+    &:last-of-type{
+      border-top: 1px solid #eee;
+    }
+  }
+}
 </style>

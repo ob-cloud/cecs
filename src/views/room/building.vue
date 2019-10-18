@@ -120,9 +120,13 @@ export default {
       this.searchModel.pageSize = pageSize
       this.getBuildingList()
     },
+    resetModel () {
+      this.createModel.buildName = ''
+    },
     handleCreate () {
       this.dialogStatus = 'create'
       this.createDialogVisible = true
+      this.resetModel()
     },
     checkCreate (type) {
       this.$refs.creation.validate(valid => {
@@ -189,6 +193,7 @@ export default {
       RoomAPI.triggerGlobalSwitch(1).then(res => {
         if (res.status === 0) {
           this.getBuildingList()
+          loading.close()
         } else {
           this.$message({
             type: 'error',
@@ -196,9 +201,6 @@ export default {
           })
         }
       })
-      setTimeout(() => {
-        loading.close()
-      }, 1500)
     },
     handlePower (item) {
       this.$confirm('即将关闭该楼栋所有开关', '确认提示', {
@@ -239,7 +241,7 @@ export default {
       })
     },
     doRemove (row) {
-      RoomAPI.removeBuilding({id: row.id}).then(response => {
+      RoomAPI.removeBuilding(row.id).then(response => {
         if (response.status === 0) {
           this.getBuildingList()
         } else {

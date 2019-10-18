@@ -2,7 +2,7 @@
  * @Author: eamiear
  * @Date: 2019-08-07 16:43:10
  * @Last Modified by: eamiear
- * @Last Modified time: 2019-10-18 15:29:32
+ * @Last Modified time: 2019-10-18 15:56:58
  */
 
 import {request} from '@/common/request'
@@ -126,11 +126,37 @@ const BuildingAPI = {
       building: JSON.stringify(building)
     })
   },
-  removeBuilding (building = {}) {
+  removeBuilding (id) {
     return request.postForm('/consumer/common', {
       CMD: 'delete_building',
-      building: JSON.stringify(building)
+      building: JSON.stringify({id})
     })
   }
 }
-export default {...RoomAPI, ...BuildingAPI}
+const FloorAPI = {
+  getFloorList (floor = {}) {
+    return request.get('/consumer/common', {
+      CMD: 'get_floor',
+      floor: JSON.stringify(floor)
+    })
+  },
+  addFloor (floor = {}) {
+    return request.postForm('/consumer/common', {
+      CMD: 'add_floor',
+      floor: JSON.stringify(floor)
+    })
+  },
+  updateFloor (floor = {}) {
+    return request.postForm('/consumer/common', {
+      CMD: 'update_floor',
+      floor: JSON.stringify(floor)
+    })
+  },
+  removeFloor (id) {
+    return request.postForm('/consumer/common', {
+      CMD: 'delete_floor',
+      floor: JSON.stringify({id})
+    })
+  }
+}
+export default {...RoomAPI, ...BuildingAPI, ...FloorAPI}
