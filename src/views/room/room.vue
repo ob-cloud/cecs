@@ -44,7 +44,7 @@
       <el-form class="ob-form" ref="creation" autoComplete="on" :rules="creationRules" :model="roomModel" label-position="left" label-width="80px">
         <el-form-item label="楼栋名称" prop="buildingId">
           <el-select placeholder="请选择楼栋" v-model="roomModel.buildingId">
-            <el-option v-for="item in buildingList" :key="item.id" :label="item.buildName + '栋'" :value="item.buildingId"></el-option>
+            <el-option v-for="item in buildingList" :key="item.id" :label="item.buildingName + '栋'" :value="item.buildingId"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="楼层名称" prop="floorId">
@@ -239,12 +239,12 @@ export default {
       })
     },
     handleDevice (row) {
-      this.deviceActiveRoom = row.location
+      this.deviceActiveRoom = row.id
       this.dialogStatus = 'device'
       this.deviceDialogVisible = true
     },
     handleScene (row) {
-      this.sceneActiveRoom = row.location
+      this.sceneActiveRoom = row.id
       this.dialogStatus = 'scene'
       this.sceneDialogVisible = true
     },

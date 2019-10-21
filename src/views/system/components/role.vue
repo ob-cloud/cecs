@@ -15,8 +15,8 @@
           <el-input @keyup.enter.native="handleSearch" class="caption-item" placeholder="输入角色名称" v-model="search.roleName"></el-input>
           <el-select clearable class="caption-item" placeholder="角色使用状态" v-model="search.status">
             <el-option label='全部' value=''></el-option>
-            <el-option label='启用' :value='0'></el-option>
-            <el-option label='停用' :value='1'></el-option>
+            <el-option label='启用' :value='1'></el-option>
+            <el-option label='停用' :value='0'></el-option>
           </el-select>
           <el-button type="primary" icon="el-icon-search" @click="handleSearch">查询</el-button>
         </template>
@@ -50,6 +50,7 @@
 </template>
 
 <script>
+import UserAPI from '@/api/user'
 import BaseTable from '@/assets/package/table-base'
 import { PAGINATION_PAGENO, PAGINATION_PAGESIZE } from '@/common/constants'
 import Helper from '@/common/helper'
@@ -102,6 +103,7 @@ export default {
   components: { BaseTable },
   created () {
     this.columns = this.getColumns()
+    this.getRoleList()
   },
   watch: {
     createDialogVisible (val) {
@@ -120,7 +122,7 @@ export default {
     getColumns () {
       return [{
         label: '序号',
-        prop: '',
+        prop: 'roleId',
         align: 'center'
       }, {
         label: '角色名称',
@@ -129,7 +131,10 @@ export default {
       }, {
         label: '状态',
         prop: 'status',
-        align: 'center'
+        align: 'center',
+        formatter (val) {
+          return val ? '启用' : '停用'
+        }
       }, {
         label: '操作',
         align: 'center',
@@ -138,10 +143,25 @@ export default {
     },
     getToolboxRender (h, row) {
       return [
-        <el-button size="tiny" icon="el-icon-edit" title="启用" onClick={() => this.handleEdit(row)}></el-button>,
-        <el-button size="tiny" icon="el-icon-edit" title="编辑" onClick={() => this.handleEdit(row)}></el-button>,
-        <el-button size="tiny" icon="el-icon-delete" title="删除" onClick={() => this.handleRemove(row)}></el-button>
+        <el-button size="tiny" title="启用" onClick={() => this.handleEdit(row)}>{row.status ? '启用' : '停用'}</el-button>,
+        <el-button size="tiny" title="编辑" onClick={() => this.handleEdit(row)}>编辑</el-button>,
+        <el-button size="tiny" title="删除" onClick={() => this.handleRemove(row)}>删除</el-button>
       ]
+    },
+    getRoleList () {
+      this.tableLoading = true
+      UserAPI.getRoleList(this.search.roleName, this.search.status).then(res => {
+        if (res.status === 0) {
+          console.log('role  ', res)
+          this.tableData = res.data.records
+        } else {
+          this.$message({
+            type: 'success',
+            message: res.message || '获取失败'
+          })
+        }
+        this.tableLoading = false
+      })
     },
     getAccountList () {
       // this.tableLoading = true
@@ -165,16 +185,16 @@ export default {
     },
     onCurrentChange (pageNo) {
       this.search.pageNo = pageNo
-      this.getAccountList()
+      this.getRoleList()
     },
     onSizeChange (pageSize) {
       this.search.pageSize = pageSize
-      this.getAccountList()
+      this.getRoleList()
     },
     handleSearch () {
       this.search.pageNo = PAGINATION_PAGENO
       this.search.pageSize = PAGINATION_PAGESIZE
-      this.getAccountList()
+      this.getRoleList()
     },
     resetcreateModel () {
       this.createModel = {
@@ -184,7 +204,7 @@ export default {
       }
     },
     handleRefresh () {
-      this.getAccountList()
+      this.getRoleList()
     },
     handleCreate () {
       this.dialogStatus = 'create'
@@ -211,27 +231,27 @@ export default {
         type: 'warning',
         closeOnClickModal: false
       }).then(() => {
-        this.doDelete(row)
+        //
       }).catch(() => {
         console.log('取消删除')
       })
     },
     doDelete (row) {
-      // RoomAPI.deleteRoom(row).then(response => {
-      //   if (response.status === 200) {
-      //     this.getAccountList()
-      //   } else {
-      //     this.$message({
-      //       type: 'error',
-      //       message: '删除失败!'
-      //     })
-      //   }
-      // }).catch(() => {
-      //   this.$message({
-      //     type: 'error',
-      //     message: '删除失败~~'
-      //   })
-      // })
+      RoomAPI.deleteRoom(row).then(response => {
+        if (response.status === 200) {
+          this.getAccountList()
+        } else {
+          this.$message({
+            type: 'error',
+            message: '删除失败!'
+          })
+        }
+      }).catch(() => {
+        this.$message({
+          type: 'error',
+          message: '删除失败~~'
+        })
+      })
     }
   }
 }

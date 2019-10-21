@@ -106,15 +106,19 @@ export default {
         type: 'expand',
         renderBody (h, row) {
           if (Suit.typeHints.isHumidifierSensors(row.device_child_type)) {
-            !that.humidifierMap.list.length && that.getHumidifierStatusHistoryByDay(row.serialId)
-            const tableData = that.humidifierMap.list
-            !that.humidifierMap.chartList.length && that.getHumidifierStatusHistoryByWeek(row.serialId)
+            const humidifierList = that.humidifierMap.list[row.serialId]
+            // const isListValid = !!that.humidifierMap.list[row.serialId].length
+            const charList = that.humidifierMap.chartList[row.serialId]
+            const isCharListValid = charList && charList.length
+            // !that.humidifierMap.list.length && that.getHumidifierStatusHistoryByDay(row.serialId)
+            const tableData = humidifierList
+            // !that.humidifierMap.chartList.length && that.getHumidifierStatusHistoryByWeek(row.serialId)
             let labels = []
             const series = []
-            if (that.humidifierMap.chartList.length) {
-              labels = that.humidifierMap.chartList.map(item => item.time)
-              const temperature = that.humidifierMap.chartList.map(item => item.temperature)
-              const humidifier = that.humidifierMap.chartList.map(item => item.humidifier)
+            if (isCharListValid) {
+              labels = charList.map(item => item.time)
+              const temperature = charList.map(item => item.temperature)
+              const humidifier = charList.map(item => item.humidifier)
               series.push({
                 name: '温度',
                 type: 'line',
@@ -150,7 +154,7 @@ export default {
                     </BaseTable>
                   </el-tab-pane>
                   <el-tab-pane label="一周数据" style="max-height: 400px;">
-                    {that.humidifierMap.chartList.length && <HumifierChart data={series} xAxis={labels} style="margin: 0 auto;"></HumifierChart>}
+                    {isCharListValid && <HumifierChart data={series} xAxis={labels} style="margin: 0 auto;"></HumifierChart>}
                   </el-tab-pane>
                 </el-tabs>
               </div>
@@ -239,6 +243,10 @@ export default {
       DeviceAPI.getDeviceList(this.search).then(resp => {
         if (resp.status === 200) {
           this.tableData = resp.data.config
+          Array.from(this.tableData).forEach(item => {
+            if (!item) return
+            this.prefetchHistory(item.device_child_type, item.serialId)
+          })
         } else {
           this.$message({
             message: resp.message || '设备获取失败'
@@ -261,12 +269,18 @@ export default {
         }
       })
     },
+    prefetchHistory (type, serialId) {
+      if (Suit.typeHints.isHumidifierSensors(type)) {
+        this.getHumidifierStatusHistoryByWeek(serialId)
+        this.getHumidifierStatusHistoryByDay(serialId)
+      }
+    },
     getHumidifierStatusHistoryByWeek (serialId) {
       const now = new Date().getTime()
       const toDate = parseInt(now / 1000)
       const fromDate = parseInt((now - (6 * 24 * 60 * 60 * 1000)) / 1000)
       DeviceAPI.getDeviceStatusHistory(serialId, fromDate, toDate, '02').then(({data}) => {
-        this.humidifierMap.chartList = this.parseHumidifierHistoryByDay(data.history, '{m}-{d}')
+        this.humidifierMap.chartList[serialId] = this.parseHumidifierHistoryByDay(data.history, '{m}-{d}')
       })
     },
     getHumidifierStatusHistoryByDay (serialId) {
@@ -281,7 +295,7 @@ export default {
       this.humidifierMap.tableLoading = true
       DeviceAPI.getDeviceStatusHistory(serialId, fromDate, toDate, '01').then(({data}) => {
         this.humidifierMap.tableLoading = false
-        this.humidifierMap.list = this.parseHumidifierHistoryByDay(data.history)
+        this.humidifierMap.list[serialId] = this.parseHumidifierHistoryByDay(data.history)
       })
     },
     parseHumidifierHistoryByDay (list, fmt) {
@@ -381,7 +395,6 @@ export default {
       this.addDeviceSelected = selected
     },
     createDevice () {
-      console.log(this.addDeviceSelected)
       if (!this.addDeviceSelected.oboxId || !this.addDeviceSelected.deviceType) {
         return this.$message({
           type: 'warning',
@@ -436,15 +449,14 @@ export default {
     transform: translateY(-50%);
 
     .item {
-      display: inline-block;
-      width: 50%;
-      // padding: 10px;
+      // display: inline-block;
+      // width: 50%;
       padding: 50px;
       text-align: center;
-      border-right: 1px solid #eee;
-      &:last-of-type{
-        border-right: none;
-      }
+      // border-right: 1px solid #eee;
+      // &:last-of-type{
+      //   border-right: none;
+      // }
     }
     .item p{
       padding: 5px;

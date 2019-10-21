@@ -143,13 +143,8 @@ export default {
         text: '设备绑定中...'
       })
       this.deviceDialogVisible = false
-      // RoomAPI.bindDeviceToRoomV2()
-      const params = {
-        serialId: selection.obox_serial_id,
-        location: this.room,
-        device_type: selection.device_type
-      }
-      RoomAPI.setRoomDevice(params).then(res => {
+
+      RoomAPI.bindDeviceToRoomV2(this.room, selection.id).then(res => {
         loader.close()
         this.responseHandler(res, '设备绑定')
         if (res.message.includes('success')) {
@@ -159,6 +154,21 @@ export default {
         loader.close()
         this.responseHandler({message: 'error'}, '设备绑定')
       })
+      // const params = {
+      //   serialId: selection.obox_serial_id,
+      //   location: this.room,
+      //   device_type: selection.device_type
+      // }
+      // RoomAPI.setRoomDevice(params).then(res => {
+      //   loader.close()
+      //   this.responseHandler(res, '设备绑定')
+      //   if (res.message.includes('success')) {
+      //     this.getRoomDeviceList()
+      //   }
+      // }).catch(() => {
+      //   loader.close()
+      //   this.responseHandler({message: 'error'}, '设备绑定')
+      // })
     },
     handleCreate () {
       this.deviceDialogVisible = true

@@ -39,7 +39,7 @@ export const changeSwitchButtonToAction = (value, device) => {
 }
 
 export const changeAirConditionToAction = (action, device) => {
-  return toAction(action, {'device_child_type': '01', addr: 'fe', ...device, node_type: '07'})
+  return toAction(action, {'device_child_type': '01', addr: 'fe', 'device_type': device.deviceType, name: device.name, index: device.index, node_type: '07'})
 }
 
 export const getAirConditionKeys = (templure, mode, speed, windVertical, windHorizon) => {

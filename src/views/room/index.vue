@@ -5,13 +5,13 @@
         <i-map :height="tableHeight"></i-map>
       </el-tab-pane>
       <el-tab-pane label="房间" name="room">
-        <room :height="tableHeight" :roomPreload="roomPreload"></room>
+        <room v-if="activeName === 'room'" :height="tableHeight" :roomPreload="roomPreload"></room>
       </el-tab-pane>
       <el-tab-pane label="楼栋" name="building">
-        <building :height="tableHeight" :preload="buildingPreload"></building>
+        <building v-if="activeName === 'building'" :height="tableHeight" :preload="buildingPreload"></building>
       </el-tab-pane>
       <el-tab-pane label="楼层" name="floor">
-        <floor :height="tableHeight" :preload="floorPreload"></floor>
+        <floor v-if="activeName === 'floor'" :height="tableHeight" :preload="floorPreload"></floor>
       </el-tab-pane>
     </el-tabs>
   </div>
