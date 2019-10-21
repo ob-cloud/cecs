@@ -21,9 +21,9 @@
           <el-input @keyup.enter.native="handleSearch" class="caption-item" placeholder="设备名称" v-model="search.name"></el-input>
           <el-button type="primary" icon="el-icon-search" @click="handleSearch">查询</el-button>
         </template>
-        <template slot="actionBar">
+        <!-- <template slot="actionBar">
           <el-button type="primary" icon="el-icon-plus" @click="handleCreate">添加设备</el-button>
-        </template>
+        </template> -->
       </slot>
     </base-table>
     <el-dialog top="10%" width="760px" title="设备操作历史" :visible.sync="dialogVisible" :close-on-click-modal="false">
