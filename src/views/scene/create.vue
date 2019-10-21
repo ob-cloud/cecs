@@ -82,6 +82,9 @@
               <el-select placeholder="请选择层" v-model="deviceAction.floor" filterable>
                 <el-option v-for="item in layerList" :key="item" :label="item + '层'" :value="item"></el-option>
               </el-select>
+              <el-select placeholder="请选择房间" v-model="deviceAction.floor" filterable>
+                <el-option v-for="item in layerList" :key="item" :label="item + '房'" :value="item"></el-option>
+              </el-select>
               <el-select placeholder="请选择设备类型" v-model="deviceAction.serialId" @change="onSelectDevice(deviceAction.serialId, index)">
                 <el-option v-for="(item, index) in deviceTypeList" :key="index" :label="item.device_type | deviceTypeFilter(item.device_child_type)" :value="item.serialId"></el-option>
               </el-select>

@@ -26,7 +26,7 @@
         </template>
       </slot>
     </base-table>
-    <el-dialog v-if="createDialogVisible" top="10%" width="860px" :title="dialogAction" :visible.sync="createDialogVisible" :close-on-click-modal="false">
+    <el-dialog v-if="createDialogVisible" top="10%" width="960px" :title="dialogAction" :visible.sync="createDialogVisible" :close-on-click-modal="false">
       <scene-create @scene-ready="onSceneReady" :scene="sceneData" @close="createDialogVisible = false"></scene-create>
       <!-- <div slot="footer" class="dialog-footer text-center" >
         <el-button @click="createDialogVisible = false">取 消</el-button>
@@ -79,29 +79,45 @@ export default {
     },
     getColumns () {
       const _this = this
-      return [{
-        label: '场景序号',
-        prop: 'scene_number',
-        align: 'center'
-      }, {
+      return [
+      // {
+      //   label: '场景序号',
+      //   prop: 'scene_number',
+      //   align: 'center'
+      // },
+      {
         label: '场景名称',
         prop: 'scene_name',
         align: 'center'
       }, {
-        label: '场景类型',
-        prop: 'scene_type',
-        align: 'center',
-        formatter (val) {
-          const type = {
-            '00': '云端场景',
-            '01': '本地场景',
-            '02': '有人场景',
-            '03': '无人场景',
-            '04': '安防场景'
-          }
-          return type[val] || '云端场景'
-        }
+        label: '楼栋',
+        prop: 'building',
+        align: 'center'
       }, {
+        label: '楼层',
+        prop: 'floor',
+        align: 'center'
+      }, {
+        label: '房间',
+        prop: 'room',
+        align: 'center'
+      },
+      // {
+      //   label: '场景类型',
+      //   prop: 'scene_type',
+      //   align: 'center',
+      //   formatter (val) {
+      //     const type = {
+      //       '00': '云端场景',
+      //       '01': '本地场景',
+      //       '02': '有人场景',
+      //       '03': '无人场景',
+      //       '04': '安防场景'
+      //     }
+      //     return type[val] || '云端场景'
+      //   }
+      // },
+      {
         label: '消息推送',
         prop: 'msg_alter',
         align: 'center',
