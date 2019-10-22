@@ -16,8 +16,8 @@
           <el-input @keyup.enter.native="handleSearch" class="caption-item" placeholder="输入角色名称" v-model="search.roleName"></el-input>
           <el-select clearable class="caption-item" placeholder="角色使用状态" v-model="search.status">
             <el-option label='全部' value=''></el-option>
-            <el-option label='启用' :value='1'></el-option>
-            <el-option label='停用' :value='0'></el-option>
+            <el-option label='启用' :value='0'></el-option>
+            <el-option label='停用' :value='1'></el-option>
           </el-select>
           <el-button type="primary" icon="el-icon-search" @click="handleSearch">查询</el-button>
         </template>
@@ -28,16 +28,17 @@
       </slot>
     </base-table>
     <el-dialog v-if="createDialogVisible" top="10%" width="660px" :title="dialogTitleMap[dialogStatus]" :visible.sync="createDialogVisible" :close-on-click-modal="false">
-      <el-form ref="creation" autoComplete="on" :rules="creationRules" :model="createModel" label-position="left" label-width="80px" style="width: 80%; margin: 0 auto;">
+      <el-form ref="createRole" autoComplete="on" :rules="creationRules" :model="createModel" label-position="left" label-width="80px" style="width: 80%; margin: 0 auto;">
         <el-form-item label="角色名称" prop="roleName">
           <el-input v-model="createModel.roleName" autoComplete="on" placeholder="请输入角色名称"></el-input>
         </el-form-item>
         <el-form-item label="角色权限" prop="auth">
           <el-tree
+            ref="authTree"
             :data="authList"
             show-checkbox
             node-key="id"
-            default-expand-all
+            :default-expand-all="false"
             :props="defaultProps">
           </el-tree>
         </el-form-item>
@@ -62,7 +63,7 @@ export default {
       tableHeight: 0,
       total: 0,
       search: {
-        status: '',
+        status: undefined,
         roleName: '',
         pageNo: PAGINATION_PAGENO,
         pageSize: PAGINATION_PAGESIZE
@@ -76,7 +77,9 @@ export default {
       },
       createModel: {
         roleName: '',
-        auth: []
+        auth: [],
+        privilegeWeight: '',
+        parentPrivilegeWeight: ''
       },
       createDialogVisible: false,
       creationRules: {
@@ -97,7 +100,7 @@ export default {
       ],
       defaultProps: {
         label: 'name',
-        children: 'children'
+        children: 'subPrivilege'
       }
     }
   },
@@ -110,7 +113,7 @@ export default {
   watch: {
     createDialogVisible (val) {
       if (val === false) {
-        this.$refs.creation.resetFields()
+        this.$refs.createRole.resetFields()
       }
     }
   },
@@ -135,7 +138,7 @@ export default {
         prop: 'status',
         align: 'center',
         formatter (val) {
-          return val ? '启用' : '停用'
+          return val === 0 ? '启用' : '停用'
         }
       }, {
         label: '操作',
@@ -145,7 +148,7 @@ export default {
     },
     getToolboxRender (h, row) {
       return [
-        <el-button size="tiny" title="启用" onClick={() => this.handleEdit(row)}>{row.status ? '启用' : '停用'}</el-button>,
+        <el-button size="tiny" title="启用" onClick={() => this.handleEdit(row)}>{row.status === 0 ? '启用' : '停用'}</el-button>,
         <el-button size="tiny" title="编辑" onClick={() => this.handleEdit(row)}>编辑</el-button>,
         <el-button size="tiny" title="删除" onClick={() => this.handleRemove(row)}>删除</el-button>
       ]
@@ -168,7 +171,7 @@ export default {
     getAuthList () {
       UserAPI.getPrivilege().then(resp => {
         if (resp.status === 0) {
-          this.authList = resp.data.records
+          this.authList = resp.data.records.privilege
         }
       })
     },
@@ -187,9 +190,10 @@ export default {
     },
     resetcreateModel () {
       this.createModel = {
-        room: '',
-        building: '',
-        layer: ''
+        roleName: '',
+        auth: [],
+        privilegeWeight: '',
+        parentPrivilegeWeight: ''
       }
     },
     handleRefresh () {
@@ -201,11 +205,13 @@ export default {
       this.resetcreateModel()
     },
     doCreate (type) {
-      this.$refs.creation.validate(valid => {
-        // if (valid) {
-        //   type === 'create' ? this.createAction() : this.editAction()
-        //   this.createDialogVisible = false
-        // }
+      console.log('--- ', this.createModel)
+      this.$refs.createRole.validate(valid => {
+        if (valid) {
+          const action = type === 'create' ? 'createRole' : 'updateRole'
+          // UserAPI[action](this.createModel)
+          // this.createDialogVisible = false
+        }
       })
     },
     handleEdit (row) {
@@ -226,9 +232,9 @@ export default {
       })
     },
     doDelete (row) {
-      RoomAPI.deleteRoom(row).then(response => {
+      UserAPI.deleteRoom(row).then(response => {
         if (response.status === 200) {
-          this.getAccountList()
+          this.getRoleList()
         } else {
           this.$message({
             type: 'error',
@@ -241,6 +247,18 @@ export default {
           message: '删除失败~~'
         })
       })
+    },
+    getCheckedNodes () {
+      this.$refs.authTree.getCheckedNodes()
+    },
+    setCheckedNodes () {
+      this.$refs.authTree.setCheckedNodes([{
+        id: 5,
+        label: '二级 2-1'
+      }, {
+        id: 9,
+        label: '三级 1-1-1'
+      }])
     }
   }
 }
