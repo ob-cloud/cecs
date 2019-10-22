@@ -2,7 +2,7 @@
  * @Author: eamiear
  * @Date: 2019-02-06 21:34:24
  * @Last Modified by: eamiear
- * @Last Modified time: 2019-08-06 18:14:50
+ * @Last Modified time: 2019-10-22 09:40:36
  */
 
 import {request} from '@/common/request'
@@ -49,6 +49,16 @@ const SystemAPI = {
     return request.post({
       url: 'qiniu/url',
       params: {key}
+    })
+  },
+  getSysLogs (log = {}) {
+    // return request.postForm('/consumer/common', {
+    //   CMD: 'get_sys_log',
+    //   log: JSON.stringify(log)
+    // })
+    return request.get('/consumer/common', {
+      CMD: 'get_sys_log',
+      log: JSON.stringify(log)
     })
   }
 }

@@ -14,11 +14,12 @@
       <slot>
         <template slot="caption">
           <el-input @keyup.enter.native="handleSearch" class="caption-item" placeholder="执行人" v-model="search.operator"></el-input>
-          <el-select clearable class="caption-item" placeholder="类型" v-model="search.type">
+          <el-input @keyup.enter.native="handleSearch" class="caption-item" placeholder="输入描述内容" v-model="search.sysDesc"></el-input>
+          <el-select clearable class="caption-item" placeholder="类型" v-model="search.sysType">
             <el-option label='全部' value=''></el-option>
-            <el-option label='设备管理' :value='0'></el-option>
-            <el-option label='场景管理' :value='1'></el-option>
-            <el-option label='用户管理' :value='2'></el-option>
+            <el-option label='设备管理' value='设备管理'></el-option>
+            <el-option label='场景管理' value='场景管理'></el-option>
+            <el-option label='用户管理' value='用户管理'></el-option>
           </el-select>
           <el-button type="primary" icon="el-icon-search" @click="handleSearch">查询</el-button>
         </template>
@@ -29,7 +30,7 @@
 
 <script>
 import BaseTable from '@/assets/package/table-base'
-// import OboxAPI from '@/api/obox'
+import SystemAPI from '@/api/system'
 import { PAGINATION_PAGENO, PAGINATION_PAGESIZE } from '@/common/constants'
 import Helper from '@/common/helper'
 export default {
@@ -38,8 +39,9 @@ export default {
       tableLoading: false,
       tableHeight: 0,
       search: {
-        type: '',
+        sysType: '',
         operator: '',
+        sysDesc: '',
         pageNo: PAGINATION_PAGENO,
         pageSize: PAGINATION_PAGESIZE
       },
@@ -71,16 +73,19 @@ export default {
         align: 'center'
       }, {
         label: '类型',
-        prop: 'type',
+        prop: 'sysType',
         align: 'center'
       }, {
         label: '操作行为',
-        prop: 'action',
+        prop: 'sysDesc',
         align: 'center'
       }, {
         label: '操作时间',
-        prop: 'time',
-        align: 'center'
+        prop: 'sysTime',
+        align: 'center',
+        formatter (val) {
+          return val && Helper.parseTime(val)
+        }
       }, {
         label: '执行人',
         prop: 'operator',
@@ -88,24 +93,24 @@ export default {
       }]
     },
     getLogsList () {
-      // this.tableLoading = true
-      // OboxAPI.getLogsList(this.search).then(resp => {
-      //   if (resp.status === 200) {
-      //     this.tableData = resp.data.oboxs
-      //   } else {
-      //     this.$message({
-      //       message: resp.message || '场景获取失败'
-      //     })
-      //   }
-      //   this.tableLoading = false
-      // }).catch(err => {
-      //   this.$message({
-      //     title: '失败',
-      //     message: err.message || '服务出错',
-      //     type: 'error'
-      //   })
-      //   this.tableLoading = false
-      // })
+      this.tableLoading = true
+      SystemAPI.getSysLogs(this.search).then(resp => {
+        if (resp.status === 0) {
+          this.tableData = resp.data.records
+        } else {
+          this.$message({
+            message: resp.message || '场景获取失败'
+          })
+        }
+        this.tableLoading = false
+      }).catch(err => {
+        this.$message({
+          title: '失败',
+          message: err.message || '服务出错',
+          type: 'error'
+        })
+        this.tableLoading = false
+      })
     },
     onCurrentChange (pageNo) {
       this.search.pageNo = pageNo
