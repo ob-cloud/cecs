@@ -7,6 +7,7 @@
       stripe border
       v-loading="tableLoading"
       :pageSize="search.pageSize"
+      :pageTotal="total"
       @on-current-page-change="onCurrentChange"
       @on-page-size-change="onSizeChange">
 
@@ -59,10 +60,10 @@ export default {
     return {
       tableLoading: false,
       tableHeight: 0,
+      total: 0,
       search: {
-        room: '',
-        building: '',
-        layer: '',
+        status: '',
+        roleName: '',
         pageNo: PAGINATION_PAGENO,
         pageSize: PAGINATION_PAGESIZE
       },
@@ -104,6 +105,7 @@ export default {
   created () {
     this.columns = this.getColumns()
     this.getRoleList()
+    this.getAuthList()
   },
   watch: {
     createDialogVisible (val) {
@@ -150,10 +152,10 @@ export default {
     },
     getRoleList () {
       this.tableLoading = true
-      UserAPI.getRoleList(this.search.roleName, this.search.status).then(res => {
+      UserAPI.getRoleList(this.search).then(res => {
         if (res.status === 0) {
-          console.log('role  ', res)
           this.tableData = res.data.records
+          this.total = res.total
         } else {
           this.$message({
             type: 'success',
@@ -163,25 +165,12 @@ export default {
         this.tableLoading = false
       })
     },
-    getAccountList () {
-      // this.tableLoading = true
-      // RoomAPI.getAccountList(this.search).then(resp => {
-      //   if (resp.status === 200) {
-      //     this.tableData = resp.data.locations
-      //   } else {
-      //     this.$message({
-      //       message: resp.message || '房间获取失败'
-      //     })
-      //   }
-      //   this.tableLoading = false
-      // }).catch(err => {
-      //   this.$message({
-      //     title: '失败',
-      //     message: err.message || '服务出错',
-      //     type: 'error'
-      //   })
-      //   this.tableLoading = false
-      // })
+    getAuthList () {
+      UserAPI.getPrivilege().then(resp => {
+        if (resp.status === 0) {
+          this.authList = resp.data.records
+        }
+      })
     },
     onCurrentChange (pageNo) {
       this.search.pageNo = pageNo

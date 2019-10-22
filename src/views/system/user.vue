@@ -2,10 +2,10 @@
   <div class="device smart">
     <el-tabs v-model="activeName" tab-position="left" class="tab-container">
       <el-tab-pane label="账户管理" name="account">
-        <account :height="tableHeight"></account>
+        <account v-if="activeName === 'account'" :height="tableHeight"></account>
       </el-tab-pane>
       <el-tab-pane label="角色管理" name="role">
-        <role :height="tableHeight"></role>
+        <role v-if="activeName === 'role'" :height="tableHeight"></role>
       </el-tab-pane>
     </el-tabs>
   </div>

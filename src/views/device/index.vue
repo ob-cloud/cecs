@@ -2,13 +2,13 @@
   <div class="device smart">
     <el-tabs v-model="activeName">
       <el-tab-pane label="OBOX设备" name="obox">
-        <device-obox :height="tableHeight"></device-obox>
+        <device-obox v-if="activeName === 'obox'" :height="tableHeight"></device-obox>
       </el-tab-pane>
       <el-tab-pane label="WIFI设备" name="wifi">
-        <device-wifi :height="tableHeight"></device-wifi>
+        <device-wifi v-if="activeName === 'wifi'" :height="tableHeight"></device-wifi>
       </el-tab-pane>
       <el-tab-pane label="网关" name="gateway">
-        <gateway :height="tableHeight"></gateway>
+        <gateway v-if="activeName === 'gateway'" :height="tableHeight"></gateway>
       </el-tab-pane>
     </el-tabs>
   </div>

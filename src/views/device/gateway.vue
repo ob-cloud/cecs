@@ -1,5 +1,5 @@
 <template>
-  <div class="device smart">
+  <div class="">
     <base-table
       :height="height"
       :tableData="tableData"
@@ -163,6 +163,6 @@ export default {
 <style lang="scss" scoped>
 .smart{
   width: 94%;
-  margin: 0 auto;
+  margin: 12px auto;
 }
 </style>

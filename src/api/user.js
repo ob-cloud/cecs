@@ -38,10 +38,10 @@ const UserAPI = {
 }
 
 const RoleAPI = {
-  getRoleList (status, roleName) {
-    return request.postForm('/consumer/common', {
+  getRoleList (role = {}) {
+    return request.get('/consumer/common', {
       CMD: 'get_smart_role',
-      role: JSON.stringify({status, roleName})
+      role: JSON.stringify(role)
     })
   },
   createRole (roleName, privilegeWeight, parentPrivilegeWeight) {
@@ -60,6 +60,11 @@ const RoleAPI = {
     return request.postForm('/consumer/common', {
       CMD: 'delete_smart_role',
       role: JSON.stringify({roleId})
+    })
+  },
+  getPrivilege () {
+    return request.get('/consumer/common', {
+      CMD: 'get_smart_privilege'
     })
   }
 }
