@@ -174,6 +174,24 @@ export default {
                     return (renderBody(h, row))
                   }
                 }
+                // let render
+                // (async() => {
+                //   render = async ({row}) => {
+                //     return await renderBody(h, row)
+                //   }
+                // })()
+                // console.log('scope render  ', render)
+                // data.scopedSlots = {
+                //   default: ({ row }) => {
+                //     let render
+                //     (async () => {
+                //       render = await renderBody(h, row)
+                //     })()
+                //     console.log('render --- ', render)
+                //     return render
+                //   }
+                // }
+                // console.log('scopeSlots  ', data.scopedSlots)
               }
               return (
                 <el-table-column {...data}></el-table-column>

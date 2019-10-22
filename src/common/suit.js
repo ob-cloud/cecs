@@ -3,7 +3,7 @@
  * @Author: eamiear
  * @Date: 2019-08-12 11:21:09
  * @Last Modified by: eamiear
- * @Last Modified time: 2019-10-15 17:28:26
+ * @Last Modified time: 2019-10-22 14:23:58
  */
 
 /**
@@ -236,7 +236,8 @@ const Suiter = {
       // 普通开关
       normal: ['03', '12', '13', '14'],
       // 插座 byte[0]
-      simple: ['01']
+      simple: ['01'],
+      threeKey: ['23']
     }
   },
 

@@ -21,22 +21,11 @@
           <el-input @keyup.enter.native="handleSearch" class="caption-item" placeholder="设备名称" v-model="search.name"></el-input>
           <el-button type="primary" icon="el-icon-search" @click="handleSearch">查询</el-button>
         </template>
-        <!-- <template slot="actionBar">
-          <el-button type="primary" icon="el-icon-plus" @click="handleCreate">添加设备</el-button>
-        </template> -->
       </slot>
     </base-table>
-    <el-dialog top="10%" width="760px" title="设备操作历史" :visible.sync="dialogVisible" :close-on-click-modal="false">
-      <device-history :serialId="activeRecord.obox_serial_id"></device-history>
+    <el-dialog top="10%" width="760px" title="三键开关控制面板" :visible.sync="dialogVisible" :close-on-click-modal="false">
+      <i-switcher></i-switcher>
     </el-dialog>
-    <el-dialog top="10%" width="760px" title="添加设备" :visible.sync="addDeviceDialogVisible" :close-on-click-modal="false">
-      <device-create :oboxs="oboxList" @deviceSelected="onDeviceSelected"></device-create>
-      <div slot="footer" class="dialog-footer text-center" >
-        <el-button @click="addDeviceDialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="createDevice">确 认</el-button>
-      </div>
-    </el-dialog>
-
   </div>
 </template>
 
@@ -45,6 +34,7 @@ import BaseTable from '@/assets/package/table-base'
 import DeviceHistory from './history'
 import DeviceCreate from './add'
 import HumifierChart from './components/humifier-chart'
+import iSwitcher from './components/switcher'
 import DeviceAPI from '@/api/device'
 import { PAGINATION_PAGENO, PAGINATION_PAGESIZE } from '@/common/constants'
 import Helper from '@/common/helper'
@@ -73,8 +63,6 @@ export default {
       oboxList: [],
       dialogVisible: false,
       activeRecord: {},
-      addDeviceDialogVisible: false,
-      addDeviceSelected: {},
       humidifierMap: {
         tableLoading: true,
         list: [],
@@ -82,7 +70,7 @@ export default {
       }
     }
   },
-  components: { BaseTable, DeviceHistory, DeviceCreate, HumifierChart },
+  components: { BaseTable, DeviceHistory, DeviceCreate, HumifierChart, iSwitcher },
   created () {
     this.getOboxList()
     this.columns = this.getColumns()
@@ -159,6 +147,23 @@ export default {
                 </el-tabs>
               </div>
             ]
+          } else if (Suit.typeHints.isThreeKeySocketSwitch(row.device_child_type)) {
+            // let s = []
+            // return [
+            //   <div class="list">
+            //     <el-checkbox-group  vModel={s} onChange={() => that.onCheboxChange(row, s)}>
+            //       {
+            //         [1, 2, 3].map((item, index) => {
+            //           return (
+            //             <el-checkbox-button label={index+1}>
+            //               <i class="obicon obicon-power"></i>
+            //             </el-checkbox-button>
+            //           )
+            //         })
+            //       }
+            //     </el-checkbox-group>
+            //   </div>
+            // ]
           }
         }
       }, {
@@ -207,36 +212,11 @@ export default {
       // const setting = <el-button size="tiny" icon="el-icon-setting" onClick={() => this.settingDevice(row)}></el-button>
       // const info = <el-button size="tiny" icon="el-icon-info" onClick={() => this.checkDeviceInfo(row)}></el-button>
       const remove = <el-button size="tiny" icon="el-icon-delete" onClick={() => this.removeDevice(row)}></el-button>
-      if (Suit.typeHints.isSocketSwitch(row.device_type)) {
-        toolboxs = toolboxs.concat(this.getSocketActionRender(row))
-      }
-      if (Suit.typeHints.isDoorLock(row.device_type)) {
-        toolboxs = toolboxs.concat(this.getDoorLockActionRender(row))
-      }
-      if (Suit.typeHints.isLed(row.device_type)) {
-        toolboxs = toolboxs.concat(this.getLampLockActionRender(row))
+      if (Suit.typeHints.isThreeKeySocketSwitch(row.device_child_type)) {
+        toolboxs.push(<el-button size="tiny" icon="obicon obicon-power" title="灯开关" onClick={() => this.handleSwitchPower(row)}></el-button>)
       }
       toolboxs.push(remove)
       return toolboxs
-    },
-    getDoorLockActionRender (row) {
-      return [
-        <el-button size="tiny" icon="obicon obicon-record" title="历史记录" onClick={() => this.handleDoorLockRecord(row)}></el-button>,
-        <el-button size="tiny" icon="obicon obicon-alarm" title="报警记录" onClick={() => this.handleDoorLockRecord(row)}></el-button>,
-        <el-button size="tiny" icon="obicon obicon-user" title="用户列表" onClick={() => this.handleDoorLockRecord(row)}></el-button>,
-        <el-button size="tiny" icon="obicon obicon-cog" title="门锁配置" onClick={() => this.handleDoorLockSet(row)}></el-button>
-      ]
-    },
-    getLampLockActionRender (row) {
-      return [
-        <el-button size="tiny" icon="obicon obicon-power" title="灯开关" onClick={() => this.handleLampPower(row)}></el-button>
-      ]
-    },
-    getSocketActionRender (row) {
-      return [
-        <el-button size="tiny" icon="obicon obicon-record" title="历史记录" onClick={() => this.handleDoorLockRecord(row)}></el-button>,
-        <el-button size="tiny" icon="obicon obicon-cog" title="开关配置" onClick={() => this.handleDoorLockSet(row)}></el-button>
-      ]
     },
     getDeviceList () {
       this.tableLoading = true
@@ -322,9 +302,6 @@ export default {
       this.search.pageNo = PAGINATION_PAGENO
       this.getDeviceList()
     },
-    handleCreate () {
-      this.addDeviceDialogVisible = true
-    },
     editDevice (row) {
       console.log('edit ', row)
     },
@@ -391,34 +368,8 @@ export default {
         this.responseHandler({message: 'error'}, `${type}灯`)
       })
     },
-    onDeviceSelected (selected) {
-      this.addDeviceSelected = selected
-    },
-    createDevice () {
-      if (!this.addDeviceSelected.oboxId || !this.addDeviceSelected.deviceType) {
-        return this.$message({
-          type: 'warning',
-          message: (!this.addDeviceSelected.oboxId ? 'obox' : '设备') + '不能空!'
-        })
-      }
-      const loader = this.$loading({
-        text: `设备搜索中...`
-      })
-      let {deviceType, deviceSubType} = this.addDeviceSelected
-      const {oboxId} = this.addDeviceSelected
-      deviceType = Suit.converter.toDecimal(deviceType, 16)
-      deviceSubType = Suit.converter.toDecimal(deviceSubType, 16)
-      DeviceAPI.searchToAddDevice(oboxId, deviceType, deviceSubType).then(res => {
-        loader.close()
-        this.responseHandler(res, `设备添加`)
-        if (res.message.includes('success')) {
-          this.addDeviceDialogVisible = false
-          this.getDeviceList()
-        }
-      }).catch(() => {
-        loader.close()
-        this.responseHandler({message: 'error'}, `设备添加`)
-      })
+    handleSwitchPower (row) {
+      this.dialogVisible = true
     }
   }
 }
