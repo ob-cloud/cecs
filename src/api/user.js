@@ -7,20 +7,28 @@ const UserAPI = {
       params: {uid}
     })
   },
-  fetchUserList (params = {}) {
-    return request.post({
-      url: 'user/list',
-      params
+  getUserList (user = {}) {
+    return request.get('/consumer/common', {
+      CMD: 'get_smart_user',
+      user: JSON.stringify(user)
     })
   },
-  createUser (params) {
-    // return request.post({
-    //   url: 'user/create',
-    //   params
-    // })
+  createUser (user = {}) {
     return request.postForm('/consumer/common', {
-      CMD: 'delete_room',
-      room: JSON.stringify({id})
+      CMD: 'add_smart_user',
+      user: JSON.stringify(user)
+    })
+  },
+  updateUser (user = {}) {
+    return request.postForm('/consumer/common', {
+      CMD: 'update_smart_user',
+      user: JSON.stringify(user)
+    })
+  },
+  deleteUser (userId) {
+    return request.postForm('/consumer/common', {
+      CMD: 'delete_smart_user',
+      user: JSON.stringify({userId})
     })
   },
   enableUser (uid) {
@@ -44,16 +52,22 @@ const RoleAPI = {
       role: JSON.stringify(role)
     })
   },
-  createRole (roleName, privilegeWeight, parentPrivilegeWeight) {
+  createRole (role = {}) {
     return request.postForm('/consumer/common', {
       CMD: 'add_smart_role',
-      role: JSON.stringify({roleName, privilegeWeight, parentPrivilegeWeight})
+      role: JSON.stringify(role)
     })
   },
-  updateRole (roleId, roleName, privilegeWeight, parentPrivilegeWeight) {
+  updateRole (role = {}) {
     return request.postForm('/consumer/common', {
       CMD: 'update_smart_role',
-      role: JSON.stringify({roleId, roleName, privilegeWeight, parentPrivilegeWeight})
+      role: JSON.stringify(role)
+    })
+  },
+  updateRoleStatus (roleId, status) {
+    return request.postForm('/consumer/common', {
+      CMD: 'update_smart_role_status',
+      role: JSON.stringify({roleId, status})
     })
   },
   deleteRole (roleId) {
@@ -68,4 +82,8 @@ const RoleAPI = {
     })
   }
 }
+
+// const AccountAPI = {
+
+// }
 export default {...UserAPI, ...RoleAPI}

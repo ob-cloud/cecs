@@ -63,7 +63,7 @@ export default {
       tableHeight: 0,
       total: 0,
       search: {
-        status: undefined,
+        status: '',
         roleName: '',
         pageNo: PAGINATION_PAGENO,
         pageSize: PAGINATION_PAGESIZE
@@ -77,7 +77,6 @@ export default {
       },
       createModel: {
         roleName: '',
-        auth: [],
         privilegeWeight: '',
         parentPrivilegeWeight: ''
       },
@@ -85,22 +84,10 @@ export default {
       creationRules: {
         roleName: [{ required: true, message: '角色名称不能为空', trigger: 'blur' }]
       },
-      authList: [
-        {
-          id: 1,
-          name: '用户管理',
-          children: [{
-            id: 9,
-            name: '账户管理'
-          }, {
-            id: 19,
-            name: '角色管理'
-          }]
-        }
-      ],
+      authList: [],
       defaultProps: {
         label: 'name',
-        children: 'subPrivilege'
+        children: 'privilege'
       }
     }
   },
@@ -148,24 +135,31 @@ export default {
     },
     getToolboxRender (h, row) {
       return [
-        <el-button size="tiny" title="启用" onClick={() => this.handleEdit(row)}>{row.status === 0 ? '启用' : '停用'}</el-button>,
-        <el-button size="tiny" title="编辑" onClick={() => this.handleEdit(row)}>编辑</el-button>,
-        <el-button size="tiny" title="删除" onClick={() => this.handleRemove(row)}>删除</el-button>
+        <el-button size="tiny" type="warning" title="启用" onClick={() => this.handleEnable(row)}>{row.status === 0 ? '停用' : '启用'}</el-button>,
+        <el-button size="tiny" type="primary" title="编辑" onClick={() => this.handleEdit(row)}>编辑</el-button>,
+        <el-button size="tiny" type="danger" title="删除" onClick={() => this.handleRemove(row)}>删除</el-button>
       ]
     },
     getRoleList () {
       this.tableLoading = true
-      UserAPI.getRoleList(this.search).then(res => {
+      const {status, roleName, pageNo, pageSize} = this.search
+      UserAPI.getRoleList({status: status === '' ? undefined : status, roleName, pageNo, pageSize}).then(res => {
         if (res.status === 0) {
           this.tableData = res.data.records
           this.total = res.total
         } else {
           this.$message({
-            type: 'success',
-            message: res.message || '获取失败'
+            type: 'error',
+            message: '获取角色列表失败'
           })
         }
         this.tableLoading = false
+      }).catch(() => {
+        this.tableLoading = false
+        this.$message({
+          type: 'error',
+          message: '服务异常'
+        })
       })
     },
     getAuthList () {
@@ -191,7 +185,6 @@ export default {
     resetcreateModel () {
       this.createModel = {
         roleName: '',
-        auth: [],
         privilegeWeight: '',
         parentPrivilegeWeight: ''
       }
@@ -205,19 +198,68 @@ export default {
       this.resetcreateModel()
     },
     doCreate (type) {
-      console.log('--- ', this.createModel)
       this.$refs.createRole.validate(valid => {
         if (valid) {
+          const privilege = this.parsePrivilege()
+          this.createModel.parentPrivilegeWeight = privilege.parentPrivilegeWeight
+          this.createModel.privilegeWeight = privilege.privilegeWeight
           const action = type === 'create' ? 'createRole' : 'updateRole'
-          // UserAPI[action](this.createModel)
-          // this.createDialogVisible = false
+          const {roleId, roleName, parentPrivilegeWeight, privilegeWeight} = this.createModel
+          UserAPI[action]({roleId, roleName, parentPrivilegeWeight, privilegeWeight}).then(res => {
+            if (res.status === 0) {
+              this.$message({
+                type: 'success',
+                message: '操作成功'
+              })
+              this.getRoleList()
+              this.createDialogVisible = false
+            }
+          }).catch(e => {
+            this.$message({
+              type: 'error',
+              message: e.message || '服务异常'
+            })
+          })
+        }
+      })
+    },
+    parsePrivilege () {
+      let parentPrivilegeWeight = 0
+      let privilegeWeight = 0
+      const checkAuthList = this.getCheckedNodes(true)
+      Array.from(checkAuthList).forEach(item => {
+        const parentAuth = this.authList.find(auth => auth.id === item.parentId)
+        parentPrivilegeWeight += parentAuth.weight
+        privilegeWeight += item.weight
+      })
+      return {
+        parentPrivilegeWeight,
+        privilegeWeight
+      }
+    },
+    handleEnable (row) {
+      UserAPI.updateRoleStatus(row.roleId, +(!row.status)).then(res => {
+        if (res.status === 0) {
+          row.status = +(!row.status)
+          this.$message({
+            type: 'success',
+            message: '状态更新成功'
+          })
         }
       })
     },
     handleEdit (row) {
       this.dialogStatus = 'edit'
       this.createDialogVisible = true
-      this.createModel = row
+      const { roleId, roleName, privilege } = {...row}
+      this.createModel = {roleId, roleName, privilege}
+      console.log('==== ', privilege)
+      // setTimeout(() => {
+      //   this.setCheckedNodes(privilege)
+      // }, 0)
+      this.$nextTick(() => {
+        this.setCheckedNodes(privilege)
+      })
     },
     handleRemove (row) {
       this.$confirm('确认删除房间？', '确认提示', {
@@ -248,17 +290,16 @@ export default {
         })
       })
     },
-    getCheckedNodes () {
-      this.$refs.authTree.getCheckedNodes()
+    getCheckedNodes (leafOnly) {
+      return this.$refs.authTree.getCheckedNodes(leafOnly)
     },
-    setCheckedNodes () {
-      this.$refs.authTree.setCheckedNodes([{
-        id: 5,
-        label: '二级 2-1'
-      }, {
-        id: 9,
-        label: '三级 1-1-1'
-      }])
+    setCheckedNodes (nodes) {
+      let subnodes = []
+      Array.from(nodes).forEach(item => {
+        subnodes = subnodes.concat(item.privilege)
+      })
+      console.log('subnodes ', subnodes)
+      return this.$refs.authTree.setCheckedNodes(subnodes)
     }
   }
 }
