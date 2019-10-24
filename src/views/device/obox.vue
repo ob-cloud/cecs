@@ -32,7 +32,6 @@
 <script>
 import BaseTable from '@/assets/package/table-base'
 import DeviceHistory from './history'
-import DeviceCreate from './add'
 import HumifierChart from './components/humifier-chart'
 import iSwitcher from './components/switcher'
 import DeviceAPI from '@/api/device'
@@ -70,7 +69,7 @@ export default {
       }
     }
   },
-  components: { BaseTable, DeviceHistory, DeviceCreate, HumifierChart, iSwitcher },
+  components: { BaseTable, DeviceHistory, HumifierChart, iSwitcher },
   created () {
     this.getOboxList()
     this.columns = this.getColumns()
@@ -207,7 +206,7 @@ export default {
       }]
     },
     getToolboxRender (h, row) {
-      let toolboxs = []
+      const toolboxs = []
       // const edit = <el-button size="tiny" icon="el-icon-edit" onClick={() => this.editDevice(row)}></el-button>
       // const setting = <el-button size="tiny" icon="el-icon-setting" onClick={() => this.settingDevice(row)}></el-button>
       // const info = <el-button size="tiny" icon="el-icon-info" onClick={() => this.checkDeviceInfo(row)}></el-button>

@@ -131,7 +131,7 @@ export default {
                         <p>温度</p>
                       </div>
                       <div class="control-style">
-                        <div class="mode">{that.airCondition.isPowerOn ? that.speedFilter(that.airAction.speed): '--'} 风速</div>
+                        <div class="mode">{that.airCondition.isPowerOn ? that.speedFilter(that.airAction.speed) : '--'} 风速</div>
                         <div class="fans">{that.airCondition.isPowerOn ? that.modeFilter(that.airAction.mode) : '--'} 模式</div>
                       </div>
                       <div class="btn-controller">
