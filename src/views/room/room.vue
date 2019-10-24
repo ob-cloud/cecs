@@ -26,7 +26,7 @@
         </div>
         <div class="content">
           <i class="building-sign obicon obicon-classroom" :class="{'is-active': index === 2}"></i>
-          <p class="text">{{item.buildName}}栋{{item.floorName}}层{{item.roomName}}房</p>
+          <p class="text">{{item.buildingName}}栋{{item.floorName}}层{{item.roomName}}房</p>
         </div>
       </div>
       <el-pagination
@@ -44,7 +44,7 @@
       <el-form class="ob-form" ref="creation" autoComplete="on" :rules="creationRules" :model="roomModel" label-position="left" label-width="80px">
         <el-form-item label="楼栋名称" prop="buildingId">
           <el-select placeholder="请选择楼栋" v-model="roomModel.buildingId">
-            <el-option v-for="item in buildingList" :key="item.id" :label="item.buildingName + '栋'" :value="item.buildingId"></el-option>
+            <el-option v-for="item in buildingList" :key="item.id" :label="item.buildName + '栋'" :value="item.id"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="楼层名称" prop="floorId">
@@ -53,7 +53,9 @@
           </el-select>
         </el-form-item>
         <el-form-item label="房间名称" prop="roomName">
-          <el-input v-model="roomModel.roomName" placeholder="请输入房间号"></el-input>
+          <el-input v-model="roomModel.roomName" placeholder="请输入房间号">
+            <template slot="append">房</template>
+          </el-input>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">

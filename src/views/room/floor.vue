@@ -23,7 +23,7 @@
         </div>
         <div class="content">
           <i class="building-sign obicon obicon-building" :class="{'is-active': item === 2}"></i>
-          <p class="text">{{item.buildingName}}栋-{{item.floorName}}层</p>
+          <p class="text">{{item.buildingName}}栋{{item.floorName}}层</p>
         </div>
       </div>
       <el-pagination
@@ -46,7 +46,9 @@
           </el-select>
         </el-form-item>
         <el-form-item label="楼层名称" prop="floorName">
-          <el-input v-model="createModel.floorName" placeholder="请输入楼层"></el-input>
+          <el-input v-model="createModel.floorName" placeholder="请输入楼层">
+            <template slot="append">层</template>
+          </el-input>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">

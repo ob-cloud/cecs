@@ -39,7 +39,9 @@
     <el-dialog  v-if="createDialogVisible" top="10%" width="660px" :title="dialogTitleMap[dialogStatus]" :visible.sync="createDialogVisible" :close-on-click-modal="false">
       <el-form class="ob-form" ref="creation" autoComplete="on" :rules="creationRules" :model="createModel" label-position="left" label-width="80px">
         <el-form-item label="楼栋名称" prop="buildName">
-          <el-input v-model="createModel.buildName" placeholder="请输入楼栋"></el-input>
+          <el-input v-model="createModel.buildName" placeholder="请输入楼栋">
+            <template slot="append">栋</template>
+          </el-input>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
