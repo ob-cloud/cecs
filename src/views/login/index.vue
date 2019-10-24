@@ -3,7 +3,8 @@
     <div class="ura-login-container">
       <!-- <h3 class="ura-login-header">管理平台登陆</h3> -->
       <div class="ura-login-header">
-        <img src="http://placehold.it/140x65" alt="">
+        <!-- <img src="http://placehold.it/140x65" alt=""> -->
+        <h2>校园节能中控平台</h2>
       </div>
       <el-form class="ura-login-body" :model="loginForm" :rules="loginRules" ref="loginForm" label-position="left">
         <el-form-item prop="account">
@@ -33,6 +34,9 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  min-height: 100%;
+  background: #f0f2f5 url('../../assets/images/background.svg') no-repeat 50%;
+  background-size: 100%;
 }
 .ura-login-container{
   width: 350px;

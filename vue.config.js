@@ -2,7 +2,7 @@
  * @Author: eamiear
  * @Date: 2018-11-27 11:32:42
  * @Last Modified by: eamiear
- * @Last Modified time: 2019-10-18 15:01:35
+ * @Last Modified time: 2019-10-23 16:36:12
  */
 
 const isProduction = process.env.NODE_ENV === 'production'
@@ -39,7 +39,8 @@ module.exports = {
     // },
     resolve: {
       alias: {
-        'views': '@/views'
+        'views': '@/views',
+        'images': '@/assets/images'
       }
     }
   }),
