@@ -30,12 +30,24 @@ const toAction = (action, device = {}) => {
   }
 }
 
+export const getSwitchButtonStatus = value => {
+  const status = new Array(7).fill(0)
+  Array.from(value).forEach((item, index) => {
+    status[0] = setMultiBitIndex(status[0], index * 2, 2, item)
+  })
+  let action = byteArrayToHexString(status)
+  action = action.slice(0, -1) + '2'
+  return action
+}
+
 export const changeSwitchButtonToAction = (value, device) => {
   const status = new Array(7).fill(0)
   Array.from(value).forEach((item, index) => {
     status[0] = setMultiBitIndex(status[0], index * 2, 2, item)
   })
-  return toAction(byteArrayToHexString(status), device)
+  let action = byteArrayToHexString(status)
+  action = action.slice(0, -1) + '2'
+  return toAction(action, device)
 }
 
 export const changeAirConditionToAction = (action, device) => {

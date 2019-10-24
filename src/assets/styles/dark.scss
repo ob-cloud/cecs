@@ -1,0 +1,8 @@
+$blue-gradient: linear-gradient(45deg, #0185ED, #4D4EC5);
+$light-blue-gradient: linear-gradient(45deg, #0FC6FE, #0185E8);
+
+.dark{
+  .app-header{
+    background: $blue-gradient;
+  }
+}

@@ -2,7 +2,7 @@
  * @Author: eamiear
  * @Date: 2019-08-07 16:43:10
  * @Last Modified by: eamiear
- * @Last Modified time: 2019-10-18 17:10:07
+ * @Last Modified time: 2019-10-24 15:38:30
  */
 
 import {request} from '@/common/request'
@@ -122,6 +122,12 @@ const RoomAPI = {
     return request.postForm('/consumer/common', {
       CMD: 'bind_room_device',
       device: JSON.stringify({roomId, deviceId})
+    })
+  },
+  getRoomDeviceListV2 (device = {}) {
+    return request.postForm('/consumer/common', {
+      CMD: 'get_room_device',
+      device: JSON.stringify(device)
     })
   },
   triggerGlobalSwitch (deviceType) {

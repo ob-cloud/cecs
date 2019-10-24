@@ -41,7 +41,7 @@ export default {
       tableLoading: true,
       tableHeight: 500,
       search: {
-        room: '',
+        roomId: '',
         pageNo: PAGINATION_PAGENO,
         pageSize: PAGINATION_PAGESIZE
       },
@@ -111,8 +111,8 @@ export default {
     },
     getRoomDeviceList () {
       this.tableLoading = true
-      this.search.room = this.room
-      RoomAPI.getRoomDeviceList(this.search).then(resp => {
+      this.search.roomId = this.room
+      RoomAPI.getRoomDeviceListV2(this.search).then(resp => {
         if (resp.status === 200) {
           this.tableData = resp.data.devices
         } else {

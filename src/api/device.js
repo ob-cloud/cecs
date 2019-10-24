@@ -186,4 +186,14 @@ const RemotDeviceAPI = {
     })
   }
 }
-export default {...DeviceAPI, ...doorLock, ...LampAPI, ...WifiDeviceAPI, ...RemotDeviceAPI}
+
+const KeySwitchAPI = {
+  setSwitchStatus (serialId, status) {
+    return request.postForm('/consumer/common', {
+      CMD: 'setting_node_status',
+      serialId,
+      status
+    })
+  }
+}
+export default {...DeviceAPI, ...doorLock, ...LampAPI, ...WifiDeviceAPI, ...RemotDeviceAPI, ...KeySwitchAPI}
