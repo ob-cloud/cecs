@@ -19,7 +19,7 @@
       <div class="building-item" v-for="(item, index) in roomList" :key="item.id">
         <div class="header">
           <i class="icon obicon obicon-device" title="房间设备" @click="handleDevice(item)"></i>
-          <i class="icon obicon obicon-scene" title="房间场景" @click="handleScene(item)"></i>
+          <!-- <i class="icon obicon obicon-scene" title="房间场景" @click="handleScene(item)"></i> -->
           <i class="icon obicon obicon-power" title="电源" @click="handlePower(item)"></i>
           <i class="icon el-icon-edit" title="编辑" @click="handleEdit(item)"></i>
           <i class="icon el-icon-delete" title="删除" @click="handleRemove(item)"></i>
