@@ -4,7 +4,7 @@
       <el-upload
         class="upload-btn"
         action="https://jsonplaceholder.typicode.com/posts/">
-        <el-button size="small" type="primary" icon="el-icon-upload">上传底图</el-button>
+        <el-button size="small" type="primary" icon="el-icon-upload">上传配置图</el-button>
         <!-- <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，图片规格 1080x700 </div> -->
       </el-upload>
       <el-button size="small" type="primary" icon="el-icon-edit" @click="isAdd = true; isAddFinished = false">编辑</el-button>
@@ -13,7 +13,8 @@
     </div>
     <div class="map-content">
       <div class="image-wrapper" @mouseenter="onMouseEnter" @mousedown="onMouseDown" @mouseleave="onMouseLeave" @mouseup="onMouseUp">
-        <img src="http://placehold.it/1080x720" alt="">
+        <!-- http://placehold.it/1080x720 -->
+        <img :src="graph" alt="" style="width: 100%; height: 100%;">
         <el-tooltip placement="top" effect="light" v-for="(item, index) in points" :key="index">
           <div slot="content">
             <p style="padding: 5px; font-size: 16px; text-align: center;">{{`${item.buildingName || '-'}栋${item.floorName || '-'}层${item.roomName || '-'}`}}</p>
@@ -96,9 +97,11 @@
 </template>
 
 <script>
+import graph from '../../assets/images/graph.jpg'
 export default {
   data () {
     return {
+      graph: graph,
       radius: 30,
       points: [{
         id: 1,
