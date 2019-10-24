@@ -13,10 +13,17 @@
 
       <slot>
         <template slot="caption">
-          <el-select clearable class="caption-item" placeholder="所有场景" v-model="search.scene_number">
-            <el-option label='所有场景' value=''></el-option>
-            <el-option label='本地场景' value='01'></el-option>
-            <el-option label='云端场景' value='00'></el-option>
+          <el-select clearable class="caption-item" placeholder="楼栋" v-model="search.buildingId" filterable>
+            <el-option label='全部' value=''></el-option>
+            <el-option v-for="item in buildingList" :key="item.id" :label="item.buildName + '栋'" :value="item.id"></el-option>
+          </el-select>
+          <el-select clearable class="caption-item" placeholder="楼层" v-model="search.floorId" filterable>
+            <el-option label='全部' value=''></el-option>
+            <el-option v-for="item in floorList" :key="item.id" :label="item.floorName + '层'" :value="item.floorId"></el-option>
+          </el-select>
+          <el-select clearable class="caption-item" placeholder="房间" v-model="search.roomId" filterable>
+            <el-option label='全部' value=''></el-option>
+            <el-option v-for="item in roomList" :key="item.id" :label="item.roomName + '房'" :value="item.roomId"></el-option>
           </el-select>
           <el-input @keyup.enter.native="handleSearch" class="caption-item" placeholder="场景名称" v-model="search.scene_name"></el-input>
           <el-button type="primary" icon="el-icon-search" @click="handleSearch">查询</el-button>
@@ -40,6 +47,7 @@
 import BaseTable from '@/assets/package/table-base'
 import SceneAPI from '@/api/scene'
 import SceneCreate from './create'
+import RoomAPI from '@/api/room'
 import { PAGINATION_PAGENO, PAGINATION_PAGESIZE } from '@/common/constants'
 import Helper from '@/common/helper'
 export default {
@@ -47,8 +55,13 @@ export default {
     return {
       tableLoading: true,
       tableHeight: 0,
+      buildingList: [],
+      floorList: [],
+      roomList: [],
       search: {
-        scene_number: '',
+        buildingId: '',
+        floorId:'',
+        roomId: '',
         scene_name: '',
         pageNo: PAGINATION_PAGENO,
         pageSize: PAGINATION_PAGESIZE
@@ -64,6 +77,17 @@ export default {
   created () {
     this.columns = this.getColumns()
     this.getSceneList()
+    this.getBuildingList()
+    // this.getFloorList()
+    this.getRoomList()
+  },
+  watch: {
+    'search.buildingId' (val) {
+      val && this.getFloorList(val)
+    },
+    'search.roomId' (val) {
+      val && this.getLayerList(val)
+    },
   },
   computed: {
     total () {
@@ -158,6 +182,32 @@ export default {
         <el-button size="tiny" icon="el-icon-edit" title="编辑" onClick={() => this.edit(row)}></el-button>,
         <el-button size="tiny" icon="el-icon-delete" title="删除" onClick={() => this.handleRemove(row)}></el-button>
       ]
+    },
+    getBuildingList () {
+      RoomAPI.getBuildingList().then(res => {
+        if (res.status === 0) {
+          this.buildingList = res.data.records
+        }
+      })
+    },
+    getFloorList (buildingId) {
+      // RoomAPI.getFloorList().then(res => {
+      //   if (res.status === 0) {
+      //     this.floorList = res.data.records
+      //   }
+      // })
+      RoomAPI.getFloorByBuildingId(buildingId).then(res => {
+        if (res.status === 0) {
+          this.floorList = res.data.records
+        }
+      })
+    },
+    getRoomList () {
+      RoomAPI.getRoomListV2().then(resp => {
+        if (resp.status === 0) {
+          this.roomList = resp.data.records
+        }
+      })
     },
     getSceneList () {
       this.tableLoading = true
