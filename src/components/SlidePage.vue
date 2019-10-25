@@ -93,6 +93,7 @@ export default {
     }
   }
   .content{
+    padding: 10px;
     .item{
       border-bottom: 1px solid #eee;
       box-shadow: 0 1px 1px 0p #f2f2f2;

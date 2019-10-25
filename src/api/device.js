@@ -2,7 +2,7 @@
  * @Author: eamiear
  * @Date: 2019-08-05 17:32:41
  * @Last Modified by: eamiear
- * @Last Modified time: 2019-10-17 16:22:52
+ * @Last Modified time: 2019-10-25 15:10:46
  */
 
 import {request} from '@/common/request'
@@ -187,6 +187,7 @@ const RemotDeviceAPI = {
   }
 }
 
+// 开关控制
 const KeySwitchAPI = {
   setSwitchStatus (serialId, status) {
     return request.postForm('/consumer/common', {
@@ -196,4 +197,17 @@ const KeySwitchAPI = {
     })
   }
 }
-export default {...DeviceAPI, ...doorLock, ...LampAPI, ...WifiDeviceAPI, ...RemotDeviceAPI, ...KeySwitchAPI}
+
+// 空调控制
+const AcControlAPI = {
+  setAcAction (serialId, index, key) {
+    return request.postForm('/consumer/common', {
+      CMD: 'control_ir_device',
+      serialId,
+      index,
+      keyType: 0,
+      key
+    })
+  }
+}
+export default {...DeviceAPI, ...doorLock, ...LampAPI, ...WifiDeviceAPI, ...RemotDeviceAPI, ...KeySwitchAPI, ...AcControlAPI}

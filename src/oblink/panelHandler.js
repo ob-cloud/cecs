@@ -59,7 +59,7 @@ export const getAirConditionKeys = (templure, mode, speed, windVertical, windHor
   const speedMap = {0: 's0', 1: 's1', 2: 's2', 3: 's3'}[speed]
   const windVerticalMap = {0: 'u0', 1: 'u1'}[windVertical] || ''
   const windHorizonMap = {0: 'l0', 1: 'l1'}[windHorizon] || ''
-  return `${modeMap}_${speedMap}_${[1, 3, 4].includes(mode) && templure}_${windVerticalMap}_${windHorizonMap}_p0`
+  return `${modeMap}_${speedMap}_${[1, 3, 4].includes(mode) ? templure : ''}_${windVerticalMap}_${windHorizonMap}_p0`
 }
 
 export const hasVerticalWind = keys => {
