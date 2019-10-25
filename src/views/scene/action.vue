@@ -137,9 +137,14 @@ export default {
       })
     },
     handleSelected () {
+      const room = {
+        buildingId: '',
+        floorId: '',
+        roomId: ''
+      }
       if (this.is3KeyPanel()) {
         // this.$emit('action-change', {action: panelHandler.changeSwitchButtonToAction(this.powerStatus, this.actionObject), extra: this.powerStatus}, false)
-        this.$emit('action-change', {action: panelHandler.changeSwitchButtonToAction(this.powerStatus, this.actionObject), extra: this.powerStatus.map(item => (item ? '开' : '关')).join('/')}, false)
+        this.$emit('action-change', {action: panelHandler.changeSwitchButtonToAction(this.powerStatus, this.actionObject, room), extra: this.powerStatus.map(item => (item ? '开' : '关')).join('/')}, false)
       } else if (this.isTransponder()) {
         const hasVW = panelHandler.hasVerticalWind(this.currentTransponderDevice.keys)
         const hasHW = panelHandler.hasHorizontalWind(this.currentTransponderDevice.keys)
@@ -149,7 +154,7 @@ export default {
           keyType: 0,
           name: this.currentTransponderDevice.name
         }
-        this.$emit('action-change', {action: panelHandler.changeAirConditionToAction(JSON.stringify(action), this.currentTransponderDevice), extra: action.name + action.key}, false)
+        this.$emit('action-change', {action: panelHandler.changeAirConditionToAction(JSON.stringify(action), this.currentTransponderDevice, room), extra: action.name + action.key}, false)
       }
     },
     speedFilter (val) {
