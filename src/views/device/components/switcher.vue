@@ -2,7 +2,7 @@
   <div class="ura-switcher list">
     <el-checkbox-group v-model="powers">
       <el-checkbox-button v-for="(item, index) in 3" :label="index+1" :key="index" @change="handleSelected">
-        <i class="obicon obicon-power"></i>
+        <i class="obicon obicon-switch-btn"></i>
       </el-checkbox-button>
     </el-checkbox-group>
     <!-- <div class="footer">
@@ -72,8 +72,8 @@ export default {
   // width: 68%;
   width: 500px;
   margin: 30px auto;
-  box-shadow: 1px 1px 1px 1px #eee;
-  background-color: #f2f2f2;
+  box-shadow: 1px 1px 1px 1px #f5f5f5;
+  background-color: #f7f7f7;
 }
 
 </style>
@@ -83,12 +83,26 @@ export default {
     // width: 30%;
     margin: 0 50px;
   }
-  .el-checkbox-button__inner{
-    border: 1px solid #DCDFE6;
+  .el-checkbox-button .el-checkbox-button__inner{
+    padding: 0px;
+    border: 1px solid #eee!important;
+    color: #c1c1c1;
     border-radius: 4px!important;
+    box-shadow: none!important;
+    // box-shadow: 0px 4px 1px 0px #c1c1c1 !important;
+    // border: 1px solid #DCDFE6;
+    // border-radius: 4px!important;
+    transition: all .3s;
+    > i{
+      font-size: 50px;
+    }
   }
   .el-checkbox-button.is-checked .el-checkbox-button__inner{
-    border-color: #409EFF;
+    // border-color: #409EFF;
+    border-color: transparent;
+    background-color: #fff;
+    color: #12eaf7;
+    box-shadow: 0px 4px 1px 0px #12eaf7 !important;
   }
 }
 </style>
