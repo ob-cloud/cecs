@@ -20,7 +20,7 @@
           :columns="columns"
           :showPagination="false"></base-table>
       </el-tab-pane>
-      <el-tab-pane label="一周数据" style="max-height: 400px;">
+      <el-tab-pane label="一周数据" style="max-height: 400px; min-height: 360px;">
         <HumifierChart v-if="isCharListValid" :data="series" :xAxis="labels" style="margin: 0 auto;"></HumifierChart>
       </el-tab-pane>
     </el-tabs>

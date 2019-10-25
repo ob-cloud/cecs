@@ -30,33 +30,6 @@
       <i-switcher :serialId="switchSerialId"></i-switcher>
     </slide-page>
     <slide-page :visible.sync="humidifierMap.dialogVisible" title="温湿度" @onClose="humidifierSerialId = ''">
-      <!-- <div class="expand humidifier">
-        <div class="humidifier-status">
-          <div class="item">
-            <p><i class="obicon obicon-temperature-o"></i><span>温度</span></p>
-            <span>23℃</span>
-          </div>
-          <div class="item">
-            <p><i class="obicon obicon-humidity"></i><span>湿度</span></p>
-            <span>33%</span>
-          </div>
-        </div>
-        <el-tabs tab-position="right" class="humidifier-table">
-          <el-tab-pane label="历史数据">
-            <base-table
-              v-loading="humidifierMap.tableLoading"
-              stripe border
-              height="360px"
-              :tableData="humidifierMap.tableData"
-              :columns="[{label: '温度' , prop: 'temperature' , align: 'center' }, {label: '湿度' , prop: 'humidifier' , align: 'center' }, {label: '时间' , prop: 'time' , align: 'center' }]"
-              :showPagination="false"
-            ></base-table>
-          </el-tab-pane>
-          <el-tab-pane label="一周数据" style="max-height: 400px;">
-            <HumifierChart v-if="humidifierMap.isCharListValid" :data="humidifierMap.series" :xAxis="humidifierMap.labels" style="margin: 0 auto;"></HumifierChart>
-          </el-tab-pane>
-        </el-tabs>
-      </div> -->
       <humifier :serialId="humidifierSerialId"></humifier>
     </slide-page>
   </div>
