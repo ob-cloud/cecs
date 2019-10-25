@@ -4,14 +4,14 @@
       <el-form-item label="场景名称" prop="scene_name">
         <el-input class="caption-item w8" placeholder="场景名称" v-model="sceneModel.scene_name"></el-input>
       </el-form-item>
-      <el-form-item label="消息推送" prop="msg_alter">
+      <!-- <el-form-item label="消息推送" prop="msg_alter">
         <el-radio-group v-model="sceneModel.msg_alter">
           <el-radio :label="0">无推送</el-radio>
-          <!-- <el-radio :label="1">APP推送</el-radio> -->
+          <el-radio :label="1">APP推送</el-radio>
           <el-radio :label="2">短信推送</el-radio>
-          <!-- <el-radio :label="3">APP/短息推送</el-radio> -->
+          <el-radio :label="3">APP/短息推送</el-radio>
         </el-radio-group>
-      </el-form-item>
+      </el-form-item> -->
       <!-- <el-form-item label="行为设备" prop="deviceIdList">
         <el-select v-model="deviceIdList" multiple placeholder="请选择设备" class="w8">
           <el-option
