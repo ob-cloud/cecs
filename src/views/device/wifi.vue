@@ -114,7 +114,7 @@ export default {
       }, {
         label: '操作',
         align: 'center',
-        renderBody: this.getToolboxRender
+        renderToolBox: this.getToolboxRender
       }]
     },
     getToolboxRender (h, row) {

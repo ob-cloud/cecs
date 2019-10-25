@@ -128,7 +128,8 @@ export default {
       }, {
         label: '操作',
         align: 'center',
-        minWidth: '180px',
+        // minWidth: '180px',
+        tooltip: false,
         renderBody: this.getToolboxRender
       }]
     },
@@ -137,7 +138,7 @@ export default {
       // const edit = <el-button size="tiny" icon="el-icon-edit" onClick={() => this.editDevice(row)}></el-button>
       // const setting = <el-button size="tiny" icon="el-icon-setting" onClick={() => this.settingDevice(row)}></el-button>
       // const info = <el-button size="tiny" icon="el-icon-info" onClick={() => this.checkDeviceInfo(row)}></el-button>
-      const remove = <el-button size="tiny" icon="el-icon-delete" onClick={() => this.removeDevice(row)}></el-button>
+      const remove = <el-button size="tiny" icon="el-icon-delete" title="删除" onClick={() => this.removeDevice(row)}></el-button>
       if (Suit.typeHints.isThreeKeySocketSwitch(row.device_child_type)) {
         toolboxs.push(<el-button size="tiny" icon="obicon obicon-power" title="灯开关" onClick={() => this.handleSwitchPower(row)}></el-button>)
       } else if (Suit.typeHints.isHumidifierSensors(row.device_child_type)) {

@@ -70,7 +70,7 @@ export default {
     useTooltip (tooltip) {
       if (this.isBoolean(tooltip) && tooltip) {
         return this.tooltip
-      } else if (!this.isEmptyObject(tooltip)) {
+      } else if (!this.isBoolean(tooltip) && !this.isEmptyObject(tooltip)) {
         return Object.assign({}, this.tooltip, tooltip)
       }
     },
@@ -78,7 +78,8 @@ export default {
       return this.$children[0]
     },
     getRenderDropdownItem (node) {
-      return (<el-dropdown-item>{node}</el-dropdown-item>)
+      const description = (node.data && node.data.attrs.title) || ''
+      return (<el-dropdown-item>{node}{description}</el-dropdown-item>)
     },
     getRenderDropdownLink (columnTooltip) {
       const tooltip = this.useTooltip(columnTooltip)
@@ -93,7 +94,7 @@ export default {
     },
     getRenderDropdown (dropdownLink, dropdownItem) {
       return (
-        <el-dropdown class={this.dropdownNamespace} trigger="click">
+        <el-dropdown class={this.dropdownNamespace} trigger="click" placement="bottom-start">
           {dropdownLink}
           <el-dropdown-menu slot="dropdown">
             {dropdownItem}

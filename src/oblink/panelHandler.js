@@ -21,12 +21,13 @@ const byteArrayToHexString = src => {
   return hexStr
 }
 
-const toAction = (action, device = {}) => {
+const toAction = (action, device = {}, room = {}) => {
   return {
     node_type: '00',
     ...device,
     action_name: device.name,
-    action
+    action,
+    ...room
   }
 }
 
@@ -40,18 +41,18 @@ export const getSwitchButtonStatus = value => {
   return action
 }
 
-export const changeSwitchButtonToAction = (value, device) => {
+export const changeSwitchButtonToAction = (value, device, room) => {
   const status = new Array(7).fill(0)
   Array.from(value).forEach((item, index) => {
     status[0] = setMultiBitIndex(status[0], index * 2, 2, item)
   })
   let action = byteArrayToHexString(status)
   action = action.slice(0, -1) + '2'
-  return toAction(action, device)
+  return toAction(action, device, room)
 }
 
-export const changeAirConditionToAction = (action, device) => {
-  return toAction(action, {'device_child_type': '01', addr: 'fe', 'device_type': device.deviceType, name: device.name, index: device.index, node_type: '07'})
+export const changeAirConditionToAction = (action, device, room) => {
+  return toAction(action, {'device_child_type': '01', addr: 'fe', 'device_type': device.deviceType, name: device.name, index: device.index, node_type: '07'}, room)
 }
 
 export const getAirConditionKeys = (templure, mode, speed, windVertical, windHorizon) => {
