@@ -23,9 +23,6 @@
         </template>
       </slot>
     </base-table>
-    <!-- <el-dialog top="10%" width="760px" title="三键开关控制面板" :visible.sync="dialogVisible" :close-on-click-modal="false">
-      <i-switcher></i-switcher>
-    </el-dialog> -->
     <slide-page :visible.sync="dialogVisible" title="三键开关控制面板">
       <i-switcher :serialId="switchSerialId"></i-switcher>
     </slide-page>
@@ -38,7 +35,6 @@
 <script>
 import BaseTable from '@/assets/package/table-base'
 import DeviceHistory from './history'
-// import HumifierChart from './components/humifier-chart'
 import Humifier from './components/humifier'
 import iSwitcher from './components/switcher'
 import SlidePage from '@/components/SlidePage'
@@ -69,16 +65,8 @@ export default {
       columns: [],
       oboxList: [],
       dialogVisible: false,
-      activeRecord: {},
       humidifierMap: {
         dialogVisible: false,
-        tableLoading: true,
-        list: [],
-        chartList: [],
-        tableData: [],
-        isCharListValid: false,
-        series: [],
-        labels: []
       },
       switchSerialId: '',
       humidifierSerialId: ''
@@ -153,7 +141,7 @@ export default {
       if (Suit.typeHints.isThreeKeySocketSwitch(row.device_child_type)) {
         toolboxs.push(<el-button size="tiny" icon="obicon obicon-power" title="灯开关" onClick={() => this.handleSwitchPower(row)}></el-button>)
       } else if (Suit.typeHints.isHumidifierSensors(row.device_child_type)) {
-        toolboxs.push(<el-button size="tiny" icon="obicon obicon-humidity" title="灯开关" onClick={() => this.handleHumidifier(row)}></el-button>)
+        toolboxs.push(<el-button size="tiny" icon="obicon obicon-humidity" title="温湿度" onClick={() => this.handleHumidifier(row)}></el-button>)
       }
       toolboxs.push(remove)
       return toolboxs
@@ -163,10 +151,6 @@ export default {
       DeviceAPI.getDeviceList(this.search).then(resp => {
         if (resp.status === 200) {
           this.tableData = resp.data.config
-          // Array.from(this.tableData).forEach(item => {
-          //   if (!item) return
-          //   // this.prefetchHistory(item.device_child_type, item.serialId)
-          // })
         } else {
           this.$message({
             message: resp.message || '设备获取失败'
@@ -186,45 +170,6 @@ export default {
       DeviceAPI.getOboxList().then(res => {
         if (res.status === 200) {
           this.oboxList = res.data.oboxs
-        }
-      })
-    },
-    prefetchHistory (type, serialId) {
-      if (Suit.typeHints.isHumidifierSensors(type)) {
-        this.getHumidifierStatusHistoryByWeek(serialId)
-        this.getHumidifierStatusHistoryByDay(serialId)
-      }
-    },
-    async getHumidifierStatusHistoryByWeek (serialId) {
-      const now = new Date().getTime()
-      const toDate = parseInt(now / 1000)
-      const fromDate = parseInt((now - (6 * 24 * 60 * 60 * 1000)) / 1000)
-      const {data} = await DeviceAPI.getDeviceStatusHistory(serialId, fromDate, toDate, '02')
-      return this.parseHumidifierHistoryByDay(data.history, '{m}-{d}')
-    },
-    async getHumidifierStatusHistoryByDay (serialId) {
-      const date = new Date()
-      const dateObj = {
-        y: date.getFullYear(),
-        m: date.getMonth() + 1,
-        d: date.getDate()
-      }
-      const fromDate = parseInt(new Date(`${dateObj.y}-${dateObj.m}-${dateObj.d} 00:00`).getTime() / 1000)
-      const toDate = parseInt(new Date(`${dateObj.y}-${dateObj.m}-${dateObj.d} 23:59`).getTime() / 1000)
-      this.humidifierMap.tableLoading = true
-      const {data} = await DeviceAPI.getDeviceStatusHistory(serialId, fromDate, toDate, '01')
-      this.humidifierMap.tableLoading = false
-      return this.parseHumidifierHistoryByDay(data.history)
-    },
-    parseHumidifierHistoryByDay (list, fmt) {
-      return Array.from(list.concat(list)).map(item => {
-        const temperature = +parseInt(item.status.slice(2, 4), 16).toString(10) - 30
-        const humidifier = +parseInt(item.status.slice(6, 8), 16).toString(10)
-        const time = Helper.parseTime(new Date(item.time * 1000), fmt || '{h}:{i}')
-        return {
-          temperature,
-          humidifier,
-          time
         }
       })
     },
@@ -289,29 +234,6 @@ export default {
     handleHumidifier (row) {
       this.humidifierSerialId = row.serialId
       this.humidifierMap.dialogVisible = true
-      // this.humidifierMap.list = await this.getHumidifierStatusHistoryByWeek(row.serialId)
-      // this.humidifierMap.chartList = await this.getHumidifierStatusHistoryByDay(row.serialId)
-
-      // const humidifierList = this.humidifierMap.list
-      // const charList = this.humidifierMap.chartList
-      // const isCharListValid = charList && charList.length
-      // this.humidifierMap.tableData = humidifierList
-      // this.humidifierMap.isCharListValid = isCharListValid
-      // if (isCharListValid) {
-      //   this.humidifierMap.labels = charList.map(item => item.time)
-      //   const temperature = charList.map(item => item.temperature)
-      //   const humidifier = charList.map(item => item.humidifier)
-      //   this.humidifierMap.series.push({
-      //     name: '温度',
-      //     type: 'line',
-      //     data: temperature
-      //   })
-      //   this.humidifierMap.series.push({
-      //     name: '湿度',
-      //     type: 'bar',
-      //     data: humidifier
-      //   })
-      // }
     }
   }
 }

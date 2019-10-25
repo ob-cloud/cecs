@@ -13,13 +13,13 @@
       <slot>
         <template slot="caption">
           <el-input @keyup.enter.native="handleSearch" class="caption-item" placeholder="设备序列号" v-model="search.obox_serial_id"></el-input>
+          <el-input @keyup.enter.native="handleSearch" class="caption-item" placeholder="设备类型" v-model="search.device_type"></el-input>
+          <el-input @keyup.enter.native="handleSearch" class="caption-item" placeholder="设备名称" v-model="search.name"></el-input>
           <el-select clearable class="caption-item" placeholder="全部状态" v-model="search.online">
             <el-option label='全部状态' value=''></el-option>
             <el-option label='在线' :value='true'></el-option>
             <el-option label='离线' :value='false'></el-option>
           </el-select>
-          <el-input @keyup.enter.native="handleSearch" class="caption-item" placeholder="设备类型" v-model="search.device_type"></el-input>
-          <el-input @keyup.enter.native="handleSearch" class="caption-item" placeholder="设备名称" v-model="search.name"></el-input>
           <el-button type="primary" icon="el-icon-search" @click="handleSearch">查询</el-button>
         </template>
       </slot>
@@ -121,7 +121,7 @@ export default {
       const toolbox = []
       const remove = <el-button size="tiny" icon="el-icon-delete" onClick={() => this.removeDevice(row)}></el-button>
       if (TypeHint.isTransponder(row.type)) {
-        toolbox.push(<el-button size="tiny" icon="obicon obicon-ac" onClick={() => this.handleAcControl(row)}></el-button>)
+        toolbox.push(<el-button size="tiny" icon="obicon obicon-infrared" onClick={() => this.handleAcControl(row)}></el-button>)
       }
       toolbox.push(remove)
       return toolbox
