@@ -141,20 +141,21 @@ export default {
       //     return type[val] || '云端场景'
       //   }
       // },
+      // {
+      //   label: '消息推送',
+      //   prop: 'msg_alter',
+      //   align: 'center',
+      //   formatter (val) {
+      //     const push = {
+      //       0: '无推送',
+      //       1: 'APP推送',
+      //       2: '短信推送',
+      //       3: 'APP+短信推送'
+      //     }
+      //     return push[val] || '无推送'
+      //   }
+      // },
       {
-        label: '消息推送',
-        prop: 'msg_alter',
-        align: 'center',
-        formatter (val) {
-          const push = {
-            0: '无推送',
-            1: 'APP推送',
-            2: '短信推送',
-            3: 'APP+短信推送'
-          }
-          return push[val] || '无推送'
-        }
-      }, {
         label: '场景状态',
         align: 'center',
         renderBody (h, row) {
