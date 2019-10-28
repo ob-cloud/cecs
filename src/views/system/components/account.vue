@@ -1,10 +1,10 @@
 <template>
-  <div class="smart">
+  <div class="ui-container">
     <base-table
-      :height="tableHeight"
+      :height="height"
       :tableData="tableData"
       :columns="columns"
-      stripe border
+      stripe
       v-loading="tableLoading"
       :pageSize="search.pageSize"
       :pageTotal="total"
@@ -54,6 +54,12 @@ import UserAPI from '@/api/user'
 import { PAGINATION_PAGENO, PAGINATION_PAGESIZE } from '@/common/constants'
 import Helper from '@/common/helper'
 export default {
+  props: {
+    height: {
+      type: Number,
+      default: 0
+    }
+  },
   data () {
     return {
       tableLoading: false,

@@ -1,5 +1,5 @@
 <template>
-  <div class="smart building">
+  <div class="building ui-container" :style="{height: `${height}px`}">
     <div class="search-bar">
       <div class="caption is-right">
         <el-button-group>
@@ -13,7 +13,7 @@
         <el-button type="primary" icon="el-icon-search" @click="handleSearch">查询</el-button>
       </div>
     </div>
-    <div class="building-list" v-loading.lock="loading" :style="{height: `${containerHeight}px`}">
+    <div class="building-list" v-loading.lock="loading"  :style="{height: (height - 90) + 'px'}">
       <div class="building-item" v-for="item in buildingList" :key="item.id">
         <div class="header">
           <i class="icon obicon obicon-power" title="电源" @click="handlePower(item)"></i>
@@ -61,6 +61,10 @@ export default {
     preload: {
       type: Boolean,
       default: false
+    },
+    height: {
+      type: Number,
+      default: 0
     }
   },
   data () {
@@ -308,6 +312,7 @@ export default {
     box-shadow: 0 0 1px 1px #f2f2f2;
     background: #fff;
     padding: 0;
+    width: 60px;
   }
 }
 .building-item{

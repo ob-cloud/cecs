@@ -1,6 +1,6 @@
 <template>
   <div class="device smart">
-    <el-tabs v-model="activeName" tab-position="left" class="room-container">
+    <el-tabs v-model="activeName" tab-position="left" class="room-container tab-aside">
       <el-tab-pane label="地图" name="map">
         <i-map :height="tableHeight"></i-map>
       </el-tab-pane>
@@ -51,7 +51,7 @@ export default {
   },
   methods: {
     fixLayout () {
-      this.tableHeight = Helper.calculateTableHeight()
+      this.tableHeight = this.activeName === 'map' ? Helper.calculateTableHeight(false, false) - 50 : Helper.calculateTableHeight() - 20
     }
   }
 }
@@ -59,21 +59,22 @@ export default {
 
 <style lang="scss" scoped>
 .smart{
-  padding: 10px;
-  padding-left: 30px;
+  // padding: 10px;
+  // padding-left: 30px;
   // width: 94%;
   // margin: 0 auto;
+  margin: 12px auto;
 }
 </style>
 <style lang="scss">
-  .room-container{
-    position: relative;
-    .el-tabs__header.is-left{
-      position: fixed;
-      z-index: 1;
-    }
-    .el-tabs__content{
-      padding-left: 64px;
-    }
-  }
+  // .room-container{
+  //   position: relative;
+  //   .el-tabs__header.is-left{
+  //     position: fixed;
+  //     z-index: 1;
+  //   }
+  //   .el-tabs__content{
+  //     padding-left: 64px;
+  //   }
+  // }
 </style>

@@ -1,6 +1,6 @@
 <template>
   <div class="device smart">
-    <el-tabs v-model="activeName">
+    <el-tabs v-model="activeName" tab-position="left" class="tab-aside">
       <el-tab-pane label="OBOX设备" name="obox">
         <device-obox v-if="activeName === 'obox'" :height="tableHeight"></device-obox>
       </el-tab-pane>
@@ -39,7 +39,7 @@ export default {
   },
   methods: {
     fixLayout () {
-      this.tableHeight = Helper.calculateTableHeight() - 50
+      this.tableHeight = Helper.calculateTableHeight() - 40
     }
   }
 }
@@ -47,7 +47,7 @@ export default {
 
 <style lang="scss" scoped>
 .smart{
-  width: 94%;
+  // width: 94%;
   margin: 12px auto;
 }
 </style>

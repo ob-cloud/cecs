@@ -1,10 +1,10 @@
 <template>
-  <div class="device smart">
+  <div class="device smart ui-container">
     <base-table
       :height="tableHeight"
       :tableData="tableData"
       :columns="columns"
-      stripe border
+      stripe
       v-loading="tableLoading"
       :pageTotal="total"
       :pageSize="search.pageSize"
@@ -99,7 +99,7 @@ export default {
   },
   methods: {
     fixLayout () {
-      this.tableHeight = Helper.calculateTableHeight()
+      this.tableHeight = Helper.calculateTableHeight() - 20
     },
     getColumns () {
       const _this = this
@@ -328,7 +328,8 @@ export default {
 
 <style lang="scss" scoped>
 .smart{
-  width: 94%;
-  margin: 12px auto;
+  // width: 94%;
+  // margin: 12px auto;
+  margin: 15px 20px;
 }
 </style>

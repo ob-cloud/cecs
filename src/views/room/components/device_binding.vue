@@ -4,7 +4,7 @@
       :height="tableHeight"
       :tableData="tableData"
       :columns="columns"
-      stripe border
+      stripe
       v-loading="tableLoading"
       :pageTotal="total"
       :pageSize="search.pageSize"
@@ -68,29 +68,29 @@ export default {
         prop: 'state',
         align: 'center',
         formatter (status, row) {
-          return Suit.getStatusDescriptor(status, row.device_type, row.device_child_type)
+          return status && Suit.getStatusDescriptor(status, row.device_type, row.device_child_type)
         }
       }, {
         label: '设备类型',
         prop: 'device_type',
         align: 'center',
         formatter (val) {
-          return Suit.getRootDeviceDescriptor(val)
+          return val &&  Suit.getRootDeviceDescriptor(val)
         }
       }, {
         label: '子设备类型',
         prop: 'device_child_type',
         align: 'center',
         formatter (val, row) {
-          return Suit.getDeviceTypeDescriptor(row.device_type, val)
+          return (val && row.device_type) && Suit.getDeviceTypeDescriptor(row.device_type, val)
         }
       }]
     },
     getDeviceList () {
       this.tableLoading = true
-      DeviceAPI.getDeviceList(this.search).then(resp => {
-        if (resp.status === 200) {
-          this.tableData = resp.data.config
+      DeviceAPI.getAllBuildingDeviceList(this.search).then(resp => {
+        if (resp.status === 0) {
+          this.tableData = resp.data.records
         } else {
           this.$message({
             message: resp.message || '设备获取失败'

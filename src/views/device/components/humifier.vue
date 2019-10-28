@@ -14,7 +14,7 @@
       <el-tab-pane label="历史数据">
         <base-table
           v-loading="tableLoading"
-          stripe border
+          stripe
           :height="tableHeight + 'px'"
           :tableData="tableData"
           :columns="columns"
@@ -42,7 +42,7 @@ export default {
   data () {
     return {
       tableLoading: true,
-      tableHeight: 360,
+      tableHeight: 320,
       tableData: [],
       columns: [{label: '温度' , prop: 'temperature' , align: 'center' }, {label: '湿度' , prop: 'humidifier' , align: 'center' }, {label: '时间' , prop: 'time' , align: 'center' }],
       isCharListValid: false,

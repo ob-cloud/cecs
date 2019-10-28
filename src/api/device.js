@@ -2,7 +2,7 @@
  * @Author: eamiear
  * @Date: 2019-08-05 17:32:41
  * @Last Modified by: eamiear
- * @Last Modified time: 2019-10-25 15:10:46
+ * @Last Modified time: 2019-10-28 18:21:47
  */
 
 import {request} from '@/common/request'
@@ -18,6 +18,12 @@ const DeviceAPI = {
       start_index: page,
       count: pageSize,
       ...params
+    })
+  },
+  getAllBuildingDeviceList (device = {}) {
+    return request.postForm('/consumer/common', {
+      CMD: 'get_building_devices',
+      user: JSON.stringify(device)
     })
   },
   getCameraList () {

@@ -2,7 +2,7 @@
  * @Author: eamiear
  * @Date: 2019-02-19 10:38:33
  * @Last Modified by: eamiear
- * @Last Modified time: 2019-10-12 17:04:40
+ * @Last Modified time: 2019-10-28 17:33:44
  */
 
 const _toString = Object.prototype.toString
@@ -73,13 +73,13 @@ export const Helper = {
   nextTick (fn) {
     fn && this.$nextTick(fn)
   },
-  calculateTableHeight () {
+  calculateTableHeight (hasPagination = true, hasGap = true) {
     const winH = document.body.clientHeight
     const navH = 50
     const tableHeader = document.querySelector('.el-table-plus__header')
     const searchBarH = (tableHeader && tableHeader.clientHeight) || 0
-    const paginationH = 60
-    return winH - navH - searchBarH - paginationH - 50
+    const paginationH = hasPagination ? 60 : 0
+    return winH - navH - searchBarH - paginationH - (hasGap ? 50 : 0)
   },
   windowOnResize (context, fn) {
     setTimeout(() => {

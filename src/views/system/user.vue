@@ -1,6 +1,6 @@
 <template>
   <div class="device smart">
-    <el-tabs v-model="activeName" tab-position="left" class="tab-container">
+    <el-tabs v-model="activeName" tab-position="left" class="tab-aside">
       <el-tab-pane label="账户管理" name="account">
         <account v-if="activeName === 'account'" :height="tableHeight"></account>
       </el-tab-pane>
@@ -30,7 +30,7 @@ export default {
   },
   methods: {
     fixLayout () {
-      this.tableHeight = Helper.calculateTableHeight()
+      this.tableHeight = Helper.calculateTableHeight() - 20
     }
   }
 }
@@ -38,8 +38,8 @@ export default {
 
 <style lang="scss" scoped>
 .smart{
-  padding: 10px;
-  padding-left: 30px;
+  // padding: 10px;
+  // padding-left: 30px;
   // width: 94%;
   // margin: 0 auto;
 }

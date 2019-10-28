@@ -1,5 +1,5 @@
 <template>
-  <div class="map-wrapper">
+  <div class="map-wrapper ui-container" :style="{height: height + 'px'}">
     <div class="map-toolbar">
       <el-upload
         class="upload-btn"
@@ -99,6 +99,12 @@
 <script>
 import graph from '../../assets/images/graph.jpg'
 export default {
+  props: {
+    height: {
+      type: Number,
+      default: 0
+    }
+  },
   data () {
     return {
       graph: graph,

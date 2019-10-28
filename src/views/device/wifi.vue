@@ -1,10 +1,10 @@
 <template>
-  <div>
+  <div class="ui-container">
     <base-table
       :height="height"
       :tableData="tableData"
       :columns="columns"
-      stripe border
+      stripe
       v-loading="tableLoading"
       :pageTotal="total"
       :pageSize="search.pageSize"

@@ -1,10 +1,10 @@
 <template>
-  <div>
+  <div class="ui-container">
     <base-table
       :height="height"
       :tableData="tableData"
       :columns="columns"
-      stripe border
+      stripe
       v-loading="tableLoading"
       :pageTotal="total"
       :pageSize="search.pageSize"
@@ -242,8 +242,8 @@ export default {
 
 <style lang="scss" scoped>
 .smart{
-  width: 94%;
-  margin: 12px auto;
+  // width: 94%;
+  // margin: 12px auto;
 }
 </style>
 <style lang="scss">

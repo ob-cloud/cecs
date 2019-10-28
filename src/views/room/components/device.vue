@@ -4,7 +4,7 @@
       :height="tableHeight"
       :tableData="tableData"
       :columns="columns"
-      stripe border
+      stripe
       v-loading="tableLoading"
       :pageTotal="total"
       :pageSize="search.pageSize"
@@ -69,33 +69,32 @@ export default {
     getColumns () {
       return [{
         label: '设备序号',
-        prop: 'obox_serial_id',
+        prop: 'deviceId',
         align: 'center'
       }, {
         label: '设备名称',
-        prop: 'name',
+        prop: 'deviceName',
         align: 'center'
       }, {
         label: '设备类型',
-        prop: 'device_type',
+        prop: 'deviceType',
         align: 'center',
         formatter (val) {
           return Suit.getRootDeviceDescriptor(val)
         }
       }, {
         label: '子设备类型',
-        prop: 'device_child_type',
+        prop: 'deviceChildType',
         align: 'center',
         formatter (val, row) {
-          return Suit.getDeviceTypeDescriptor(row.device_type, val)
+          return Suit.getDeviceTypeDescriptor(row.deviceType, val)
         }
       }, {
         label: '设备状态',
-        prop: 'state',
+        prop: 'deviceStatus',
         align: 'center',
         formatter (status, row) {
-          console.log(status, row.device_type, row.device_child_type)
-          return Suit.getStatusDescriptor(status, row.device_type, row.device_child_type)
+          // return Suit.getStatusDescriptor(status, row.deviceType, row.deviceChildType)
         }
       }, {
         label: '操作',
@@ -113,8 +112,8 @@ export default {
       this.tableLoading = true
       this.search.roomId = this.room
       RoomAPI.getRoomDeviceListV2(this.search).then(resp => {
-        if (resp.status === 200) {
-          this.tableData = resp.data.devices
+        if (resp.status === 0) {
+          this.tableData = resp.data.records
         } else {
           this.$message({
             message: resp.message || '房间设备获取失败'
