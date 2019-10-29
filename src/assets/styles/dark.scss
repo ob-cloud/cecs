@@ -375,6 +375,31 @@ body.dark{
   //   background: #0185E8
   // }
 
+  // cascader
+  .cascader{
+    background-color: $stripe-dark!important;
+    border-color: $stripe-dark!important;
+    color: $white;
+    box-shadow: 0 0 2px 0px $stripe-dark;
+    > i{
+      background-color: $dark!important;
+      color: $light-white!important;
+    }
+  }
+  .el-cascader__dropdown{
+    background-color: $light-dark;
+    border-color: $light-dark;
+    color: $white;
+
+    .el-cascader-menu{
+      color: $white;
+      border-right-color: $dark;
+    }
+    .el-cascader-node:not(.is-disabled):hover, .el-cascader-node:not(.is-disabled):focus{
+      background-color: $stripe-dark;
+    }
+  }
+
   // service
   .ui-container{
     background-color: $light-dark;
@@ -393,6 +418,27 @@ body.dark{
       border-bottom-color: $medium-dark!important;
       i{
         color: $light-white;
+      }
+    }
+
+    .content{
+      .title{
+        background-color: $dark!important;
+        color: $light-white!important;
+      }
+      .item{
+        border-bottom-color: $medium-dark!important;
+      }
+    }
+    .detail{
+      .sensors{
+        color: $white;
+        p{
+          color: $light-white!important;
+        }
+        p > i{
+          color: $light-blue!important;
+        }
       }
     }
 

@@ -24,7 +24,7 @@
         </el-tooltip>
         <div v-if="isAdd" class="point edit" :style="{left: editPoint.x + 'px', top: editPoint.y + 'px'}"></div>
         <div v-if="isAddFinished && !isSetLocation" class="cascader" :style="{left: (editPoint.x + this.radius) + 'px', top: (editPoint.y + this.radius) + 'px'}">
-          <i class="el-icon el-icon-close" @click="handleCancelAdd"></i>
+          <i class="el-icon el-icon-close" @click="handleCancelAdd" title="取消"></i>
           <el-cascader
             :options="buildingOptions"
             v-model="selectedOptions"
@@ -396,7 +396,7 @@ export default {
   top: 50px;
   bottom: 4px;
   background: #fff;
-  width: 300px;
+  width: 340px;
   box-shadow: 0 0 2px 1px #ddd;
 
   .header{
@@ -461,7 +461,7 @@ export default {
 }
 .slide-fade-enter, .slide-fade-leave-to
 /* .slide-fade-leave-active for below version 2.1.8 */ {
-  transform: translateX(300px);
+  transform: translateX(340px);
   opacity: 0;
 }
 </style>
