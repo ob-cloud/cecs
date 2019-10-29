@@ -7,7 +7,7 @@
         <el-button size="small" type="primary" icon="el-icon-upload">上传配置图</el-button>
         <!-- <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，图片规格 1080x700 </div> -->
       </el-upload>
-      <el-button size="small" type="primary" icon="el-icon-edit" @click="isAdd = true; isAddFinished = false">编辑</el-button>
+      <el-button size="small" type="primary" icon="el-icon-edit" @click="handleEdit()">编辑</el-button>
       <!-- <el-button size="small" type="primary" icon="el-icon-plus" @click="isAdd = true; isAddFinished = false">添加</el-button> -->
       <!-- <el-button size="small" type="primary" icon="el-icon-edit" @click="isEdit = true">编辑</el-button> -->
     </div>
@@ -108,7 +108,7 @@ export default {
   data () {
     return {
       graph: graph,
-      radius: 30,
+      radius: 20,
       points: [{
         id: 1,
         x: 130,
@@ -190,6 +190,19 @@ export default {
     }
   },
   methods: {
+    handleEdit () {
+      this.isAdd = true
+      this.isAddFinished = false
+      // if (!this.isAddFinished) {
+      //   this.isAdd = true
+      //   this.isAddFinished = false
+      // } else {
+      //   return this.$message({
+      //     type: 'info',
+      //     message: '正在编辑中...'
+      //   })
+      // }
+    },
     handleChange(value) {
       if (!value || !value.length) return
       const loader = this.$loading({
@@ -207,6 +220,7 @@ export default {
           type: 'success',
           message: '设置成功'
         })
+        // this.isAddFinished = false
       }, 2000)
       this.selectedOptions = []
     },
@@ -256,8 +270,8 @@ export default {
         if (!that.isAdd) return
         const offsetLeft = this.offsetLeft
         const offsetTop = this.offsetTop
-        const x = event.clientX - offsetLeft - 30
-        const y = event.clientY - offsetTop - 62
+        const x = event.clientX - offsetLeft - 20
+        const y = event.clientY - offsetTop - 102
         if (event.offsetX < 0 || event.offsetY < 0 || x > (1080 - that.radius) || y > (720 - that.radius)) return false
         that.editPoint.x = x
         that.editPoint.y = y
@@ -340,8 +354,10 @@ export default {
       background-color: rgb(223, 45, 45);
       border: 1px solid #333;
       border-radius: 100%;
-      width: 30px;
-      height: 30px;
+      // width: 30px;
+      // height: 30px;
+      width: 20px;
+      height: 20px;
       cursor: pointer;
     }
     .cascader {
