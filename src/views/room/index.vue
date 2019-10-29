@@ -1,6 +1,13 @@
 <template>
   <div class="device smart">
+    <el-breadcrumb separator-class="el-icon-arrow-right" class="breadcrumb">
+      <el-breadcrumb-item>{{breadcrumb.prev}}</el-breadcrumb-item>
+      <el-breadcrumb-item>{{breadcrumb.current}}</el-breadcrumb-item>
+    </el-breadcrumb>
     <el-tabs v-model="activeName" tab-position="left" class="room-container tab-aside">
+      <el-tab-pane label="" disabled class="menu-panel">
+         <span slot="label" class="menu-panel__label"><i class="el-icon-menu"></i></span>
+      </el-tab-pane>
       <el-tab-pane label="地图" name="map">
         <i-map :height="tableHeight"></i-map>
       </el-tab-pane>
@@ -30,7 +37,11 @@ export default {
       tableHeight: 0,
       roomPreload: false,
       buildingPreload: false,
-      floorPreload: false
+      floorPreload: false,
+      breadcrumb: {
+        prev: '房间管理',
+        current: '地图'
+      }
     }
   },
   components: { Building, Floor, Room, iMap },
@@ -46,12 +57,27 @@ export default {
   //     console.log(this.roomPreload)
   //   }
   // },
+  watch: {
+    '$route' (val) {
+      this.breadcrumb.prev = val.meta.title
+    },
+    activeName (val) {
+      if (!val) return
+      this.breadcrumb.current = {
+        'map': '地图',
+        'room': '房间',
+        'building': '楼栋',
+        'floor': '楼层'
+      }[val]
+    }
+  },
   mounted () {
     Helper.windowOnResize(this, this.fixLayout)
   },
   methods: {
     fixLayout () {
       this.tableHeight = this.activeName === 'map' ? Helper.calculateTableHeight(false, false) - 50 : Helper.calculateTableHeight() - 20
+      this.tableHeight -= 40
     }
   }
 }
@@ -63,7 +89,7 @@ export default {
   // padding-left: 30px;
   // width: 94%;
   // margin: 0 auto;
-  margin: 12px auto;
+  // margin: 12px auto;
 }
 </style>
 <style lang="scss">

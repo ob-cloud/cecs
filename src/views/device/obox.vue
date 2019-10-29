@@ -8,6 +8,7 @@
       v-loading="tableLoading"
       :pageTotal="total"
       :pageSize="search.pageSize"
+      :toolboxSize="0"
       @on-current-page-change="onCurrentChange"
       @on-page-size-change="onSizeChange">
       <slot>
@@ -130,7 +131,7 @@ export default {
         align: 'center',
         // minWidth: '180px',
         tooltip: false,
-        renderBody: this.getToolboxRender
+        renderToolBox: this.getToolboxRender
       }]
     },
     getToolboxRender (h, row) {
@@ -138,11 +139,11 @@ export default {
       // const edit = <el-button size="tiny" icon="el-icon-edit" onClick={() => this.editDevice(row)}></el-button>
       // const setting = <el-button size="tiny" icon="el-icon-setting" onClick={() => this.settingDevice(row)}></el-button>
       // const info = <el-button size="tiny" icon="el-icon-info" onClick={() => this.checkDeviceInfo(row)}></el-button>
-      const remove = <el-button size="tiny" icon="el-icon-delete" title="删除" onClick={() => this.removeDevice(row)}></el-button>
+      const remove = <el-button size="tiny" icon="el-icon-delete" title="删除" onClick={() => this.removeDevice(row)}>删除</el-button>
       if (Suit.typeHints.isThreeKeySocketSwitch(row.device_child_type)) {
-        toolboxs.push(<el-button size="tiny" icon="obicon obicon-power" title="灯开关" onClick={() => this.handleSwitchPower(row)}></el-button>)
+        toolboxs.push(<el-button size="tiny" icon="obicon obicon-power" title="灯开关" onClick={() => this.handleSwitchPower(row)}>灯开关</el-button>)
       } else if (Suit.typeHints.isHumidifierSensors(row.device_child_type)) {
-        toolboxs.push(<el-button size="tiny" icon="obicon obicon-humidity" title="温湿度" onClick={() => this.handleHumidifier(row)}></el-button>)
+        toolboxs.push(<el-button size="tiny" icon="obicon obicon-humidity" title="温湿度" onClick={() => this.handleHumidifier(row)}>温湿度</el-button>)
       }
       toolboxs.push(remove)
       return toolboxs
@@ -229,6 +230,7 @@ export default {
       })
     },
     handleSwitchPower (row) {
+      console.log('power ', row)
       this.switchSerialId = row.serialId
       this.dialogVisible = true
     },

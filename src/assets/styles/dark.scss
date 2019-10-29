@@ -81,6 +81,7 @@ body.dark{
     > .el-tabs__content{
       padding-left: 160px;
       margin: 10px 20px;
+      padding-right: 0;
     }
     .el-tabs__header.is-left{
       position: absolute;
@@ -154,7 +155,10 @@ body.dark{
     border-color: $light-blue;
     color: $light-blue;
   }
-
+  .el-dropdown-menu .el-table-plus-toolbox__item, .el-table-plus-toolbox_dropdown .el-table-plus-toolbox__item{
+    color: $light-white;
+    font-size: 12px;
+  }
   // .el-table-plus__header__caption .el-input__inner{
   //   background-color: transparent;
   //   border-color: $light-blue;
@@ -619,11 +623,72 @@ body.dark{
     }
     .building-list .pagination{
       background-color: $light-dark;
-      right: 10px;
+      // right: 10px;
       box-shadow: 0 0 1px 1px $light-white;
       > button:last-of-type{
         border-top-color: $light-white;
       }
     }
   }
+
+  // device
+  .breadcrumb {
+    display: block;
+    &.el-breadcrumb{
+      height: 45px;
+      line-height: 45px;
+      background-color: #2C3449;
+      margin-bottom: 10px;
+      padding: 0 20px;
+      color: #A2AAB5;
+      margin-left: 161px;
+      .el-breadcrumb__inner.is-link, .el-breadcrumb__inner a{
+        color: #A2AAB5;
+      }
+    }
+  }
+  .el-breadcrumb.breadcrumb + .tab-aside.el-tabs--left > .el-tabs__content{
+    margin: 0 0 0 20px;
+
+    .ui-container{
+      margin-right: 20px;
+    }
+  }
+  // .tab-aside.el-tabs--left > .el-tabs__content{
+
+  // }
+  // .ui-container{
+  //   margin-right: 20px;
+  // }
+
+  .tab-aside .el-tabs__item.is-left.is-disabled{
+    display: block;
+  }
+  .menu-panel__label{
+    display: block;
+    text-align: right;
+  }
+}
+
+// light
+.breadcrumb,
+.tab-aside .el-tabs__item.is-left.is-disabled{
+  display: none;
+}
+.el-tabs__content{
+  padding: 0 20px;
+}
+::-webkit-scrollbar {/*滚动条整体样式*/
+  width: 4px;     /*高宽分别对应横竖滚动条的尺寸*/
+  height: 4px;
+}
+::-webkit-scrollbar-thumb {/*滚动条里面小方块*/
+  border-radius: 10px;
+  box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
+  background: rgba(0,0,0,0.2);
+}
+::-webkit-scrollbar-track {/*滚动条里面轨道*/
+  box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
+  border-radius: 0;
+  background: rgba(0,0,0,0.1);
 }

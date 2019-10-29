@@ -301,10 +301,11 @@ export default {
 .building-list{
   position: relative;
   // padding-right: 70px;
+  overflow: auto;
   .pagination{
     display: inline-block;
-    position: absolute;
-    right: 0;
+    position: fixed;
+    right: 30px;
     top: 50%;
     transform: translateY(-50%);
     border-radius: 6px;

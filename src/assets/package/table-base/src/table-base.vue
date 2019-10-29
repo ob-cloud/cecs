@@ -78,8 +78,7 @@ export default {
       return this.$children[0]
     },
     getRenderDropdownItem (node) {
-      const description = (node.data && node.data.attrs.title) || ''
-      return (<el-dropdown-item>{node}{description}</el-dropdown-item>)
+      return (<el-dropdown-item>{node}</el-dropdown-item>)
     },
     getRenderDropdownLink (columnTooltip) {
       const tooltip = this.useTooltip(columnTooltip)
