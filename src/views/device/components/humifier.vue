@@ -44,7 +44,7 @@ export default {
       tableLoading: true,
       tableHeight: 320,
       tableData: [],
-      columns: [{label: '温度' , prop: 'temperature' , align: 'center' }, {label: '湿度' , prop: 'humidifier' , align: 'center' }, {label: '时间' , prop: 'time' , align: 'center' }],
+      columns: [{label: '温度', prop: 'temperature', align: 'center' }, {label: '湿度', prop: 'humidifier', align: 'center' }, {label: '时间', prop: 'time', align: 'center' }],
       isCharListValid: false,
       series: [],
       labels: []

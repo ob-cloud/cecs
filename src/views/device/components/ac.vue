@@ -154,7 +154,7 @@ export default {
           this.loading = false
         }
       }).catch(() => {
-         this.loading = false
+        this.loading = false
       })
     },
     getActionKey () {

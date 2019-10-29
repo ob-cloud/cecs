@@ -76,7 +76,7 @@ export default {
         prop: 'device_type',
         align: 'center',
         formatter (val) {
-          return val &&  Suit.getRootDeviceDescriptor(val)
+          return val && Suit.getRootDeviceDescriptor(val)
         }
       }, {
         label: '子设备类型',

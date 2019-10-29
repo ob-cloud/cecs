@@ -61,7 +61,7 @@ export default {
       sceneDeviceList: [],
       search: {
         buildingId: '',
-        floorId:'',
+        floorId: '',
         roomId: '',
         scene_name: '',
         pageNo: PAGINATION_PAGENO,
@@ -105,13 +105,7 @@ export default {
     },
     getColumns () {
       const _this = this
-      return [
-      // {
-      //   label: '场景序号',
-      //   prop: 'scene_number',
-      //   align: 'center'
-      // },
-      {
+      return [{
         label: '场景名称',
         prop: 'scene_name',
         align: 'center'
@@ -127,45 +121,12 @@ export default {
         label: '房间',
         prop: 'room',
         align: 'center'
-      },
-      // {
-      //   label: '场景类型',
-      //   prop: 'scene_type',
-      //   align: 'center',
-      //   formatter (val) {
-      //     const type = {
-      //       '00': '云端场景',
-      //       '01': '本地场景',
-      //       '02': '有人场景',
-      //       '03': '无人场景',
-      //       '04': '安防场景'
-      //     }
-      //     return type[val] || '云端场景'
-      //   }
-      // },
-      // {
-      //   label: '消息推送',
-      //   prop: 'msg_alter',
-      //   align: 'center',
-      //   formatter (val) {
-      //     const push = {
-      //       0: '无推送',
-      //       1: 'APP推送',
-      //       2: '短信推送',
-      //       3: 'APP+短信推送'
-      //     }
-      //     return push[val] || '无推送'
-      //   }
-      // },
-      {
+      }, {
         label: '场景状态',
         align: 'center',
         renderBody (h, row) {
           return (
-            <el-switch
-              onChange={() => {
-                _this.handleChangeStatus(row)
-              }}
+            <el-switch onChange={() => { _this.handleChangeStatus(row) }}
               value={[false, true][row.scene_status]}
               active-color='#409EFF'
               inactive-color='#DCDFE6'>

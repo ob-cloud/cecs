@@ -35,7 +35,6 @@
 
 <script>
 import BaseTable from '@/assets/package/table-base'
-import DeviceHistory from './history'
 import Humifier from './components/humifier'
 import iSwitcher from './components/switcher'
 import SlidePage from '@/components/SlidePage'
@@ -73,7 +72,7 @@ export default {
       humidifierSerialId: ''
     }
   },
-  components: { BaseTable, DeviceHistory, Humifier, iSwitcher, SlidePage },
+  components: { BaseTable, Humifier, iSwitcher, SlidePage },
   created () {
     this.getOboxList()
     this.columns = this.getColumns()
@@ -92,7 +91,6 @@ export default {
       this.tableHeight = Helper.calculateTableHeight() - 50
     },
     getColumns () {
-      const that = this
       return [{
         label: '设备序号',
         prop: 'obox_serial_id',

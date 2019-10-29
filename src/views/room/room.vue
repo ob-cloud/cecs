@@ -79,7 +79,7 @@ import RoomDevice from './components/device'
 import RoomScene from './components/scene'
 import Helper from '@/common/helper'
 export default {
-   props: {
+  props: {
     roomPreload: {
       type: Boolean,
       default: false

@@ -203,7 +203,7 @@ export default {
       //   })
       // }
     },
-    handleChange(value) {
+    handleChange (value) {
       if (!value || !value.length) return
       const loader = this.$loading({
         text: '位置设置中...'

@@ -88,7 +88,6 @@ export default {
       this.tableHeight = Helper.calculateTableHeight() - 50
     },
     getColumns () {
-      const that = this
       return [{
         label: '设备序号',
         prop: 'deviceId',
