@@ -14,7 +14,7 @@
         <el-button type="primary" icon="el-icon-search" @click="handleSearch">查询</el-button>
       </div>
     </div>
-    <div class="building-list" v-loading.lock="loading" :style="{height: (height - 90) + 'px'}">
+    <div class="building-list" v-loading.lock="loading" :style="{height: (height - 80) + 'px'}">
       <div class="building-item" v-for="item in layerList" :key="item.id">
         <div class="header">
           <i class="icon obicon obicon-power" title="电源" @click="handlePower(item)"></i>
@@ -300,7 +300,7 @@ export default {
 }
 .building-list{
   position: relative;
-  padding-right: 70px;
+  // padding-right: 70px;
   .pagination{
     display: inline-block;
     position: absolute;

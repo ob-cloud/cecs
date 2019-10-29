@@ -254,7 +254,7 @@ body.dark{
     color: $light-blue;
   }
   .el-pagination button:disabled{
-
+    color: $light-white;
   }
   .el-pager li{
     min-width: 28.5px;
@@ -596,6 +596,10 @@ body.dark{
     .building-list .pagination{
       background-color: $light-dark;
       right: 10px;
+      box-shadow: 0 0 1px 1px $light-white;
+      > button:last-of-type{
+        border-top-color: $light-white;
+      }
     }
   }
 }
