@@ -47,7 +47,8 @@
   box-shadow: 0 0 10px rgba(0,0,0,.35);
   margin-top: -120px;
   background: #fff;
-  padding: 15px 20px
+  padding: 15px 20px;
+  user-select: none;
 }
 .ura-login-header{
   text-align: center;

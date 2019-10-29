@@ -27,6 +27,7 @@ export default {
     return {
       tableLoading: true,
       tableHeight: 500,
+      total: 0,
       search: {
         pageNo: PAGINATION_PAGENO,
         pageSize: PAGINATION_PAGESIZE
@@ -36,11 +37,11 @@ export default {
     }
   },
   components: { BaseTable },
-  computed: {
-    total () {
-      return this.tableData.length || 0
-    }
-  },
+  // computed: {
+  //   total () {
+  //     return this.tableData.length || 0
+  //   }
+  // },
   mounted () {
     this.columns = this.getColumns()
     this.getDeviceList()
@@ -91,6 +92,7 @@ export default {
       DeviceAPI.getAllBuildingDeviceList(this.search).then(resp => {
         if (resp.status === 0) {
           this.tableData = resp.data.records
+          this.total = resp.total
         } else {
           this.$message({
             message: resp.message || '设备获取失败'

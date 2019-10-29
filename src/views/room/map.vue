@@ -307,6 +307,7 @@ export default {
 <style lang="scss" scoped>
 .map-wrapper{
   // padding-left: 64px;
+  overflow-y: auto;
   .map-toolbar{
     text-align: right;
     padding: 10px;
@@ -328,8 +329,8 @@ export default {
       display: inline-block;
       user-select: none;
       overflow: hidden;
-      min-width: 1080px;
-      min-height: 720px;
+      width: 1080px;
+      height: 720px;
       max-height: 720px;
       max-width: 1080px;
     }

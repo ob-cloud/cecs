@@ -17,7 +17,7 @@
         </template>
       </slot>
     </base-table>
-    <el-dialog id="holder" top="10%" width="760px" title="绑定设备" :visible.sync="deviceDialogVisible" :close-on-click-modal="false" append-to-body>
+    <el-dialog id="holder" top="10%" width="860px" title="绑定设备" :visible.sync="deviceDialogVisible" :close-on-click-modal="false" append-to-body>
       <device-binding @selection="onSelection"></device-binding>
     </el-dialog>
   </div>
@@ -95,6 +95,7 @@ export default {
         align: 'center',
         formatter (status, row) {
           // return Suit.getStatusDescriptor(status, row.deviceType, row.deviceChildType)
+          return status === '0' ? '关' : '开'
         }
       }, {
         label: '操作',
@@ -104,7 +105,7 @@ export default {
     },
     getToolboxRender (h, row) {
       return [
-        <el-button size="tiny" icon="el-icon-edit" title="编辑" onClick={() => this.handleEdit(row)}></el-button>,
+        // <el-button size="tiny" icon="el-icon-edit" title="编辑" onClick={() => this.handleEdit(row)}></el-button>,
         <el-button size="tiny" icon="el-icon-delete" title="解绑设备" onClick={() => this.handleRemove(row)}></el-button>
       ]
     },

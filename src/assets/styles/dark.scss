@@ -430,7 +430,7 @@ body.dark{
         background-color: $dark!important;
         color: $light-white!important;
       }
-      .item{
+      > .item{
         border-bottom-color: $medium-dark!important;
       }
     }
@@ -587,6 +587,9 @@ body.dark{
     .controller{
       border-top-color: $medium-dark;
     }
+    > .item{
+      color: $light-white;
+    }
   }
 
   .building{
@@ -642,6 +645,7 @@ body.dark{
       padding: 0 20px;
       color: #A2AAB5;
       margin-left: 161px;
+      .el-breadcrumb__inner,
       .el-breadcrumb__inner.is-link, .el-breadcrumb__inner a{
         color: #A2AAB5;
       }
@@ -668,6 +672,28 @@ body.dark{
     display: block;
     text-align: right;
   }
+
+  // login
+  .ura-login{
+    background-color: $stripe-dark!important;
+  }
+  .ura-login-container{
+    // background-color: $light-dark!important;
+    // color: $light-white;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.35)!important;
+
+    .el-input__inner{
+      border-color: $medium-dark;
+      color: $medium-dark;
+    }
+    .el-button--primary{
+      border-color: transparent;
+      color: $white;
+    }
+    input::-webkit-input-placeholder{
+      color: $medium-dark;
+    }
+  }
 }
 
 // light
@@ -679,13 +705,14 @@ body.dark{
   padding: 0 20px;
 }
 ::-webkit-scrollbar {/*滚动条整体样式*/
-  width: 4px;     /*高宽分别对应横竖滚动条的尺寸*/
-  height: 4px;
+  width: 6px;     /*高宽分别对应横竖滚动条的尺寸*/
+  height: 6px;
 }
 ::-webkit-scrollbar-thumb {/*滚动条里面小方块*/
   border-radius: 10px;
   box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
-  background: rgba(0,0,0,0.2);
+  background-color: rgba(0,0,0,0.2);
+  background-image: $blue-gradient;
 }
 ::-webkit-scrollbar-track {/*滚动条里面轨道*/
   box-shadow: inset 0 0 5px rgba(0,0,0,0.2);

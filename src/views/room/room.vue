@@ -49,7 +49,7 @@
         </el-form-item>
         <el-form-item label="楼层名称" prop="floorId">
           <el-select placeholder="请选择楼层" v-model="roomModel.floorId">
-            <el-option v-for="item in layerList" :key="item.id" :label="item.floorName + '层'" :value="item.floorId"></el-option>
+            <el-option v-for="item in layerList" :key="item.id" :label="item.floorName + '层'" :value="item.id"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="房间名称" prop="roomName">
@@ -64,7 +64,7 @@
       </span>
     </el-dialog>
 
-    <el-dialog v-if="deviceDialogVisible" top="10%" width="760px" :title="dialogTitleMap[dialogStatus]" :visible.sync="deviceDialogVisible" :close-on-click-modal="false">
+    <el-dialog v-if="deviceDialogVisible" top="10%" width="960px" :title="dialogTitleMap[dialogStatus]" :visible.sync="deviceDialogVisible" :close-on-click-modal="false">
       <room-device :room='deviceActiveRoom'></room-device>
     </el-dialog>
     <el-dialog v-if="sceneDialogVisible" top="10%" width="760px" :title="dialogTitleMap[dialogStatus]" :visible.sync="sceneDialogVisible" :close-on-click-modal="false">
