@@ -6,6 +6,7 @@ $medium-dark: #3A4257;
 $stripe-dark: #2C3449;
 // $light-white: #cecece;
 $light-white: #A2AAB5;
+$medium-white: #bcc6d0;
 $white: #fff;
 // $light-white: #E8ECEA;
 $blue: #049DEC;
@@ -32,7 +33,8 @@ body.dark{
   }
   .el-menu.el-menu--horizontal,
   .el-menu--horizontal > .el-menu-item{
-    color: $light-white;
+    // color: $light-white;
+    color: $medium-white;
     border-bottom: none;
   }
   .el-menu--horizontal > .el-menu-item:not(.is-disabled):hover, .el-menu--horizontal > .el-menu-item:not(.is-disabled):focus,
@@ -502,8 +504,10 @@ body.dark{
       color: $light-white;
     }
     .action-item__behavior{
-      border-color: $light-blue!important;
-      color: $light-blue!important;
+      // border-color: $light-blue!important;
+      // color: $light-blue!important;
+      border-color: $medium-dark!important;
+      color: $light-white!important;
     }
   }
   .condition-type.el-tabs--border-card{
