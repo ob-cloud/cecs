@@ -1,5 +1,5 @@
 <template>
-  <div class="smart">
+  <div class="scene-create">
     <el-form ref="sceneForm" :rules="sceneModelRules" :model="sceneModel" label-width="100px">
       <el-form-item label="场景名称" prop="scene_name">
         <el-input class="caption-item w8" placeholder="场景名称" v-model="sceneModel.scene_name"></el-input>

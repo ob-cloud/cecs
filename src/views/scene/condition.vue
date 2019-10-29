@@ -461,7 +461,7 @@ export default {
 }
 .chain-action__item .content .el-radio{
   margin-right: 10px;
-  margin-top: 5px;
+  margin-top: 10px;
 }
 .el-radio.is-bordered + .el-radio.is-bordered{
   margin-left: 0;

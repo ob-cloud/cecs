@@ -462,8 +462,17 @@ body.dark{
     }
   }
   // scene
+  .scene-create{
+    .el-input__inner{
+      border-color: $medium-dark;
+      color: $light-white;
+    }
+    input::-webkit-input-placeholder{
+      color: $light-white;
+    }
+  }
   .condition .condition-item{
-    border-color: $light-blue;
+    border-color: $medium-dark;
     color: $light-white;
   }
   .action-content .condition-item{
@@ -474,16 +483,19 @@ body.dark{
     }
     .el-input-number__increase, .el-input-number__decrease{
       background-color: transparent;
-      color: $light-blue;
+      color: $light-white;
     }
     .el-input-number.is-controls-right .el-input-number__increase{
-      border-bottom-color: $light-blue;
+      border-bottom-color: $medium-dark;
     }
     .el-input-number__increase{
-      border-left-color: $light-blue;
+      border-left-color: $medium-dark;
     }
     .el-input-number.is-controls-right .el-input-number__decrease{
-      border-color: $light-blue;
+      border-color: $medium-dark;
+    }
+    .el-input .el-select__caret{
+      color: $light-white;
     }
     .action-item__behavior{
       border-color: $light-blue!important;
@@ -506,11 +518,11 @@ body.dark{
   // 联动设备
   .chain-list{
     .chain-device{
-      border-color: $light-blue!important;
+      border-color: $light-white!important;
       box-shadow: 0 0 1px $light-blue!important;
       &.active, &:hover{
-        border-color: $blue!important;
-        box-shadow: 0 0 1px 1px $blue!important;
+        border-color: $light-blue!important;
+        box-shadow: 0 0 1px 0 $light-blue!important;
       }
       p {
         color: $white!important;
@@ -539,24 +551,30 @@ body.dark{
         background-color: transparent;
         border-color: $light-blue;
         color: $light-white;
+        padding: 8px 20px;
       }
       .el-radio-button__orig-radio:checked + .el-radio-button__inner{
-        background-color: $blue;
+        background-color: $dark;
         color: $white;
       }
       .el-radio.is-bordered{
-        color: $light-blue;
-        border-color: $light-blue;
+        height: 30px;
+        padding: 7px 20px 7px 10px;
+      }
+      .el-radio.is-bordered{
+        color: $light-white;
+        border-color: $light-white;
       }
       .el-radio__inner{
         background-color: transparent;
-        border-color: $light-blue;
+        border-color: $light-white;
         &::after{
-          background-color: $blue;
+          background-color: $light-blue;
         }
       }
       .el-radio__input.is-checked .el-radio__inner{
-        border-color: $blue;
+        border-color: $light-blue;
+        color: $light-blue;
       }
     }
   }
@@ -590,8 +608,14 @@ body.dark{
       color: $white;
     }
     .el-button-group .el-button--primary:not(:first-child):not(:last-child){
-      border-left-color: $light-blue;
-      border-right-color: $light-blue;
+      border-left-color: $light-dark;
+      border-right-color: $light-dark;
+    }
+    .el-button-group .el-button--primary:first-child{
+      border-right-color: $light-dark;
+    }
+    .el-button-group .el-button--primary:last-child{
+      border-left-color: $light-dark;
     }
     .building-list .pagination{
       background-color: $light-dark;

@@ -58,6 +58,7 @@ export default {
       buildingList: [],
       floorList: [],
       roomList: [],
+      sceneDeviceList: [],
       search: {
         buildingId: '',
         floorId:'',
@@ -80,6 +81,7 @@ export default {
     this.getBuildingList()
     // this.getFloorList()
     this.getRoomList()
+    this.getSceneDeviceList()
   },
   watch: {
     'search.buildingId' (val) {
@@ -183,6 +185,14 @@ export default {
         <el-button size="tiny" icon="el-icon-edit" title="编辑" onClick={() => this.edit(row)}></el-button>,
         <el-button size="tiny" icon="el-icon-delete" title="删除" onClick={() => this.handleRemove(row)}></el-button>
       ]
+    },
+    getSceneDeviceList () {
+      SceneAPI.getSceneDeviceList().then(res => {
+        if (res.status === 0) {
+          this.sceneDeviceList = []
+          console.log(res)
+        }
+      })
     },
     getBuildingList () {
       RoomAPI.getBuildingList().then(res => {
