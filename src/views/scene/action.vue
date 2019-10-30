@@ -8,6 +8,7 @@
       </el-checkbox-group>
     </div>
     <div v-if="isTransponder()" class="list transponder" v-loading="transponderLoading">
+      <div v-if="!transponderList.length" style="text-align:center;">无数据</div>
       <div class="item" :class="{active: item.index === currentTransponderDevice.index}" v-for="(item, index) in transponderList" :key="index" @click="currentTransponderDevice = item">
         <p class="item-icon">
           <i class="obicon obicon-ac" :class="transponderIconFilter(item.deviceType)"></i>
@@ -56,6 +57,7 @@
 <script>
 import * as panelHandler from '@/oblink/panelHandler'
 import DeviceAPI from '@/api/device'
+const {default: Suit} = require('@/common/suit')
 export default {
   props: {
     actionObject: {
@@ -113,7 +115,8 @@ export default {
       return {[iconMap[type]]: true}
     },
     is3KeyPanel () {
-      return this.deviceType === '04' && this.deviceSubType === '21'
+      return Suit.typeHints.isThreeKeySocketSwitch(this.deviceSubType)
+      // return this.deviceType === '04' && this.deviceSubType === '21'
     },
     isTransponder () {
       return this.deviceType === '51'
@@ -138,9 +141,10 @@ export default {
     },
     handleSelected () {
       const room = {
-        buildingId: '',
-        floorId: '',
-        roomId: ''
+        buildingId: this.actionObject.buildingId,
+        floorId: this.actionObject.floorId,
+        roomId: this.actionObject.roomId,
+        action_time: this.actionObject.action_time
       }
       if (this.is3KeyPanel()) {
         // this.$emit('action-change', {action: panelHandler.changeSwitchButtonToAction(this.powerStatus, this.actionObject), extra: this.powerStatus}, false)
@@ -150,7 +154,7 @@ export default {
         const hasHW = panelHandler.hasHorizontalWind(this.currentTransponderDevice.keys)
         const action = {
           index: this.currentTransponderDevice.index,
-          key: panelHandler.getAirConditionKeys(this.airAction.templure, this.airAction.mode, this.airAction.speed, +hasVW, +hasHW),
+          key: this.currentTransponderDevice ? panelHandler.getAirConditionKeys(this.airAction.templure, this.airAction.mode, this.airAction.speed, +hasVW, +hasHW) : '',
           keyType: 0,
           name: this.currentTransponderDevice.name
         }

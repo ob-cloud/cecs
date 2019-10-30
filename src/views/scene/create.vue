@@ -74,19 +74,19 @@
             <i class="el-icon-close fr" @click="handleRemoveAction(index)"></i>
             <div class="action-item">
               <el-tooltip content="行为执行时间(单位秒)" placement="top">
-                <el-input-number v-model="deviceAction.second" controls-position="right" :min="0"></el-input-number>
+                <el-input-number v-model="deviceAction.action_time" controls-position="right" :min="0"></el-input-number>
               </el-tooltip>
-              <el-select placeholder="请选择栋" v-model="deviceAction.building" filterable>
-                <el-option v-for="item in buildingList" :key="item" :label="item + '栋'" :value="item"></el-option>
+              <el-select placeholder="请选择栋" v-model="deviceAction.buildingId" filterable @change="onSelectChange(deviceAction.buildingId, index, 0)">
+                <el-option v-for="item in deviceAction.buildingList" :key="item.buildingId" :label="item.buildingName" :value="item.buildingId"></el-option>
               </el-select>
-              <el-select placeholder="请选择层" v-model="deviceAction.floor" filterable>
-                <el-option v-for="item in layerList" :key="item" :label="item + '层'" :value="item"></el-option>
+              <el-select placeholder="请选择层" v-model="deviceAction.floorId" filterable @change="onSelectChange(deviceAction.floorId, index, 1)">
+                <el-option v-for="item in deviceAction.floorList" :key="item.floorId" :label="item.floorName" :value="item.floorId"></el-option>
               </el-select>
-              <el-select placeholder="请选择房间" v-model="deviceAction.floor" filterable>
-                <el-option v-for="item in layerList" :key="item" :label="item + '房'" :value="item"></el-option>
+              <el-select placeholder="请选择房间" v-model="deviceAction.roomId" filterable @change="onSelectChange(deviceAction.roomId, index, 2)">
+                <el-option v-for="item in deviceAction.roomList" :key="item.roomId" :label="item.roomName" :value="item.roomId"></el-option>
               </el-select>
               <el-select placeholder="请选择设备类型" v-model="deviceAction.serialId" @change="onSelectDevice(deviceAction.serialId, index)">
-                <el-option v-for="(item, index) in deviceTypeList" :key="index" :label="item.device_type | deviceTypeFilter(item.device_child_type)" :value="item.serialId"></el-option>
+                <el-option v-for="item in deviceAction.deviceTypeList" :key="item.deviceSerialId" :label="item.deviceType | deviceTypeFilter(item.deviceChildType)" :value="item.deviceSerialId"></el-option>
               </el-select>
               <div v-if="deviceAction.serialId" class="action-item__behavior" @click="settingAction(deviceAction.serialId, index)" :title="deviceAction.actionDescriptor">
                 <p>{{deviceAction.actionDescriptor || '配置设备动作'}}</p>
@@ -118,7 +118,9 @@ import SceneAction from './action'
 import DeviceAPI from '@/api/device'
 const {default: Suit} = require('@/common/suit')
 import { PAGINATION_PAGENO } from '@/common/constants'
+import scene from './scene'
 export default {
+  mixins: [scene],
   props: {
     isLocal: {
       type: Boolean,
@@ -158,12 +160,17 @@ export default {
         conditions: [] // 联动设备行为条件
       },
       deviceActionModel: [{
-        second: 0,
-        building: '',
-        floor: '',
+        action_time: 0,
+        buildingId: '',
+        floorId: '',
+        roomId: '',
         serialId: '',
         actionDescriptor: '',
-        action: ''
+        action: '',
+        buildingList: [],
+        floorList: [],
+        roomList: [],
+        deviceTypeList: []
       }],
       currentAction: null, // 当前操作action项
       activeDevice: null, // 当前选中设备类型对象
@@ -192,35 +199,32 @@ export default {
         device_type: '51'
       }],
       actionDialogVisible: false,
-      buildingList: [],
-      layerList: []
+      // buildingList: [],
+      // layerList: []
     }
   },
   filters: {
     deviceTypeFilter (type, subtype) {
+      if (!type && !subtype) return
       return subtype ? Suit.getDeviceTypeDescriptor(type, subtype) : Suit.getRootDeviceDescriptor(type)
     }
   },
   components: {SceneCondition, SceneAction},
   mounted () {
     this.getDeviceList()
-    this.getBuildingList()
-    this.getLayerList()
+    this.getSceneDeviceList().then(buildingList => {
+      this.deviceActionModel[0].buildingList = buildingList
+    })
+    console.log('mounted ', this.deviceTypeList)
   },
   watch: {
     deviceIdList (serialIds) {
       this.deviceSelectedList = serialIds.map(serialId => {
         return this.deviceList.find(device => serialId === device.serialId)
       })
-    }
+    },
   },
   methods: {
-    getBuildingList () {
-      this.buildingList = ['1', '12', '2', '3', '4']
-    },
-    getLayerList () {
-      this.layerList = ['1', '2', '22', '3', '4']
-    },
     isActionDevice (deviceType, deviceSubType, isLocal) {
       return !Suit.typeHints.isSensors(deviceType)
         && !Suit.typeHints.isFinger(deviceType)
@@ -274,21 +278,70 @@ export default {
       this.currentAction.actionDescriptor = actionData.extra // .map(item => (item ? '开' : '关')).join('/')
       this.currentAction.action = actionData.action
     },
+    onSelectChange (id, index, type) {
+      const activeActionModel = this.deviceActionModel[index]
+      if (type === 0) { // building
+        activeActionModel.floorId = ''
+        activeActionModel.roomId = ''
+        activeActionModel.serialId = ''
+        activeActionModel.floorList = []
+        activeActionModel.roomList = []
+        activeActionModel.deviceTypeList = []
+        this.getFloorList(id)
+        activeActionModel.floorList = this.floorList
+      } else if (type === 1) { // floor
+        activeActionModel.roomId = ''
+        activeActionModel.roomList = []
+        activeActionModel.serialId = ''
+        activeActionModel.deviceTypeList = []
+        this.getRoomList(id)
+        activeActionModel.roomList = this.roomList
+      } else { // room
+        activeActionModel.serialId = ''
+        activeActionModel.deviceTypeList = []
+        this.getDeviceTypeListByRoomId(id)
+        activeActionModel.deviceTypeList = this.deviceTypeList
+        activeActionModel.deviceTypeList = this.deviceTypeList.filter(item => {
+          return this.isActionDevice(item.deviceType, item.deviceChildType)
+        })
+        console.log('deviceTypeList ', activeActionModel.deviceTypeList, id)
+      }
+    },
     onSelectDevice (serialId, index) {
-      this.activeDevice = this.deviceTypeList.find(item => item.serialId === serialId)
-      this.currentAction = this.deviceActionModel[index]
+      const activeActionModel = this.deviceActionModel[index]
+      const device = activeActionModel.deviceTypeList.find(item => item.deviceSerialId === serialId)
+      this.activeDevice = {
+        device_child_type: device.deviceChildType,
+        device_type: device.deviceType,
+        device_name: device.deviceName,
+        serialId: device.deviceSerialId,
+        obox_serial_id: device.oboxSerialId,
+        state: device.deviceState,
+        addr: device.rfAddress,
+        buildingId: activeActionModel.buildingId,
+        floorId: activeActionModel.floorId,
+        roomId: activeActionModel.roomId,
+        action_time: activeActionModel.action_time
+      }
+      this.currentAction = activeActionModel
+      this.currentAction.actionDescriptor = ''
     },
     handleRemoveAction (index) {
       this.deviceActionModel.splice(index, 1)
     },
     handleAddAction () {
       this.deviceActionModel.push({
-        second: 0,
-        building: '',
-        floor: '',
+        action_time: 0,
+        buildingId: '',
+        floorId: '',
+        roomId: '',
         serialId: '',
         actionDescriptor: '',
-        action: ''
+        action: '',
+        buildingList: this.buildingList,
+        floorList: [],
+        roomList: [],
+        deviceTypeList: []
       })
     },
     handleSelectedCondition () {

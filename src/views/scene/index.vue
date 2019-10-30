@@ -15,7 +15,7 @@
         <template slot="caption">
           <el-select clearable class="caption-item" placeholder="楼栋" v-model="search.buildingId" filterable>
             <el-option label='全部' value=''></el-option>
-            <el-option v-for="item in buildingList" :key="item.id" :label="item.buildName + '栋'" :value="item.id"></el-option>
+            <el-option v-for="item in buildingList" :key="item.buildingId" :label="item.buildingName + '栋'" :value="item.buildingId"></el-option>
           </el-select>
           <el-select clearable class="caption-item" placeholder="楼层" v-model="search.floorId" filterable>
             <el-option label='全部' value=''></el-option>
@@ -50,15 +50,17 @@ import SceneCreate from './create'
 import RoomAPI from '@/api/room'
 import { PAGINATION_PAGENO, PAGINATION_PAGESIZE } from '@/common/constants'
 import Helper from '@/common/helper'
+import scene from './scene'
 export default {
+  mixins: [scene],
   data () {
     return {
       tableLoading: true,
       tableHeight: 0,
-      buildingList: [],
-      floorList: [],
-      roomList: [],
-      sceneDeviceList: [],
+      // buildingList: [],
+      // floorList: [],
+      // roomList: [],
+      // sceneDeviceList: [],
       search: {
         buildingId: '',
         floorId: '',
@@ -78,17 +80,19 @@ export default {
   created () {
     this.columns = this.getColumns()
     this.getSceneList()
-    this.getBuildingList()
-    // this.getFloorList()
-    this.getRoomList()
     this.getSceneDeviceList()
   },
   watch: {
     'search.buildingId' (val) {
-      val && this.getFloorList(val)
+      this.search.floorId = ''
+      this.floorList = []
+      this.getFloorList(val)
+
     },
-    'search.roomId' (val) {
-      val && this.getLayerList(val)
+    'search.floorId' (val) {
+      this.search.roomId = ''
+      this.roomList = []
+      this.getRoomList(val)
     },
   },
   computed: {
@@ -146,40 +150,6 @@ export default {
         <el-button size="tiny" icon="el-icon-edit" title="编辑" onClick={() => this.edit(row)}></el-button>,
         <el-button size="tiny" icon="el-icon-delete" title="删除" onClick={() => this.handleRemove(row)}></el-button>
       ]
-    },
-    getSceneDeviceList () {
-      SceneAPI.getSceneDeviceList().then(res => {
-        if (res.status === 0) {
-          this.sceneDeviceList = []
-          console.log(res)
-        }
-      })
-    },
-    getBuildingList () {
-      RoomAPI.getBuildingList().then(res => {
-        if (res.status === 0) {
-          this.buildingList = res.data.records
-        }
-      })
-    },
-    getFloorList (buildingId) {
-      // RoomAPI.getFloorList().then(res => {
-      //   if (res.status === 0) {
-      //     this.floorList = res.data.records
-      //   }
-      // })
-      RoomAPI.getFloorByBuildingId(buildingId).then(res => {
-        if (res.status === 0) {
-          this.floorList = res.data.records
-        }
-      })
-    },
-    getRoomList () {
-      RoomAPI.getRoomListV2().then(resp => {
-        if (resp.status === 0) {
-          this.roomList = resp.data.records
-        }
-      })
     },
     getSceneList () {
       this.tableLoading = true
