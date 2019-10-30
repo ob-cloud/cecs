@@ -47,12 +47,12 @@
 import BaseTable from '@/assets/package/table-base'
 import SceneAPI from '@/api/scene'
 import SceneCreate from './create'
-import RoomAPI from '@/api/room'
+// import RoomAPI from '@/api/room'
 import { PAGINATION_PAGENO, PAGINATION_PAGESIZE } from '@/common/constants'
 import Helper from '@/common/helper'
-import scene from './scene'
+import sceneMixin from './scene'
 export default {
-  mixins: [scene],
+  mixins: [sceneMixin],
   data () {
     return {
       tableLoading: true,
@@ -87,7 +87,6 @@ export default {
       this.search.floorId = ''
       this.floorList = []
       this.getFloorList(val)
-
     },
     'search.floorId' (val) {
       this.search.roomId = ''

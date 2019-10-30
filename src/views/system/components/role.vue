@@ -149,7 +149,8 @@ export default {
     getRoleList () {
       this.tableLoading = true
       const {status, roleName, pageNo, pageSize} = this.search
-      UserAPI.getRoleList({status: status === '' ? undefined : status, roleName, pageNo, pageSize}).then(res => {
+      const params = status === '' ? {roleName, pageNo, pageSize} : {status, roleName, pageNo, pageSize}
+      UserAPI.getRoleList(params).then(res => {
         if (res.status === 0) {
           this.tableData = res.data.records
           this.total = res.total
