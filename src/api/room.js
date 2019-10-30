@@ -2,7 +2,7 @@
  * @Author: eamiear
  * @Date: 2019-08-07 16:43:10
  * @Last Modified by: eamiear
- * @Last Modified time: 2019-10-28 18:21:30
+ * @Last Modified time: 2019-10-30 14:21:30
  */
 
 import {request} from '@/common/request'
@@ -121,6 +121,12 @@ const RoomAPI = {
   bindDeviceToRoomV2 (roomId, deviceId) {
     return request.postForm('/consumer/common', {
       CMD: 'bind_room_device',
+      device: JSON.stringify({roomId, deviceId})
+    })
+  },
+  unbindRoomDevice (roomId, deviceId) {
+    return request.postForm('/consumer/common', {
+      CMD: 'unbind_room_device',
       device: JSON.stringify({roomId, deviceId})
     })
   },

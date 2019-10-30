@@ -24,6 +24,9 @@ body.dark{
   }
   .navbar{
     text-align: center;
+    .el-dialog{
+      text-align: left;
+    }
   }
   .brand, .logo, .brand:hover, .brand:active, .brand:visited, .logo:hover, .logo:active, .logo:visited,
   .navbar-custom-menu .uv-user-menu .uv-user-menu > .dropdown-toggle,
@@ -679,23 +682,34 @@ body.dark{
 
   // login
   .ura-login{
-    background-color: $stripe-dark!important;
+    // background-color: $stripe-dark!important;
   }
   .ura-login-container{
-    // background-color: $light-dark!important;
-    // color: $light-white;
-    box-shadow: 0 0 10px rgba(255, 255, 255, 0.35)!important;
+    // background-color: #5D687B!important; // $light-dark!important;
+    color: $dark;
+    // box-shadow: 0 0 10px rgba(255, 255, 255, 0.35)!important;
+    // background-image: $blue-gradient!important;
 
     .el-input__inner{
-      border-color: $medium-dark;
-      color: $medium-dark;
+      border-color: $dark;
+      color: $dark;
+
+      // border-color: $light-white;
+      // color: $white;
+
+      // border-color: $light-blue;
+      // color: $light-blue;
     }
     .el-button--primary{
       border-color: transparent;
       color: $white;
+
+      border: none;
+      // background-image: $light-blue-gradient;
     }
     input::-webkit-input-placeholder{
-      color: $medium-dark;
+      // color: $medium-dark;
+      color: $light-white;
     }
   }
 }
@@ -722,4 +736,7 @@ body.dark{
   box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
   border-radius: 0;
   background: rgba(0,0,0,0.1);
+}
+.el-button > .obicon + span{
+  margin-left: 5px;
 }

@@ -13,7 +13,7 @@
 
       <slot>
         <template slot="actionBar">
-          <el-button type="primary" icon="el-icon-plus" @click="handleCreate">添加</el-button>
+          <el-button type="primary" icon="obicon obicon-bangding" @click="handleCreate">绑定</el-button>
         </template>
       </slot>
     </base-table>
@@ -106,7 +106,7 @@ export default {
     getToolboxRender (h, row) {
       return [
         // <el-button size="tiny" icon="el-icon-edit" title="编辑" onClick={() => this.handleEdit(row)}></el-button>,
-        <el-button size="tiny" icon="el-icon-delete" title="解绑设备" onClick={() => this.handleRemove(row)}></el-button>
+        <el-button size="tiny" icon="obicon obicon-unbind" title="设备解绑" onClick={() => this.handleRemove(row)}></el-button>
       ]
     },
     getRoomDeviceList () {
@@ -177,7 +177,7 @@ export default {
       console.log('房间编辑 ', row)
     },
     handleRemove (row) {
-      this.$confirm('确认删除设备？', '确认提示', {
+      this.$confirm('确认解绑设备？', '确认提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning',
@@ -190,22 +190,17 @@ export default {
     },
     doRemove (row) {
       const loader = this.$loading({
-        text: '设备删除中...'
+        text: '设备解绑中...'
       })
-      const params = {
-        device_type: row.device_type,
-        serialId: row.obox_serial_id,
-        location: this.room
-      }
-      RoomAPI.removeRoomDevice(params).then(res => {
+      RoomAPI.unbindRoomDevice(this.room, row.deviceId).then(res => {
         loader.close()
-        this.responseHandler(res, '设备删除')
+        this.responseHandler(res, '设备解绑')
         if (res.message.includes('success')) {
           this.getRoomDeviceList()
         }
       }).catch(() => {
         loader.close()
-        this.responseHandler({message: 'error'}, '设备删除')
+        this.responseHandler({message: 'error'}, '设备解绑')
       })
     },
     responseHandler (res, msg) {
