@@ -143,8 +143,7 @@ export default {
         text: '设备绑定中...'
       })
       this.deviceDialogVisible = false
-
-      RoomAPI.bindDeviceToRoomV2(this.room, selection.id).then(res => {
+      RoomAPI.bindDeviceToRoomV2(this.room, selection.id, selection.serialId).then(res => {
         loader.close()
         this.responseHandler(res, '设备绑定')
         if (res.message.includes('success')) {
@@ -192,7 +191,7 @@ export default {
       const loader = this.$loading({
         text: '设备解绑中...'
       })
-      RoomAPI.unbindRoomDevice(this.room, row.deviceId).then(res => {
+      RoomAPI.unbindRoomDevice(this.room, row.deviceId, row.deviceSerialId).then(res => {
         loader.close()
         this.responseHandler(res, '设备解绑')
         if (res.message.includes('success')) {
