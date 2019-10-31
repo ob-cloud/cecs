@@ -68,8 +68,8 @@ export default {
   methods: {
     getColumns () {
       return [{
-        label: '设备序号',
-        prop: 'deviceId',
+        label: '设备序列号',
+        prop: 'deviceSerialId',
         align: 'center'
       }, {
         label: '设备名称',

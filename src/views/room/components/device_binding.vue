@@ -57,7 +57,7 @@ export default {
           )
         }
       }, {
-        label: '设备序号',
+        label: '设备序列号',
         prop: 'serialId',
         align: 'center'
       }, {
