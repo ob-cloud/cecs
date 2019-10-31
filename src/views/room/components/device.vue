@@ -17,7 +17,7 @@
         </template>
       </slot>
     </base-table>
-    <el-dialog id="holder" top="10%" width="860px" title="绑定设备" :visible.sync="deviceDialogVisible" :close-on-click-modal="false" append-to-body>
+    <el-dialog v-if="deviceDialogVisible" id="holder" top="10%" width="860px" title="绑定设备" :visible.sync="deviceDialogVisible" :close-on-click-modal="false" append-to-body>
       <device-binding @selection="onSelection"></device-binding>
     </el-dialog>
   </div>
