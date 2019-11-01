@@ -21,7 +21,7 @@
           <i class="icon el-icon-delete" title="删除" @click="handleRemove(item)"></i>
         </div>
         <div class="content">
-          <i class="building-sign obicon obicon-building-o" :class="{'is-active': item === 2}"></i>
+          <i class="building-sign obicon obicon-building-o" :class="{'is-active': item.allType}"></i>
           <p class="text">{{item.buildName}} 栋</p>
         </div>
       </div>
@@ -215,13 +215,14 @@ export default {
       })
     },
     handlePower (item) {
-      this.$confirm('即将关闭该楼栋所有开关', '确认提示', {
+      const action = item.allType ? '关闭' : '打开'
+      this.$confirm(`即将${action}该楼栋所有开关`, '确认提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning',
         closeOnClickModal: false
       }).then(() => {
-        RoomAPI.triggerSwitch({buildingId: item.id, deviceType: 1}).then(res => {
+        RoomAPI.triggerSwitch({buildingId: item.id, deviceType: item.allType ? 0 : 1}).then(res => {
           if (res.status === 0) {
             this.getBuildingList()
           } else {
