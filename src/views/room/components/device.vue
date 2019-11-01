@@ -87,7 +87,7 @@ export default {
         prop: 'deviceChildType',
         align: 'center',
         formatter (val, row) {
-          if(Suit.typeHints.isThreeKeySocketSwitch(row.deviceChildType)) {
+          if (Suit.typeHints.isThreeKeySocketSwitch(row.deviceChildType)) {
             return Suit.getDeviceTypeDescriptor(row.deviceType, val)
           }
           return '-'
@@ -98,7 +98,7 @@ export default {
         align: 'center',
         formatter (status, row) {
           // return Suit.getStatusDescriptor(status, row.deviceType, row.deviceChildType)
-          if(Suit.typeHints.isThreeKeySocketSwitch(row.deviceChildType)) {
+          if (Suit.typeHints.isThreeKeySocketSwitch(row.deviceChildType)) {
             return status === '0' ? '关' : '开'
           }
           return '-'

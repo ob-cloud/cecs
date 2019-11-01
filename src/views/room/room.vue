@@ -260,15 +260,36 @@ export default {
       this.sceneDialogVisible = true
     },
     handlePower (item) {
-      this.$message({
-        type: 'success',
-        message: '关闭成功'
+      const isActive = this.isLightActive(item.deviceState)
+      const loading = this.$loading({
+        lock: true,
+        text: `正在${isActive ? '关闭' : '打开'}教室开关...`
+      })
+      RoomAPI.triggerSwitch({buildingId: item.buildingId, roomId: item.id, floorId: item.floorId, deviceType: isActive ? 2 : 1}).then(res => {
+        if (res.status === 0) {
+          this.getRoomList()
+          loading.close()
+          this.$message({
+            type: 'success',
+            message: `${isActive ? '关闭' : '打开'}成功`
+          })
+        } else {
+          this.$message({
+            type: 'error',
+            message: '开关操作失败!'
+          })
+        }
       })
     },
     handleEdit (row) {
       this.dialogStatus = 'edit'
       this.createDialogVisible = true
-      this.roomModel = row
+      this.roomModel = {
+        roomName: row.roomName,
+        floorId: row.floorId,
+        buildingId: row.buildingId,
+        id: row.id
+      }
     },
     handleRemove (row) {
       this.$confirm('确认删除房间？', '确认提示', {
