@@ -60,11 +60,10 @@
           <div class="item">
             <div class="title">开关</div>
             <div class="detail">
-              <div class="power">
+              <!-- <div class="power">
                 <el-button size="small" type="success" icon="obicon obicon-power"></el-button>
-                <el-button size="small" type="danger" icon="obicon obicon-power"></el-button>
-                <el-button size="small" type="success" icon="obicon obicon-power"></el-button>
-              </div>
+              </div> -->
+              <iSwitcher :useDefaultStyle="false" styles="map power"></iSwitcher>
             </div>
           </div>
           <div class="item">
@@ -78,6 +77,12 @@
                 <p><i class="obicon obicon-humidity"></i><span>湿度</span></p>
                 <span>33%</span>
               </div>
+            </div>
+          </div>
+          <div class="item">
+            <div class="title">红外转发</div>
+            <div class="detail">
+              <AireCondition class="map" serialId="17e25c3a7d"></AireCondition>
             </div>
           </div>
           <div class="item">
@@ -98,6 +103,8 @@
 
 <script>
 import graph from '../../assets/images/graph.jpg'
+import iSwitcher from '@/views/device/components/switcher'
+import AireCondition from '@/views/device/components/ac'
 export default {
   props: {
     height: {
@@ -189,6 +196,7 @@ export default {
       activePointIndex: ''
     }
   },
+  components: { iSwitcher, AireCondition },
   methods: {
     handleEdit () {
       this.isAdd = true
@@ -415,8 +423,9 @@ export default {
   top: 50px;
   bottom: 4px;
   background: #fff;
-  width: 340px;
+  width: 380px;
   box-shadow: 0 0 2px 1px #ddd;
+  overflow: auto;
 
   .header{
     padding: 12px 10px;
@@ -480,7 +489,47 @@ export default {
 }
 .slide-fade-enter, .slide-fade-leave-to
 /* .slide-fade-leave-active for below version 2.1.8 */ {
-  transform: translateX(340px);
+  transform: translateX(380px);
   opacity: 0;
+}
+</style>
+<style lang="scss">
+.map.power{
+  .el-checkbox-button__inner{
+    border-radius: 4px;
+    border-color: #DCDFE6;
+    padding: 0;
+    > i{
+      font-size: 45px;
+    }
+  }
+  .el-checkbox-button.is-checked:first-child .el-checkbox-button__inner {
+    border-left-color: #DCDFE6;
+  }
+}
+.map.transponder-wrapper{
+  .list.transponder{
+    display: block;
+    width: 100%;
+    height: 120px;
+    max-height: 120px;
+    border-color: transparent;
+    overflow: auto;
+    .tips{
+      line-height: 60px;
+    }
+    .item{
+      float: left;
+      width: 100px;
+    }
+  }
+  .controller{
+    display: block;
+    width: 100%;
+    margin-top: 10px;
+    .panel{
+      padding-bottom: 20px;
+    }
+  }
 }
 </style>

@@ -1,5 +1,5 @@
 <template>
-  <div class="ura-switcher list">
+  <div :class="clazz">
     <el-checkbox-group v-model="powers">
       <el-checkbox-button v-for="(item, index) in 1" :label="index+1" :key="index" @change="handleSelected">
         <i class="obicon obicon-switch-btn"></i>
@@ -23,12 +23,25 @@ export default {
     state: {
       type: String,
       default: ''
+    },
+    useDefaultStyle: {
+      type: Boolean,
+      default: true
+    },
+    styles: {
+      type: String,
+      default: ''
     }
   },
   data () {
     return {
       powers: [],
       powerStatus: [0, 0, 0],
+    }
+  },
+  computed: {
+    clazz () {
+      return this.useDefaultStyle ? 'ura-switcher list' : this.styles ? this.styles : ''
     }
   },
   watch: {
