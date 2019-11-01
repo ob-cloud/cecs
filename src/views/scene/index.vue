@@ -15,15 +15,15 @@
         <template slot="caption">
           <el-select clearable class="caption-item" placeholder="楼栋" v-model="search.buildingId" filterable>
             <el-option label='全部' value=''></el-option>
-            <el-option v-for="item in buildingList" :key="item.buildingId" :label="item.buildingName + '栋'" :value="item.buildingId"></el-option>
+            <el-option v-for="(item, index) in buildingList" :key="item.buildingName + index + item.buildingId" :label="item.buildingName + '栋'" :value="item.buildingId"></el-option>
           </el-select>
           <el-select clearable class="caption-item" placeholder="楼层" v-model="search.floorId" filterable>
             <el-option label='全部' value=''></el-option>
-            <el-option v-for="item in floorList" :key="item.id" :label="item.floorName + '层'" :value="item.floorId"></el-option>
+            <el-option v-for="(item, index) in floorList" :key="item.floorName + index + item.id" :label="item.floorName + '层'" :value="item.floorId"></el-option>
           </el-select>
           <el-select clearable class="caption-item" placeholder="房间" v-model="search.roomId" filterable>
             <el-option label='全部' value=''></el-option>
-            <el-option v-for="item in roomList" :key="item.id" :label="item.roomName + '房'" :value="item.roomId"></el-option>
+            <el-option v-for="(item, index) in roomList" :key="item.roomName + index + item.id" :label="item.roomName + '房'" :value="item.roomId"></el-option>
           </el-select>
           <el-input @keyup.enter.native="handleSearch" class="caption-item" placeholder="场景名称" v-model="search.scene_name"></el-input>
           <el-button type="primary" icon="el-icon-search" @click="handleSearch">查询</el-button>

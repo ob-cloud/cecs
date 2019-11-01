@@ -2,7 +2,7 @@
   <div class="action-container">
     <div v-if="is3KeyPanel()" class="list">
       <el-checkbox-group v-model="powers">
-        <el-checkbox-button v-for="(item, index) in 3" :label="index+1" :key="index">
+        <el-checkbox-button v-for="(item, index) in 1" :label="index+1" :key="index">
           <i class="obicon obicon-power"></i>
         </el-checkbox-button>
       </el-checkbox-group>
@@ -87,7 +87,8 @@ export default {
   },
   watch: {
     powers (val) {
-      this.changeStatus(val)
+      // this.changeStatus(val)
+      this.changeStatus(val.length ? 1 : 0)
     }
   },
   computed: {
@@ -125,10 +126,11 @@ export default {
       return this.currentTransponderDevice.deviceType === 7
     },
     changeStatus (power) {
-      this.powerStatus.forEach((element, index) => {
-        const isExist = power.find(item => item === index + 1)
-        this.powerStatus[index] = +!!isExist
-      })
+      // this.powerStatus.forEach((element, index) => {
+      //   const isExist = power.find(item => item === index + 1)
+      //   this.powerStatus[index] = +!!isExist
+      // })
+      this.powerStatus.fill(power)
     },
     getTransponderDeviceList () {
       this.transponderLoading = true

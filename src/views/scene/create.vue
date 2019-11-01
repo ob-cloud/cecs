@@ -77,13 +77,13 @@
                 <el-input-number v-model="deviceAction.action_time" controls-position="right" :min="0"></el-input-number>
               </el-tooltip>
               <el-select placeholder="请选择栋" v-model="deviceAction.buildingId" filterable @change="onSelectChange(deviceAction.buildingId, index, 0)">
-                <el-option v-for="item in deviceAction.buildingList" :key="item.buildingId" :label="item.buildingName" :value="item.buildingId"></el-option>
+                <el-option v-for="(item, index) in deviceAction.buildingList" :key="item.buildingName + index + item.buildingId" :label="item.buildingName" :value="item.buildingId"></el-option>
               </el-select>
               <el-select placeholder="请选择层" v-model="deviceAction.floorId" filterable @change="onSelectChange(deviceAction.floorId, index, 1)">
-                <el-option v-for="item in deviceAction.floorList" :key="item.floorId" :label="item.floorName" :value="item.floorId"></el-option>
+                <el-option v-for="(item, index) in deviceAction.floorList" :key="item.floorName + index + item.floorId" :label="item.floorName" :value="item.floorId"></el-option>
               </el-select>
               <el-select placeholder="请选择房间" v-model="deviceAction.roomId" filterable @change="onSelectChange(deviceAction.roomId, index, 2)">
-                <el-option v-for="item in deviceAction.roomList" :key="item.roomId" :label="item.roomName" :value="item.roomId"></el-option>
+                <el-option v-for="(item, index) in deviceAction.roomList" :key="item.roomName + index + item.roomId" :label="item.roomName" :value="item.roomId"></el-option>
               </el-select>
               <el-select placeholder="请选择设备类型" v-model="deviceAction.serialId" @change="onSelectDevice(deviceAction.serialId, index)">
                 <el-option v-for="item in deviceAction.deviceTypeList" :key="item.deviceSerialId" :label="item.deviceType | deviceTypeFilter(item.deviceChildType)" :value="item.deviceSerialId"></el-option>
