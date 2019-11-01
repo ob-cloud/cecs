@@ -1,7 +1,7 @@
 <template>
   <div class="ura-switcher list">
     <el-checkbox-group v-model="powers">
-      <el-checkbox-button v-for="(item, index) in 3" :label="index+1" :key="index" @change="handleSelected">
+      <el-checkbox-button v-for="(item, index) in 1" :label="index+1" :key="index" @change="handleSelected">
         <i class="obicon obicon-switch-btn"></i>
       </el-checkbox-button>
     </el-checkbox-group>
@@ -19,6 +19,10 @@ export default {
     serialId: {
       type: String,
       default: ''
+    },
+    state: {
+      type: String,
+      default: ''
     }
   },
   data () {
@@ -29,15 +33,27 @@ export default {
   },
   watch: {
     powers (val) {
-      this.changeStatus(val)
+      // this.changeStatus(val)
+      this.changeStatus(val.length ? 1 : 0)
+    }
+  },
+  mounted () {
+    if (this.isLightActive(this.state)) {
+      this.powers = [1]
     }
   },
   methods: {
+    isLightActive (status) {
+      if (!status) return false
+      const state = status.slice(0, 2)
+      return state !== '00'
+    },
     changeStatus (power) {
-      this.powerStatus.forEach((element, index) => {
-        const isExist = power.find(item => item === index + 1)
-        this.powerStatus[index] = +!!isExist
-      })
+      // this.powerStatus.forEach((element, index) => {
+      //   const isExist = power.find(item => item === index + 1)
+      //   this.powerStatus[index] = +!!isExist
+      // })
+      this.powerStatus.fill(power)
     },
     handleSelected () {
       const status = panelHandler.getSwitchButtonStatus(this.powerStatus)
@@ -49,7 +65,18 @@ export default {
             type: 'success',
             message: '设置成功'
           })
+          this.$emit('switcher-change', this.serialId, status)
+        } else {
+          this.$message({
+            type: 'error',
+            message: '设置失败'
+          })
         }
+      }).catch(() => {
+        this.$message({
+          type: 'error',
+          message: '服务异常'
+        })
       })
     }
   },
@@ -101,8 +128,10 @@ export default {
     // border-color: #409EFF;
     border-color: transparent;
     background-color: #fff;
-    color: #12eaf7;
-    box-shadow: 0px 4px 1px 0px #12eaf7 !important;
+    // #12eaf7
+    color: #d8d815;
+    // box-shadow: 0px -4px 1px 0px #d8d815 !important;
+    box-shadow: 0px -4px 7px 2px #d8d815 !important;
   }
 }
 </style>

@@ -25,7 +25,7 @@
       </slot>
     </base-table>
     <slide-page :visible.sync="dialogVisible" title="三键开关控制面板">
-      <i-switcher :serialId="switchSerialId"></i-switcher>
+      <i-switcher :serialId="switchSerialId" :state="switchState" @switcher-change="onSwitcherChange"></i-switcher>
     </slide-page>
     <slide-page :visible.sync="humidifierMap.dialogVisible" title="温湿度" @onClose="humidifierSerialId = ''">
       <humifier :serialId="humidifierSerialId"></humifier>
@@ -69,6 +69,7 @@ export default {
         dialogVisible: false,
       },
       switchSerialId: '',
+      switchState: '',
       humidifierSerialId: ''
     }
   },
@@ -104,6 +105,9 @@ export default {
         prop: 'state',
         align: 'center',
         formatter (status, row) {
+          if (Suit.typeHints.isThreeKeySocketSwitch(row.device_child_type)) {
+            return status && status.slice(0, 2) === '00' ? '关' : '开'
+          }
           return Suit.getStatusDescriptor(status, row.device_type, row.device_child_type)
         }
       }, {
@@ -230,11 +234,15 @@ export default {
     handleSwitchPower (row) {
       console.log('power ', row)
       this.switchSerialId = row.serialId
+      this.switchState = row.state
       this.dialogVisible = true
     },
     handleHumidifier (row) {
       this.humidifierSerialId = row.serialId
       this.humidifierMap.dialogVisible = true
+    },
+    onSwitcherChange () {
+      this.getDeviceList()
     }
   }
 }
