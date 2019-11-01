@@ -69,6 +69,11 @@ export default {
         prop: 'state',
         align: 'center',
         formatter (status, row) {
+          // if(Suit.typeHints.isThreeKeySocketSwitch(row.deviceChildType)) {
+          //   return status === '0' ? '关' : '开'
+          // } else {
+          //   return '-'
+          // }
           return status && Suit.getStatusDescriptor(status, row.device_type, row.device_child_type)
         }
       }, {

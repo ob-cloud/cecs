@@ -121,7 +121,7 @@ export default {
       this.containerHeight = Helper.calculateTableHeight() - 20
     },
     getBuildingList () {
-      RoomAPI.getBuildingList({buildName: ''}).then(res => {
+      RoomAPI.getSelectBuildingList().then(res => {
         if (res.status === 0) {
           const {data} = res
           this.buildingList = data.records

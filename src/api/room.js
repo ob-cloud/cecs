@@ -2,7 +2,7 @@
  * @Author: eamiear
  * @Date: 2019-08-07 16:43:10
  * @Last Modified by: eamiear
- * @Last Modified time: 2019-10-31 10:27:19
+ * @Last Modified time: 2019-11-01 14:16:57
  */
 
 import {request} from '@/common/request'
@@ -154,6 +154,11 @@ const BuildingAPI = {
     return request.get('/consumer/common', {
       CMD: 'get_building',
       building: JSON.stringify(building)
+    })
+  },
+  getSelectBuildingList () {
+    return request.get('/consumer/common', {
+      CMD: 'get_select_building'
     })
   },
   addBuilding (building = {}) {

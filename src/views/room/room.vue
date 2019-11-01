@@ -16,7 +16,7 @@
       </div>
     </div>
     <div class="building-list" v-loading.lock="loading" :style="{height: (height - 80) + 'px'}">
-      <div class="building-item" v-for="(item, index) in roomList" :key="item.id">
+      <div class="building-item" v-for="item in roomList" :key="item.id">
         <div class="header">
           <i class="icon obicon obicon-device" title="房间设备" @click="handleDevice(item)"></i>
           <!-- <i class="icon obicon obicon-scene" title="房间场景" @click="handleScene(item)"></i> -->
@@ -25,7 +25,7 @@
           <i class="icon el-icon-delete" title="删除" @click="handleRemove(item)"></i>
         </div>
         <div class="content">
-          <i class="building-sign obicon obicon-classroom" :class="{'is-active': index === 2}"></i>
+          <i class="building-sign obicon obicon-classroom" :class="{'is-active': isLightActive(item.deviceState)}"></i>
           <p class="text">{{item.buildingName}}栋{{item.floorName}}层{{item.roomName}}房</p>
         </div>
       </div>
@@ -150,7 +150,7 @@ export default {
       this.containerHeight = Helper.calculateTableHeight() - 20
     },
     getBuildingList () {
-      RoomAPI.getBuildingList({buildName: ''}).then(res => {
+      RoomAPI.getSelectBuildingList().then(res => {
         if (res.status === 0) {
           const {data} = res
           this.buildingList = data.records
@@ -185,6 +185,11 @@ export default {
         })
         this.loading = false
       })
+    },
+    isLightActive (status) {
+      if (!status) return false
+      const state = status.slice(0, 2)
+      return state !== '00'
     },
     handleRefresh () {
       this.searchModel.buildName = ''
