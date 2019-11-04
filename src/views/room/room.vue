@@ -220,33 +220,39 @@ export default {
     handleSearch () {
       this.getRoomList()
     },
-    handleMainSwitch () {
-      this.$confirm('即将关闭所有房间开关', '确认提示', {
+    async handleMainSwitch () {
+      const that = this
+      const res = await RoomAPI.getSwitchGlobalType()
+      if (res.status !== 0) return
+      const action = res.data ? '关闭' : '打开'
+      this.$confirm(`即将${action}所有房间开关`, '确认提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning',
-        closeOnClickModal: false
-      }).then(() => {
-        this.doHandleSwitch()
-      }).catch(() => {
-        console.log('取消删除')
+        closeOnClickModal: false,
+        callback (action, instance) {
+          action === 'confirm' && that.doHandleSwitch(+!res.data)
+        }
       })
     },
-    doHandleSwitch (id) {
+    doHandleSwitch (status) {
+      const action = status ? '打开' : '关闭'
       const loading = this.$loading({
         lock: true,
-        text: '正在关闭教室开关...'
+        text: `正在${action}教室开关...`
       })
-      RoomAPI.triggerGlobalSwitch(1).then(res => {
+      RoomAPI.triggerGlobalSwitch(status ? 1 : 2).then(res => {
         if (res.status === 0) {
           this.getRoomList()
-          loading.close()
         } else {
           this.$message({
             type: 'error',
             message: '开关操作失败!'
           })
         }
+        loading.close()
+      }).catch(() => {
+        loading.close()
       })
     },
     handleDevice (row) {
