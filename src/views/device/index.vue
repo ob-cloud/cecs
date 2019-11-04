@@ -14,7 +14,7 @@
       <el-tab-pane label="WIFI设备" name="wifi">
         <device-wifi v-if="activeName === 'wifi'" :height="tableHeight"></device-wifi>
       </el-tab-pane>
-      <el-tab-pane label="网关" name="gateway">
+      <el-tab-pane label="网关管理" name="gateway">
         <gateway v-if="activeName === 'gateway'" :height="tableHeight"></gateway>
       </el-tab-pane>
     </el-tabs>
@@ -54,7 +54,7 @@ export default {
       this.breadcrumb.current = {
         'obox': 'OBOX设备',
         'wifi': 'WIFI设备',
-        'gateway': '网关'
+        'gateway': '网关管理'
       }[val]
     }
   },
