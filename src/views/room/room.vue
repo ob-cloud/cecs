@@ -230,8 +230,8 @@ export default {
         cancelButtonText: '取消',
         type: 'warning',
         closeOnClickModal: false,
-        callback (action, instance) {
-          action === 'confirm' && that.doHandleSwitch(+!res.data)
+        callback (actionText, instance) {
+          actionText === 'confirm' && that.doHandleSwitch(+!res.data)
         }
       })
     },

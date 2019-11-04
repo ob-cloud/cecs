@@ -1,6 +1,7 @@
 <template>
   <div class="map-wrapper ui-container" :style="{height: height + 'px'}">
     <div class="map-toolbar">
+      <el-button size="small" type="primary" icon="el-icon-refresh" @click="handleRefresh()">刷新</el-button>
       <el-upload
         class="upload-btn"
         action="https://jsonplaceholder.typicode.com/posts/">
@@ -8,9 +9,6 @@
         <!-- <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，图片规格 1080x700 </div> -->
       </el-upload>
       <el-button size="small" type="primary" icon="el-icon-edit" @click="handleEdit()">编辑</el-button>
-      <el-button size="small" type="primary" icon="el-icon-refresh" @click="handleRefresh()">刷新</el-button>
-      <!-- <el-button size="small" type="primary" icon="el-icon-plus" @click="isAdd = true; isAddFinished = false">添加</el-button> -->
-      <!-- <el-button size="small" type="primary" icon="el-icon-edit" @click="isEdit = true">编辑</el-button> -->
     </div>
     <div class="map-content">
       <div class="image-wrapper" @mouseenter="onMouseEnter" @mousedown="onMouseDown" @mouseleave="onMouseLeave" @mouseup="onMouseUp">
@@ -36,38 +34,31 @@
       </div>
     </div>
     <transition name="slide-fade">
-      <div class="sidebar" v-if="dialogVisible">
+      <div class="sidebar" v-if="dialogVisible" v-loading="sidebarLoading">
         <div class="header">
           <i class="el-icon el-icon-close" @click="dialogVisible = false" title="关闭"></i>
           <div class="title">{{currentDialogTitle}}</div>
         </div>
         <div class="content">
-          <div class="item">
-            <div class="title">开关</div>
+          <div class="item" v-for="(item, index) in curRoomDeviceList" :key="index">
+            <div class="title">{{parseTitle(item)}}</div>
             <div class="detail">
-              <!-- <div class="power">
-                <el-button size="small" type="success" icon="obicon obicon-power"></el-button>
-              </div> -->
-              <iSwitcher :useDefaultStyle="false" styles="map power"></iSwitcher>
-            </div>
-          </div>
-          <div class="item">
-            <div class="title">温湿度</div>
-            <div class="detail">
-              <div class="sensors">
-                <p><i class="obicon obicon-temperature-o"></i><span>温度</span></p>
-                <span>23℃</span>
-              </div>
-              <div class="sensors">
-                <p><i class="obicon obicon-humidity"></i><span>湿度</span></p>
-                <span>33%</span>
-              </div>
-            </div>
-          </div>
-          <div class="item">
-            <div class="title">红外转发</div>
-            <div class="detail">
-              <AireCondition class="map" serialId="17e25c3a7d"></AireCondition>
+              <template v-if="isKeyPanel(item.deviceChildType)">
+                <iSwitcher :state="item.deviceStatus === '0' ? '00' : '15'" :serialId="item.deviceSerialId" :useDefaultStyle="false" styles="map power"></iSwitcher>
+              </template>
+              <template v-else-if="isHumidifier(item.deviceChildType)">
+                <div class="sensors">
+                  <p><i class="obicon obicon-temperature-o"></i><span>温度</span></p>
+                  <span>23℃</span>
+                </div>
+                <div class="sensors">
+                  <p><i class="obicon obicon-humidity"></i><span>湿度</span></p>
+                  <span>33%</span>
+                </div>
+              </template>
+              <template v-else-if="isTransponder(item.deviceType)">
+                <AireCondition class="map" :serialId="item.deviceSerialId"></AireCondition>
+              </template>
             </div>
           </div>
           <div class="item">
@@ -93,6 +84,8 @@ import AireCondition from '@/views/device/components/ac'
 import RoomAPI from '@/api/room'
 import MapAPI from '@/api/map'
 import Helper from '@/common/helper'
+const {default: TypeHint} = require('@/oblink/suit')
+const {default: Suit} = require('@/common/suit')
 export default {
   props: {
     height: {
@@ -122,7 +115,9 @@ export default {
       dialogVisible: false,
       currentDialogTitle: '',
       activePoint: {},
-      activePointIndex: ''
+      activePointIndex: '',
+      curRoomDeviceList: [],
+      sidebarLoading: false
     }
   },
   components: { iSwitcher, AireCondition },
@@ -147,6 +142,18 @@ export default {
     },
     isBuildingActive (status) {
       return status && status.slice(0, 2) !== '00'
+    },
+    getRoomDeviceListByRoomId (id) {
+      this.curRoomDeviceList = []
+      this.sidebarLoading = true
+      RoomAPI.getRoomDeviceListV2({roomId: id}).then(res => {
+        if (res.status === 0) {
+          this.curRoomDeviceList = Array.from(res.data.records).filter(item => {
+            return this.isKeyPanel(item.deviceChildType) || this.isHumidifier(item.deviceChildType) || this.isTransponder(item.deviceType)
+          })
+        }
+        this.sidebarLoading = false
+      }).catch(() => { this.sidebarLoading = false })
     },
     handleEdit () {
       this.isAdd = true
@@ -185,11 +192,11 @@ export default {
     },
     handlePoint (point, index) {
       if (!this.isAdd) {
-        console.log(point)
         this.activePoint = point
         this.activePointIndex = index
         this.dialogVisible = true
         this.currentDialogTitle = `${point.buildingName || '-'}栋${point.floorName || '-'}层${point.roomName || '-'}`
+        this.getRoomDeviceListByRoomId(point.roomId)
       }
     },
     handleRemovePoint () {
@@ -293,6 +300,20 @@ export default {
     isCross (point1, point2) {
       const w = this.radius
       return point1.x + w > point2.x && point1.x < point2.x + w && point1.y + w > point2.y && point1.y < point2.y + w
+    },
+    isKeyPanel (deviceSubType) {
+      return Suit.typeHints.isThreeKeySocketSwitch(deviceSubType)
+    },
+    isHumidifier (deviceSubType) {
+      return Suit.typeHints.isHumidifierSensors(deviceSubType)
+    },
+    isTransponder (deviceType) {
+      return TypeHint.isTransponder(deviceType)
+    },
+    parseTitle (item) {
+      if (this.isKeyPanel(item.deviceChildType)) return '开关'
+      if (this.isHumidifier(item.deviceChildType)) return '温湿度'
+      if (this.isTransponder(item.deviceType)) return '红外转发'
     }
   },
 }
