@@ -47,7 +47,7 @@ export default {
   watch: {
     powers (val) {
       // this.changeStatus(val)
-      this.changeStatus(val.length ? 1 : 0)
+      // this.changeStatus(val.length ? 1 : 0)
     }
   },
   mounted () {
@@ -68,7 +68,8 @@ export default {
       // })
       this.powerStatus.fill(power)
     },
-    handleSelected () {
+    handleSelected (item) {
+      this.changeStatus(+item)
       const status = panelHandler.getSwitchButtonStatus(this.powerStatus)
       console.log('status ', status)
       if (!this.serialId) return

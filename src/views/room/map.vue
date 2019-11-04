@@ -52,7 +52,7 @@
             <div class="title">{{parseTitle(item)}}</div>
             <div class="detail">
               <template v-if="isKeyPanel(item.deviceChildType)">
-                <iSwitcher :state="item.deviceStatus === '0' ? '00' : '15'" :serialId="item.deviceSerialId" :useDefaultStyle="false" styles="map power"></iSwitcher>
+                <iSwitcher :state="item.deviceState" :serialId="item.deviceSerialId" :useDefaultStyle="false" styles="map power"></iSwitcher>
               </template>
               <template v-else-if="isHumidifier(item.deviceChildType)">
                 <div class="sensors">
@@ -141,6 +141,7 @@ export default {
     ]),
   },
   mounted () {
+    this.initMapInfo()
     this.getRoomCascader()
     this.getMapPoints()
     this.uploadData.access_token = this.token
@@ -159,6 +160,13 @@ export default {
         }
         loader.close()
       }).catch(() => loader.close())
+    },
+    initMapInfo () {
+      MapAPI.getMapInfo().then(res => {
+        if (res.status === 0) {
+          this.graph = res.data.records
+        }
+      })
     },
     isBuildingActive (status) {
       return status && status.slice(0, 2) !== '00'
