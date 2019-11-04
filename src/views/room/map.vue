@@ -1,14 +1,15 @@
 <template>
   <div class="map-wrapper ui-container" :style="{height: height + 'px'}">
     <div class="map-toolbar">
-      <el-button size="small" type="primary" icon="el-icon-refresh" @click="handleRefresh()">刷新</el-button>
+      <el-button size="small" type="primary" icon="el-icon-refresh" :disabled="isEditing" @click="handleRefresh()">刷新</el-button>
       <el-upload
         class="upload-btn"
+        :disabled="isEditing"
         action="https://jsonplaceholder.typicode.com/posts/">
         <el-button size="small" type="primary" icon="el-icon-upload">上传配置图</el-button>
         <!-- <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，图片规格 1080x700 </div> -->
       </el-upload>
-      <el-button size="small" type="primary" icon="el-icon-edit" @click="handleEdit()">编辑</el-button>
+      <el-button size="small" type="primary" icon="el-icon-edit" :disabled="isEditing" @click="handleEdit()">编辑</el-button>
     </div>
     <div class="map-content">
       <div class="image-wrapper" @mouseenter="onMouseEnter" @mousedown="onMouseDown" @mouseleave="onMouseLeave" @mouseup="onMouseUp">
@@ -111,7 +112,7 @@ export default {
       isAdd: false,
       isAddFinished: false,
       isSetLocation: false,
-      isEdit: false,
+      isEditing: false,
       dialogVisible: false,
       currentDialogTitle: '',
       activePoint: {},
@@ -158,6 +159,7 @@ export default {
     handleEdit () {
       this.isAdd = true
       this.isAddFinished = false
+      this.isEditing = true
       // if (!this.isAddFinished) {
       //   this.isAdd = true
       //   this.isAddFinished = false
@@ -187,6 +189,7 @@ export default {
           })
           this.getMapPoints()
         }
+        this.isEditing = false
       })
       this.selectedOptions = []
     },
@@ -249,6 +252,7 @@ export default {
         x: -1000,
         y: -1000
       }
+      this.isEditing = false
     },
     onMouseEnter (e) {
       if (!this.isAdd) return
