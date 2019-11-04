@@ -3,11 +3,11 @@
     <div class="humidifier-status">
       <div class="item">
         <p><i class="obicon obicon-temperature-o"></i><span>温度</span></p>
-        <span>23℃</span>
+        <span>{{temperature}}℃</span>
       </div>
       <div class="item">
         <p><i class="obicon obicon-humidity"></i><span>湿度</span></p>
-        <span>33%</span>
+        <span>{{humidifier}}%</span>
       </div>
     </div>
     <el-tabs tab-position="right" class="humidifier-table">
@@ -20,7 +20,7 @@
           :columns="columns"
           :showPagination="false"></base-table>
       </el-tab-pane>
-      <el-tab-pane label="一周数据" style="max-height: 400px; min-height: 360px;">
+      <el-tab-pane label="今日数据" style="max-height: 400px; min-height: 360px;">
         <HumifierChart v-if="isCharListValid" :data="series" :xAxis="labels" style="margin: 0 auto;"></HumifierChart>
       </el-tab-pane>
     </el-tabs>
@@ -37,6 +37,10 @@ export default {
     serialId: {
       type: String,
       default: ''
+    },
+    state: {
+      type: String,
+      default: ''
     }
   },
   data () {
@@ -47,7 +51,9 @@ export default {
       columns: [{label: '温度', prop: 'temperature', align: 'center' }, {label: '湿度', prop: 'humidifier', align: 'center' }, {label: '时间', prop: 'time', align: 'center' }],
       isCharListValid: false,
       series: [],
-      labels: []
+      labels: [],
+      temperature: 0,
+      humidifier: 0
     }
   },
   components: {BaseTable, HumifierChart},
@@ -59,6 +65,7 @@ export default {
   },
   mounted () {
     this.handleData(this.serialId)
+    this.parseState()
   },
   methods: {
     async getHumidifierStatusHistoryByWeek (serialId) {
@@ -117,6 +124,11 @@ export default {
           data: humidifier
         })
       }
+    },
+    parseState () {
+      if (!this.state) return
+      this.temperature = +parseInt(this.state.slice(2, 4), 16).toString(10) - 30
+      this.humidifier = +parseInt(this.state.slice(6, 8), 16).toString(10)
     }
   },
 }

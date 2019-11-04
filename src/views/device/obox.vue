@@ -28,7 +28,7 @@
       <i-switcher :serialId="switchSerialId" :state="switchState" @switcher-change="onSwitcherChange"></i-switcher>
     </slide-page>
     <slide-page :visible.sync="humidifierMap.dialogVisible" title="温湿度" @onClose="humidifierSerialId = ''">
-      <humifier :serialId="humidifierSerialId"></humifier>
+      <humifier :serialId="humidifierSerialId" :state="humidifierState"></humifier>
     </slide-page>
   </div>
 </template>
@@ -70,7 +70,8 @@ export default {
       },
       switchSerialId: '',
       switchState: '',
-      humidifierSerialId: ''
+      humidifierSerialId: '',
+      humidifierState: ''
     }
   },
   components: { BaseTable, Humifier, iSwitcher, SlidePage },
@@ -239,6 +240,7 @@ export default {
     },
     handleHumidifier (row) {
       this.humidifierSerialId = row.serialId
+      this.humidifierState = row.state
       this.humidifierMap.dialogVisible = true
     },
     onSwitcherChange () {

@@ -131,8 +131,8 @@ export default {
           return (
             <el-switch onChange={() => { _this.handleChangeStatus(row) }}
               value={[false, true][row.scene_status]}
-              active-color='#409EFF'
-              inactive-color='#DCDFE6'>
+              active-color='#246CDA'
+              inactive-color='#282A39'>
             </el-switch>
           )
         }

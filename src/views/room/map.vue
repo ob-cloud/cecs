@@ -57,11 +57,11 @@
               <template v-else-if="isHumidifier(item.deviceChildType)">
                 <div class="sensors">
                   <p><i class="obicon obicon-temperature-o"></i><span>温度</span></p>
-                  <span>23℃</span>
+                  <span>{{parseTemperature(item.deviceState)}}℃</span>
                 </div>
                 <div class="sensors">
                   <p><i class="obicon obicon-humidity"></i><span>湿度</span></p>
-                  <span>33%</span>
+                  <span>{{parseHumidifier(item.deviceState)}}%</span>
                 </div>
               </template>
               <template v-else-if="isTransponder(item.deviceType)">
@@ -337,6 +337,14 @@ export default {
       if (this.isKeyPanel(item.deviceChildType)) return '开关'
       if (this.isHumidifier(item.deviceChildType)) return '温湿度'
       if (this.isTransponder(item.deviceType)) return '红外转发'
+    },
+    parseTemperature (state) {
+      if (!state) return 0
+      return +parseInt(state.slice(2, 4), 16).toString(10) - 30
+    },
+    parseHumidifier (state) {
+      if (!state) return 0
+      return +parseInt(state.slice(6, 8), 16).toString(10)
     },
     onBeforeUpload (file) {
       this.loader = this.$loading({
