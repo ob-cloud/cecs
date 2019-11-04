@@ -8,6 +8,7 @@
         <!-- <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，图片规格 1080x700 </div> -->
       </el-upload>
       <el-button size="small" type="primary" icon="el-icon-edit" @click="handleEdit()">编辑</el-button>
+      <el-button size="small" type="primary" icon="el-icon-refresh" @click="handleRefresh()">刷新</el-button>
       <!-- <el-button size="small" type="primary" icon="el-icon-plus" @click="isAdd = true; isAddFinished = false">添加</el-button> -->
       <!-- <el-button size="small" type="primary" icon="el-icon-edit" @click="isEdit = true">编辑</el-button> -->
     </div>
@@ -18,9 +19,9 @@
         <el-tooltip placement="top" effect="light" v-for="(item, index) in points" :key="index">
           <div slot="content">
             <p style="padding: 5px; font-size: 16px; text-align: center;">{{`${item.buildingName || '-'}栋${item.floorName || '-'}层${item.roomName || '-'}`}}</p>
-            <p style="padding: 5px; color: #333; text-align: center;">{{`开关-${item.status ? '开' : '关'}`}}</p>
+            <p style="padding: 5px; color: #333; text-align: center;">{{`开关-${isBuildingActive(item.deviceState) ? '开' : '关'}`}}</p>
           </div>
-          <div class="point" :style="{left: item.x + 'px', top: item.y + 'px', background: item.status ? '#1fe650' : 'rgb(223, 45, 45)'}" @click="handlePoint(item, index)"></div>
+          <div class="point" :style="{left: item.x + 'px', top: item.y + 'px', background: isBuildingActive(item.deviceState) ? '#1fe650' : 'rgb(223, 45, 45)'}" @click="handlePoint(item, index)"></div>
         </el-tooltip>
         <div v-if="isAdd" class="point edit" :style="{left: editPoint.x + 'px', top: editPoint.y + 'px'}"></div>
         <div v-if="isAddFinished && !isSetLocation" class="cascader" :style="{left: (editPoint.x + this.radius) + 'px', top: (editPoint.y + this.radius) + 'px'}">
@@ -34,23 +35,6 @@
         </div>
       </div>
     </div>
-    <!-- <el-dialog top="10%" width="760px" :title="currentDialogTitle" :visible.sync="dialogVisible" :close-on-click-modal="false">
-      <div class="panel">
-        <div class="left">
-          1
-        </div>
-        <div class="right">
-          <div class="item">
-            <p><i class="obicon obicon-temperature-o"></i><span>温度</span></p>
-            <span>23℃</span>
-          </div>
-          <div class="item">
-            <p><i class="obicon obicon-humidity"></i><span>湿度</span></p>
-            <span>33%</span>
-          </div>
-        </div>
-      </div>
-    </el-dialog> -->
     <transition name="slide-fade">
       <div class="sidebar" v-if="dialogVisible">
         <div class="header">
@@ -107,6 +91,7 @@ import graph from '../../assets/images/graph.jpg'
 import iSwitcher from '@/views/device/components/switcher'
 import AireCondition from '@/views/device/components/ac'
 import RoomAPI from '@/api/room'
+import MapAPI from '@/api/map'
 import Helper from '@/common/helper'
 export default {
   props: {
@@ -119,75 +104,12 @@ export default {
     return {
       graph: graph,
       radius: 20,
-      points: [{
-        id: 1,
-        x: 130,
-        y: 200,
-        status: 0,
-        buildingId: '',
-        floorId: '',
-        roomId: '',
-        buildingName: '1',
-        floorName: '2',
-        roomName: '3'
-      }, {
-        id: 2,
-        x: 230,
-        y: 300,
-        status: 1,
-        buildingId: '',
-        floorId: '',
-        roomId: '',
-        buildingName: '1',
-        floorName: '2',
-        roomName: '3'
-      }, {
-        id: 3,
-        x: 630,
-        y: 400,
-        status: 1,
-        buildingId: '',
-        floorId: '',
-        roomId: '',
-        buildingName: '1',
-        floorName: '2',
-        roomName: '3'
-      }],
+      points: [],
       editPoint: {
         x: -1000,
         y: -1000
       },
-      buildingOptions: [{
-        value: '1',
-        label: '1栋',
-        children: [{
-          value: '2',
-          label: '2层',
-          children: [{
-            value: '101',
-            label: '101房'
-          }, {
-            value: '102',
-            label: '102房'
-          }, {
-            value: '103',
-            label: '103房'
-          }, {
-            value: '104',
-            label: '104房'
-          }]
-        }, {
-          value: '2',
-          label: '2栋',
-          children: [{
-            value: '2',
-            label: '2层'
-          }, {
-            value: '3',
-            label: '3层'
-          }]
-        }]
-      }],
+      buildingOptions: [],
       buildProps: {
         value: 'id',
         label: 'name'
@@ -206,12 +128,25 @@ export default {
   components: { iSwitcher, AireCondition },
   mounted () {
     this.getRoomCascader()
+    this.getMapPoints()
   },
   methods: {
     getRoomCascader () {
       RoomAPI.getRoomCascader().then(res => {
         this.buildingOptions = Helper.formatBuildingTree(res.data.records)
       })
+    },
+    getMapPoints () {
+      const loader = this.$loading()
+      MapAPI.getPointList().then(res => {
+        if (res.status === 0) {
+          this.points = res.data.records
+        }
+        loader.close()
+      }).catch(() => loader.close())
+    },
+    isBuildingActive (status) {
+      return status && status.slice(0, 2) !== '00'
     },
     handleEdit () {
       this.isAdd = true
@@ -226,25 +161,26 @@ export default {
       //   })
       // }
     },
+    handleRefresh () {
+      this.getMapPoints()
+    },
     handleChange (value) {
       if (!value || !value.length) return
       const loader = this.$loading({
         text: '位置设置中...'
       })
-      setTimeout(() => {
-        loader.close()
-        this.isSetLocation = true
-        const point = this.points.pop()
-        point.buildingName = value[0]
-        point.floorName = value[1]
-        point.roomName = value[2]
-        this.points.push(point)
-        this.$message({
-          type: 'success',
-          message: '设置成功'
-        })
-        // this.isAddFinished = false
-      }, 2000)
+      const point = this.points.pop()
+      MapAPI.createPoint(value[2], point.x, point.y).then(res => {
+        if (res.status === 0) {
+          loader.close()
+          this.isSetLocation = true
+          this.$message({
+            type: 'success',
+            message: '设置成功'
+          })
+          this.getMapPoints()
+        }
+      })
       this.selectedOptions = []
     },
     handlePoint (point, index) {
@@ -267,11 +203,32 @@ export default {
         const loader = this.$loading({
           text: '位置删除中...'
         })
-        setTimeout(() => {
-          this.points.splice(this.activePointIndex, 1)
+        let point = this.points.splice(this.activePointIndex, 1)
+        point = (point && point.length) && point[0]
+        if (!point) return
+        MapAPI.removePoint(point.id).then(res => {
+          if (res.status === 0) {
+            this.dialogVisible = false
+            this.$message({
+              type: 'success',
+              message: '删除成功'
+            })
+          } else {
+            this.points.push(point)
+            this.$message({
+              type: 'error',
+              message: '删除失败'
+            })
+          }
           loader.close()
-          this.dialogVisible = false
-        }, 2000)
+        }).catch(() => {
+          loader.close()
+          this.points.push(point)
+          this.$message({
+            type: 'error',
+            message: '服务异常'
+          })
+        })
       }).catch(() => {
         console.log('取消删除')
       })
