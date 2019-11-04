@@ -30,7 +30,7 @@
 
 <script>
 import BaseTable from '@/assets/package/table-base'
-import SystemAPI from '@/api/system'
+// import SystemAPI from '@/api/system'
 import { PAGINATION_PAGENO, PAGINATION_PAGESIZE } from '@/common/constants'
 import Helper from '@/common/helper'
 export default {

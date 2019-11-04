@@ -5,8 +5,15 @@
       <el-upload
         class="upload-btn"
         :disabled="isEditing"
-        action="https://jsonplaceholder.typicode.com/posts/">
-        <el-button size="small" type="primary" icon="el-icon-upload">上传配置图</el-button>
+        :data="uploadData"
+        :show-file-list="false"
+        accept=".png, .jpg, .jpeg"
+        :before-upload="onBeforeUpload"
+        :on-success="onUploadSuccess"
+        :on-error="onUploadFail"
+        action="/consumer/image/uploadSchoolMap">
+        <el-button size="small" type="primary" icon="el-icon-upload">上传配置图<!--<i class="el-icon-question"></i>--></el-button>
+
         <!-- <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，图片规格 1080x700 </div> -->
       </el-upload>
       <el-button size="small" type="primary" icon="el-icon-edit" :disabled="isEditing" @click="handleEdit()">编辑</el-button>
@@ -14,7 +21,7 @@
     <div class="map-content">
       <div class="image-wrapper" @mouseenter="onMouseEnter" @mousedown="onMouseDown" @mouseleave="onMouseLeave" @mouseup="onMouseUp">
         <!-- http://placehold.it/1080x720 -->
-        <img :src="graph" alt="" style="width: 100%; height: 100%;">
+        <img :src="graph" alt="">
         <el-tooltip placement="top" effect="light" v-for="(item, index) in points" :key="index">
           <div slot="content">
             <p style="padding: 5px; font-size: 16px; text-align: center;">{{`${item.buildingName || '-'}栋${item.floorName || '-'}层${item.roomName || '-'}`}}</p>
@@ -79,7 +86,7 @@
 </template>
 
 <script>
-import graph from '../../assets/images/graph.jpg'
+import graph from '../../assets/images/1080x720.png'
 import iSwitcher from '@/views/device/components/switcher'
 import AireCondition from '@/views/device/components/ac'
 import RoomAPI from '@/api/room'
@@ -87,6 +94,9 @@ import MapAPI from '@/api/map'
 import Helper from '@/common/helper'
 const {default: TypeHint} = require('@/oblink/suit')
 const {default: Suit} = require('@/common/suit')
+import {
+  mapGetters
+} from 'vuex'
 export default {
   props: {
     height: {
@@ -97,6 +107,9 @@ export default {
   data () {
     return {
       graph: graph,
+      uploadData: {
+        access_token: ''
+      },
       radius: 20,
       points: [],
       editPoint: {
@@ -122,9 +135,15 @@ export default {
     }
   },
   components: { iSwitcher, AireCondition },
+  computed: {
+    ...mapGetters([
+      'token'
+    ]),
+  },
   mounted () {
     this.getRoomCascader()
     this.getMapPoints()
+    this.uploadData.access_token = this.token
   },
   methods: {
     getRoomCascader () {
@@ -318,6 +337,22 @@ export default {
       if (this.isKeyPanel(item.deviceChildType)) return '开关'
       if (this.isHumidifier(item.deviceChildType)) return '温湿度'
       if (this.isTransponder(item.deviceType)) return '红外转发'
+    },
+    onBeforeUpload (file) {
+      this.loader = this.$loading({
+        text: '图片上传中...'
+      })
+    },
+    onUploadSuccess (response, file, fileList) {
+      this.graph = response.data.picurl
+      this.loader && this.loader.close()
+    },
+    onUploadFail (response, file, fileList) {
+      this.loader && this.loader.close()
+      this.$message({
+        type: 'error',
+        message: '图片上传失败，请重新上传'
+      })
     }
   },
 }
@@ -352,6 +387,10 @@ export default {
       height: 720px;
       max-height: 720px;
       max-width: 1080px;
+      > img{
+        max-width: 100%;
+        max-height: 100%;
+      }
     }
     .point{
       display: inline-block;
