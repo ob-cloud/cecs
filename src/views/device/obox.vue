@@ -94,7 +94,7 @@ export default {
     getColumns () {
       return [{
         label: '设备序号',
-        prop: 'obox_serial_id',
+        prop: 'serialId',
         align: 'center'
       }, {
         label: '设备名称',
