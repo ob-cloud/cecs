@@ -2,7 +2,7 @@
  * @Author: eamiear
  * @Date: 2019-02-19 10:38:33
  * @Last Modified by: eamiear
- * @Last Modified time: 2019-10-29 15:35:08
+ * @Last Modified time: 2019-11-04 10:51:41
  */
 
 const _toString = Object.prototype.toString
@@ -121,6 +121,31 @@ export const Helper = {
       return value || 0
     })
     return timeStr
+  },
+  formatBuildingTree (areaList) {
+    if (!areaList || !areaList.length) return
+    return areaList.map(area => {
+      const building = {
+        id: area.buildingId,
+        name: area.buildingName,
+        children: []
+      }
+      building.children = Array.from(area.floors).map(flo => {
+        const floor = {
+          id: flo.floorId,
+          name: flo.floorName,
+          children: []
+        }
+        floor.children = Array.from(flo.rooms).map(r => {
+          return {
+            id: r.roomId,
+            name: r.roomName
+          }
+        })
+        return floor
+      })
+      return building
+    })
   }
 }
 

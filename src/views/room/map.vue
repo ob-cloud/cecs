@@ -28,6 +28,7 @@
           <el-cascader
             :options="buildingOptions"
             v-model="selectedOptions"
+            :props="buildProps"
             @change="handleChange">
           </el-cascader>
         </div>
@@ -105,6 +106,8 @@
 import graph from '../../assets/images/graph.jpg'
 import iSwitcher from '@/views/device/components/switcher'
 import AireCondition from '@/views/device/components/ac'
+import RoomAPI from '@/api/room'
+import Helper from '@/common/helper'
 export default {
   props: {
     height: {
@@ -185,6 +188,10 @@ export default {
           }]
         }]
       }],
+      buildProps: {
+        value: 'id',
+        label: 'name'
+      },
       selectedOptions: [],
       isAdd: false,
       isAddFinished: false,
@@ -197,7 +204,15 @@ export default {
     }
   },
   components: { iSwitcher, AireCondition },
+  mounted () {
+    this.getRoomCascader()
+  },
   methods: {
+    getRoomCascader () {
+      RoomAPI.getRoomCascader().then(res => {
+        this.buildingOptions = Helper.formatBuildingTree(res.data.records)
+      })
+    },
     handleEdit () {
       this.isAdd = true
       this.isAddFinished = false
