@@ -1,62 +1,51 @@
 <template>
-  <div class="device smart  ui-container">
-    <base-table
-      :height="tableHeight"
-      :tableData="tableData"
-      :columns="columns"
-      stripe
-      v-loading="tableLoading"
-      :pageTotal="total"
-      :pageSize="search.pageSize"
-      @on-current-page-change="onCurrentChange"
-      @on-page-size-change="onSizeChange">
-
-      <slot>
-        <template slot="caption">
-          <el-input @keyup.enter.native="handleSearch" class="caption-item" placeholder="执行人" v-model="search.operator"></el-input>
-          <el-input @keyup.enter.native="handleSearch" class="caption-item" placeholder="输入描述内容" v-model="search.sysDesc"></el-input>
-          <el-select clearable class="caption-item" placeholder="类型" v-model="search.sysType">
-            <el-option label='全部' value=''></el-option>
-            <el-option label='设备管理' value='设备管理'></el-option>
-            <el-option label='场景管理' value='场景管理'></el-option>
-            <el-option label='用户管理' value='用户管理'></el-option>
-          </el-select>
-          <el-button type="primary" icon="el-icon-search" @click="handleSearch">查询</el-button>
-        </template>
-      </slot>
-    </base-table>
+  <div class="device smart">
+    <el-breadcrumb separator-class="el-icon-arrow-right" class="breadcrumb">
+      <el-breadcrumb-item>{{breadcrumb.prev}}</el-breadcrumb-item>
+      <el-breadcrumb-item>{{breadcrumb.current}}</el-breadcrumb-item>
+    </el-breadcrumb>
+    <el-tabs v-model="activeName" tab-position="left" class="tab-aside">
+      <el-tab-pane label="" disabled class="menu-panel">
+         <span slot="label" class="menu-panel__label"><i class="el-icon-menu"></i></span>
+      </el-tab-pane>
+      <el-tab-pane label="日志记录" name="logs">
+        <Logs v-if="activeName === 'logs'" :height="tableHeight"></Logs>
+      </el-tab-pane>
+      <el-tab-pane label="导出记录" name="exports">
+        <Exports v-if="activeName === 'exports'" :height="tableHeight"></Exports>
+      </el-tab-pane>
+    </el-tabs>
   </div>
 </template>
 
 <script>
-import BaseTable from '@/assets/package/table-base'
-import SystemAPI from '@/api/system'
-import { PAGINATION_PAGENO, PAGINATION_PAGESIZE } from '@/common/constants'
+import Logs from './components/logs'
+import Exports from './components/exports'
 import Helper from '@/common/helper'
 export default {
   data () {
     return {
-      tableLoading: false,
+      activeName: 'logs',
       tableHeight: 0,
-      search: {
-        sysType: '',
-        operator: '',
-        sysDesc: '',
-        pageNo: PAGINATION_PAGENO,
-        pageSize: PAGINATION_PAGESIZE
-      },
-      tableData: [],
-      columns: []
+      breadcrumb: {
+        prev: '日志管理',
+        current: '日志记录'
+      }
     }
   },
-  components: { BaseTable },
+  components: { Logs, Exports },
   created () {
-    this.columns = this.getColumns()
-    this.getLogsList()
   },
-  computed: {
-    total () {
-      return this.tableData.length || 0
+  watch: {
+    '$route' (val) {
+      this.breadcrumb.prev = val.meta.title
+    },
+    activeName (val) {
+      if (!val) return
+      this.breadcrumb.current = {
+        'logs': '日志记录',
+        'exports': '导出记录'
+      }[val]
     }
   },
   mounted () {
@@ -64,74 +53,23 @@ export default {
   },
   methods: {
     fixLayout () {
-      this.tableHeight = Helper.calculateTableHeight() - 20
-    },
-    getColumns () {
-      return [{
-        label: '序号',
-        prop: 'id',
-        align: 'center'
-      }, {
-        label: '类型',
-        prop: 'sysType',
-        align: 'center'
-      }, {
-        label: '操作行为',
-        prop: 'sysDesc',
-        align: 'center'
-      }, {
-        label: '操作时间',
-        prop: 'sysTime',
-        align: 'center',
-        formatter (val) {
-          return val && Helper.parseTime(val)
-        }
-      }, {
-        label: '执行人',
-        prop: 'operator',
-        align: 'center',
-      }]
-    },
-    getLogsList () {
-      this.tableLoading = true
-      SystemAPI.getSysLogs(this.search).then(resp => {
-        if (resp.status === 0) {
-          this.tableData = resp.data.records
-        } else {
-          this.$message({
-            message: resp.message || '场景获取失败'
-          })
-        }
-        this.tableLoading = false
-      }).catch(err => {
-        this.$message({
-          title: '失败',
-          message: err.message || '服务出错',
-          type: 'error'
-        })
-        this.tableLoading = false
-      })
-    },
-    onCurrentChange (pageNo) {
-      this.search.pageNo = pageNo
-      this.getLogsList()
-    },
-    onSizeChange (pageSize) {
-      this.search.pageSize = pageSize
-      this.getLogsList()
-    },
-    handleSearch () {
-      this.search.pageNo = PAGINATION_PAGENO
-      this.getLogsList()
+      this.tableHeight = Helper.calculateTableHeight() - 20 - 40
     }
   }
 }
 </script>
 
 <style lang="scss" scoped>
-.smart{
-  // width: 94%;
-  // margin: 12px auto;
-  margin: 15px 20px;
-}
+</style>
+<style lang="scss">
+  .tab-container{
+    position: relative;
+    .el-tabs__header.is-left{
+      position: fixed;
+      z-index: 1;
+    }
+    .el-tabs__content{
+      padding-left: 95px;
+    }
+  }
 </style>

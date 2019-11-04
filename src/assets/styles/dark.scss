@@ -228,6 +228,13 @@ body.dark{
   .el-button--tiny{
     padding: 5px 8px;
   }
+  .el-button.is-disabled.is-plain, .el-button.is-disabled.is-plain:hover, .el-button.is-disabled.is-plain:focus{
+    background-color: $dark;
+    border-color: $dark;
+  }
+  .el-button.is-plain:hover, .el-button.is-plain:focus{
+    background-color: $stripe-dark;
+  }
 
   // INPUT
   .el-input__inner{
@@ -249,6 +256,10 @@ body.dark{
     background-color: transparent;
     color: $light-blue;
     border-color: $light-blue;
+  }
+  .el-input.is-disabled .el-input__inner{
+    background-color: $dark;
+    border-color: $dark;
   }
 
   // PAGINATION
@@ -339,21 +350,60 @@ body.dark{
     }
 
   }
+  // DATE TIME PICKER
+  .el-date-editor {
+    vertical-align: middle;
+    .el-range-input{
+      background-color: transparent;
+      color: $light-white;
+    }
+    .el-range-separator{
+      color: $light-white;
+      line-height: 28px;
+    }
+    + .el-button {
+      margin-left: 10px;
+    }
+  }
+  .el-date-range-picker__time-header{
+    border-bottom-color: $medium-dark;
+  }
+  .el-date-range-picker__content.is-left{
+    border-right-color: $medium-dark;
+  }
+  .el-picker-panel__footer{
+    border-top-color: $medium-dark;
+  }
+  .el-date-table th{
+    border-bottom-color: $medium-dark;
+  }
+  .el-date-table td.in-range div{
+    background-color: $dark;
+  }
 
   // DATE TIME
   .el-picker-panel,
   .el-time-panel{
     background-color: $stripe-dark;
-    border-color: $stripe-dark;
+    border-color: $dark;
     color: $white;
   }
   .el-picker-panel{
+    .el-picker-panel__sidebar,
+    .el-picker-panel__footer{
+      background-color: $light-dark;
+    }
+    .el-picker-panel__sidebar{
+      border-right-color: $medium-dark;
+    }
+    .el-picker-panel__shortcut{
+      color: $light-white;
+    }
     .el-picker-panel__icon-btn{
       color: $light-blue;
     }
   }
   .el-time-panel{
-
     .el-time-panel__content::after, .el-time-panel__content::before{
       border-top-color: $medium-dark;
       border-bottom-color: $medium-dark;
