@@ -3,36 +3,36 @@
     <div class="search-bar">
       <div class="caption is-right">
         <el-button-group>
-          <el-button type="primary" icon="btn-icon el-icon-refresh" title="刷新" @click="handleRefresh"></el-button>
-          <el-button type="primary" icon="btn-icon el-icon-circle-plus-outline" title="添加" @click="handleCreate"></el-button>
-          <el-button type="primary" icon="btn-icon obicon obicon-switch-btn" title="开关总闸" @click="handleMainSwitch"></el-button>
+          <el-button type="primary" icon="btn-icon el-icon-refresh" :title="$t('message.refresh')" @click="handleRefresh"></el-button>
+          <el-button type="primary" icon="btn-icon el-icon-circle-plus-outline" :title="$t('message.create')" @click="handleCreate"></el-button>
+          <el-button type="primary" icon="btn-icon obicon obicon-switch-btn" :title="$t('message.switch')" @click="handleMainSwitch"></el-button>
         </el-button-group>
       </div>
       <div class="caption">
-        <el-input class="caption-item" @keyup.enter.native="handleSearch" v-model="searchModel.buildName" placeholder="请输入楼栋"></el-input>
-        <el-input class="caption-item" @keyup.enter.native="handleSearch" v-model="searchModel.floorName" placeholder="请输入楼层"></el-input>
-        <el-input class="caption-item" @keyup.enter.native="handleSearch" v-model="searchModel.roomName" placeholder="请输入房号"></el-input>
-        <el-button type="primary" icon="el-icon-search" @click="handleSearch">查询</el-button>
+        <el-input class="caption-item" @keyup.enter.native="handleSearch" v-model="searchModel.buildName" :placeholder="$t('message.placeholder', { PLACEHOLDER: 'build' })"></el-input>
+        <el-input class="caption-item" @keyup.enter.native="handleSearch" v-model="searchModel.floorName" :placeholder="$t('message.placeholder', { PLACEHOLDER: 'floor' })"></el-input>
+        <el-input class="caption-item" @keyup.enter.native="handleSearch" v-model="searchModel.roomName" :placeholder="$t('message.placeholder', { PLACEHOLDER: 'room' })"></el-input>
+        <el-button type="primary" icon="el-icon-search" @click="handleSearch">{{$t('message.search')}}</el-button>
       </div>
     </div>
     <div class="building-list" v-loading.lock="loading" :style="{height: (height - 80) + 'px'}">
       <div class="building-item" v-for="item in roomList" :key="item.id">
         <div class="header">
-          <i class="icon obicon obicon-device" title="房间设备" @click="handleDevice(item)"></i>
+          <i class="icon obicon obicon-device" :title="$t('smart.room.device')" @click="handleDevice(item)"></i>
           <!-- <i class="icon obicon obicon-scene" title="房间场景" @click="handleScene(item)"></i> -->
-          <i class="icon obicon obicon-power" title="电源" @click="handlePower(item)"></i>
-          <i class="icon el-icon-edit" title="编辑" @click="handleEdit(item)"></i>
-          <i class="icon el-icon-delete" title="删除" @click="handleRemove(item)"></i>
+          <i class="icon obicon obicon-power" :title="$t('message.power')" @click="handlePower(item)"></i>
+          <i class="icon el-icon-edit" :title="$t('message.edit')" @click="handleEdit(item)"></i>
+          <i class="icon el-icon-delete" :title="$t('message.delete')" @click="handleRemove(item)"></i>
         </div>
         <div class="content">
           <i class="building-sign obicon obicon-classroom" :class="{'is-active': isLightActive(item.deviceState)}"></i>
-          <p class="text">{{item.buildingName}}栋{{item.floorName}}层{{item.roomName}}房</p>
+          <p class="text">{{item.buildingName}}{{$t('message.building')}}{{item.floorName}}{{$t('message.floor')}}{{item.roomName}}{{$t('message.room')}}</p>
         </div>
       </div>
       <el-pagination
         class="pagination"
-        prev-text="上一屏"
-        next-text="下一屏"
+        :prev-text="$t('message.prev')"
+        :next-text="$t('message.next')"
         :page-size="searchModel.pageSize"
         :total="total"
         layout="prev, next"

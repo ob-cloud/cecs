@@ -1,3 +1,5 @@
+import Vue from 'vue'
+console.log('v  ', Vue)
 export const navMenuList = [
   {
     id: 3,
