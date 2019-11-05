@@ -22,51 +22,45 @@
           </el-option>
         </el-select>
       </el-form-item> -->
-      <el-form-item label="设备条件">
-        <el-card class="box-card w8">
-          <div slot="header" class="clearfix">
-            <span>条件</span>
-            <!-- <i class="close fr el-icon-close"></i> -->
-          </div>
-          <div class="">
-            <el-tabs class="condition" v-model="conditionsTab" type="border-card">
-              <el-tab-pane label="条件1" name="c1" class="panel">
-                <div class="condition-item clearfix" v-for="(condition, index) in conditionMapList['c1']" :key="index">
-                  <i class="obicon obicon-node fl"></i>
-                  <i class="el-icon-close fr" @click="removeCondition(index)"></i>
-                  <p>{{parseCondition(condition)}}</p>
-                </div>
-                <el-button class="add-btn" size="mini" type="plain" icon="el-icon-plus" @click="addCondition"></el-button>
-              </el-tab-pane>
-              <el-tab-pane label="条件2" name="c2" class="panel">
-                <div class="condition-item clearfix" v-for="(condition, index) in conditionMapList['c2']" :key="index">
-                  <i class="obicon obicon-node fl"></i>
-                  <i class="el-icon-close fr" @click="removeCondition(index)"></i>
-                  <p>{{parseCondition(condition)}}</p>
-                </div>
-                <el-button class="add-btn" size="mini" type="plain" icon="el-icon-plus" @click="addCondition"></el-button>
-              </el-tab-pane>
-              <el-tab-pane label="条件3" name="c3" class="panel">
-                <div class="condition-item clearfix" v-for="(condition, index) in conditionMapList['c3']" :key="index">
-                  <i class="obicon obicon-node fl"></i>
-                  <i class="el-icon-close fr" @click="removeCondition(index)"></i>
-                  <p>{{parseCondition(condition)}}</p>
-                </div>
-                <el-button class="add-btn" size="mini" type="plain" icon="el-icon-plus" @click="addCondition"></el-button>
-              </el-tab-pane>
-            </el-tabs>
-            <!-- <div class="actions">
-              <div class="header">动作</div>
-              <div class="content">
-                <div class="condition-item clearfix" v-for="(device, index) in deviceSelectedList" :key="index">
-                  <i class="el-icon-date fl"></i>
-                  <i class="el-icon-close fr"></i>
-                  <p>{{device.name}}： {{parseAction(device)}}</p>
-                </div>
-              </div>
-            </div> -->
-          </div>
-        </el-card>
+      <el-form-item label="设备条件" class="box-card">
+        <el-tabs class="condition w8" v-model="conditionsTab" type="border-card">
+          <el-tab-pane label="条件1" name="c1" class="panel">
+            <span slot="label">条件1<span class="or">OR</span></span>
+            <div class="condition-item clearfix" v-for="(condition, index) in conditionMapList['c1']" :key="index">
+              <i class="obicon obicon-node fl"></i>
+              <i class="el-icon-close fr" @click="removeCondition(index)"></i>
+              <p>
+                {{parseCondition(condition)}}
+                <span class="and" v-if="conditionMapList['c1'].length !== 1 && index !== conditionMapList['c1'].length - 1">AND</span>
+              </p>
+            </div>
+            <el-button class="add-btn" size="mini" type="plain" icon="el-icon-plus" @click="addCondition"></el-button>
+          </el-tab-pane>
+
+          <el-tab-pane label="条件2" name="c2" class="panel">
+            <span slot="label">条件2<span class="or">OR</span></span>
+            <div class="condition-item clearfix" v-for="(condition, index) in conditionMapList['c2']" :key="index">
+              <i class="obicon obicon-node fl"></i>
+              <i class="el-icon-close fr" @click="removeCondition(index)"></i>
+              <p>
+                {{parseCondition(condition)}}
+                <span class="and" v-if="conditionMapList['c2'].length !== 1 && index !== conditionMapList['c2'].length - 1">AND</span>
+              </p>
+            </div>
+            <el-button class="add-btn" size="mini" type="plain" icon="el-icon-plus" @click="addCondition"></el-button>
+          </el-tab-pane>
+          <el-tab-pane label="条件3" name="c3" class="panel">
+            <div class="condition-item clearfix" v-for="(condition, index) in conditionMapList['c3']" :key="index">
+              <i class="obicon obicon-node fl"></i>
+              <i class="el-icon-close fr" @click="removeCondition(index)"></i>
+              <p>
+                {{parseCondition(condition)}}
+                <span class="and" v-if="conditionMapList['c3'].length !== 1 && index !== conditionMapList['c3'].length - 1">AND</span>
+              </p>
+            </div>
+            <el-button class="add-btn" size="mini" type="plain" icon="el-icon-plus" @click="addCondition"></el-button>
+          </el-tab-pane>
+        </el-tabs>
       </el-form-item>
       <el-form-item label="设备行为">
         <div class="action-content">
@@ -478,7 +472,10 @@ export default {
   text-align: left;
 }
 .condition{
-  margin: 0 20px;
+  // margin: 0 20px;
+  .condition-item > p{
+    position: relative;
+  }
 }
 .condition .panel{
   position: relative;
@@ -543,9 +540,11 @@ export default {
   margin-top: 6px;
 }
 .condition-item i{
+  position: relative;
   line-height: 40px;
   font-size: 14px;
   padding-right: 5px;
+  z-index: 9;
 }
 .condition-item i:last-of-type{
   cursor: pointer;
@@ -565,7 +564,64 @@ export default {
   padding: 18px 8px 0;
   text-align: right;
 }
-
+.or{
+  position: absolute;
+  right: -12px;
+  top: 9px;
+  font-size: 12px;
+  font-family: Consolas;
+  display: inline-block;
+  width: 22px;
+  height: 22px;
+  border: 1px solid #000;
+  border-radius: 100%;
+  vertical-align: middle;
+  text-align: center;
+  line-height: 21px;
+  background-color: #000;
+  color: #fff;
+  z-index: 9999;
+}
+.and{
+  position: absolute;
+  right: -40px;
+  top: 30px;
+  font-family: Consolas;
+  display: inline-block;
+  font-size: 11px;
+  transform: scale(1);
+  font-family: Consolas;
+  display: inline-block;
+  width: 26px;
+  height: 26px;
+  border: 1px solid #000;
+  border-radius: 100%;
+  vertical-align: middle;
+  text-align: center;
+  line-height: 24px;
+  background-color: #000;
+  color: #fff;
+}
+.and::before,
+.and::after{
+  display: inline-block;
+  content: ' ';
+  width: 15px;
+  height: 8px;
+  border: 1px dashed #999;
+  position: absolute;
+  border-left: none;
+}
+.and::before{
+  top: -10px;
+  left: -3px;
+  border-bottom: none;
+}
+.and::after{
+  bottom: -10px;
+  left: -3px;
+  border-top: none;
+}
 </style>
 <style lang="css">
 .condition-type.el-tabs--border-card,
