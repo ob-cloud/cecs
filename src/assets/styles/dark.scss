@@ -105,11 +105,20 @@ body.dark{
       background-color: $stripe-dark;
       border-bottom-color: $dark;
     }
+    .or{
+      color: $light-white;
+      border-color: $dark;
+      background-color: $dark;
+    }
     > .el-tabs__header .el-tabs__item.is-active{
       color: $white;
       background-color: $dark;
       border-right-color: transparent;
       border-left-color: transparent;
+      .or{
+        background-color: $dark;
+        border-color: $dark;
+      }
     }
   }
   // TABLE
@@ -348,7 +357,6 @@ body.dark{
     .el-tabs--border-card{
       border-color: $medium-dark;
     }
-
   }
   // DATE TIME PICKER
   .el-date-editor {
@@ -530,6 +538,20 @@ body.dark{
     }
     input::-webkit-input-placeholder{
       color: $light-white;
+    }
+  }
+  .box-card{
+    .el-tabs--border-card{
+      border-color: $medium-dark;
+    }
+    .and{
+      background-color: $dark;
+      color: $light-white;
+      border-color: $dark;
+      &::before,
+      &::after{
+        border-color: $medium-dark;
+      }
     }
   }
   .condition .condition-item{

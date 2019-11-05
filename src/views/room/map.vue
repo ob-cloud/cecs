@@ -12,7 +12,16 @@
         :on-success="onUploadSuccess"
         :on-error="onUploadFail"
         action="/consumer/image/uploadSchoolMap">
-        <el-button size="small" type="primary" icon="el-icon-upload">上传配置图<!--<i class="el-icon-question"></i>--></el-button>
+        <el-button size="small" type="primary" icon="el-icon-upload">
+          上传配置图
+          <el-tooltip placement="top" effect="dark">
+            <div slot="content" class="question">
+              <p>请上传规格为1080x720的图片</p>
+              <p>图片格式仅支持jpg/jpeg/png</p>
+            </div>
+            <i class="el-icon-question"></i>
+          </el-tooltip>
+        </el-button>
 
         <!-- <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，图片规格 1080x700 </div> -->
       </el-upload>
@@ -215,6 +224,13 @@ export default {
             message: '设置成功'
           })
           this.getMapPoints()
+        } else if (res.status === 600) {
+          loader.close()
+          this.isSetLocation = true
+          this.$message({
+            type: 'error',
+            message: '该房间已存在'
+          })
         }
         this.isEditing = false
       })
@@ -384,9 +400,17 @@ export default {
 
     .upload-btn{
       display: inline-block;
+      position: relative;
     }
     .el-button{
       margin-left: 10px;
+    }
+    .el-button > span i{
+      position: absolute;
+      top: -2px;
+      right: 0;
+      color: #fff;
+      font-size: 16px;
     }
   }
   .map-content{
@@ -582,6 +606,19 @@ export default {
     .panel{
       padding-bottom: 20px;
     }
+  }
+}
+.question{
+  padding: 2px;
+  text-align: center;
+  font-size: 14px;
+  color: #A2AAB5;
+  font-family: Consolas;
+  p{
+    padding: 3px;
+  }
+  p:last-of-type{
+    font-size: 12px;
   }
 }
 </style>
