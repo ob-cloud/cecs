@@ -16,12 +16,12 @@
             v-model="pickerValue"
             type="datetimerange"
             :picker-options="pickerOptions"
-            range-separator="至"
-            start-placeholder="开始日期"
-            end-placeholder="结束日期"
+            range-separator="-"
+            :start-placeholder="$t('smart.exportrecords.search', {FIELD: 'start'})"
+            :end-placeholder="$t('smart.exportrecords.search', {FIELD: 'end'})"
             align="right">
           </el-date-picker>
-          <el-button type="primary" icon="obicon obicon-cloud-download" @click="handleExport">导出</el-button>
+          <el-button type="primary" icon="obicon obicon-cloud-download" @click="handleExport">{{$t('meesage.exports')}}</el-button>
         </template>
       </slot>
     </base-table>
@@ -50,7 +50,7 @@ export default {
       },
       pickerOptions: {
         shortcuts: [{
-          text: '最近一周',
+          text: this.$t('smart.exportrecords.search', {FIELD: 'week'}),
           onClick (picker) {
             const end = new Date()
             const start = new Date()
@@ -58,7 +58,7 @@ export default {
             picker.$emit('pick', [start, end])
           }
         }, {
-          text: '最近一个月',
+          text: this.$t('smart.exportrecords.search', {FIELD: 'month'}),
           onClick (picker) {
             const end = new Date()
             const start = new Date()
@@ -66,7 +66,7 @@ export default {
             picker.$emit('pick', [start, end])
           }
         }, {
-          text: '最近三个月',
+          text: this.$t('smart.exportrecords.search', {FIELD: 'months'}),
           onClick (picker) {
             const end = new Date()
             const start = new Date()
@@ -99,26 +99,26 @@ export default {
     },
     getColumns () {
       return [{
-        label: '序号',
+        label: this.$t('smart.exportrecords.tableField', {FIELD: 'serial'}),
         prop: 'id',
         align: 'center'
       }, {
-        label: '文件名',
+        label: this.$t('smart.exportrecords.tableField', {FIELD: 'name'}),
         prop: 'sysType',
         align: 'center'
       }, {
-        label: '日期区间',
+        label: this.$t('smart.exportrecords.tableField', {FIELD: 'daterange'}),
         prop: 'sysDesc',
         align: 'center'
       }, {
-        label: '操作时间',
+        label: this.$t('smart.exportrecords.tableField', {FIELD: 'datetime'}),
         prop: 'sysTime',
         align: 'center',
         formatter (val) {
           return val && Helper.parseTime(val)
         }
       }, {
-        label: '执行人',
+        label: this.$t('smart.exportrecords.tableField', {FIELD: 'operator'}),
         prop: 'operator',
         align: 'center',
       }]

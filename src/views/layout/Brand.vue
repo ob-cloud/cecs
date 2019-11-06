@@ -1,6 +1,6 @@
 <template>
   <a href="#" class="brand">
-    <span class="brand-label">校园节能中控平台</span>
+    <span class="brand-label">{{$t('system.title')}}</span>
   </a>
 </template>
 

@@ -13,14 +13,14 @@
 
       <slot>
         <template slot="caption">
-          <el-input @keyup.enter.native="handleSearch" class="caption-item" placeholder="序列号" v-model="search.obox_serial_id"></el-input>
-          <el-input @keyup.enter.native="handleSearch" class="caption-item" placeholder="名称" v-model="search.obox_name"></el-input>
-          <el-select clearable class="caption-item" placeholder="全部" v-model="search.obox_status">
-            <el-option label='全部' value=''></el-option>
-            <el-option label='在线' :value='1'></el-option>
-            <el-option label='不在线' :value='0'></el-option>
+          <el-input @keyup.enter.native="handleSearch" class="caption-item" :placeholder="$t('smart.gateway.search', {FIELD: 'serial'})" v-model="search.obox_serial_id"></el-input>
+          <el-input @keyup.enter.native="handleSearch" class="caption-item" :placeholder="$t('smart.gateway.search', {FIELD: 'name'})" v-model="search.obox_name"></el-input>
+          <el-select clearable class="caption-item" :placeholder="$t('smart.gateway.search', {FIELD: 'status'})" v-model="search.obox_status">
+            <el-option :label="$t('smart.gateway.search', {FIELD: 'status'})" value=''></el-option>
+            <el-option :label="$t('message.status', {STATUS: 'online'})" :value='1'></el-option>
+            <el-option :label="$t('message.status', {STATUS: 'offline'})" :value='0'></el-option>
           </el-select>
-          <el-button type="primary" icon="el-icon-search" @click="handleSearch">查询</el-button>
+          <el-button type="primary" icon="el-icon-search" @click="handleSearch">{{$t('message.search')}}</el-button>
         </template>
       </slot>
     </base-table>
@@ -72,34 +72,35 @@ export default {
       this.tableHeight = Helper.calculateTableHeight()
     },
     getColumns () {
+      const that = this
       return [{
-        label: '序列号',
+        label: this.$t('smart.gateway.tableField', {FIELD: 'serial'}),
         prop: 'obox_serial_id',
         align: 'center'
       }, {
-        label: '名称',
+        label: this.$t('smart.gateway.tableField', {FIELD: 'name'}),
         prop: 'obox_name',
         align: 'center'
       }, {
-        label: '版本',
+        label: this.$t('smart.gateway.tableField', {FIELD: 'version'}),
         prop: 'obox_version',
         align: 'center'
       }, {
-        label: '状态',
+        label: this.$t('smart.gateway.tableField', {FIELD: 'status'}),
         prop: 'obox_status',
         align: 'center',
         formatter (val) {
-          return val ? '在线' : '不在线'
+          return val ? that.$t('message.status', {STATUS: 'online'}) : that.$t('message.status', {STATUS: 'offline'})
         }
       }, {
-        label: '操作',
+        label: this.$t('smart.gateway.tableField', {FIELD: 'action'}),
         align: 'center',
         renderBody: this.getToolboxRender
       }]
     },
     getToolboxRender (h, row) {
       return [
-        <el-button size="tiny" icon="obicon obicon-trash" title="删除" onClick={() => this.handleRemove(row)}></el-button>
+        <el-button size="tiny" icon="obicon obicon-trash" title={this.$t('message.delete')} onClick={() => this.handleRemove(row)}></el-button>
       ]
     },
     getOboxList () {
@@ -109,14 +110,14 @@ export default {
           this.tableData = resp.data.oboxs
         } else {
           this.$message({
-            message: resp.message || '场景获取失败'
+            message: this.$t('smart.obox.message', {MESSAGE: 'fetchFail'})
           })
         }
         this.tableLoading = false
       }).catch(err => {
         this.$message({
-          title: '失败',
-          message: err.message || '服务出错',
+          title: this.$t('message.fail'),
+          message: this.$t('message.exception'),
           type: 'error'
         })
         this.tableLoading = false
@@ -135,15 +136,15 @@ export default {
       this.getOboxList()
     },
     handleRemove (row) {
-      this.$confirm('确认删除OBOX？', '确认提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
+      this.$confirm(this.$t('smart.gateway.message', {MESSAGE: 'delConfirm'}), this.$t('message.tips'), {
+        confirmButtonText: this.$t('message.confirm'),
+        cancelButtonText: this.$t('message.cancel'),
         type: 'warning',
         closeOnClickModal: false
       }).then(() => {
         this.doRemove()
       }).catch(() => {
-        console.log('取消删除')
+        console.log('cancel')
       })
     },
     doRemove () {

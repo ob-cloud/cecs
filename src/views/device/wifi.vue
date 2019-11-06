@@ -12,22 +12,22 @@
       @on-page-size-change="onSizeChange">
       <slot>
         <template slot="caption">
-          <el-input @keyup.enter.native="handleSearch" class="caption-item" placeholder="设备序列号" v-model="search.obox_serial_id"></el-input>
-          <el-input @keyup.enter.native="handleSearch" class="caption-item" placeholder="设备类型" v-model="search.device_type"></el-input>
-          <el-input @keyup.enter.native="handleSearch" class="caption-item" placeholder="设备名称" v-model="search.name"></el-input>
-          <el-select clearable class="caption-item" placeholder="全部状态" v-model="search.online">
-            <el-option label='全部状态' value=''></el-option>
-            <el-option label='在线' :value='true'></el-option>
-            <el-option label='离线' :value='false'></el-option>
+          <el-input @keyup.enter.native="handleSearch" class="caption-item" :placeholder="$t('smart.wifi.search', {FIELD: 'serial'})" v-model="search.obox_serial_id"></el-input>
+          <el-input @keyup.enter.native="handleSearch" class="caption-item" :placeholder="$t('smart.wifi.search', {FIELD: 'type'})" v-model="search.device_type"></el-input>
+          <el-input @keyup.enter.native="handleSearch" class="caption-item" :placeholder="$t('smart.wifi.search', {FIELD: 'name'})" v-model="search.name"></el-input>
+          <el-select clearable class="caption-item" :placeholder="$t('smart.wifi.search', {FIELD: 'status'})" v-model="search.online">
+            <el-option :label="$t('smart.wifi.search', {FIELD: 'status'})" value=''></el-option>
+            <el-option :label="$t('message.status', {STATUS: 'online'})" :value='true'></el-option>
+            <el-option :label="$t('message.status', {STATUS: 'offline'})" :value='false'></el-option>
           </el-select>
-          <el-button type="primary" icon="el-icon-search" @click="handleSearch">查询</el-button>
+          <el-button type="primary" icon="el-icon-search" @click="handleSearch">{{$t('message.search')}}</el-button>
         </template>
       </slot>
     </base-table>
     <!-- <el-dialog top="10%" width="760px" title="设备操作历史" :visible.sync="dialogVisible" :close-on-click-modal="false">
       <device-history :serialId="activeRecord.obox_serial_id"></device-history>
     </el-dialog> -->
-    <slide-page :visible.sync="dialogVisible" title="红外转发控制面板" @onClose="acSerialId = ''">
+    <slide-page :visible.sync="dialogVisible" :title="$t('smart.wifi.slide', {FIELD: 'panel'})" @onClose="acSerialId = ''">
       <ac-control :serialId="acSerialId"></ac-control>
     </slide-page>
   </div>
@@ -88,39 +88,40 @@ export default {
       this.tableHeight = Helper.calculateTableHeight() - 50
     },
     getColumns () {
+      const that = this
       return [{
-        label: '设备序号',
+        label: this.$t('smart.wifi.tableField', {FIELD: 'serial'}),
         prop: 'deviceId',
         align: 'center'
       }, {
-        label: '设备名称',
+        label: this.$t('smart.wifi.tableField', {FIELD: 'name'}),
         prop: 'name',
         align: 'center'
       }, {
-        label: '设备状态',
+        label: this.$t('smart.wifi.tableField', {FIELD: 'status'}),
         prop: 'online',
         align: 'center',
         formatter (status, row) {
-          return status === false ? '离线' : '在线'
+          return status === false ? that.$t('message.status', {STATUS: 'offline'}) : that.$t('message.status', {STATUS: 'online'})
         }
       }, {
-        label: '设备类型',
+        label: this.$t('smart.wifi.tableField', {FIELD: 'type'}),
         prop: 'type',
         align: 'center',
         formatter (val) {
           return Suit.getRootDeviceDescriptor(val)
         }
       }, {
-        label: '操作',
+        label: this.$t('smart.wifi.tableField', {FIELD: 'action'}),
         align: 'center',
         renderToolBox: this.getToolboxRender
       }]
     },
     getToolboxRender (h, row) {
       const toolbox = []
-      const remove = <el-button size="tiny" icon="el-icon-delete" onClick={() => this.removeDevice(row)}></el-button>
+      const remove = <el-button size="tiny" icon="el-icon-delete" title={this.$t('message.delete')} onClick={() => this.removeDevice(row)}></el-button>
       if (TypeHint.isTransponder(row.type)) {
-        toolbox.push(<el-button size="tiny" icon="obicon obicon-infrared" onClick={() => this.handleAcControl(row)}></el-button>)
+        toolbox.push(<el-button size="tiny" icon="obicon obicon-infrared" title={this.$t('smart.wifi.placeholder', {FIELD: 'infrated'})} onClick={() => this.handleAcControl(row)}></el-button>)
       }
       toolbox.push(remove)
       return toolbox
@@ -132,14 +133,14 @@ export default {
           this.tableData = resp.data.configs
         } else {
           this.$message({
-            message: resp.message || '设备获取失败'
+            message: this.$t('smart.obox.message', {MESSAGE: 'fetchFail'})
           })
         }
         this.tableLoading = false
       }).catch(err => {
         this.$message({
-          title: '失败',
-          message: err.message || '服务出错',
+          title: this.$t('message.fail'),
+          message: this.$t('message.exception'),
           type: 'error'
         })
         this.tableLoading = false
@@ -169,38 +170,38 @@ export default {
       this.acSerialId = row.deviceId
     },
     removeDevice (row) {
-      this.$confirm('确认删除设备？', '确认提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
+      this.$confirm(this.$t('smart.obox.message', {MESSAGE: 'delConfirm'}), this.$t('message.tips'), {
+        confirmButtonText: this.$t('message.confirm'),
+        cancelButtonText: this.$t('message.cancel'),
         type: 'warning',
         closeOnClickModal: false
       }).then(() => {
         this.doRemove(row)
       }).catch(() => {
-        console.log('取消删除')
+        console.log('cancel')
       })
     },
     doRemove (row) {
       const loader = this.$loading({
-        text: '设备删除中...'
+        text: this.$t('smart.obox.message', {MESSAGE: 'loading'})
       })
       DeviceAPI.removeDevice(row.obox_serial_id, row.name).then(res => {
         loader.close()
-        this.responseHandler(res, '设备删除')
+        this.responseHandler(res, this.$t('smart.obox.message', {MESSAGE: 'delDevice'}))
         if (res.message.includes('success')) {
           this.getDeviceList()
         }
       }).catch(() => {
         loader.close()
-        this.responseHandler({message: 'error'}, '设备删除')
+        this.responseHandler({message: 'error'}, this.$t('smart.obox.message', {MESSAGE: 'delDevice'}))
       })
     },
     responseHandler (res, msg) {
-      let message = `${msg}失败`
+      let message = `${msg}${this.$t('message.fail')}`
       let type = 'error'
       if (res.message.includes('success')) {
         type = 'success'
-        message = `${msg}成功`
+        message = `${msg}${this.$t('message.success')}`
       }
       this.$message({
         type,

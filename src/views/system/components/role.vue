@@ -14,26 +14,26 @@
 
       <slot>
         <template slot="caption">
-          <el-input @keyup.enter.native="handleSearch" class="caption-item" placeholder="输入角色名称" v-model="search.roleName"></el-input>
-          <el-select clearable class="caption-item" placeholder="角色使用状态" v-model="search.status">
-            <el-option label='全部' value=''></el-option>
-            <el-option label='启用' :value='0'></el-option>
-            <el-option label='停用' :value='1'></el-option>
+          <el-input @keyup.enter.native="handleSearch" class="caption-item" :placeholder="$t('smart.role.search', {FIELD: 'name'})" v-model="search.roleName"></el-input>
+          <el-select clearable class="caption-item" :placeholder="$t('smart.role.search', {FIELD: 'status'})" v-model="search.status">
+            <el-option :label="$t('smart.role.search', {FIELD: 'status'})" value=''></el-option>
+            <el-option :label="$t('smart.role.action', {FIELD: 'enable'})" :value='0'></el-option>
+            <el-option :label="$t('smart.role.action', {FIELD: 'disable'})" :value='1'></el-option>
           </el-select>
-          <el-button type="primary" icon="el-icon-search" @click="handleSearch">查询</el-button>
+          <el-button type="primary" icon="el-icon-search" @click="handleSearch">{{$t('message.search')}}</el-button>
         </template>
         <template slot="actionBar">
-          <el-button type="success" icon="el-icon-refresh" @click="handleRefresh">刷新</el-button>
-          <el-button type="primary" icon="el-icon-plus" @click="handleCreate">创建</el-button>
+          <el-button type="success" icon="el-icon-refresh" @click="handleRefresh">{{$t('message.refresh')}}</el-button>
+          <el-button type="primary" icon="el-icon-plus" @click="handleCreate">{{$t('message.create')}}</el-button>
         </template>
       </slot>
     </base-table>
     <el-dialog v-if="createDialogVisible" top="10%" width="660px" :title="dialogTitleMap[dialogStatus]" :visible.sync="createDialogVisible" :close-on-click-modal="false">
       <el-form ref="createRole" autoComplete="on" :rules="creationRules" :model="createModel" label-position="left" label-width="80px" style="width: 80%; margin: 0 auto;">
-        <el-form-item label="角色名称" prop="roleName">
-          <el-input v-model="createModel.roleName" autoComplete="on" placeholder="请输入角色名称"></el-input>
+        <el-form-item :label="$t('smart.role.form', {FIELD: 'label'})" prop="roleName">
+          <el-input v-model="createModel.roleName" autoComplete="on" :placeholder="$t('smart.role.form', {FIELD: 'name'})"></el-input>
         </el-form-item>
-        <el-form-item label="角色权限" prop="auth">
+        <el-form-item :label="$t('smart.role.form', {FIELD: 'auth'})" prop="auth">
           <el-tree
             ref="authTree"
             :data="authList"
@@ -45,8 +45,8 @@
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
-        <el-button @click="createDialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="doCreate(dialogStatus)">确 定</el-button>
+        <el-button @click="createDialogVisible = false">{{$t('message.cancel')}}</el-button>
+        <el-button type="primary" @click="doCreate(dialogStatus)">{{$t('message.confirm')}}</el-button>
       </span>
     </el-dialog>
   </div>
@@ -79,8 +79,8 @@ export default {
       columns: [],
       dialogStatus: '',
       dialogTitleMap: {
-        edit: '编辑角色',
-        create: '创建角色'
+        edit: this.$t('smart.role.action', {FIELD: 'edit'}),
+        create: this.$t('smart.role.action', {FIELD: 'create'})
       },
       createModel: {
         roleName: '',
@@ -89,7 +89,7 @@ export default {
       },
       createDialogVisible: false,
       creationRules: {
-        roleName: [{ required: true, message: '角色名称不能为空', trigger: 'blur' }]
+        roleName: [{ required: true, message: this.$t('message.rules', {FIELD: 'roleName'}), trigger: 'blur' }]
       },
       authList: [],
       defaultProps: {
@@ -119,32 +119,34 @@ export default {
       this.tableHeight = Helper.calculateTableHeight()
     },
     getColumns () {
+      const that = this
       return [{
-        label: '序号',
+        label: this.$t('smart.role.tableField', {FIELD: 'serial'}),
         prop: 'roleId',
         align: 'center'
       }, {
-        label: '角色名称',
+        label: this.$t('smart.role.tableField', {FIELD: 'name'}),
         prop: 'roleName',
         align: 'center'
       }, {
-        label: '状态',
+        label: this.$t('smart.role.tableField', {FIELD: 'status'}),
         prop: 'status',
         align: 'center',
         formatter (val) {
-          return val === 0 ? '启用' : '停用'
+          return val === 0 ? that.$t('smart.role.action', {FIELD: 'enable'}) : that.$t('smart.role.action', {FIELD: 'disable'})
         }
       }, {
-        label: '操作',
+        label: this.$t('smart.role.tableField', {FIELD: 'action'}),
         align: 'center',
         renderBody: this.getToolboxRender
       }]
     },
     getToolboxRender (h, row) {
+      const status = row.status === 0 ? this.$t('smart.role.action', {FIELD: 'disable'}) : this.$t('smart.role.action', {FIELD: 'enable'})
       return [
-        <el-button size="tiny" type="warning" title="启用" onClick={() => this.handleEnable(row)}>{row.status === 0 ? '停用' : '启用'}</el-button>,
-        <el-button size="tiny" type="primary" title="编辑" onClick={() => this.handleEdit(row)}>编辑</el-button>,
-        <el-button size="tiny" type="danger" title="删除" onClick={() => this.handleRemove(row)}>删除</el-button>
+        <el-button size="tiny" type="warning" title={status} onClick={() => this.handleEnable(row)}>{status}</el-button>,
+        <el-button size="tiny" type="primary" title={this.$t('message.edit')} onClick={() => this.handleEdit(row)}>{this.$t('message.edit')}</el-button>,
+        <el-button size="tiny" type="danger" title={this.$t('message.delete')} onClick={() => this.handleRemove(row)}>{this.$t('message.delete')}</el-button>
       ]
     },
     getRoleList () {
@@ -162,7 +164,7 @@ export default {
         } else {
           this.$message({
             type: 'error',
-            message: '获取角色列表失败'
+            message: this.$t('smart.role.message', {MESSAGE: 'fetchFail'})
           })
         }
         this.tableLoading = false
@@ -170,7 +172,7 @@ export default {
         this.tableLoading = false
         this.$message({
           type: 'error',
-          message: '服务异常'
+          message: this.$t('message.exception'),
         })
       })
     },
@@ -223,7 +225,7 @@ export default {
             if (res.status === 0) {
               this.$message({
                 type: 'success',
-                message: '操作成功'
+                message: this.$t('message.actionSuccess'),
               })
               this.getRoleList()
               this.createDialogVisible = false
@@ -231,7 +233,7 @@ export default {
           }).catch(e => {
             this.$message({
               type: 'error',
-              message: e.message || '服务异常'
+              message: this.$t('message.exception'),
             })
           })
         }
@@ -257,7 +259,7 @@ export default {
           row.status = +(!row.status)
           this.$message({
             type: 'success',
-            message: '状态更新成功'
+            message: this.$t('smart.role.message', {MESSAGE: 'statusUpdate'})
           })
         }
       })
@@ -276,15 +278,15 @@ export default {
       })
     },
     handleRemove (row) {
-      this.$confirm('确认删除角色？', '确认提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
+      this.$confirm(this.$t('smart.role.message', {MESSAGE: 'delConfirm'}), this.$t('message.tips'), {
+        confirmButtonText: this.$t('message.confirm'),
+        cancelButtonText: this.$t('message.cancel'),
         type: 'warning',
         closeOnClickModal: false
       }).then(() => {
         this.doDelete(row)
       }).catch(() => {
-        console.log('取消删除')
+        console.log('cancel')
       })
     },
     doDelete (row) {
@@ -294,13 +296,13 @@ export default {
         } else {
           this.$message({
             type: 'error',
-            message: '删除失败!'
+            message: this.$t('message.actionFail')
           })
         }
       }).catch(() => {
         this.$message({
           type: 'error',
-          message: '删除失败~~'
+          message: this.$t('message.exception')
         })
       })
     },

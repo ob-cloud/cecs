@@ -13,15 +13,15 @@
 
       <slot>
         <template slot="caption">
-          <el-input @keyup.enter.native="handleSearch" class="caption-item" placeholder="执行人" v-model="search.operator"></el-input>
-          <el-input @keyup.enter.native="handleSearch" class="caption-item" placeholder="输入描述内容" v-model="search.sysDesc"></el-input>
-          <el-select clearable class="caption-item" placeholder="类型" v-model="search.sysType">
-            <el-option label='全部' value=''></el-option>
-            <el-option label='设备管理' value='设备管理'></el-option>
-            <el-option label='场景管理' value='场景管理'></el-option>
-            <el-option label='用户管理' value='用户管理'></el-option>
+          <el-input @keyup.enter.native="handleSearch" class="caption-item" :placeholder="$t('smart.logrecords.search', {FIELD: 'operator'})" v-model="search.operator"></el-input>
+          <el-input @keyup.enter.native="handleSearch" class="caption-item" :placeholder="$t('smart.logrecords.search', {FIELD: 'description'})" v-model="search.sysDesc"></el-input>
+          <el-select clearable class="caption-item" :placeholder="$t('smart.logrecords.search', {FIELD: 'type'})" v-model="search.sysType">
+            <el-option :label="$t('smart.logrecords.search', {FIELD: 'type'})" value=''></el-option>
+            <el-option :label="$t('smart.logrecords.search', {FIELD: 'device'})" value='设备管理'></el-option>
+            <el-option :label="$t('smart.logrecords.search', {FIELD: 'scene'})" value='场景管理'></el-option>
+            <el-option :label="$t('smart.logrecords.search', {FIELD: 'user'})" value='用户管理'></el-option>
           </el-select>
-          <el-button type="primary" icon="el-icon-search" @click="handleSearch">查询</el-button>
+          <el-button type="primary" icon="el-icon-search" @click="handleSearch">{{$t('message.search')}}</el-button>
         </template>
       </slot>
     </base-table>
@@ -74,26 +74,26 @@ export default {
     },
     getColumns () {
       return [{
-        label: '序号',
+        label: this.$t('smart.logrecords.tableField', {FIELD: 'serial'}),
         prop: 'id',
         align: 'center'
       }, {
-        label: '类型',
+        label: this.$t('smart.logrecords.tableField', {FIELD: 'type'}),
         prop: 'sysType',
         align: 'center'
       }, {
-        label: '操作行为',
+        label: this.$t('smart.logrecords.tableField', {FIELD: 'action'}),
         prop: 'sysDesc',
         align: 'center'
       }, {
-        label: '操作时间',
+        label: this.$t('smart.logrecords.tableField', {FIELD: 'datetime'}),
         prop: 'sysTime',
         align: 'center',
         formatter (val) {
           return val && Helper.parseTime(val)
         }
       }, {
-        label: '执行人',
+        label: this.$t('smart.logrecords.tableField', {FIELD: 'operator'}),
         prop: 'operator',
         align: 'center',
       }]
@@ -105,14 +105,14 @@ export default {
           this.tableData = resp.data.records
         } else {
           this.$message({
-            message: resp.message || '场景获取失败'
+            message: this.$t('smart.logrecords.message', {MESSAGE: 'fetchFail'})
           })
         }
         this.tableLoading = false
       }).catch(err => {
         this.$message({
-          title: '失败',
-          message: err.message || '服务出错',
+          title: this.$t('message.fail'),
+          message: this.$t('message.exception'),
           type: 'error'
         })
         this.tableLoading = false

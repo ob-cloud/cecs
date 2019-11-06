@@ -229,7 +229,7 @@ export default {
         type: 'warning',
         closeOnClickModal: false
       }).then(() => {
-        RoomAPI.triggerSwitch({floorId: item.id, deviceType: item.allType ? 0 : 1}).then(res => {
+        RoomAPI.triggerSwitch({floorId: item.id, deviceType: item.allType ? 2 : 1}).then(res => {
           if (res.status === 0) {
             this.getLayerList()
           } else {

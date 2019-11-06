@@ -20,7 +20,7 @@
           </el-select>
           <el-input @keyup.enter.native="handleSearch" class="caption-item" :placeholder="$t('smart.obox.search', {FIELD: 'type'})" v-model="search.device_type"></el-input>
           <el-input @keyup.enter.native="handleSearch" class="caption-item" :placeholder="$t('smart.obox.search', {FIELD: 'name'})" v-model="search.name"></el-input>
-          <el-button type="primary" icon="el-icon-search" @click="handleSearch">{{$t('message.confirm')}}</el-button>
+          <el-button type="primary" icon="el-icon-search" @click="handleSearch">{{$t('message.search')}}</el-button>
         </template>
       </slot>
     </base-table>
@@ -147,7 +147,7 @@ export default {
       if (Suit.typeHints.isThreeKeySocketSwitch(row.device_child_type)) {
         toolboxs.push(<el-button size="tiny" icon="obicon obicon-power" title={this.$t('smart.obox.placeholder', {FIELD: 'lamp'})} onClick={() => this.handleSwitchPower(row)}>{this.$t('smart.obox.placeholder', {FIELD: 'lamp'})}</el-button>)
       } else if (Suit.typeHints.isHumidifierSensors(row.device_child_type)) {
-        toolboxs.push(<el-button size="tiny" icon="obicon obicon-humidity" title="温湿度" onClick={() => this.handleHumidifier(row)}>温湿度</el-button>)
+        toolboxs.push(<el-button size="tiny" icon="obicon obicon-humidity" title={this.$t('smart.obox.placeholder', {FIELD: 'humidifier'})} onClick={() => this.handleHumidifier(row)}>{this.$t('smart.obox.placeholder', {FIELD: 'humidifier'})}</el-button>)
       }
       toolboxs.push(remove)
       return toolboxs
@@ -159,14 +159,14 @@ export default {
           this.tableData = resp.data.config
         } else {
           this.$message({
-            message: resp.message || '设备获取失败'
+            message: this.$t('smart.obox.message', {MESSAGE: 'fetchFail'})
           })
         }
         this.tableLoading = false
       }).catch(err => {
         this.$message({
-          title: '失败',
-          message: err.message || '服务出错',
+          title: this.$t('message.fail'),
+          message: this.$t('message.exception'),
           type: 'error'
         })
         this.tableLoading = false
@@ -195,38 +195,38 @@ export default {
       console.log('edit ', row)
     },
     removeDevice (row) {
-      this.$confirm('确认删除设备？', '确认提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
+      this.$confirm(this.$t('smart.obox.message', {MESSAGE: 'delConfirm'}), this.$t('message.tips'), {
+        confirmButtonText: this.$t('message.confirm'),
+        cancelButtonText: this.$t('message.cancel'),
         type: 'warning',
         closeOnClickModal: false
       }).then(() => {
         this.doRemove(row)
       }).catch(() => {
-        console.log('取消删除')
+        console.log('cancel')
       })
     },
     doRemove (row) {
       const loader = this.$loading({
-        text: '设备删除中...'
+        text: this.$t('smart.obox.message', {MESSAGE: 'loading'})
       })
       DeviceAPI.removeDevice(row.obox_serial_id, row.name).then(res => {
         loader.close()
-        this.responseHandler(res, '设备删除')
+        this.responseHandler(res, this.$t('smart.obox.message', {MESSAGE: 'delDevice'}))
         if (res.message.includes('success')) {
           this.getDeviceList()
         }
       }).catch(() => {
         loader.close()
-        this.responseHandler({message: 'error'}, '设备删除')
+        this.responseHandler({message: 'error'}, this.$t('smart.obox.message', {MESSAGE: 'delDevice'}))
       })
     },
     responseHandler (res, msg) {
-      let message = `${msg}失败`
+      let message = `${msg}${this.$t('message.fail')}`
       let type = 'error'
       if (res.message.includes('success')) {
         type = 'success'
-        message = `${msg}成功`
+        message = `${msg}${this.$t('message.success')}`
       }
       this.$message({
         type,

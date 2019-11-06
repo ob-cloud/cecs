@@ -14,36 +14,36 @@
 
       <slot>
         <template slot="caption">
-          <el-input @keyup.enter.native="handleSearch" class="caption-item" placeholder="输入用户名" v-model="search.userName"></el-input>
-          <el-input @keyup.enter.native="handleSearch" class="caption-item" placeholder="输入手机号码" v-model="search.mobile"></el-input>
-          <el-button type="primary" icon="el-icon-search" @click="handleSearch">查询</el-button>
+          <el-input @keyup.enter.native="handleSearch" class="caption-item" :placeholder="$t('smart.account.search', {FIELD: 'name'})" v-model="search.userName"></el-input>
+          <el-input @keyup.enter.native="handleSearch" class="caption-item" :placeholder="$t('smart.account.search', {FIELD: 'phone'})" v-model="search.mobile"></el-input>
+          <el-button type="primary" icon="el-icon-search" @click="handleSearch">{{$t('message.search')}}</el-button>
         </template>
         <template slot="actionBar">
-          <el-button type="success" icon="el-icon-refresh" @click="handleRefresh">刷新</el-button>
-          <el-button type="primary" icon="el-icon-plus" @click="handleCreate">创建</el-button>
+          <el-button type="success" icon="el-icon-refresh" @click="handleRefresh">{{$t('message.refresh')}}</el-button>
+          <el-button type="primary" icon="el-icon-plus" @click="handleCreate">{{$t('message.create')}}</el-button>
         </template>
       </slot>
     </base-table>
     <el-dialog v-if="createDialogVisible" top="10%" width="660px" :title="dialogTitleMap[dialogStatus]" :visible.sync="createDialogVisible" :close-on-click-modal="false">
       <el-form ref="creation" autoComplete="on" :rules="creationRules" :model="createModel" label-position="left" label-width="80px" style="width: 80%; margin: 0 auto;">
-        <el-form-item label="用户名" prop="userName">
-          <el-input v-model="createModel.userName" autoComplete="on" placeholder="请输入用户名"></el-input>
+        <el-form-item :label="$t('smart.account.tableField', {FIELD: 'name'})" prop="userName">
+          <el-input v-model="createModel.userName" autoComplete="on" :placeholder="$t('smart.account.form', {FIELD: 'name'})"></el-input>
         </el-form-item>
-        <el-form-item label="手机号" prop="mobile">
-          <el-input v-model="createModel.mobile" placeholder="请输入手机号"></el-input>
+        <el-form-item :label="$t('smart.account.form', {FIELD: 'mobile'})" prop="mobile">
+          <el-input v-model="createModel.mobile" :placeholder="$t('smart.account.form', {FIELD: 'phone'})"></el-input>
         </el-form-item>
-        <el-form-item label="密码" prop="password">
-          <el-input type="password" v-model="createModel.password" placeholder="请输入密码"></el-input>
+        <el-form-item :label="$t('smart.account.tableField', {FIELD: 'pwd'})" prop="password">
+          <el-input type="password" v-model="createModel.password" :placeholder="$t('smart.account.form', {FIELD: 'pwd'})"></el-input>
         </el-form-item>
-        <el-form-item label="角色" prop="roleId">
-          <el-select clearable class="caption-item" placeholder="选择角色" v-model="createModel.roleId" style="width: 100%;">
+        <el-form-item :label="$t('smart.account.form', {FIELD: 'roleName'})" prop="roleId">
+          <el-select clearable class="caption-item" :placeholder="$t('smart.account.form', {FIELD: 'role'})" v-model="createModel.roleId" style="width: 100%;">
             <el-option :label='item.roleName' :value='item.roleId' v-for="(item, index) in roleList" :key="index"></el-option>
           </el-select>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
-        <el-button @click="createDialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="doCreate(dialogStatus)">确 定</el-button>
+        <el-button @click="createDialogVisible = false">{{$t('message.cancel')}}</el-button>
+        <el-button type="primary" @click="doCreate(dialogStatus)">{{$t('message.confirm')}}</el-button>
       </span>
     </el-dialog>
   </div>
@@ -76,8 +76,8 @@ export default {
       columns: [],
       dialogStatus: '',
       dialogTitleMap: {
-        edit: '编辑账户',
-        create: '添加账户'
+        edit: this.$t('smart.account.action', {FIELD: 'edit'}),
+        create: this.$t('smart.account.action', {FIELD: 'create'})
       },
       createModel: {
         userName: '',
@@ -87,10 +87,10 @@ export default {
       },
       createDialogVisible: false,
       creationRules: {
-        userName: [{ required: true, message: '用户名不能为空', trigger: 'blur' }],
-        mobile: [{ required: true, message: '手机号码不能为空', trigger: 'blur' }],
-        password: [{ required: true, message: '账号密码不能为空', trigger: 'blur' }],
-        roleId: [{ required: true, message: '角色不能为空', trigger: 'blur' }]
+        userName: [{ required: true, message: this.$t('message.rules', {RULE: 'user'}), trigger: 'blur' }],
+        mobile: [{ required: true, message: this.$t('message.rules', {RULE: 'phone'}), trigger: 'blur' }],
+        password: [{ required: true, message: this.$t('message.rules', {RULE: 'pwd'}), trigger: 'blur' }],
+        roleId: [{ required: true, message: this.$t('message.rules', {RULE: 'role'}), trigger: 'blur' }]
       },
       roleList: []
     }
@@ -116,30 +116,30 @@ export default {
     },
     getColumns () {
       return [{
-        label: '用户名',
+        label: this.$t('smart.account.tableField', {FIELD: 'name'}),
         prop: 'userName',
         align: 'center'
       }, {
-        label: '手机号码',
+        label: this.$t('smart.account.tableField', {FIELD: 'phone'}),
         prop: 'mobile',
         align: 'center'
       }, {
-        label: '密码',
+        label: this.$t('smart.account.tableField', {FIELD: 'pwd'}),
         prop: 'password',
         align: 'center',
         formatter (val) {
           return new Array(6).fill('*')
         }
       }, {
-        label: '操作',
+        label: this.$t('smart.account.tableField', {FIELD: 'action'}),
         align: 'center',
         renderBody: this.getToolboxRender
       }]
     },
     getToolboxRender (h, row) {
       return [
-        <el-button size="tiny" icon="el-icon-edit" title="编辑" onClick={() => this.handleEdit(row)}></el-button>,
-        <el-button size="tiny" icon="el-icon-delete" title="删除" onClick={() => this.handleRemove(row)}></el-button>
+        <el-button size="tiny" icon="el-icon-edit" title={this.$t('message.edit')} onClick={() => this.handleEdit(row)}></el-button>,
+        <el-button size="tiny" icon="el-icon-delete" title={this.$t('message.delete')} onClick={() => this.handleRemove(row)}></el-button>
       ]
     },
     getAccountList () {
@@ -154,14 +154,14 @@ export default {
           }
         } else {
           this.$message({
-            message: resp.message || '用户获取失败'
+            message: this.$t('smart.account.message', {MESSAGE: 'fetchFail'})
           })
         }
         this.tableLoading = false
       }).catch(err => {
         this.$message({
-          title: '失败',
-          message: err.message || '服务出错',
+          title: this.$t('message.fail'),
+          message: this.$t('message.exception'),
           type: 'error'
         })
         this.tableLoading = false
@@ -214,7 +214,7 @@ export default {
             if (res.status === 0) {
               this.$message({
                 type: 'success',
-                message: '操作成功'
+                message: this.$t('message.actionSuccess')
               })
               this.createDialogVisible = false
               this.getAccountList()
@@ -222,8 +222,8 @@ export default {
           }).catch(() => {
             this.createDialogVisible = false
             this.$message({
-              title: '失败',
-              message: '服务异常',
+              title: this.$t('message.fail'),
+              message: this.$t('message.exception'),
               type: 'error'
             })
           })
@@ -238,9 +238,9 @@ export default {
       !this.roleList.length && this.getRoleList()
     },
     handleRemove (row) {
-      this.$confirm('确认删除账户？', '确认提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
+      this.$confirm(this.$t('smart.account.message', {MESSAGE: 'delConfirm'}), this.$t('message.tips'), {
+        confirmButtonText: this.$t('message.confirm'),
+        cancelButtonText: this.$t('message.cancel'),
         type: 'warning',
         closeOnClickModal: false
       }).then(() => {
@@ -248,13 +248,13 @@ export default {
           if (res.status === 0) {
             this.$message({
               type: 'success',
-              message: '操作成功'
+              message: this.$t('message.actionSuccess')
             })
             this.getAccountList()
           }
         })
       }).catch(() => {
-        console.log('取消删除')
+        console.log('cancel')
       })
     }
   }

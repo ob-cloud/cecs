@@ -15,32 +15,32 @@
             </div>
           </el-button>
           <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item command="resetPassword">重设密码</el-dropdown-item>
-            <el-dropdown-item command="logout">退出登录</el-dropdown-item>
+            <el-dropdown-item command="resetPassword">{{$t('system.resetpwd')}}</el-dropdown-item>
+            <el-dropdown-item command="logout">{{$t('system.logout')}}</el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
       </div>
 
       <ura-nav-menu class="navbar-menu-nav"></ura-nav-menu>
 
-      <el-dialog title="重设密码" width="600px" :visible.sync="passwordModelVisible" :close-on-click-modal="false">
+      <el-dialog :title="$t('system.reset', {FIELD: 'title'})" width="600px" :visible.sync="passwordModelVisible" :close-on-click-modal="false">
         <el-form autoComplete="on" :rules="passwordModelRules" :model="passwordModel"  ref="passwordRef" label-position="right" label-width="18%">
-          <el-form-item label="旧密码:" prop="oldPassword">
-            <el-input class="filter-item" placeholder="旧密码" v-model="passwordModel.oldPassword" type="password">
+          <el-form-item :label="$t('system.reset', {FIELD: 'oldpwd'})+':'" prop="oldPassword">
+            <el-input class="filter-item" :placeholder="$t('system.reset', {FIELD: 'oldpwd'})" v-model="passwordModel.oldPassword" type="password">
             </el-input>
           </el-form-item>
-          <el-form-item label="新密码:" prop="newPassword">
-            <el-input class="filter-item" placeholder="新密码" v-model="passwordModel.newPassword" type="password">
+          <el-form-item :label="$t('system.reset', {FIELD: 'newpwd'})+':'" prop="newPassword">
+            <el-input class="filter-item" :placeholder="$t('system.reset', {FIELD: 'newpwd'})" v-model="passwordModel.newPassword" type="password">
             </el-input>
           </el-form-item>
-          <el-form-item label="确认新密码:" prop="rePassword">
-            <el-input class="filter-item" placeholder="确认新密码" v-model="passwordModel.rePassword" type="password">
+          <el-form-item :label="$t('system.reset', {FIELD: 'confirm'})+':'" prop="rePassword">
+            <el-input class="filter-item" :placeholder="$t('system.reset', {FIELD: 'confirm'})" v-model="passwordModel.rePassword" type="password">
             </el-input>
           </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer text-center" >
-          <el-button @click="passwordModelVisible = false">取 消</el-button>
-          <el-button type="primary" :loading="loading" @click="doresetPassword()">确 认</el-button>
+          <el-button @click="passwordModelVisible = false">{{$t('message.cancel')}}</el-button>
+          <el-button type="primary" :loading="loading" @click="doresetPassword()">{{$t('message.confirm')}}</el-button>
         </div>
       </el-dialog>
     </nav>
@@ -55,29 +55,30 @@ import SystemAPI from '@/api/system'
 import md5 from 'md5'
 export default {
   data () {
+    const that = this
     const validatePassword = (rule, value, callback) => {
       if (value.length < 6) {
-        callback(new Error('密码长度不能小于6位'))
+        callback(new Error(that.$t('system.rules', {FIELD: 'length'})))
       } else if (!this.isOldPwdCorrect(md5(btoa(value) + value))) {
-        callback(new Error('旧密码不正确'))
+        callback(new Error(that.$t('system.rules', {FIELD: 'erroldpwd'})))
       } else {
         callback()
       }
     }
     const validateNewPassword = (rule, value, callback) => {
       if (!value) {
-        callback(new Error('密码不能为空'))
+        callback(new Error(that.$t('system.rules', {FIELD: 'empty'})))
       } else if (value.length < 6) {
-        callback(new Error('密码长度不能小于6位'))
+        callback(new Error(that.$t('system.rules', {FIELD: 'length'})))
       } else {
         callback()
       }
     }
     const validateConfirm = (rule, value, callback) => {
       if (!value) {
-        callback(new Error('密码不能为空'))
+        callback(new Error(that.$t('system.rules', {FIELD: 'empty'})))
       } else if (value.trim() !== this.passwordModel.newPassword.trim()) {
-        callback(new Error('两次输入密码不一致'))
+        callback(new Error(that.$t('system.rules', {FIELD: 'errconfirm'})))
       } else {
         callback()
       }
@@ -140,7 +141,7 @@ export default {
             if (response.message.includes('update success')) {
               this.$message({
                 type: 'success',
-                message: '重置成功， 准备退出重新登录'
+                message: this.$t('system.reset', {FIELD: 'resetsuccess'})
               })
               setTimeout(() => {
                 this.passwordModelVisible = false
@@ -149,14 +150,14 @@ export default {
             } else {
               this.$message({
                 type: 'error',
-                message: response.msg || '重置失败'
+                message: this.$t('system.reset', {FIELD: 'fail'})
               })
             }
           }).catch(err => {
             this.loading = false
             this.$message({
               type: 'error',
-              message: '服务出错，请稍后再试~~'
+              message: this.$t('message.exception')
             })
           })
         }

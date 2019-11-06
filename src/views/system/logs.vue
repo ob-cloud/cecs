@@ -8,10 +8,10 @@
       <el-tab-pane label="" disabled class="menu-panel">
          <span slot="label" class="menu-panel__label"><i class="el-icon-menu"></i></span>
       </el-tab-pane>
-      <el-tab-pane label="日志记录" name="logs">
+      <el-tab-pane :label="$t('smart.logrecords.title')" name="logs">
         <Logs v-if="activeName === 'logs'" :height="tableHeight"></Logs>
       </el-tab-pane>
-      <el-tab-pane label="导出记录" name="exports">
+      <el-tab-pane :label="$t('smart.exportrecords.title')" name="exports">
         <Exports v-if="activeName === 'exports'" :height="tableHeight"></Exports>
       </el-tab-pane>
     </el-tabs>
@@ -28,8 +28,8 @@ export default {
       activeName: 'logs',
       tableHeight: 0,
       breadcrumb: {
-        prev: '日志管理',
-        current: '日志记录'
+        prev: this.$t('smart.logmodule'),
+        current: this.$t('smart.logrecords.title')
       }
     }
   },
@@ -43,8 +43,8 @@ export default {
     activeName (val) {
       if (!val) return
       this.breadcrumb.current = {
-        'logs': '日志记录',
-        'exports': '导出记录'
+        'logs': this.$t('smart.logrecords.title'),
+        'exports': this.$t('smart.exportrecords.title')
       }[val]
     }
   },

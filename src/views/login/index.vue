@@ -4,23 +4,23 @@
       <!-- <h3 class="ura-login-header">管理平台登陆</h3> -->
       <div class="ura-login-header">
         <!-- <img src="http://placehold.it/140x65" alt=""> -->
-        <h2>校园节能中控平台</h2>
+        <h2>{{$t('system.title')}}</h2>
       </div>
       <el-form class="ura-login-body" :model="loginForm" :rules="loginRules" ref="loginForm" label-position="left">
         <el-form-item prop="account">
-          <el-input name="account" type="text" v-model="loginForm.account" placeholder="账号" />
+          <el-input name="account" type="text" v-model="loginForm.account" :placeholder="$t('system.logintext', {FIELD: 'account'})" />
         </el-form-item>
         <el-form-item prop="password">
           <el-input
             name="password"
             type="password"
             v-model="loginForm.password"
-            placeholder="密码"
+            :placeholder="$t('system.logintext', {FIELD: 'pwd'})"
             @keyup.enter.native="handleLogin" />
         </el-form-item>
       </el-form>
       <div class="ura-login-footer">
-        <el-button class="btn" type="primary" :loading="loading" @click.native.prevent="handleLogin">登录</el-button>
+        <el-button class="btn" type="primary" :loading="loading" @click.native.prevent="handleLogin">{{$t('system.login')}}</el-button>
       </div>
     </div>
 
@@ -82,16 +82,17 @@
 export default {
   name: 'login',
   data () {
+    const that = this
     const validateAccount = (rule, value, callback) => {
       if (!value) {
-        callback(new Error('请输入正确的用户名'))
+        callback(new Error(that.$t('system.logintext', {FIELD: 'erraccount'})))
       } else {
         callback()
       }
     }
     const validatePassword = (rule, value, callback) => {
       if (value.length < 6) {
-        callback(new Error('密码不能小于6位'))
+        callback(new Error(that.$t('system.rules', {FIELD: 'length'})))
       } else {
         callback()
       }
@@ -117,7 +118,7 @@ export default {
             this.loading = false
             if (!response) {
               this.$message({
-                message: response.msg || '登录失败',
+                message: this.$t('system.logintext', {FIELD: 'loginfail'}),
                 type: 'error'
               })
               this.$router.push({path: '/login'})

@@ -8,10 +8,10 @@
       <el-tab-pane label="" disabled class="menu-panel">
          <span slot="label" class="menu-panel__label"><i class="el-icon-menu"></i></span>
       </el-tab-pane>
-      <el-tab-pane label="账户管理" name="account">
+      <el-tab-pane :label="$t('smart.account.title')" name="account">
         <account v-if="activeName === 'account'" :height="tableHeight"></account>
       </el-tab-pane>
-      <el-tab-pane label="角色管理" name="role">
+      <el-tab-pane :label="$t('smart.role.title')" name="role">
         <role v-if="activeName === 'role'" :height="tableHeight"></role>
       </el-tab-pane>
     </el-tabs>
@@ -28,8 +28,8 @@ export default {
       activeName: 'account',
       tableHeight: 0,
       breadcrumb: {
-        prev: '用户管理',
-        current: '账户管理'
+        prev: this.$t('smart.usermodule'),
+        current: this.$t('smart.account.title')
       }
     }
   },
@@ -43,8 +43,8 @@ export default {
     activeName (val) {
       if (!val) return
       this.breadcrumb.current = {
-        'account': '账户管理',
-        'role': '角色管理'
+        'account': this.$t('smart.account.title'),
+        'role': this.$t('smart.role.title')
       }[val]
     }
   },

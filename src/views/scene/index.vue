@@ -13,23 +13,23 @@
 
       <slot>
         <template slot="caption">
-          <el-select clearable class="caption-item" placeholder="楼栋" v-model="search.buildingId" filterable>
-            <el-option label='全部' value=''></el-option>
-            <el-option v-for="(item, index) in buildingList" :key="item.buildingName + index + item.buildingId" :label="item.buildingName + '栋'" :value="item.buildingId"></el-option>
+          <el-select clearable class="caption-item" :placeholder="$t('smart.building.title')" v-model="search.buildingId" filterable>
+            <el-option :label="$t('smart.scene.search', {FIELD: 'build'})" value=''></el-option>
+            <el-option v-for="(item, index) in buildingList" :key="item.buildingName + index + item.buildingId" :label="item.buildingName" :value="item.buildingId"></el-option>
           </el-select>
-          <el-select clearable class="caption-item" placeholder="楼层" v-model="search.floorId" filterable>
-            <el-option label='全部' value=''></el-option>
-            <el-option v-for="(item, index) in floorList" :key="item.floorName + index + item.id" :label="item.floorName + '层'" :value="item.floorId"></el-option>
+          <el-select clearable class="caption-item" :placeholder="$t('smart.floor.title')" v-model="search.floorId" filterable>
+            <el-option :label="$t('smart.scene.search', {FIELD: 'floor'})" value=''></el-option>
+            <el-option v-for="(item, index) in floorList" :key="item.floorName + index + item.id" :label="item.floorName" :value="item.floorId"></el-option>
           </el-select>
-          <el-select clearable class="caption-item" placeholder="房间" v-model="search.roomId" filterable>
-            <el-option label='全部' value=''></el-option>
-            <el-option v-for="(item, index) in roomList" :key="item.roomName + index + item.id" :label="item.roomName + '房'" :value="item.roomId"></el-option>
+          <el-select clearable class="caption-item" :placeholder="$t('smart.room.title')" v-model="search.roomId" filterable>
+            <el-option :label="$t('smart.scene.search', {FIELD: 'room'})" value=''></el-option>
+            <el-option v-for="(item, index) in roomList" :key="item.roomName + index + item.id" :label="item.roomName" :value="item.roomId"></el-option>
           </el-select>
-          <el-input @keyup.enter.native="handleSearch" class="caption-item" placeholder="场景名称" v-model="search.scene_name"></el-input>
-          <el-button type="primary" icon="el-icon-search" @click="handleSearch">查询</el-button>
+          <el-input @keyup.enter.native="handleSearch" class="caption-item" :placeholder="$t('smart.scene.search', {FIELD: 'name'})" v-model="search.scene_name"></el-input>
+          <el-button type="primary" icon="el-icon-search" @click="handleSearch">{{$t('message.search')}}</el-button>
         </template>
         <template slot="actionBar">
-          <el-button type="primary" @click="createRemoteScene">创建场景</el-button>
+          <el-button type="primary" @click="createRemoteScene">{{$t('smart.scene.action', {FIELD: 'create'})}}</el-button>
         </template>
       </slot>
     </base-table>
@@ -72,7 +72,7 @@ export default {
       tableData: [],
       columns: [],
       createDialogVisible: false,
-      dialogAction: '添加场景',
+      dialogAction: this.$t('smart.scene.action', {FIELD: 'create'}),
       sceneData: null
     }
   },
@@ -109,23 +109,23 @@ export default {
     getColumns () {
       const _this = this
       return [{
-        label: '场景名称',
+        label: this.$t('smart.scene.tableField', {FIELD: 'name'}),
         prop: 'scene_name',
         align: 'center'
       }, {
-        label: '楼栋',
+        label: this.$t('smart.scene.tableField', {FIELD: 'build'}),
         prop: 'building',
         align: 'center'
       }, {
-        label: '楼层',
+        label: this.$t('smart.scene.tableField', {FIELD: 'floor'}),
         prop: 'floor',
         align: 'center'
       }, {
-        label: '房间',
+        label: this.$t('smart.scene.tableField', {FIELD: 'room'}),
         prop: 'room',
         align: 'center'
       }, {
-        label: '场景状态',
+        label: this.$t('smart.scene.tableField', {FIELD: 'status'}),
         align: 'center',
         renderBody (h, row) {
           return (
@@ -137,7 +137,7 @@ export default {
           )
         }
       }, {
-        label: '操作',
+        label: this.$t('smart.scene.tableField', {FIELD: 'action'}),
         align: 'center',
         minWidth: '180px',
         renderBody: this.getToolboxRender
@@ -145,9 +145,9 @@ export default {
     },
     getToolboxRender (h, row) {
       return [
-        <el-button size="tiny" icon="el-icon-caret-right" title="执行场景" onClick={() => this.execute(row)}></el-button>,
-        <el-button size="tiny" icon="el-icon-edit" title="编辑" onClick={() => this.edit(row)}></el-button>,
-        <el-button size="tiny" icon="el-icon-delete" title="删除" onClick={() => this.handleRemove(row)}></el-button>
+        <el-button size="tiny" icon="el-icon-caret-right" title={this.$t('smart.scene.action', {FIELD: 'excute'})} onClick={() => this.execute(row)}></el-button>,
+        <el-button size="tiny" icon="el-icon-edit" title={this.$t('smart.scene.action', {FIELD: 'edit'})} onClick={() => this.edit(row)}></el-button>,
+        <el-button size="tiny" icon="el-icon-delete" title={this.$t('smart.scene.action', {FIELD: 'delete'})} onClick={() => this.handleRemove(row)}></el-button>
       ]
     },
     getSceneList () {
@@ -157,14 +157,14 @@ export default {
           this.tableData = resp.data.scenes
         } else {
           this.$message({
-            message: resp.message || '场景获取失败'
+            message: this.$t('smart.scene.message', {MESSAGE: 'fetchFail'})
           })
         }
         this.tableLoading = false
       }).catch(err => {
         this.$message({
-          title: '失败',
-          message: err.message || '服务出错',
+          title: this.$t('message.fail'),
+          message: this.$t('message.exception'),
           type: 'error'
         })
         this.tableLoading = false
@@ -186,17 +186,17 @@ export default {
     handleChangeStatus (row) {
       row.scene_status = 1 - row.scene_status
       SceneAPI.chageSceneStatus(`0${row.scene_status}`, row.scene_number).then(res => {
-        this.responseHandler(res, '场景状态更新')
+        this.responseHandler(res, this.$t('smart.scene.message', {MESSAGE: 'update'}))
       }).catch(err => {
-        this.responseHandler({message: 'error'}, '场景状态更新')
+        this.responseHandler({message: 'error'}, this.$t('smart.scene.message', {MESSAGE: 'update'}))
       })
     },
     responseHandler (res, msg) {
-      let message = `${msg}失败`
+      let message = `${msg}${this.$t('message.fail')}`
       let type = 'error'
       if (res.message.includes('success')) {
         type = 'success'
-        message = `${msg}成功`
+        message = `${msg}${this.$t('message.success')}`
       }
       this.$message({
         type,
@@ -206,60 +206,60 @@ export default {
     execute (row) {
       const loader = this.$loading({
         lock: true,
-        text: '场景执行中...'
+        text: this.$t('smart.scene.message', {MESSAGE: 'loading'})
       })
       SceneAPI.executeScene(row.scene_number).then(res => {
         loader.close()
-        this.responseHandler(res, '场景状态更新')
+        this.responseHandler(res, this.$t('smart.scene.message', {MESSAGE: 'excute'}))
         if (res.message.includes('success')) {
           this.getSceneList()
         }
       }).catch(err => {
         loader.close()
-        this.responseHandler({message: 'error'}, '场景状态更新')
+        this.responseHandler({message: 'error'}, this.$t('smart.scene.message', {MESSAGE: 'excute'}))
       })
     },
     edit (row) {
       this.createDialogVisible = true
-      this.dialogAction = '编辑场景'
+      this.dialogAction = this.$t('smart.scene.action', {MESSAGE: 'edit'})
       this.sceneData = row
     },
     handleRemove (row) {
-      this.$confirm('确认删除场景？', '确认提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
+      this.$confirm(this.$t('smart.scene.message', {MESSAGE: 'delConfirm'}), this.$t('message.tips'), {
+        confirmButtonText: this.$t('message.confirm'),
+        cancelButtonText: this.$t('message.cancel'),
         type: 'warning',
         closeOnClickModal: false
       }).then(() => {
         this.doRemove(row.scene_number)
       }).catch(() => {
-        console.log('取消删除')
+        console.log('cancel')
       })
     },
     doRemove (sceneNumber) {
       SceneAPI.removeScene(sceneNumber).then(res => {
-        this.responseHandler(res, '场景删除')
+        this.responseHandler(res, this.$t('smart.scene.message', {MESSAGE: 'delDevice'}))
         if (res.message.includes('success')) {
           this.getSceneList()
         }
       }).catch(() => {
-        this.responseHandler({message: 'error'}, '场景删除')
+        this.responseHandler({message: 'error'}, this.$t('smart.scene.message', {MESSAGE: 'delDevice'}))
       })
     },
     createRemoteScene () {
-      this.dialogAction = '添加场景'
+      this.dialogAction = this.$t('smart.scene.action', {MESSAGE: 'create'})
       this.createDialogVisible = true
       this.sceneData = null
     },
     onSceneReady (scene, dialogVisible) {
       SceneAPI.setScene(scene).then(res => {
-        this.responseHandler(res, '添加场景')
+        this.responseHandler(res, this.$t('smart.scene.action', {MESSAGE: 'create'}))
         if (res.message.includes('success')) {
           this.createDialogVisible = false
           this.getSceneList()
         }
       }).catch(err => {
-        this.responseHandler({message: 'error'}, '添加场景')
+        this.responseHandler({message: 'error'}, this.$t('smart.scene.action', {MESSAGE: 'create'}))
       })
     }
   }
