@@ -7,6 +7,7 @@
       stripe
       v-loading="tableLoading"
       :pageSize="search.pageSize"
+      :pageNo="search.pageNo"
       :pageTotal="total"
       @on-current-page-change="onCurrentChange"
       @on-page-size-change="onSizeChange">
@@ -147,6 +148,10 @@ export default {
         if (resp.status === 0) {
           this.tableData = resp.data.records
           this.total = resp.total
+          if (!this.tableData.length && this.search.pageNo !== 1) {
+            this.search.pageNo = PAGINATION_PAGENO
+            this.getAccountList()
+          }
         } else {
           this.$message({
             message: resp.message || '用户获取失败'
@@ -163,7 +168,7 @@ export default {
       })
     },
     getRoleList () {
-      UserAPI.getRoleList().then(resp => {
+      UserAPI.getRoleList({status: 0}).then(resp => {
         if (resp.status === 0) {
           this.roleList = resp.data.records
         }
@@ -191,6 +196,8 @@ export default {
       }
     },
     handleRefresh () {
+      this.search.pageNo = PAGINATION_PAGENO
+      this.search.pageSize = PAGINATION_PAGESIZE
       this.getAccountList()
     },
     handleCreate () {

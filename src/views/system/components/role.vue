@@ -7,6 +7,7 @@
       stripe
       v-loading="tableLoading"
       :pageSize="search.pageSize"
+      :pageNo="search.pageNo"
       :pageTotal="total"
       @on-current-page-change="onCurrentChange"
       @on-page-size-change="onSizeChange">
@@ -154,6 +155,10 @@ export default {
         if (res.status === 0) {
           this.tableData = res.data.records
           this.total = res.total
+          if (!this.tableData.length && this.search.pageNo !== 1) {
+            this.search.pageNo = PAGINATION_PAGENO
+            this.getRoleList()
+          }
         } else {
           this.$message({
             type: 'error',
@@ -197,6 +202,8 @@ export default {
       }
     },
     handleRefresh () {
+      this.search.pageNo = PAGINATION_PAGENO
+      this.search.pageSize = PAGINATION_PAGESIZE
       this.getRoleList()
     },
     handleCreate () {
@@ -269,20 +276,20 @@ export default {
       })
     },
     handleRemove (row) {
-      this.$confirm('确认删除房间？', '确认提示', {
+      this.$confirm('确认删除角色？', '确认提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning',
         closeOnClickModal: false
       }).then(() => {
-        //
+        this.doDelete(row)
       }).catch(() => {
         console.log('取消删除')
       })
     },
     doDelete (row) {
-      UserAPI.deleteRoom(row).then(response => {
-        if (response.status === 200) {
+      UserAPI.deleteRole(row.roleId).then(response => {
+        if (response.status === 0) {
           this.getRoleList()
         } else {
           this.$message({
