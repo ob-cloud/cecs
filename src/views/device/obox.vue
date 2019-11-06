@@ -13,21 +13,21 @@
       @on-page-size-change="onSizeChange">
       <slot>
         <template slot="caption">
-          <el-input @keyup.enter.native="handleSearch" class="caption-item" placeholder="设备序列号" v-model="search.obox_serial_id"></el-input>
-          <el-select clearable class="caption-item" placeholder="所有设备" v-model="search.oboxId">
-            <el-option label='所有设备' value=''></el-option>
-            <el-option :label='item.obox_name+`(${item.obox_status === 1 ? "在线" : "离线"})`' :value='item.obox_serial_id' v-for="(item, index) in oboxList" :key="index"></el-option>
+          <el-input @keyup.enter.native="handleSearch" class="caption-item" :placeholder="$t('smart.obox.search', {FIELD: 'serial'})" v-model="search.obox_serial_id"></el-input>
+          <el-select clearable class="caption-item" :placeholder="$t('smart.obox.search', {FIELD: 'devices'})" v-model="search.oboxId">
+            <el-option :label="$t('smart.obox.search', {FIELD: 'devices'})" value=''></el-option>
+            <el-option :label="item.obox_name + item.obox_status === 1 ? $t('message.status', {STATUS: 'online'}) : $t('message.status', {STATUS: 'offline'})" :value='item.obox_serial_id' v-for="(item, index) in oboxList" :key="index"></el-option>
           </el-select>
-          <el-input @keyup.enter.native="handleSearch" class="caption-item" placeholder="设备类型" v-model="search.device_type"></el-input>
-          <el-input @keyup.enter.native="handleSearch" class="caption-item" placeholder="设备名称" v-model="search.name"></el-input>
-          <el-button type="primary" icon="el-icon-search" @click="handleSearch">查询</el-button>
+          <el-input @keyup.enter.native="handleSearch" class="caption-item" :placeholder="$t('smart.obox.search', {FIELD: 'type'})" v-model="search.device_type"></el-input>
+          <el-input @keyup.enter.native="handleSearch" class="caption-item" :placeholder="$t('smart.obox.search', {FIELD: 'name'})" v-model="search.name"></el-input>
+          <el-button type="primary" icon="el-icon-search" @click="handleSearch">{{$t('message.confirm')}}</el-button>
         </template>
       </slot>
     </base-table>
-    <slide-page :visible.sync="dialogVisible" title="三键开关控制面板">
+    <slide-page :visible.sync="dialogVisible" :title="$t('smart.obox.slide', {FIELD: 'panel'})">
       <i-switcher :serialId="switchSerialId" :state="switchState" @switcher-change="onSwitcherChange"></i-switcher>
     </slide-page>
-    <slide-page :visible.sync="humidifierMap.dialogVisible" title="温湿度" @onClose="humidifierSerialId = ''">
+    <slide-page :visible.sync="humidifierMap.dialogVisible" :title="$t('smart.obox.slide', {FIELD: 'humidifier'})" @onClose="humidifierSerialId = ''">
       <humifier :serialId="humidifierSerialId" :state="humidifierState"></humifier>
     </slide-page>
   </div>
@@ -93,44 +93,45 @@ export default {
       this.tableHeight = Helper.calculateTableHeight() - 50
     },
     getColumns () {
+      const that = this
       return [{
-        label: '设备序号',
+        label: this.$t('smart.obox.tableField', {FIELD: 'serial'}),
         prop: 'serialId',
         align: 'center'
       }, {
-        label: '设备名称',
+        label: this.$t('smart.obox.tableField', {FIELD: 'name'}),
         prop: 'name',
         align: 'center'
       }, {
-        label: '设备状态',
+        label: this.$t('smart.obox.tableField', {FIELD: 'status'}),
         prop: 'state',
         align: 'center',
         formatter (status, row) {
           if (Suit.typeHints.isThreeKeySocketSwitch(row.device_child_type)) {
-            return status && status.slice(0, 2) === '00' ? '关' : '开'
+            return status && status.slice(0, 2) === '00' ? that.$t('message.status', {STATUS: 'off'}) : that.$t('message.status', {STATUS: 'on'})
           }
           return Suit.getStatusDescriptor(status, row.device_type, row.device_child_type)
         }
       }, {
-        label: '设备类型',
+        label: this.$t('smart.obox.tableField', {FIELD: 'type'}),
         prop: 'device_type',
         align: 'center',
         formatter (val) {
           return Suit.getRootDeviceDescriptor(val)
         }
       }, {
-        label: '子设备类型',
+        label: this.$t('smart.obox.tableField', {FIELD: 'subtype'}),
         prop: 'device_child_type',
         align: 'center',
         formatter (val, row) {
           return Suit.getDeviceTypeDescriptor(row.device_type, val)
         }
       }, {
-        label: '设备版本',
+        label: this.$t('smart.obox.tableField', {FIELD: 'version'}),
         prop: 'version',
         align: 'center'
       }, {
-        label: '操作',
+        label: this.$t('smart.obox.tableField', {FIELD: 'action'}),
         align: 'center',
         // minWidth: '180px',
         tooltip: false,
@@ -142,9 +143,9 @@ export default {
       // const edit = <el-button size="tiny" icon="el-icon-edit" onClick={() => this.editDevice(row)}></el-button>
       // const setting = <el-button size="tiny" icon="el-icon-setting" onClick={() => this.settingDevice(row)}></el-button>
       // const info = <el-button size="tiny" icon="el-icon-info" onClick={() => this.checkDeviceInfo(row)}></el-button>
-      const remove = <el-button size="tiny" icon="el-icon-delete" title="删除" onClick={() => this.removeDevice(row)}>删除</el-button>
+      const remove = <el-button size="tiny" icon="el-icon-delete" title={this.$t('message.delete')} onClick={() => this.removeDevice(row)}>{this.$t('message.delete')}</el-button>
       if (Suit.typeHints.isThreeKeySocketSwitch(row.device_child_type)) {
-        toolboxs.push(<el-button size="tiny" icon="obicon obicon-power" title="灯开关" onClick={() => this.handleSwitchPower(row)}>灯开关</el-button>)
+        toolboxs.push(<el-button size="tiny" icon="obicon obicon-power" title={this.$t('smart.obox.placeholder', {FIELD: 'lamp'})} onClick={() => this.handleSwitchPower(row)}>{this.$t('smart.obox.placeholder', {FIELD: 'lamp'})}</el-button>)
       } else if (Suit.typeHints.isHumidifierSensors(row.device_child_type)) {
         toolboxs.push(<el-button size="tiny" icon="obicon obicon-humidity" title="温湿度" onClick={() => this.handleHumidifier(row)}>温湿度</el-button>)
       }

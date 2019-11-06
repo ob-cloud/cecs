@@ -8,16 +8,16 @@
       <el-tab-pane label="" disabled class="menu-panel">
          <span slot="label" class="menu-panel__label"><i class="el-icon-menu"></i></span>
       </el-tab-pane>
-      <el-tab-pane label="地图" name="map">
+      <el-tab-pane :label="$t('smart.map.title')" name="map">
         <i-map :height="tableHeight"></i-map>
       </el-tab-pane>
-      <el-tab-pane label="房间" name="room">
+      <el-tab-pane :label="$t('smart.room.title')" name="room">
         <room v-if="activeName === 'room'" :height="tableHeight" :roomPreload="roomPreload"></room>
       </el-tab-pane>
-      <el-tab-pane label="楼栋" name="building">
+      <el-tab-pane :label="$t('smart.building.title')" name="building">
         <building v-if="activeName === 'building'" :height="tableHeight" :preload="buildingPreload"></building>
       </el-tab-pane>
-      <el-tab-pane label="楼层" name="floor">
+      <el-tab-pane :label="$t('smart.floor.title')" name="floor">
         <floor v-if="activeName === 'floor'" :height="tableHeight" :preload="floorPreload"></floor>
       </el-tab-pane>
     </el-tabs>
@@ -39,8 +39,8 @@ export default {
       buildingPreload: false,
       floorPreload: false,
       breadcrumb: {
-        prev: '房间管理',
-        current: '地图'
+        prev: this.$t('smart.roommodule'),
+        current: this.$t('smart.map.title')
       }
     }
   },
@@ -64,10 +64,10 @@ export default {
     activeName (val) {
       if (!val) return
       this.breadcrumb.current = {
-        'map': '地图',
-        'room': '房间',
-        'building': '楼栋',
-        'floor': '楼层'
+        'map': this.$t('smart.map.title'),
+        'room': this.$t('smart.room.title'),
+        'building': this.$t('smart.building.title'),
+        'floor': this.$t('smart.floor.title'),
       }[val]
     }
   },

@@ -6,7 +6,7 @@ import zhTWLocale from './locale/zh-TW'
 
 Vue.use(VueI18n)
 
-const locale = 'zh-CN' // default locale
+const locale = 'zh-TW' // default locale
 const formatter = new Formatter({ locale })
 
 export default new VueI18n({

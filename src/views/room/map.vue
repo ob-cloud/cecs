@@ -13,11 +13,11 @@
         :on-error="onUploadFail"
         action="/consumer/image/uploadSchoolMap">
         <el-button size="small" type="primary" icon="el-icon-upload">
-          上传配置图
+          {{$t('message.upload')}}
           <el-tooltip placement="top" effect="dark">
             <div slot="content" class="question">
-              <p>请上传规格为1080x720的图片</p>
-              <p>图片格式仅支持jpg/jpeg/png</p>
+              <p>{{$t('message.image', {IMAGE: 'pixel'})}}</p>
+              <p>{{$t('message.image', {IMAGE: 'type'})}}</p>
             </div>
             <i class="el-icon-question"></i>
           </el-tooltip>
@@ -25,7 +25,7 @@
 
         <!-- <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，图片规格 1080x700 </div> -->
       </el-upload>
-      <el-button size="small" type="primary" icon="el-icon-edit" :disabled="isEditing" @click="handleEdit()">编辑</el-button>
+      <el-button size="small" type="primary" icon="el-icon-edit" :disabled="isEditing" @click="handleEdit()">{{$t('message.edit')}}</el-button>
     </div>
     <div class="map-content">
       <div class="image-wrapper" @mouseenter="onMouseEnter" @mousedown="onMouseDown" @mouseleave="onMouseLeave" @mouseup="onMouseUp">
@@ -33,14 +33,14 @@
         <img :src="graph" alt="">
         <el-tooltip placement="top" effect="light" v-for="(item, index) in points" :key="index">
           <div slot="content">
-            <p style="padding: 5px; font-size: 16px; text-align: center;">{{`${item.buildingName || '-'}栋${item.floorName || '-'}层${item.roomName || '-'}`}}</p>
-            <p style="padding: 5px; color: #333; text-align: center;">{{`开关-${isBuildingActive(item.deviceState) ? '开' : '关'}`}}</p>
+            <p style="padding: 5px; font-size: 16px; text-align: center;">{{`${item.buildingName || '-'}${$t('message.building')}${item.floorName || '-'}${$t('message.floor')}${item.roomName || '-'}`}}</p>
+            <p style="padding: 5px; color: #333; text-align: center;">{{`${$t('message.switchStatus', {SWITCH: 'label'})}-${isBuildingActive(item.deviceState) ? $t('message.switchStatus', {SWITCH: 'oepn'}) : $t('message.switchStatus', {SWITCH: 'close'})}`}}</p>
           </div>
           <div class="point" :style="{left: item.x + 'px', top: item.y + 'px', background: isBuildingActive(item.deviceState) ? '#1fe650' : 'rgb(223, 45, 45)'}" @click="handlePoint(item, index)"></div>
         </el-tooltip>
         <div v-if="isAdd" class="point edit" :style="{left: editPoint.x + 'px', top: editPoint.y + 'px'}"></div>
         <div v-if="isAddFinished && !isSetLocation" class="cascader" :style="{left: (editPoint.x + this.radius) + 'px', top: (editPoint.y + this.radius) + 'px'}">
-          <i class="el-icon el-icon-close" @click="handleCancelAdd" title="取消"></i>
+          <i class="el-icon el-icon-close" @click="handleCancelAdd" :title="$t('message.cancel')"></i>
           <el-cascader
             :options="buildingOptions"
             v-model="selectedOptions"
@@ -53,7 +53,7 @@
     <transition name="slide-fade">
       <div class="sidebar" v-if="dialogVisible" v-loading="sidebarLoading">
         <div class="header">
-          <i class="el-icon el-icon-close" @click="dialogVisible = false" title="关闭"></i>
+          <i class="el-icon el-icon-close" @click="dialogVisible = false" :title="$t('message.close')"></i>
           <div class="title">{{currentDialogTitle}}</div>
         </div>
         <div class="content">
@@ -65,11 +65,11 @@
               </template>
               <template v-else-if="isHumidifier(item.deviceChildType)">
                 <div class="sensors">
-                  <p><i class="obicon obicon-temperature-o"></i><span>温度</span></p>
+                  <p><i class="obicon obicon-temperature-o"></i><span>{{$t('message.device', {DEVICE_TEXT: 'temperature'})}}</span></p>
                   <span>{{parseTemperature(item.deviceState)}}℃</span>
                 </div>
                 <div class="sensors">
-                  <p><i class="obicon obicon-humidity"></i><span>湿度</span></p>
+                  <p><i class="obicon obicon-humidity"></i><span>{{$t('message.device', {DEVICE_TEXT: 'humidifier'})}}</span></p>
                   <span>{{parseHumidifier(item.deviceState)}}%</span>
                 </div>
               </template>
@@ -79,10 +79,10 @@
             </div>
           </div>
           <div class="item">
-            <div class="title">操作</div>
+            <div class="title">{{$t('message.action')}}</div>
             <div class="detail">
               <div class="action">
-                <el-tooltip content="删除房间" placement="bottom" effect="light">
+                <el-tooltip :content="$t('smart.map.message', {MESSAGE: 'delRoom'})" placement="bottom" effect="light">
                   <el-button size="small" type="danger" icon="obicon obicon-trash" @click="handleRemovePoint"></el-button>
                 </el-tooltip>
               </div>
@@ -212,7 +212,7 @@ export default {
     handleChange (value) {
       if (!value || !value.length) return
       const loader = this.$loading({
-        text: '位置设置中...'
+        text: this.$t('smart.map.message', {MESSAGE: 'setLocation'})
       })
       const point = this.points.pop()
       MapAPI.createPoint(value[2], point.x, point.y).then(res => {
@@ -221,7 +221,7 @@ export default {
           this.isSetLocation = true
           this.$message({
             type: 'success',
-            message: '设置成功'
+            message: this.$t('smart.map.message', {MESSAGE: 'setLocSuccess'})
           })
           this.getMapPoints()
         } else if (res.status === 600) {
@@ -229,7 +229,7 @@ export default {
           this.isSetLocation = true
           this.$message({
             type: 'error',
-            message: '该房间已存在'
+            message: this.$t('smart.map.message', {MESSAGE: 'roomExist'})
           })
         }
         this.isEditing = false
@@ -241,20 +241,20 @@ export default {
         this.activePoint = point
         this.activePointIndex = index
         this.dialogVisible = true
-        this.currentDialogTitle = `${point.buildingName || '-'}栋${point.floorName || '-'}层${point.roomName || '-'}`
+        this.currentDialogTitle = `${point.buildingName || '-'}${this.$t('message.building')}${point.floorName || '-'}${this.$t('message.floor')}${point.roomName || '-'}`
         this.getRoomDeviceListByRoomId(point.roomId)
       }
     },
     handleRemovePoint () {
       if (!this.activePointIndex) return
-      this.$confirm('确认删除？', '确认提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
+      this.$confirm(this.$t('smart.map.message', {MESSAGE: 'delLocAction'}), this.$t('message.tips'), {
+        confirmButtonText: this.$t('message.confirm'),
+        cancelButtonText: this.$t('message.cancel'),
         type: 'warning',
         closeOnClickModal: false
       }).then(() => {
         const loader = this.$loading({
-          text: '位置删除中...'
+          text: this.$t('smart.map.message', {MESSAGE: 'delLoc'})
         })
         let point = this.points.splice(this.activePointIndex, 1)
         point = (point && point.length) && point[0]
@@ -264,13 +264,13 @@ export default {
             this.dialogVisible = false
             this.$message({
               type: 'success',
-              message: '删除成功'
+              message: this.$t('message.delete') + this.$t('message.success')
             })
           } else {
             this.points.push(point)
             this.$message({
               type: 'error',
-              message: '删除失败'
+              message: this.$t('message.delete') + this.$t('message.fail')
             })
           }
           loader.close()
@@ -279,11 +279,11 @@ export default {
           this.points.push(point)
           this.$message({
             type: 'error',
-            message: '服务异常'
+            message: this.$t('message.exception')
           })
         })
       }).catch(() => {
-        console.log('取消删除')
+        console.log('cancel')
       })
     },
     handleCancelAdd () {
@@ -334,7 +334,7 @@ export default {
       if (hasCross) {
         this.$message({
           type: 'info',
-          message: '房间重复了'
+          message: this.$t('smart.map.message', {MESSAGE: 'roomExist'})
         })
         this.points.pop()
         return
@@ -358,9 +358,9 @@ export default {
       return TypeHint.isTransponder(deviceType)
     },
     parseTitle (item) {
-      if (this.isKeyPanel(item.deviceChildType)) return '开关'
-      if (this.isHumidifier(item.deviceChildType)) return '温湿度'
-      if (this.isTransponder(item.deviceType)) return '红外转发'
+      if (this.isKeyPanel(item.deviceChildType)) return this.$t('message.device', {DEVICE_TEXT: 'switch'})
+      if (this.isHumidifier(item.deviceChildType)) return this.$t('message.device', {DEVICE_TEXT: 'humitemp'})
+      if (this.isTransponder(item.deviceType)) return this.$t('message.device', {DEVICE_TEXT: 'Infrared'})
     },
     parseTemperature (state) {
       if (!state) return 0
@@ -372,7 +372,7 @@ export default {
     },
     onBeforeUpload (file) {
       this.loader = this.$loading({
-        text: '图片上传中...'
+        text: this.$t('message.uploading')
       })
     },
     onUploadSuccess (response, file, fileList) {
@@ -383,7 +383,7 @@ export default {
       this.loader && this.loader.close()
       this.$message({
         type: 'error',
-        message: '图片上传失败，请重新上传'
+        message: this.$t('message.uploadFail')
       })
     }
   },

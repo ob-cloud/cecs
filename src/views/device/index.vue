@@ -8,13 +8,13 @@
       <el-tab-pane label="" disabled class="menu-panel">
          <span slot="label" class="menu-panel__label"><i class="el-icon-menu"></i></span>
       </el-tab-pane>
-      <el-tab-pane label="OBOX设备" name="obox">
+      <el-tab-pane :label="$t('smart.obox.title')" name="obox">
         <device-obox v-if="activeName === 'obox'" :height="tableHeight"></device-obox>
       </el-tab-pane>
-      <el-tab-pane label="WIFI设备" name="wifi">
+      <el-tab-pane :label="$t('smart.wifi.title')" name="wifi">
         <device-wifi v-if="activeName === 'wifi'" :height="tableHeight"></device-wifi>
       </el-tab-pane>
-      <el-tab-pane label="网关管理" name="gateway">
+      <el-tab-pane :label="$t('smart.gateway.title')" name="gateway">
         <gateway v-if="activeName === 'gateway'" :height="tableHeight"></gateway>
       </el-tab-pane>
     </el-tabs>
@@ -32,8 +32,8 @@ export default {
       activeName: 'obox',
       tableHeight: 0,
       breadcrumb: {
-        prev: '设备管理',
-        current: 'OBOX设备'
+        prev: this.$t('smart.devicemodule'),
+        current: this.$t('smart.obox.title')
       }
     }
   },
@@ -52,9 +52,9 @@ export default {
     activeName (val) {
       if (!val) return
       this.breadcrumb.current = {
-        'obox': 'OBOX设备',
-        'wifi': 'WIFI设备',
-        'gateway': '网关管理'
+        'obox': this.$t('smart.obox.title'),
+        'wifi': this.$t('smart.wifi.title'),
+        'gateway': this.$t('smart.gateway.title')
       }[val]
     }
   },

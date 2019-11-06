@@ -3,33 +3,33 @@
     <div class="search-bar">
       <div class="caption is-right">
         <el-button-group>
-          <el-button type="primary" icon="btn-icon el-icon-refresh" title="刷新" @click="handleRefresh"></el-button>
-          <el-button type="primary" icon="btn-icon el-icon-circle-plus-outline" title="添加" @click="handleCreate"></el-button>
-          <el-button type="primary" icon="btn-icon obicon obicon-switch-btn" title="开关总闸" @click="handleMainSwitch"></el-button>
+          <el-button type="primary" icon="btn-icon el-icon-refresh" :title="$t('message.refresh')" @click="handleRefresh"></el-button>
+          <el-button type="primary" icon="btn-icon el-icon-circle-plus-outline" :title="$t('message.create')" @click="handleCreate"></el-button>
+          <el-button type="primary" icon="btn-icon obicon obicon-switch-btn" :title="$t('message.switchControl')" @click="handleMainSwitch"></el-button>
         </el-button-group>
       </div>
       <div class="caption">
-        <el-input class="caption-item" @keyup.enter.native="handleSearch" v-model="searchModel.buildName" placeholder="请输入楼栋"></el-input>
-        <el-input class="caption-item" @keyup.enter.native="handleSearch" v-model="searchModel.floorName" placeholder="请输入楼层"></el-input>
-        <el-button type="primary" icon="el-icon-search" @click="handleSearch">查询</el-button>
+        <el-input class="caption-item" @keyup.enter.native="handleSearch" v-model="searchModel.buildName" :placeholder="$t('message.placeholder', { PLACEHOLDER: 'build' })"></el-input>
+        <el-input class="caption-item" @keyup.enter.native="handleSearch" v-model="searchModel.floorName" :placeholder="$t('message.placeholder', { PLACEHOLDER: 'floor' })"></el-input>
+        <el-button type="primary" icon="el-icon-search" @click="handleSearch">{{$t('message.search')}}</el-button>
       </div>
     </div>
     <div class="building-list" v-loading.lock="loading" :style="{height: (height - 80) + 'px'}">
       <div class="building-item" v-for="item in layerList" :key="item.id">
         <div class="header">
-          <i class="icon obicon obicon-power" title="电源" @click="handlePower(item)"></i>
-          <i class="icon el-icon-edit" title="编辑" @click="handleEdit(item)"></i>
-          <i class="icon el-icon-delete" title="删除" @click="handleRemove(item)"></i>
+          <i class="icon obicon obicon-power" :title="$t('message.power')" @click="handlePower(item)"></i>
+          <i class="icon el-icon-edit" :title="$t('message.edit')" @click="handleEdit(item)"></i>
+          <i class="icon el-icon-delete" :title="$t('message.delete')" @click="handleRemove(item)"></i>
         </div>
         <div class="content">
           <i class="building-sign obicon obicon-building" :class="{'is-active': item.allType}"></i>
-          <p class="text">{{item.buildingName}}栋{{item.floorName}}层</p>
+          <p class="text">{{item.buildingName}}{{$t('message.building')}}{{item.floorName}}{{$t('message.floor')}}</p>
         </div>
       </div>
       <el-pagination
         class="pagination"
-        prev-text="上一屏"
-        next-text="下一屏"
+        :prev-text="$t('message.prev')"
+        :next-text="$t('message.next')"
         :page-size="searchModel.pageSize"
         :total="total"
         layout="prev, next"
@@ -40,20 +40,20 @@
     <el-dialog  v-if="createDialogVisible" top="10%" width="660px" :title="dialogTitleMap[dialogStatus]" :visible.sync="createDialogVisible" :close-on-click-modal="false">
       <el-form class="ob-form" ref="creation" autoComplete="on" :rules="creationRules" :model="createModel" label-position="left" label-width="80px">
 
-        <el-form-item label="楼栋名称" prop="buildingId">
-          <el-select clearable class="item" placeholder="请选择楼栋" v-model="createModel.buildingId">
+        <el-form-item :label="$t('smart.room.label', { LABEL: 'build' })" prop="buildingId">
+          <el-select clearable class="item" :placeholder="$t('message.placeholder', { TYPE: 'choose', PLACEHOLDER: 'build' })" v-model="createModel.buildingId">
             <el-option :label='item.buildName' :value='item.id' v-for="item in buildingList" :key="item.id"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="楼层名称" prop="floorName">
-          <el-input v-model="createModel.floorName" placeholder="请输入楼层">
-            <template slot="append">层</template>
+        <el-form-item :label="$t('smart.room.label', { LABEL: 'floor' })" prop="floorName">
+          <el-input v-model="createModel.floorName" :placeholder="$t('message.placeholder', { TYPE: 'choose', PLACEHOLDER: 'floor' })">
+            <template slot="append">{{$t('message.floor')}}</template>
           </el-input>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
-        <el-button @click="createDialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="checkCreate(dialogStatus)">确 定</el-button>
+        <el-button @click="createDialogVisible = false">>{{$t('message.cancel')}}</el-button>
+        <el-button type="primary" @click="checkCreate(dialogStatus)">{{$t('message.confirm')}}</el-button>
       </span>
     </el-dialog>
   </div>
@@ -83,8 +83,8 @@ export default {
       createDialogVisible: false,
       dialogStatus: '',
       dialogTitleMap: {
-        edit: '编辑楼层',
-        create: '创建楼层'
+        edit: this.$t('smart.floor.dialogTitle', {TITLE: 'edit'}),
+        create: this.$t('smart.floor.dialogTitle', {TITLE: 'create'})
       },
       searchModel: {
         buildName: '',
@@ -97,8 +97,8 @@ export default {
         buildingId: ''
       },
       creationRules: {
-        floorName: [{ required: true, message: '楼层不可为空', trigger: 'blur' }],
-        buildingId: [{ required: true, message: '楼栋不可为空', trigger: 'blur' }]
+        floorName: [{ required: true, message: this.$t('message.rules', {RULE: 'floor'}), trigger: 'blur' }],
+        buildingId: [{ required: true, message: this.$t('message.rules', {RULE: 'build'}), trigger: 'blur' }]
       }
     }
   },
@@ -169,15 +169,16 @@ export default {
             if (response.status === 0) {
               this.getLayerList()
             } else {
+              const msg = (type === 'create' ? this.$t('message.create') : this.$t('message.edit')) + this.$t('message.fail')
               this.$message({
                 type: 'error',
-                message: (type === 'create' ? '添加' : '编辑') + '失败!'
+                message: msg
               })
             }
           }).catch(() => {
             this.$message({
               type: 'error',
-              message: '操作失败'
+              message: this.$t('message.exception')
             })
           })
           this.createDialogVisible = false
@@ -191,10 +192,10 @@ export default {
       const that = this
       const res = await RoomAPI.getSwitchGlobalType()
       if (res.status !== 0) return
-      const action = res.data ? '关闭' : '打开'
-      this.$confirm(`即将${action}所有楼层开关`, '确认提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
+      const action = res.data ? this.$t('message.status', {STATUS: 'close'}) : this.$t('message.status', {STATUS: 'open'})
+      this.$confirm(`${action}${this.$t('smart.floor.message', {MESSAGE: 'switchConfirm'})}`, this.$t('message.tips'), {
+        confirmButtonText: this.$t('message.confirm'),
+        cancelButtonText: this.$t('message.cancel'),
         type: 'warning',
         closeOnClickModal: false,
         callback (actionText, instance) {
@@ -203,10 +204,10 @@ export default {
       })
     },
     doHandleSwitch (status) {
-      const action = status ? '打开' : '关闭'
+      const action = status ? this.$t('message.status', {STATUS: 'open'}) : this.$t('message.status', {STATUS: 'close'})
       const loading = this.$loading({
         lock: true,
-        text: `正在${action}教室开关...`
+        text: `${action}${this.$t('smart.floor.message', {MESSAGE: 'loading'})}`
       })
       RoomAPI.triggerGlobalSwitch(status ? 1 : 2).then(res => {
         if (res.status === 0) {
@@ -215,16 +216,16 @@ export default {
         } else {
           this.$message({
             type: 'error',
-            message: '开关操作失败!'
+            message: this.$t('smart.floor.message', {STATUS: 'switchFail'})
           })
         }
       })
     },
     handlePower (item) {
-      const action = item.allType ? '关闭' : '打开'
-      this.$confirm(`即将${action}该楼栋所有开关`, '确认提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
+      const action = item.allType ? this.$t('message.status', {STATUS: 'close'}) : this.$t('message.status', {STATUS: 'open'})
+      this.$confirm(`${action}${this.$t('smart.floor.message', {MESSAGE: 'switchConfirm'})}`, this.$t('message.tips'), {
+        confirmButtonText: this.$t('message.confirm'),
+        cancelButtonText: this.$t('message.cancel'),
         type: 'warning',
         closeOnClickModal: false
       }).then(() => {
@@ -234,12 +235,12 @@ export default {
           } else {
             this.$message({
               type: 'error',
-              message: '开关操作失败!'
+              message: this.$t('smart.floor.message', {STATUS: 'switchFail'})
             })
           }
         })
       }).catch(() => {
-        console.log('取消删除')
+        console.log('cancel')
       })
     },
     handleEdit (item) {
@@ -248,9 +249,9 @@ export default {
       this.createModel = {buildingId: item.buildingId, id: item.id, floorName: item.floorName}
     },
     handleRemove (item) {
-      this.$confirm('确认删除楼栋？', '确认提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
+      this.$confirm(this.$t('smart.floor.message', {MESSAGE: 'rmRoomConfirm'}), this.$t('message.tips'), {
+        confirmButtonText: this.$t('message.confirm'),
+        cancelButtonText: this.$t('message.cancel'),
         type: 'warning',
         closeOnClickModal: false
       }).then(() => {
@@ -260,17 +261,17 @@ export default {
           } else {
             this.$message({
               type: 'error',
-              message: '删除失败!'
+              message: this.$t('message.delete') + this.$t('message.fail')
             })
           }
         }).catch(() => {
           this.$message({
             type: 'error',
-            message: '删除失败'
+            message: this.$t('message.exception')
           })
         })
       }).catch(() => {
-        console.log('取消删除')
+        console.log('cancel')
       })
     }
   },

@@ -5,7 +5,7 @@
         <el-button-group>
           <el-button type="primary" icon="btn-icon el-icon-refresh" :title="$t('message.refresh')" @click="handleRefresh"></el-button>
           <el-button type="primary" icon="btn-icon el-icon-circle-plus-outline" :title="$t('message.create')" @click="handleCreate"></el-button>
-          <el-button type="primary" icon="btn-icon obicon obicon-switch-btn" :title="$t('message.switch')" @click="handleMainSwitch"></el-button>
+          <el-button type="primary" icon="btn-icon obicon obicon-switch-btn" :title="$t('message.switchControl')" @click="handleMainSwitch"></el-button>
         </el-button-group>
       </div>
       <div class="caption">
@@ -42,25 +42,25 @@
     </div>
     <el-dialog v-if="createDialogVisible" top="10%" width="660px" :title="dialogTitleMap[dialogStatus]" :visible.sync="createDialogVisible" :close-on-click-modal="false">
       <el-form class="ob-form" ref="creation" autoComplete="on" :rules="creationRules" :model="roomModel" label-position="left" label-width="80px">
-        <el-form-item label="楼栋名称" prop="buildingId">
-          <el-select placeholder="请选择楼栋" v-model="roomModel.buildingId">
-            <el-option v-for="item in buildingList" :key="item.id" :label="item.buildName + '栋'" :value="item.id"></el-option>
+        <el-form-item :label="$t('smart.room.label', { LABEL: 'build' })" prop="buildingId">
+          <el-select :placeholder="$t('message.placeholder', { TYPE: 'choose', PLACEHOLDER: 'build' })" v-model="roomModel.buildingId">
+            <el-option v-for="item in buildingList" :key="item.id" :label="item.buildName + $t('message.building')" :value="item.id"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="楼层名称" prop="floorId">
-          <el-select placeholder="请选择楼层" v-model="roomModel.floorId">
-            <el-option v-for="item in layerList" :key="item.id" :label="item.floorName + '层'" :value="item.id"></el-option>
+        <el-form-item :label="$t('smart.room.label', { LABEL: 'floor' })" prop="floorId">
+          <el-select :placeholder="$t('message.placeholder', { TYPE: 'choose', PLACEHOLDER: 'floor' })" v-model="roomModel.floorId">
+            <el-option v-for="item in layerList" :key="item.id" :label="item.floorName + $t('message.floor')" :value="item.id"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="房间名称" prop="roomName">
-          <el-input v-model="roomModel.roomName" placeholder="请输入房间号">
-            <template slot="append">房</template>
+        <el-form-item :label="$t('smart.room.label', { LABEL: 'room' })" prop="roomName">
+          <el-input v-model="roomModel.roomName" :placeholder="$t('message.placeholder', { PLACEHOLDER: 'floor' })">
+            <template slot="append">{{$t('message.room')}}</template>
           </el-input>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
-        <el-button @click="createDialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="doCreateRoom(dialogStatus)">确 定</el-button>
+        <el-button @click="createDialogVisible = false">{{$t('message.cancel')}}</el-button>
+        <el-button type="primary" @click="doCreateRoom(dialogStatus)">{{$t('message.confirm')}}</el-button>
       </span>
     </el-dialog>
 
@@ -110,19 +110,19 @@ export default {
         floorId: ''
       },
       creationRules: {
-        buildingId: [{ required: true, message: '楼栋不可为空', trigger: 'blur' }],
-        floorId: [{ required: true, message: '楼层名称不可为空', trigger: 'blur' }],
-        roomName: [{ required: true, message: '房间名称不可为空', trigger: 'blur' }]
+        buildingId: [{ required: true, message: this.$t('message.rules', {RULE: 'build'}), trigger: 'blur' }],
+        floorId: [{ required: true, message: this.$t('message.rules', {RULE: 'floor'}), trigger: 'blur' }],
+        roomName: [{ required: true, message: this.$t('message.rules', {RULE: 'room'}), trigger: 'blur' }]
       },
       createDialogVisible: false,
       deviceDialogVisible: false,
       sceneDialogVisible: false,
       dialogStatus: '',
       dialogTitleMap: {
-        device: '房间设备列表',
-        scene: '房间场景列表',
-        edit: '房间编辑',
-        create: '创建房间'
+        device: this.$t('smart.room.dialogTitle', {TITLE: 'device'}),
+        scene: this.$t('smart.room.dialogTitle', {TITLE: 'scene'}),
+        edit: this.$t('smart.room.dialogTitle', {TITLE: 'edit'}),
+        create: this.$t('smart.room.dialogTitle', {TITLE: 'create'})
       },
       // 当前选中房间号
       deviceActiveRoom: '',
@@ -173,14 +173,14 @@ export default {
           this.total = resp.total
         } else {
           this.$message({
-            message: resp.message || '房间获取失败'
+            message: this.$t('smart.room.message', {MESSAGE: 'fail'})
           })
         }
         this.loading = false
       }).catch(err => {
         this.$message({
-          title: '失败',
-          message: err.message || '服务出错',
+          title: this.$t('message.fail'),
+          message: this.$t('smart.room.message', {MESSAGE: 'err'}),
           type: 'error'
         })
         this.loading = false
@@ -224,10 +224,10 @@ export default {
       const that = this
       const res = await RoomAPI.getSwitchGlobalType()
       if (res.status !== 0) return
-      const action = res.data ? '关闭' : '打开'
-      this.$confirm(`即将${action}所有房间开关`, '确认提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
+      const action = res.data ? this.$t('message.status', {STATUS: 'close'}) : this.$t('message.status', {STATUS: 'open'})
+      this.$confirm(`${action}${this.$t('smart.room.message', {MESSAGE: 'switchConfirm'})}`, this.$t('message.tips'), {
+        confirmButtonText: this.$t('message.confirm'),
+        cancelButtonText: this.$t('message.cancel'),
         type: 'warning',
         closeOnClickModal: false,
         callback (actionText, instance) {
@@ -236,10 +236,10 @@ export default {
       })
     },
     doHandleSwitch (status) {
-      const action = status ? '打开' : '关闭'
+      const action = status ? this.$t('message.status', {STATUS: 'open'}) : this.$t('message.status', {STATUS: 'close'})
       const loading = this.$loading({
         lock: true,
-        text: `正在${action}教室开关...`
+        text: `${action}${this.$t('smart.room.message', {MESSAGE: 'loading'})}`
       })
       RoomAPI.triggerGlobalSwitch(status ? 1 : 2).then(res => {
         if (res.status === 0) {
@@ -247,7 +247,7 @@ export default {
         } else {
           this.$message({
             type: 'error',
-            message: '开关操作失败!'
+            message: this.$t('smart.room.message', {STATUS: 'switchFail'})
           })
         }
         loading.close()
@@ -267,9 +267,10 @@ export default {
     },
     handlePower (item) {
       const isActive = this.isLightActive(item.deviceState)
+      const statusText = isActive ? this.$t('message.status', {STATUS: 'close'}) : this.$t('message.status', {STATUS: 'open'})
       const loading = this.$loading({
         lock: true,
-        text: `正在${isActive ? '关闭' : '打开'}教室开关...`
+        text: `${statusText}${this.$t('smart.room.message', {MESSAGE: 'loading'})}...`
       })
       RoomAPI.triggerSwitch({buildingId: item.buildingId, roomId: item.id, floorId: item.floorId, deviceType: isActive ? 2 : 1}).then(res => {
         if (res.status === 0) {
@@ -277,12 +278,12 @@ export default {
           loading.close()
           this.$message({
             type: 'success',
-            message: `${isActive ? '关闭' : '打开'}成功`
+            message: `${statusText}${this.$t('message.success')}`
           })
         } else {
           this.$message({
             type: 'error',
-            message: '开关操作失败!'
+            message: this.$t('smart.room.message', {MESSAGE: 'switchFail'})
           })
         }
       })
@@ -298,15 +299,29 @@ export default {
       }
     },
     handleRemove (row) {
-      this.$confirm('确认删除房间？', '确认提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
+      this.$confirm(this.$t('smart.room.message', {MESSAGE: 'rmRoomConfirm'}), this.$t('message.tips'), {
+        confirmButtonText: this.$t('message.confirm'),
+        cancelButtonText: this.$t('message.cancel'),
         type: 'warning',
         closeOnClickModal: false
       }).then(() => {
-        // this.doDelete(row)
+        RoomAPI.removeRoomV2(row.id).then(res => {
+          if (res.status === 0) {
+            this.getRoomList()
+          } else {
+            this.$message({
+              type: 'error',
+              message: this.$t('message.delete') + this.$t('message.fail')
+            })
+          }
+        }).catch(() => {
+          this.$message({
+            type: 'error',
+            message: this.$t('message.exception')
+          })
+        })
       }).catch(() => {
-        console.log('取消删除')
+        console.log('cancel')
       })
     },
     doCreateRoom (type) {
@@ -317,15 +332,16 @@ export default {
             if (response.status === 0) {
               this.getRoomList()
             } else {
+              const text = (type === 'create' ? this.$t('message.create') : this.$t('message.edit'))
               this.$message({
                 type: 'error',
-                message: (type === 'create' ? '添加' : '编辑') + '失败!'
+                message: text + this.$t('message.fail')
               })
             }
           }).catch(() => {
             this.$message({
               type: 'error',
-              message: '操作失败'
+              message: this.$t('message.actionFail')
             })
           })
           this.createDialogVisible = false
