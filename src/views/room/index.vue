@@ -9,7 +9,7 @@
          <span slot="label" class="menu-panel__label"><i class="el-icon-menu"></i></span>
       </el-tab-pane>
       <el-tab-pane :label="$t('smart.map.title')" name="map">
-        <i-map :height="tableHeight"></i-map>
+        <i-map v-if="activeName === 'map'" :height="tableHeight"></i-map>
       </el-tab-pane>
       <el-tab-pane :label="$t('smart.room.title')" name="room">
         <room v-if="activeName === 'room'" :height="tableHeight" :roomPreload="roomPreload"></room>

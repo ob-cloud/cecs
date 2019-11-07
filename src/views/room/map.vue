@@ -371,6 +371,14 @@ export default {
       return +parseInt(state.slice(6, 8), 16).toString(10)
     },
     onBeforeUpload (file) {
+      const suffix = file.name && file.name.slice(file.name.lastIndexOf('.') + 1)
+      if (!['png', 'jpg', 'jpeg'].includes(suffix)) {
+        this.$message({
+          type: 'error',
+          message: this.$t('message.image', {IMAGE: 'type'})
+        })
+        return false
+      }
       this.loader = this.$loading({
         text: this.$t('message.uploading')
       })

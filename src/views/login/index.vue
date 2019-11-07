@@ -8,7 +8,7 @@
       </div>
       <el-form class="ura-login-body" :model="loginForm" :rules="loginRules" ref="loginForm" label-position="left">
         <el-form-item prop="account">
-          <el-input name="account" type="text" v-model="loginForm.account" :placeholder="$t('system.logintext', {FIELD: 'account'})" />
+          <el-input name="account" type="text" v-model="loginForm.account" @keyup.enter.native="handleLogin" :placeholder="$t('system.logintext', {FIELD: 'account'})" />
         </el-form-item>
         <el-form-item prop="password">
           <el-input
