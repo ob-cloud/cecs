@@ -142,20 +142,30 @@ export default {
         type: 'warning',
         closeOnClickModal: false
       }).then(() => {
-        this.doRemove()
+        this.doRemove(row)
       }).catch(() => {
         console.log('cancel')
       })
     },
-    doRemove () {
-      // const loading = this.$loading({
-      //   lock: true,
-      //   text: 'obox升级中...'
-      // })
-      // setTimeout(() => {
-      //   loading.close()
-      // }, 1500)
-      // console.log('升级操作')
+    doRemove (row) {
+      OboxAPI.deleteObox(row.obox_serial_id).then(res => {
+        if (res.status === 200) {
+          this.$message({
+            type: 'success',
+            message: this.$t('smart.gateway.message', {MESSAGE: 'delDevice'}) + this.$t('message.success')
+          })
+        } else {
+          this.$message({
+            type: 'error',
+            message: this.$t('smart.gateway.message', {MESSAGE: 'delDevice'}) + this.$t('message.fail')
+          })
+        }
+      }).catch(() => {
+        this.$message({
+          type: 'error',
+          message: this.$t('message.exception')
+        })
+      })
     }
   }
 }
