@@ -16,7 +16,7 @@
           <el-input @keyup.enter.native="handleSearch" class="caption-item" :placeholder="$t('smart.obox.search', {FIELD: 'serial'})" v-model="search.obox_serial_id"></el-input>
           <el-select clearable class="caption-item" :placeholder="$t('smart.obox.search', {FIELD: 'devices'})" v-model="search.oboxId">
             <el-option :label="$t('smart.obox.search', {FIELD: 'devices'})" value=''></el-option>
-            <el-option :label="item.obox_name + item.obox_status === 1 ? $t('message.status', {STATUS: 'online'}) : $t('message.status', {STATUS: 'offline'})" :value='item.obox_serial_id' v-for="(item, index) in oboxList" :key="index"></el-option>
+            <el-option :label="item.obox_name + ' (' + (item.obox_status === 1 ? $t('message.status', {STATUS: 'online'}) : $t('message.status', {STATUS: 'offline'})) + ')'" :value='item.obox_serial_id' v-for="(item, index) in oboxList" :key="index"></el-option>
           </el-select>
           <el-input @keyup.enter.native="handleSearch" class="caption-item" :placeholder="$t('smart.obox.search', {FIELD: 'type'})" v-model="search.device_type"></el-input>
           <el-input @keyup.enter.native="handleSearch" class="caption-item" :placeholder="$t('smart.obox.search', {FIELD: 'name'})" v-model="search.name"></el-input>
@@ -210,7 +210,7 @@ export default {
       const loader = this.$loading({
         text: this.$t('smart.obox.message', {MESSAGE: 'loading'})
       })
-      DeviceAPI.removeDevice(row.obox_serial_id, row.name).then(res => {
+      DeviceAPI.removeDevice(row.serialId, row.name).then(res => {
         loader.close()
         this.responseHandler(res, this.$t('smart.obox.message', {MESSAGE: 'delDevice'}))
         if (res.message.includes('success')) {

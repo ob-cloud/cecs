@@ -7,7 +7,15 @@ import {
 } from '../mutation-types'
 
 import { navMenuList } from '@/router/menu'
+import routeMenuList from '@/router/modules/navlist'
 import store from '@/store'
+
+const mixinMenu = () => {
+  navMenuList.forEach(element => {
+    const cur = routeMenuList.find(item => item.path === element.path)
+    if (cur) element.meta = cur.meta
+  })
+}
 
 const menu = {
   state: {
@@ -37,6 +45,7 @@ const menu = {
   actions: {
     generateNavibarMenu ({ commit }) {
       return new Promise(resolve => {
+        mixinMenu()
         commit('SET_MENU_NAV_LIST', navMenuList)
         const path = location.href.slice(location.href.indexOf('#') + 1, location.href.lastIndexOf('?'))
         const defaultMenu = navMenuList.find(item => item.path === path) || navMenuList[0]

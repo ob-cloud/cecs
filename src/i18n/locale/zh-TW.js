@@ -7,7 +7,8 @@ export default {
     resetpwd: '重置密碼',
     logout: '退出登錄',
     login: '登錄',
-    logintext: '{FIELD, select, account{賬戶} pwd{密碼} erraccount{請輸入正確的用戶名} loginfail{登錄失敗} other{}}'
+    logintext: '{FIELD, select, account{賬戶} pwd{密碼} erraccount{請輸入正確的用戶名} loginfail{登錄失敗，賬號或密碼錯誤} other{}}',
+    route: '{FIELD, select, devicemgr{設備管理} scenemgr{場景管理} roommgr{房間管理} usrmgr{用戶管理} logmgr{日誌管理} other{}}'
   },
   message: {
     refresh: '刷新',
@@ -45,7 +46,7 @@ export default {
     status: '{STATUS, select, open{打開} close{關閉} online{在線} offline{離線} on{開} off{關} other{}}',
     switchStatus: '{SWITCH, select, label{開關} open{打開} close{關閉} other{}}',
     image: '{IMAGE, select, pixel{請上傳規格為1080x72的圖片} type{圖片格式僅支持jpg/jpeg/png} other{}}',
-    device: '{DEVICE_TEXT, select, temperature{溫度} humidifier{濕度} switch{開關} humitemp{溫濕度} Infrared{红外转发} other{}}'
+    device: '{DEVICE_TEXT, select, temperature{溫度} humidifier{濕度} switch{開關} humitemp{溫濕度} Infrared{紅外轉發} other{}}'
   },
   smart: {
     roommodule: '房間管理',
@@ -58,7 +59,7 @@ export default {
       device: '房間設備',
       label: '{LABEL, select, build{樓棟} floor{樓層} room{房間} other{}}名稱',
       dialogTitle: '{TITLE, select, device{房間設備列表} scene{房間場景列表} edit{房間編輯} create{創建房間} other{提示框}}',
-      message: '{MESSAGE, select, fail{房间获取失败} err{服务出错} switchConfirm{所有房間開關} loading{教室開關...} switchFail{開關操作失敗} rmRoomConfirm{確認刪除房間？} fetchRoomDev{獲取房間設備} binding{設備綁定中...} unbinding{設備解綁中...} unbindConfirm{確認解綁設備？} other{}}',
+      message: '{MESSAGE, select, fail{房間獲取失敗} err{服務出錯} switchConfirm{所有房間開關} loading{教室開關...} switchFail{開關操作失敗} rmRoomConfirm{確認刪除房間？} fetchRoomDev{獲取房間設備} binding{設備綁定中...} unbinding{設備解綁中...} unbindConfirm{確認解綁設備？} other{}}',
       tableField: '{FIELD, select, option{選項} obxSerial{obox序列號} serial{設備序列號} name{設備名稱} status{設備狀態} type{設備類型} subtype{子設備類型} version{設備版本} action{操作} other{}}',
     },
     building: {
@@ -68,7 +69,7 @@ export default {
     },
     floor: {
       title: '樓層',
-      dialogTitle: '{TITLE, select, edit{編輯樓棟} create{創建樓棟} other{提示框}}',
+      dialogTitle: '{TITLE, select, edit{編輯樓層} create{創建樓層} other{提示框}}',
       message: '{MESSAGE, select, switchConfirm{所有樓層開關} loading{教室開關...} switchFail{開關操作失敗} rmRoomConfirm{確認刪除樓層？} other{}}',
     },
     devicemodule: '設備管理',

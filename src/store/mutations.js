@@ -2,13 +2,17 @@
  * @Author: eamiear
  * @Date: 2019-02-06 18:36:47
  * @Last Modified by: eamiear
- * @Last Modified time: 2019-02-10 17:37:58
+ * @Last Modified time: 2019-11-07 15:34:20
  */
-
-import {UPDATE_DOCUMENT_CLIENT_HEIGHT} from './mutation-types'
+import {cacher} from '@/common/cache'
+import {UPDATE_DOCUMENT_CLIENT_HEIGHT, SET_LANG} from './mutation-types'
 
 export default {
   [UPDATE_DOCUMENT_CLIENT_HEIGHT] (state, height) {
     state.documentClientHeight = height
+  },
+  [SET_LANG] (state, lang) {
+    state.lang = lang
+    cacher.set('language', lang)
   }
 }

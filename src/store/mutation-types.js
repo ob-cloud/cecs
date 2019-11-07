@@ -2,10 +2,11 @@
  * @Author: eamiear
  * @Date: 2019-02-06 18:36:35
  * @Last Modified by: eamiear
- * @Last Modified time: 2019-08-06 18:02:21
+ * @Last Modified time: 2019-11-07 15:09:39
  */
 
 export const UPDATE_DOCUMENT_CLIENT_HEIGHT = 'UPDATE_DOCUMENT_CLIENT_HEIGHT'
+export const SET_LANG = 'SET_LANG'
 
 // menu mutations
 export const SET_MENU_NAV_LIST = 'SET_MENU_NAV_LIST'
