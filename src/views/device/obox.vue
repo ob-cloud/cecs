@@ -30,6 +30,17 @@
     <slide-page :visible.sync="humidifierMap.dialogVisible" :title="$t('smart.obox.slide', {FIELD: 'humidifier'})" @onClose="humidifierSerialId = ''">
       <humifier :serialId="humidifierSerialId" :state="humidifierState"></humifier>
     </slide-page>
+    <el-dialog  v-if="renameDialogVisible" top="10%" width="660px" title="重命名" :visible.sync="renameDialogVisible" :close-on-click-modal="false">
+      <el-form class="ob-form" ref="rename" autoComplete="on" :rules="renameRules" :model="renameModel" label-position="left" label-width="80px">
+        <el-form-item :label="$t('smart.obox.tableField', { FIELD: 'name' })" prop="name">
+          <el-input v-model="renameModel.name" :placeholder="$t('message.placeholder', {TYPE: '', PLACEHOLDER: 'deviceName' })"></el-input>
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="renameDialogVisible = false">{{$t('message.cancel')}}</el-button>
+        <el-button type="primary" @click="handleRename()">{{$t('message.confirm')}}</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -71,7 +82,14 @@ export default {
       switchSerialId: '',
       switchState: '',
       humidifierSerialId: '',
-      humidifierState: ''
+      humidifierState: '',
+      renameDialogVisible: false, // 重命名
+      renameModel: {
+        name: ''
+      },
+      renameRules: {
+        name: [{ required: true, message: this.$t('message.rules', {RULE: 'deviceName'}), trigger: 'blur' }]
+      }
     }
   },
   components: { BaseTable, Humifier, iSwitcher, SlidePage },
@@ -143,12 +161,14 @@ export default {
       // const edit = <el-button size="tiny" icon="el-icon-edit" onClick={() => this.editDevice(row)}></el-button>
       // const setting = <el-button size="tiny" icon="el-icon-setting" onClick={() => this.settingDevice(row)}></el-button>
       // const info = <el-button size="tiny" icon="el-icon-info" onClick={() => this.checkDeviceInfo(row)}></el-button>
+      const rename = <el-button size="tiny" icon="el-icon-edit" title={this.$t('message.rename')} onClick={() => this.handleRenameAction(row)}>{this.$t('message.rename')}</el-button>
       const remove = <el-button size="tiny" icon="el-icon-delete" title={this.$t('message.delete')} onClick={() => this.removeDevice(row)}>{this.$t('message.delete')}</el-button>
       if (Suit.typeHints.isThreeKeySocketSwitch(row.device_child_type)) {
         toolboxs.push(<el-button size="tiny" icon="obicon obicon-power" title={this.$t('smart.obox.placeholder', {FIELD: 'lamp'})} onClick={() => this.handleSwitchPower(row)}>{this.$t('smart.obox.placeholder', {FIELD: 'lamp'})}</el-button>)
       } else if (Suit.typeHints.isHumidifierSensors(row.device_child_type)) {
         toolboxs.push(<el-button size="tiny" icon="obicon obicon-humidity" title={this.$t('smart.obox.placeholder', {FIELD: 'humidifier'})} onClick={() => this.handleHumidifier(row)}>{this.$t('smart.obox.placeholder', {FIELD: 'humidifier'})}</el-button>)
       }
+      toolboxs.push(rename)
       toolboxs.push(remove)
       return toolboxs
     },
@@ -219,6 +239,25 @@ export default {
       }).catch(() => {
         loader.close()
         this.responseHandler({message: 'error'}, this.$t('smart.obox.message', {MESSAGE: 'delDevice'}))
+      })
+    },
+    handleRenameAction (row) {
+      this.renameDialogVisible = true
+      this.renameModel = {...row}
+    },
+    handleRename () {
+      this.$refs.rename.validate(valid => {
+        if (valid) {
+          DeviceAPI.modifyDeviceName(this.renameModel.serialId, this.renameModel.name).then(res => {
+            this.responseHandler(res, this.$t('message.rename'))
+            if (res.message.includes('success')) {
+              this.getDeviceList()
+            }
+          }).catch(() => {
+            this.responseHandler({message: 'error'}, this.$t('message.rename'))
+          })
+          this.renameDialogVisible = false
+        }
       })
     },
     responseHandler (res, msg) {
