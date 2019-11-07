@@ -11,6 +11,12 @@
       @current-change="onSelectionChange"
       @on-current-page-change="onCurrentChange"
       @on-page-size-change="onSizeChange">
+      <slot>
+        <template slot="caption">
+          <el-input @keyup.enter.native="handleSearch" class="caption-item" :placeholder="$t('smart.room.tableField', {FIELD: 'obxSerial'})" v-model="search.oboxSerialId"></el-input>
+          <el-button type="primary" icon="el-icon-search" @click="handleSearch">{{$t('message.search')}}</el-button>
+        </template>
+      </slot>
     </base-table>
   </div>
 </template>
@@ -29,6 +35,7 @@ export default {
       tableHeight: 500,
       total: 0,
       search: {
+        oboxSerialId: '',
         pageNo: PAGINATION_PAGENO,
         pageSize: PAGINATION_PAGESIZE
       },
@@ -48,8 +55,9 @@ export default {
   },
   methods: {
     getColumns () {
+      const that = this
       return [{
-        label: '选项',
+        label: this.$t('smart.room.tableField', {FIELD: 'option'}),
         align: 'center',
         renderBody (h) {
           return (
@@ -57,34 +65,37 @@ export default {
           )
         }
       }, {
-        label: '设备序列号',
+        label: this.$t('smart.room.tableField', {FIELD: 'obxSerial'}),
+        prop: 'obox_serial_id',
+        align: 'center'
+      }, {
+        label: this.$t('smart.room.tableField', {FIELD: 'serial'}),
         prop: 'serialId',
         align: 'center'
       }, {
-        label: '设备名称',
+        label: this.$t('smart.room.tableField', {FIELD: 'name'}),
         prop: 'name',
         align: 'center'
       }, {
-        label: '设备状态',
+        label: this.$t('smart.room.tableField', {FIELD: 'status'}),
         prop: 'state',
         align: 'center',
         formatter (status, row) {
-          // if(Suit.typeHints.isThreeKeySocketSwitch(row.deviceChildType)) {
-          //   return status === '0' ? '关' : '开'
-          // } else {
-          //   return '-'
-          // }
-          return status && Suit.getStatusDescriptor(status, row.device_type, row.device_child_type)
+          if (Suit.typeHints.isThreeKeySocketSwitch(row.deviceChildType)) {
+            return status === '0' ? that.$t('message.status', {STATUS: 'off'}) : that.$t('message.status', {STATUS: 'on'})
+          }
+          return '-'
+          // return status && Suit.getStatusDescriptor(status, row.device_type, row.device_child_type)
         }
       }, {
-        label: '设备类型',
+        label: this.$t('smart.room.tableField', {FIELD: 'type'}),
         prop: 'device_type',
         align: 'center',
         formatter (val) {
           return val && Suit.getRootDeviceDescriptor(val)
         }
       }, {
-        label: '子设备类型',
+        label: this.$t('smart.room.tableField', {FIELD: 'subtype'}),
         prop: 'device_child_type',
         align: 'center',
         formatter (val, row) {
@@ -100,14 +111,14 @@ export default {
           this.total = resp.total
         } else {
           this.$message({
-            message: resp.message || '设备获取失败'
+            message: this.$t('smart.obox.message', {MESSAGE: 'fetchFail'}),
           })
         }
         this.tableLoading = false
       }).catch(err => {
         this.$message({
-          title: '失败',
-          message: err.message || '设备获取失败',
+          title: this.$t('message.fail'),
+          message: this.$t('message.exception'),
           type: 'error'
         })
         this.tableLoading = false
@@ -123,6 +134,9 @@ export default {
     },
     onSelectionChange (selections) {
       this.$emit('selection', selections)
+    },
+    handleSearch () {
+      this.getDeviceList()
     }
   }
 }

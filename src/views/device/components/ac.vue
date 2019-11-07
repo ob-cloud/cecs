@@ -7,35 +7,35 @@
         </p>
         <p>{{item.name}}</p>
       </div>
-      <p class="tips" v-if="!transponderList.length">无数据</p>
+      <p class="tips" v-if="!transponderList.length">{{$t('smart.obox.ac', {FIELD: ''})}}</p>
     </div>
     <div class="controller" v-if="isValidAc()" v-loading="controlPanelLoading">
       <div class="panel">
         <div class="templure">
           <p>{{airCondition.isPowerOn ? airAction.templure : '--'}}<span>℃</span></p>
-          <p>温度</p>
+          <p>{{$t('smart.obox.ac', {FIELD: 'temperature'})}}</p>
         </div>
         <div class="control-style">
-          <div class="mode">{{airCondition.isPowerOn ? speedFilter(airAction.speed) : '--'}} 风速</div>
-          <div class="fans">{{airCondition.isPowerOn ? modeFilter(airAction.mode) : '--'}} 模式</div>
+          <div class="mode">{{airCondition.isPowerOn ? speedFilter(airAction.speed) : '--'}} {{$t('smart.obox.ac', {FIELD: 'speed'})}}</div>
+          <div class="fans">{{airCondition.isPowerOn ? modeFilter(airAction.mode) : '--'}} {{$t('smart.obox.ac', {FIELD: 'mode'})}}</div>
         </div>
         <div class="btn-controller">
           <div class="btn" :class="{inactive: !isFanSpeedEnable()}">
             <i class="obicon obicon-wing-o" @click="keyHandler(1)"></i>
-            <p>风扇</p>
+            <p>{{$t('smart.obox.ac', {FIELD: 'fans'})}}</p>
           </div>
           <div class="btn" :class="{on: airCondition.isPowerOn, off: !airCondition.isPowerOn}">
             <i class="obicon obicon-power" @click="keyHandler(0)"></i>
-            <p>开关</p>
+            <p>{{$t('smart.obox.ac', {FIELD: 'switch'})}}</p>
           </div>
           <div class="btn" :class="{inactive: !airCondition.isPowerOn}">
             <i class="obicon obicon-mode-o" @click="keyHandler(2)"></i>
-            <p>模式</p>
+            <p>{{$t('smart.obox.ac', {FIELD: 'mode'})}}</p>
           </div>
         </div>
         <div class="btn-controller templure" :class="{inactive: !isTemplureEnable()}">
           <i class="obicon obicon-minus" @click="keyHandler(3, -1)"></i>
-          <p>温度</p>
+          <p>{{$t('smart.obox.ac', {FIELD: 'temperature'})}}</p>
           <i class="obicon obicon-plus" @click="keyHandler(3, 1)"></i>
         </div>
       </div>
@@ -84,10 +84,10 @@ export default {
       return this.transponderList.length && TypeHint.isAcDevice(this.currentDevice.deviceType)
     },
     speedFilter (val) {
-      return {0: '自动', 1: '弱风', 2: '中风', 3: '强风'}[val] || '自动'
+      return {0: this.$t('smart.obox.ac', {FIELD: 'auto'}), 1: this.$t('smart.obox.ac', {FIELD: 'weak'}), 2: this.$t('smart.obox.ac', {FIELD: 'medium'}), 3: this.$t('smart.obox.ac', {FIELD: 'strong'})}[val] || this.$t('smart.obox.ac', {FIELD: 'auto'})
     },
     modeFilter (val) {
-      return {0: '自动', 1: '制冷', 2: '抽湿', 3: '送风', 4: '制热'}[val] || '制冷'
+      return {0: this.$t('smart.obox.ac', {FIELD: 'auto'}), 1: this.$t('smart.obox.ac', {FIELD: 'cold'}), 2: this.$t('smart.obox.ac', {FIELD: 'dehum'}), 3: this.$t('smart.obox.ac', {FIELD: 'supply'}), 4: this.$t('smart.obox.ac', {FIELD: 'hot'})}[val] || this.$t('smart.obox.ac', {FIELD: 'cold'})
     },
     isTemplureEnable () {
       return this.airCondition.isPowerOn && (this.airAction.mode === 4 || this.airAction.mode === 1)
@@ -109,7 +109,7 @@ export default {
           if (res.message.includes('success')) {
             this.$message({
               type: 'success',
-              message: '电源开关' + (this.airCondition.isPowerOn ? '已开' : '已关')
+              message: this.$t('smart.obox.message', {MESSAGE: 'powerswitch'}) + (this.airCondition.isPowerOn ? this.$t('message.status', {STATUS: 'on'}) : this.$t('message.status', {STATUS: 'off'}))
             })
           }
           this.controlPanelLoading = false
@@ -137,7 +137,7 @@ export default {
         if (res.message.includes('success')) {
           this.$message({
             type: 'success',
-            message: '操作指令已发送成功'
+            message: this.$t('smart.obox.message', {MESSAGE: 'direct'})
           })
         }
         this.controlPanelLoading = false

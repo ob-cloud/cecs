@@ -2,16 +2,16 @@
   <div class="expand humidifier">
     <div class="humidifier-status">
       <div class="item">
-        <p><i class="obicon obicon-temperature-o"></i><span>温度</span></p>
+        <p><i class="obicon obicon-temperature-o"></i><span>{{$t('smart.obox.tableField', {FIELD: 'temperature'})}}</span></p>
         <span>{{temperature}}℃</span>
       </div>
       <div class="item">
-        <p><i class="obicon obicon-humidity"></i><span>湿度</span></p>
+        <p><i class="obicon obicon-humidity"></i><span>{{$t('smart.obox.tableField', {FIELD: 'humidifier'})}}</span></p>
         <span>{{humidifier}}%</span>
       </div>
     </div>
     <el-tabs tab-position="right" class="humidifier-table">
-      <el-tab-pane label="历史数据">
+      <el-tab-pane :label="$t('smart.obox.message', {MESSAGE: 'history'})">
         <base-table
           v-loading="tableLoading"
           stripe
@@ -20,7 +20,7 @@
           :columns="columns"
           :showPagination="false"></base-table>
       </el-tab-pane>
-      <el-tab-pane label="今日数据" style="max-height: 400px; min-height: 360px;">
+      <el-tab-pane :label="$t('smart.obox.message', {MESSAGE: 'nowadays'})" style="max-height: 400px; min-height: 360px;">
         <HumifierChart v-if="isCharListValid" :data="series" :xAxis="labels" style="margin: 0 auto;"></HumifierChart>
       </el-tab-pane>
     </el-tabs>
@@ -48,7 +48,7 @@ export default {
       tableLoading: true,
       tableHeight: 320,
       tableData: [],
-      columns: [{label: '温度', prop: 'temperature', align: 'center' }, {label: '湿度', prop: 'humidifier', align: 'center' }, {label: '时间', prop: 'time', align: 'center' }],
+      columns: [{label: this.$t('smart.obox.tableField', {FIELD: 'temperature'}), prop: 'temperature', align: 'center' }, {label: this.$t('smart.obox.tableField', {FIELD: 'humidifier'}), prop: 'humidifier', align: 'center' }, {label: this.$t('smart.obox.tableField', {FIELD: 'humidifier'}), prop: 'time', align: 'center' }],
       isCharListValid: false,
       series: [],
       labels: [],
@@ -114,12 +114,12 @@ export default {
         const temperature = chartList.map(item => item.temperature)
         const humidifier = chartList.map(item => item.humidifier)
         this.series.push({
-          name: '温度',
+          name: this.$t('smart.obox.tableField', {FIELD: 'temperature'}),
           type: 'line',
           data: temperature
         })
         this.series.push({
-          name: '湿度',
+          name: this.$t('smart.obox.tableField', {FIELD: 'humidifier'}),
           type: 'bar',
           data: humidifier
         })

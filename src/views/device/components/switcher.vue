@@ -77,19 +77,19 @@ export default {
         if (res.message.includes('success')) {
           this.$message({
             type: 'success',
-            message: '设置成功'
+            message: this.$t('smart.obox.message', {MESSAGE: 'setSuccess'})
           })
           this.$emit('switcher-change', this.serialId, status)
         } else {
           this.$message({
             type: 'error',
-            message: '设置失败'
+            message: this.$t('smart.obox.message', {MESSAGE: 'setFail'})
           })
         }
       }).catch(() => {
         this.$message({
           type: 'error',
-          message: '服务异常'
+          message: this.$t('message.exception')
         })
       })
     }

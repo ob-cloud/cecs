@@ -13,11 +13,11 @@
 
       <slot>
         <template slot="actionBar">
-          <el-button type="primary" icon="obicon obicon-bangding" @click="handleCreate">绑定</el-button>
+          <el-button type="primary" icon="obicon obicon-bangding" @click="handleCreate">{{$t('message.bind')}}</el-button>
         </template>
       </slot>
     </base-table>
-    <el-dialog v-if="deviceDialogVisible" id="holder" top="10%" width="860px" title="绑定设备" :visible.sync="deviceDialogVisible" :close-on-click-modal="false" append-to-body>
+    <el-dialog v-if="deviceDialogVisible" id="holder" top="10%" width="860px" :title="$t('message.binddev')" :visible.sync="deviceDialogVisible" :close-on-click-modal="false" append-to-body>
       <device-binding @selection="onSelection"></device-binding>
     </el-dialog>
   </div>
@@ -67,23 +67,24 @@ export default {
   },
   methods: {
     getColumns () {
+      const that = this
       return [{
-        label: '设备序列号',
+        label: this.$t('smart.room.tableField', {FIELD: 'serial'}),
         prop: 'deviceSerialId',
         align: 'center'
       }, {
-        label: '设备名称',
+        label: this.$t('smart.room.tableField', {FIELD: 'name'}),
         prop: 'deviceName',
         align: 'center'
       }, {
-        label: '设备类型',
+        label: this.$t('smart.room.tableField', {FIELD: 'type'}),
         prop: 'deviceType',
         align: 'center',
         formatter (val) {
           return Suit.getRootDeviceDescriptor(val)
         }
       }, {
-        label: '子设备类型',
+        label: this.$t('smart.room.tableField', {FIELD: 'subtype'}),
         prop: 'deviceChildType',
         align: 'center',
         formatter (val, row) {
@@ -93,18 +94,18 @@ export default {
           return '-'
         }
       }, {
-        label: '设备状态',
+        label: this.$t('smart.room.tableField', {FIELD: 'status'}),
         prop: 'deviceStatus',
         align: 'center',
         formatter (status, row) {
           // return Suit.getStatusDescriptor(status, row.deviceType, row.deviceChildType)
           if (Suit.typeHints.isThreeKeySocketSwitch(row.deviceChildType)) {
-            return status === '0' ? '关' : '开'
+            return status === '0' ? that.$t('message.status', {STATUS: 'off'}) : that.$t('message.status', {STATUS: 'on'})
           }
           return '-'
         }
       }, {
-        label: '操作',
+        label: this.$t('smart.room.tableField', {FIELD: 'action'}),
         align: 'center',
         renderBody: this.getToolboxRender
       }]
@@ -112,7 +113,7 @@ export default {
     getToolboxRender (h, row) {
       return [
         // <el-button size="tiny" icon="el-icon-edit" title="编辑" onClick={() => this.handleEdit(row)}></el-button>,
-        <el-button size="tiny" icon="obicon obicon-unbind" title="设备解绑" onClick={() => this.handleRemove(row)}></el-button>
+        <el-button size="tiny" icon="obicon obicon-unbind" title={this.$t('message.unbinddev')} onClick={() => this.handleRemove(row)}></el-button>
       ]
     },
     getRoomDeviceList () {
@@ -123,14 +124,14 @@ export default {
           this.tableData = resp.data.records
         } else {
           this.$message({
-            message: resp.message || '房间设备获取失败'
+            message: this.$t('smart.room.message', {MESSAGE: 'fetchRoomDev'})
           })
         }
         this.tableLoading = false
       }).catch(err => {
         this.$message({
-          title: '失败',
-          message: err.message || '服务出错',
+          title: this.$t('message.fail'),
+          message: this.$t('message.exception'),
           type: 'error'
         })
         this.tableLoading = false
@@ -146,18 +147,18 @@ export default {
     },
     onSelection (selection) {
       const loader = this.$loading({
-        text: '设备绑定中...'
+        text: this.$t('smart.room.message', {MESSAGE: 'binding'})
       })
       this.deviceDialogVisible = false
       RoomAPI.bindDeviceToRoomV2(this.room, selection.id, selection.serialId).then(res => {
         loader.close()
-        this.responseHandler(res, '设备绑定')
+        this.responseHandler(res, this.$t('message.binddev'))
         if (res.message.includes('success')) {
           this.getRoomDeviceList()
         }
       }).catch(() => {
         loader.close()
-        this.responseHandler({message: 'error'}, '设备绑定')
+        this.responseHandler({message: 'error'}, this.$t('message.binddev'))
       })
       // const params = {
       //   serialId: selection.obox_serial_id,
@@ -179,41 +180,41 @@ export default {
       this.deviceDialogVisible = true
     },
     handleEdit (row) {
-      console.log('房间编辑 ', row)
+      // console.log('房间编辑 ', row)
     },
     handleRemove (row) {
-      this.$confirm('确认解绑设备？', '确认提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
+      this.$confirm(this.$t('smart.room.message', {MESSAGE: 'unbindConfirm'}), this.$t('message.tips'), {
+        confirmButtonText: this.$t('message.confirm'),
+        cancelButtonText: this.$t('message.cancel'),
         type: 'warning',
         closeOnClickModal: false
       }).then(() => {
         this.doRemove(row)
       }).catch(() => {
-        console.log('取消删除')
+        console.log('cancel')
       })
     },
     doRemove (row) {
       const loader = this.$loading({
-        text: '设备解绑中...'
+        text: this.$t('smart.room.message', {MESSAGE: 'unbinding'})
       })
       RoomAPI.unbindRoomDevice(this.room, row.deviceId, row.deviceSerialId).then(res => {
         loader.close()
-        this.responseHandler(res, '设备解绑')
+        this.responseHandler(res, this.$t('message.unbinddev'))
         if (res.message.includes('success')) {
           this.getRoomDeviceList()
         }
       }).catch(() => {
         loader.close()
-        this.responseHandler({message: 'error'}, '设备解绑')
+        this.responseHandler({message: 'error'}, this.$t('message.unbinddev'))
       })
     },
     responseHandler (res, msg) {
-      let message = `${msg}失败`
+      let message = `${msg}${this.$t('message.fail')}`
       let type = 'error'
       if (res.message.includes('success')) {
         type = 'success'
-        message = `${msg}成功`
+        message = `${msg}${this.$t('message.success')}`
       }
       this.$message({
         type,

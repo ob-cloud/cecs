@@ -27,6 +27,10 @@ export default {
     uploadFail: '圖片上傳失敗，請重新上傳',
     search: '查詢',
     power: '電源',
+    bind: '綁定',
+    unbind: '解綁',
+    binddev: '綁定設備',
+    unbinddev: '解綁設備',
     switchControl: '開關總閘',
     prev: '上一屏',
     next: '下一屏',
@@ -54,7 +58,8 @@ export default {
       device: '房間設備',
       label: '{LABEL, select, build{樓棟} floor{樓層} room{房間} other{}}名稱',
       dialogTitle: '{TITLE, select, device{房間設備列表} scene{房間場景列表} edit{房間編輯} create{創建房間} other{提示框}}',
-      message: '{MESSAGE, select, fail{房间获取失败} err{服务出错} switchConfirm{所有房間開關} loading{教室開關...} switchFail{開關操作失敗} rmRoomConfirm{確認刪除房間？} other{}}',
+      message: '{MESSAGE, select, fail{房间获取失败} err{服务出错} switchConfirm{所有房間開關} loading{教室開關...} switchFail{開關操作失敗} rmRoomConfirm{確認刪除房間？} fetchRoomDev{獲取房間設備} binding{設備綁定中...} unbinding{設備解綁中...} unbindConfirm{確認解綁設備？} other{}}',
+      tableField: '{FIELD, select, option{選項} obxSerial{obox序列號} serial{設備序列號} name{設備名稱} status{設備狀態} type{設備類型} subtype{子設備類型} version{設備版本} action{操作} other{}}',
     },
     building: {
       title: '樓棟',
@@ -70,10 +75,11 @@ export default {
     obox: {
       title: 'OBOX設備',
       search: '{FIELD, select, serial{設備序列號} devices{所有設備} type{設備類型} name{設備名稱} other{}}',
-      tableField: '{FIELD, select, serial{設備序列號} name{設備名稱} status{設備狀態} type{設備類型} subtype{子設備類型} version{設備版本} action{操作} other{}}',
+      tableField: '{FIELD, select, temperature{溫度} humidifier{濕度} date{時間} serial{設備序列號} name{設備名稱} status{設備狀態} type{設備類型} subtype{子設備類型} version{設備版本} action{操作} other{}}',
       slide: '{FIELD, select, panel{三鍵開關控制面板} humidifier{溫濕度} other{}}',
       placeholder: '{FIELD, select, lamp{燈開關} humidifier{溫濕度} other{}}',
-      message: '{MESSAGE, select, fetchFail{設備獲取失敗} loading{設備刪除中...} delConfirm{確認刪除設備？} delDevice{設備刪除} other{}}',
+      message: '{MESSAGE, select, powerswitch{電源開關已} direct{操作指令發送成功} fetchFail{設備獲取失敗} loading{設備刪除中...} delConfirm{確認刪除設備？} delDevice{設備刪除} setSuccess{設置成功} setFail{設置失敗} history{歷史數據} nowadays{今日數據} other{}}',
+      ac: '{FIELD, select, temperature{溫度} humidifier{濕度} auto{自動} speed{風速} fans{風扇} weak{弱風} medium{中風} strong{強風} cold{製冷} hot{制熱} dehum{抽濕} supply{送風} mode{模式} switch{開關} type{設備類型} subtype{子設備類型} version{設備版本} action{操作} other{无数据}}'
     },
     wifi: {
       title: 'WIFI設備',
