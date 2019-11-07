@@ -21,7 +21,7 @@
             :end-placeholder="$t('smart.exportrecords.search', {FIELD: 'end'})"
             align="right">
           </el-date-picker>
-          <el-button type="primary" icon="obicon obicon-cloud-download" @click="handleExport">{{$t('meesage.exports')}}</el-button>
+          <el-button type="primary" icon="obicon obicon-cloud-download" @click="handleExport">{{$t('message.exports')}}</el-button>
         </template>
       </slot>
     </base-table>
