@@ -48,7 +48,7 @@ export default {
       tableLoading: true,
       tableHeight: 320,
       tableData: [],
-      columns: [{label: this.$t('smart.obox.tableField', {FIELD: 'temperature'}), prop: 'temperature', align: 'center' }, {label: this.$t('smart.obox.tableField', {FIELD: 'humidifier'}), prop: 'humidifier', align: 'center' }, {label: this.$t('smart.obox.tableField', {FIELD: 'humidifier'}), prop: 'time', align: 'center' }],
+      columns: [{label: this.$t('smart.obox.tableField', {FIELD: 'temperature'}), prop: 'temperature', align: 'center' }, {label: this.$t('smart.obox.tableField', {FIELD: 'humidifier'}), prop: 'humidifier', align: 'center' }, {label: this.$t('smart.obox.tableField', {FIELD: 'date'}), prop: 'time', align: 'center' }],
       isCharListValid: false,
       series: [],
       labels: [],
