@@ -43,7 +43,7 @@
     <el-dialog v-if="createDialogVisible" top="10%" width="660px" :title="dialogTitleMap[dialogStatus]" :visible.sync="createDialogVisible" :close-on-click-modal="false">
       <el-form class="ob-form" ref="creation" autoComplete="on" :rules="creationRules" :model="roomModel" label-position="left" label-width="80px">
         <el-form-item :label="$t('smart.room.label', { LABEL: 'build' })" prop="buildingId">
-          <el-select :placeholder="$t('message.placeholder', { TYPE: 'choose', PLACEHOLDER: 'build' })" v-model="roomModel.buildingId">
+          <el-select :placeholder="$t('message.placeholder', { TYPE: 'choose', PLACEHOLDER: 'build' })" v-model="roomModel.buildingId" @change="onSelectChange">
             <el-option v-for="item in buildingList" :key="item.id" :label="item.buildName + $t('message.building')" :value="item.id"></el-option>
           </el-select>
         </el-form-item>
@@ -142,7 +142,10 @@ export default {
       }
     },
     'roomModel.buildingId' (val) {
-      val && this.getLayerList(val)
+      if (val) {
+        // this.roomModel.floorId = ''
+        this.getLayerList(val)
+      }
     }
   },
   methods: {
@@ -211,6 +214,12 @@ export default {
     onSizeChange (pageSize) {
       this.searchModel.pageSize = pageSize
       this.getRoomList()
+    },
+    onSelectChange (val) {
+      console.log('select ', val)
+      if (val) {
+        this.roomModel.floorId = ''
+      }
     },
     handleCreate () {
       this.dialogStatus = 'create'

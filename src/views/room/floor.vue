@@ -52,7 +52,7 @@
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
-        <el-button @click="createDialogVisible = false">>{{$t('message.cancel')}}</el-button>
+        <el-button @click="createDialogVisible = false">{{$t('message.cancel')}}</el-button>
         <el-button type="primary" @click="checkCreate(dialogStatus)">{{$t('message.confirm')}}</el-button>
       </span>
     </el-dialog>
