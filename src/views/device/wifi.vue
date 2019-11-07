@@ -30,6 +30,17 @@
     <slide-page :visible.sync="dialogVisible" :title="$t('smart.wifi.slide', {FIELD: 'panel'})" @onClose="acSerialId = ''">
       <ac-control :serialId="acSerialId"></ac-control>
     </slide-page>
+    <!-- <el-dialog  v-if="renameDialogVisible" top="10%" width="660px" title="重命名" :visible.sync="renameDialogVisible" :close-on-click-modal="false">
+      <el-form class="ob-form" ref="rename" autoComplete="on" :rules="renameRules" :model="renameModel" label-position="left" label-width="80px">
+        <el-form-item :label="$t('smart.obox.tableField', { FIELD: 'name' })" prop="name">
+          <el-input v-model="renameModel.name" :placeholder="$t('message.placeholder', {TYPE: '', PLACEHOLDER: 'deviceName' })"></el-input>
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="renameDialogVisible = false">{{$t('message.cancel')}}</el-button>
+        <el-button type="primary" @click="handleRename()">{{$t('message.confirm')}}</el-button>
+      </span>
+    </el-dialog> -->
   </div>
 </template>
 
@@ -66,7 +77,14 @@ export default {
       oboxList: [],
       dialogVisible: false,
       activeRecord: {},
-      acSerialId: ''
+      acSerialId: '',
+      // renameDialogVisible: false, // 重命名
+      // renameModel: {
+      //   name: ''
+      // },
+      // renameRules: {
+      //   name: [{ required: true, message: this.$t('message.rules', {RULE: 'deviceName'}), trigger: 'blur' }]
+      // }
     }
   },
   components: { BaseTable, SlidePage, AcControl },
@@ -119,10 +137,12 @@ export default {
     },
     getToolboxRender (h, row) {
       const toolbox = []
+      // const rename = <el-button size="tiny" icon="el-icon-edit" title={this.$t('message.rename')} onClick={() => this.handleRenameAction(row)}></el-button>
       const remove = <el-button size="tiny" icon="el-icon-delete" title={this.$t('message.delete')} onClick={() => this.removeDevice(row)}></el-button>
       if (TypeHint.isTransponder(row.type)) {
         toolbox.push(<el-button size="tiny" icon="obicon obicon-infrared" title={this.$t('smart.wifi.placeholder', {FIELD: 'infrated'})} onClick={() => this.handleAcControl(row)}></el-button>)
       }
+      // toolbox.push(rename)
       toolbox.push(remove)
       return toolbox
     },
@@ -194,6 +214,25 @@ export default {
       }).catch(() => {
         loader.close()
         this.responseHandler({message: 'error'}, this.$t('smart.obox.message', {MESSAGE: 'delDevice'}))
+      })
+    },
+    handleRenameAction (row) {
+      this.renameDialogVisible = true
+      this.renameModel = {...row}
+    },
+    handleRename () {
+      this.$refs.rename.validate(valid => {
+        if (valid) {
+          DeviceAPI.modifyDeviceName(this.renameModel.serialId, this.renameModel.name).then(res => {
+            this.responseHandler(res, this.$t('message.rename'))
+            if (res.message.includes('success')) {
+              this.getDeviceList()
+            }
+          }).catch(() => {
+            this.responseHandler({message: 'error'}, this.$t('message.rename'))
+          })
+          this.renameDialogVisible = false
+        }
       })
     },
     responseHandler (res, msg) {
