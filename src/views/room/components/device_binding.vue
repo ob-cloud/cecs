@@ -81,8 +81,8 @@ export default {
         prop: 'state',
         align: 'center',
         formatter (status, row) {
-          if (Suit.typeHints.isThreeKeySocketSwitch(row.deviceChildType)) {
-            return status === '0' ? that.$t('message.status', {STATUS: 'off'}) : that.$t('message.status', {STATUS: 'on'})
+          if (Suit.typeHints.isThreeKeySocketSwitch(row.device_child_type)) {
+            return (status && status.slice(0, 2) === '00') ? that.$t('message.status', {STATUS: 'off'}) : that.$t('message.status', {STATUS: 'on'})
           }
           return '-'
           // return status && Suit.getStatusDescriptor(status, row.device_type, row.device_child_type)
