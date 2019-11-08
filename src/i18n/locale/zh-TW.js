@@ -117,10 +117,10 @@ export default {
     },
     role: {
       title: '角色管理',
-      search: '{FIELD, select, name{輸入用戶名} status{全部狀態} other{}}',
+      search: '{FIELD, select, name{輸入角色名} status{全部狀態} other{}}',
       form: '{FIELD, select, label{角色名稱} name{請輸入角色名稱} auth{角色權限} other{}}',
       action: '{FIELD, select, create{創建角色} edit{編輯角色} enable{啟動} disable{停用} other{}}',
-      tableField: '{FIELD, select, serial{序號} name{用戶名} status{狀態} action{操作} other{}}',
+      tableField: '{FIELD, select, serial{序號} name{角色名} status{狀態} action{操作} other{}}',
       message: '{MESSAGE, select, fetchFail{角色獲取失敗} loading{角色刪除中...} statusUpdate{狀態更新成功} delConfirm{確認刪除角色？} delDevice{角色刪除} other{}}',
     },
     logmodule: '日誌管理',
