@@ -2,7 +2,7 @@
  * @Author: eamiear
  * @Date: 2019-02-19 10:38:33
  * @Last Modified by: eamiear
- * @Last Modified time: 2019-11-04 10:51:41
+ * @Last Modified time: 2019-11-08 10:06:07
  */
 
 const _toString = Object.prototype.toString
@@ -146,6 +146,12 @@ export const Helper = {
       })
       return building
     })
+  },
+  isMobile (s) {
+    return /^1[0-9]{10}$/.test(s)
+  },
+  isValidUser (s) { // 字母数字_
+    return /^\D.?[a-zA-Z\d_]{5,}/.test(s)
   }
 }
 

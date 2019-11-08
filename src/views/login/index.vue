@@ -81,6 +81,7 @@
 
 <script>
 import LanguageSelect from '@/components/LanguageSelect'
+import Helper from '@/common/helper'
 export default {
   name: 'login',
   data () {
@@ -88,6 +89,8 @@ export default {
     const validateAccount = (rule, value, callback) => {
       if (!value) {
         callback(new Error(that.$t('system.logintext', {FIELD: 'erraccount'})))
+      } else if (!Helper.isMobile(value)) {
+        callback(new Error(that.$t('system.logintext', {FIELD: 'invalidMobile'})))
       } else {
         callback()
       }

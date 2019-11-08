@@ -1,8 +1,8 @@
 <template>
   <div class="scene-create">
     <el-form ref="sceneForm" :rules="sceneModelRules" :model="sceneModel" label-width="100px">
-      <el-form-item label="场景名称" prop="scene_name">
-        <el-input class="caption-item w8" placeholder="场景名称" v-model="sceneModel.scene_name"></el-input>
+      <el-form-item :label="$t('smart.scene.tableField', {FIELD: 'name'})" prop="scene_name">
+        <el-input class="caption-item w8" :placeholder="$t('smart.scene.create', {FIELD: 'inputNameTip'})" v-model="sceneModel.scene_name"></el-input>
       </el-form-item>
       <!-- <el-form-item label="消息推送" prop="msg_alter">
         <el-radio-group v-model="sceneModel.msg_alter">
@@ -22,10 +22,10 @@
           </el-option>
         </el-select>
       </el-form-item> -->
-      <el-form-item label="设备条件" class="box-card">
+      <el-form-item :label="$t('smart.scene.create', {FIELD: 'deviceCon'})" class="box-card">
         <el-tabs class="condition w8" v-model="conditionsTab" type="border-card">
-          <el-tab-pane label="条件1" name="c1" class="panel">
-            <span slot="label">条件1<span class="or">OR</span></span>
+          <el-tab-pane :label="$t('smart.scene.create', {FIELD: 'cons1'})" name="c1" class="panel">
+            <span slot="label">{{$t('smart.scene.create', {FIELD: 'cons1'})}}<span class="or">OR</span></span>
             <div class="condition-item clearfix" v-for="(condition, index) in conditionMapList['c1']" :key="index">
               <i class="obicon obicon-node fl"></i>
               <i class="el-icon-close fr" @click="removeCondition(index)"></i>
@@ -37,8 +37,8 @@
             <el-button class="add-btn" size="mini" type="plain" icon="el-icon-plus" @click="addCondition"></el-button>
           </el-tab-pane>
 
-          <el-tab-pane label="条件2" name="c2" class="panel">
-            <span slot="label">条件2<span class="or">OR</span></span>
+          <el-tab-pane :label="$t('smart.scene.create', {FIELD: 'cons2'})" name="c2" class="panel">
+            <span slot="label">{{$t('smart.scene.create', {FIELD: 'cons2'})}}<span class="or">OR</span></span>
             <div class="condition-item clearfix" v-for="(condition, index) in conditionMapList['c2']" :key="index">
               <i class="obicon obicon-node fl"></i>
               <i class="el-icon-close fr" @click="removeCondition(index)"></i>
@@ -49,7 +49,7 @@
             </div>
             <el-button class="add-btn" size="mini" type="plain" icon="el-icon-plus" @click="addCondition"></el-button>
           </el-tab-pane>
-          <el-tab-pane label="条件3" name="c3" class="panel">
+          <el-tab-pane :label="$t('smart.scene.create', {FIELD: 'cons3'})" name="c3" class="panel">
             <div class="condition-item clearfix" v-for="(condition, index) in conditionMapList['c3']" :key="index">
               <i class="obicon obicon-node fl"></i>
               <i class="el-icon-close fr" @click="removeCondition(index)"></i>
@@ -67,23 +67,23 @@
           <div class="condition-item clearfix" v-for="(deviceAction, index) in deviceActionModel" :key="index">
             <i class="el-icon-close fr" @click="handleRemoveAction(index)"></i>
             <div class="action-item">
-              <el-tooltip content="行为执行时间(单位秒)" placement="top">
+              <el-tooltip :content="$t('smart.scene.create', {FIELD: 'actionTips'})" placement="top">
                 <el-input-number v-model="deviceAction.action_time" controls-position="right" :min="0"></el-input-number>
               </el-tooltip>
-              <el-select placeholder="请选择栋" v-model="deviceAction.buildingId" filterable @change="onSelectChange(deviceAction.buildingId, index, 0)">
+              <el-select :placeholder="$t('message.placeholder', {TYPE: 'choose', PLACEHOLDER: 'build'})" v-model="deviceAction.buildingId" filterable @change="onSelectChange(deviceAction.buildingId, index, 0)">
                 <el-option v-for="(item, index) in deviceAction.buildingList" :key="item.buildingName + index + item.buildingId" :label="item.buildingName" :value="item.buildingId"></el-option>
               </el-select>
-              <el-select placeholder="请选择层" v-model="deviceAction.floorId" filterable @change="onSelectChange(deviceAction.floorId, index, 1)">
+              <el-select :placeholder="$t('message.placeholder', {TYPE: 'choose', PLACEHOLDER: 'floor'})" v-model="deviceAction.floorId" filterable @change="onSelectChange(deviceAction.floorId, index, 1)">
                 <el-option v-for="(item, index) in deviceAction.floorList" :key="item.floorName + index + item.floorId" :label="item.floorName" :value="item.floorId"></el-option>
               </el-select>
-              <el-select placeholder="请选择房间" v-model="deviceAction.roomId" filterable @change="onSelectChange(deviceAction.roomId, index, 2)">
+              <el-select :placeholder="$t('message.placeholder', {TYPE: 'choose', PLACEHOLDER: 'room'})" v-model="deviceAction.roomId" filterable @change="onSelectChange(deviceAction.roomId, index, 2)">
                 <el-option v-for="(item, index) in deviceAction.roomList" :key="item.roomName + index + item.roomId" :label="item.roomName" :value="item.roomId"></el-option>
               </el-select>
-              <el-select placeholder="请选择设备类型" v-model="deviceAction.serialId" @change="onSelectDevice(deviceAction.serialId, index)">
+              <el-select :placeholder="$t('message.placeholder', {TYPE: 'choose', PLACEHOLDER: 'deviceType'})" v-model="deviceAction.serialId" @change="onSelectDevice(deviceAction.serialId, index)">
                 <el-option v-for="item in deviceAction.deviceTypeList" :key="item.deviceSerialId" :label="item.deviceType | deviceTypeFilter(item.deviceChildType)" :value="item.deviceSerialId"></el-option>
               </el-select>
               <div v-if="deviceAction.serialId" class="action-item__behavior" @click="settingAction(deviceAction.serialId, index)" :title="deviceAction.actionDescriptor">
-                <p>{{deviceAction.actionDescriptor || '配置设备动作'}}</p>
+                <p>{{deviceAction.actionDescriptor || $t('smart.scene.create', {FIELD: 'devAction'})}}</p>
               </div>
             </div>
           </div>
@@ -92,16 +92,16 @@
       </el-form-item>
     </el-form>
     <!-- 条件类型弹窗 -->
-    <el-dialog v-if="conDialogVisible" width="950px" top="10%" title="条件类型" :visible.sync="conDialogVisible" :close-on-click-modal="false" append-to-body>
+    <el-dialog v-if="conDialogVisible" width="950px" top="10%" :title="$t('smart.scene.create', {FIELD: 'conType'})" :visible.sync="conDialogVisible" :close-on-click-modal="false" append-to-body>
       <scene-condition :isLcal="true" :deviceList="deviceList" @condition-change="onConditionChange"></scene-condition>
     </el-dialog>
     <!-- action -->
-    <el-dialog v-if="actionDialogVisible" :width="activeDevice.device_type === '51' ? '80%' : '600px'" title="设备行为配置" :visible.sync="actionDialogVisible" :close-on-click-modal="false" append-to-body>
+    <el-dialog v-if="actionDialogVisible" :width="activeDevice.device_type === '51' ? '80%' : '600px'" :title="$t('smart.scene.create', {FIELD: 'devAction'})" :visible.sync="actionDialogVisible" :close-on-click-modal="false" append-to-body>
       <scene-action :actionObject="activeDevice" @action-change="onActionChange"></scene-action>
     </el-dialog>
     <div class="footer">
-      <el-button @click="close">取 消</el-button>
-      <el-button type="primary" @click="handleSelectedCondition">确 认</el-button>
+      <el-button @click="close">{{$t('message.cancel')}}</el-button>
+      <el-button type="primary" @click="handleSelectedCondition">{{$t('message.confirm')}}</el-button>
     </div>
   </div>
 </template>
@@ -178,7 +178,7 @@ export default {
         'c3': []
       },
       sceneModelRules: {
-        scene_name: [{ required: true, trigger: 'blur', message: '场景名称不能为空'}],
+        scene_name: [{ required: true, trigger: 'blur', message: this.$t('smart.scene.create', {FIELD: 'empty'})}],
         msg_alter: [{ required: true, trigger: 'blur', message: '消息推送不能为空'}],
         // deviceIdList: [{ required: true, trigger: 'blur', validator: validateAction}]
       },
@@ -257,8 +257,7 @@ export default {
       console.log(condition)
       if (this.conditionMapList[this.conditionsTab].length >= 3) {
         this.$message({
-          title: '提示',
-          message: '一组最多三个条件',
+          message: this.$t('smart.scene.create', {FIELD: 'conTip'}),
           type: 'info'
         })
         return
@@ -360,10 +359,10 @@ export default {
       let str = ''
       console.log('---- ', condition)
       if (condition.model.type === '1') {
-        str = `定时 ${condition.model.date ? condition.model.date : condition.model.week || ''} ${condition.model.time || ''}`
+        str = `${this.$t('smart.scene.condition', {FIELD: 'timing'})} ${condition.model.date ? condition.model.date : condition.model.week || ''} ${condition.model.time || ''}`
       } else if (condition.model.type === '2') {
         const type = Suit.getDeviceTypeDescriptor(condition.selected.device_type, condition.selected.device_child_type)
-        str = `联动 ${type} ${condition.model.action}`
+        str = `${this.$t('smart.scene.condition', {FIELD: 'chain'})} ${type} ${condition.model.action}`
       }
       return str
     },

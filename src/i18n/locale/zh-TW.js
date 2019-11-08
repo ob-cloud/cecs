@@ -7,7 +7,7 @@ export default {
     resetpwd: '重置密碼',
     logout: '退出登錄',
     login: '登錄',
-    logintext: '{FIELD, select, account{賬戶} pwd{密碼} erraccount{請輸入正確的用戶名} loginfail{登錄失敗，賬號或密碼錯誤} other{}}',
+    logintext: '{FIELD, select, account{賬戶} pwd{密碼} erraccount{請輸入正確的用戶名} invalidMobile{手機號碼有誤} loginfail{登錄失敗，賬號或密碼錯誤} other{}}',
     route: '{FIELD, select, devicemgr{設備管理} scenemgr{場景管理} roommgr{房間管理} usrmgr{用戶管理} logmgr{日誌管理} other{}}'
   },
   message: {
@@ -39,10 +39,11 @@ export default {
     building: '棟',
     floor: '層',
     room: '房',
+    none: '無',
     action: '操作',
     actionFail: '操作失敗',
     actionSuccess: '操作成功',
-    placeholder: '請{TYPE, select, input{輸入} choose{選擇} other{輸入}}{PLACEHOLDER, select, build{樓棟} floor{樓層} room{房間} deviceName{設備名稱} other{}}',
+    placeholder: '請{TYPE, select, input{輸入} choose{選擇} other{輸入}}{PLACEHOLDER, select, build{樓棟} floor{樓層} room{房間} deviceName{設備名稱} deviceType{設備類型} other{}}',
     rules: '{RULE, select, build{樓棟} floor{樓層} room{房間} user{用戶名} phone{手機號} pwd{密碼} role{角色} roleName{角色名稱} deviceName{設備名稱} other{}} 不能為空',
     status: '{STATUS, select, open{打開} close{關閉} online{在線} offline{離線} on{開} off{關} other{}}',
     switchStatus: '{SWITCH, select, label{開關} open{打開} close{關閉} other{}}',
@@ -102,6 +103,8 @@ export default {
       action: '{FIELD, select, create{創建場景} excute{執行場景} edit{編輯場景} delete{刪除} other{}}',
       tableField: '{FIELD, select, name{場景名稱} build{樓棟} floor{樓層} room{房間} status{場景狀態} action{操作} other{}}',
       message: '{MESSAGE, select, fetchFail{場景獲取失敗} loading{場景刪除中...} delConfirm{確認刪除場景？} delDevice{場景刪除} update{場景狀態更新} excute{場景執行} other{}}',
+      create: '{FIELD, select, inputNameTip{輸入場景名稱(英文字母數字_組合)} empty{場景名稱不能為空} invalid{名称应满足长度为6的英文字母数字_组合} deviceCon{设备条件} cons1{条件1} cons2{条件2} cons3{条件3} behavior{设备行为} actionTips{行为执行时间(单位秒)} devAction{配置设备动作} setDevAct{设备行为配置} conType{条件类型} conTip{一组最多三个条件} other{}}',
+      condition: '{FIELD, select, timing{定时} timeCon{定时条件} date{日期} selDate{选择日期} selTime{选择时间} week{星期} chain{联动} chainCon{联动条件} selConTip{请正确选择条件} other{}}',
     },
     usermodule: '用戶管理',
     account: {

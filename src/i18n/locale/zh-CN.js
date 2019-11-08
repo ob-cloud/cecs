@@ -7,7 +7,7 @@ export default {
     resetpwd: '重置密码',
     logout: '退出登录',
     login: '登录',
-    logintext: '{FIELD, select, account{账户} pwd{密码} erraccount{请输入正确的用户名} loginfail{登录失败，账号或密码错误} other{}}',
+    logintext: '{FIELD, select, account{账户} pwd{密码} erraccount{请输入正确的用户名} invalidMobile{手机号码有误} loginfail{登录失败，账号或密码错误} other{}}',
     route: '{FIELD, select, devicemgr{设备管理} scenemgr{场景管理} roommgr{房间管理} usrmgr{用户管理} logmgr{日记管理} other{}}'
   },
   message: {
@@ -39,10 +39,11 @@ export default {
     building: '栋',
     floor: '层',
     room: '房',
+    none: '无',
     action: '操作',
     actionFail: '操作失败',
     actionSuccess: '操作成功',
-    placeholder: '请{TYPE, select, input{输入} choose{选择} other{输入}}{PLACEHOLDER, select, build{楼栋} floor{楼层} room{房间} deviceName{设备名称} other{}}',
+    placeholder: '请{TYPE, select, input{输入} choose{选择} other{输入}}{PLACEHOLDER, select, build{楼栋} floor{楼层} room{房间} deviceName{设备名称} deviceType{设备类型} other{}}',
     rules: '{RULE, select, build{楼栋} floor{楼层} room{房间} user{用户名} phone{手机号} pwd{密码} role{角色} roleName{角色名称} deviceName{设备名称} other{}} 不能为空',
     status: '{STATUS, select, open{打开} close{关闭} online{在线} offline{离线} on{开} off{关} other{}}',
     switchStatus: '{SWITCH, select, label{开关} open{打开} close{关闭} other{}}',
@@ -102,6 +103,8 @@ export default {
       action: '{FIELD, select, create{创建场景} excute{执行场景} edit{编辑场景} delete{刪除} other{}}',
       tableField: '{FIELD, select, name{场景名称} build{楼栋} floor{楼层} room{房间} status{场景状态} action{操作} other{}}',
       message: '{MESSAGE, select, fetchFail{场景获取失败} loading{场景删除中...} delConfirm{确认删除场景？} delDevice{场景删除} update{场景状态更新} excute{场景执行} other{}}',
+      create: '{FIELD, select, inputNameTip{输入场景名称(英文字母数字_组合)} empty{场景名称不能为空} invalid{名称应满足长度为6的英文字母数字_组合} deviceCon{设备条件} cons1{条件1} cons2{条件2} cons3{条件3} behavior{设备行为} actionTips{行为执行时间(单位秒)} devAction{配置设备动作} setDevAct{设备行为配置} conType{条件类型} conTip{一组最多三个条件} other{}}',
+      condition: '{FIELD, select, timing{定时} timeCon{定时条件} date{日期} selDate{选择日期} selTime{选择时间} week{星期} chain{联动} chainCon{联动条件} selConTip{请正确选择条件} other{}}',
     },
     usermodule: '用户管理',
     account: {

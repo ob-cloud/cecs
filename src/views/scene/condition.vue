@@ -1,25 +1,25 @@
 <template>
   <div>
     <el-tabs v-model="conditionType" class="condition-type" type="border-card" @tab-click="onConditionTabClick">
-      <el-tab-pane label="定时条件" name="1">
+      <el-tab-pane :label="$t('smart.scene.condition', {FIELD: 'timeCon'})" name="1">
           <el-tabs tab-position="left" class="timing h200" v-model="conditionTimeType">
-            <el-tab-pane label="日期" name="1">
+            <el-tab-pane :label="$t('smart.scene.condition', {FIELD: 'date'})" name="1">
               <el-date-picker
                 class="picker"
                 v-model="conditionModel.date"
                 type="date"
                 value-format="yyyy-MM-dd"
-                placeholder="选择日期">
+                :placeholder="$t('smart.scene.condition', {FIELD: 'selDate'})">
               </el-date-picker>
               <el-time-picker
                 class="picker"
                 v-model="conditionModel.time"
                 format="HH:mm"
                 value-format="HH:mm"
-                placeholder="选择时间">
+                :placeholder="$t('smart.scene.condition', {FIELD: 'selTime'})">
               </el-time-picker>
             </el-tab-pane>
-            <el-tab-pane label="星期" name="2">
+            <el-tab-pane :label="$t('smart.scene.condition', {FIELD: 'week'})" name="2">
               <div class="weeks">
                 <el-radio-group v-model="conditionModel.week">
                   <el-radio-button type="plain" v-for="(week, index) in weeks" :key="index" :label="week.label"></el-radio-button>
@@ -29,18 +29,18 @@
                   v-model="conditionModel.time"
                   format="HH:mm"
                   value-format="HH:mm"
-                  placeholder="选择时间">
+                  :placeholder="$t('smart.scene.condition', {FIELD: 'selTime'})">
                 </el-time-picker>
               </div>
             </el-tab-pane>
           </el-tabs>
       </el-tab-pane>
-      <el-tab-pane label="联动条件" name="2" class="left h200 chain-list">
+      <el-tab-pane :label="$t('smart.scene.condition', {FIELD: 'chainCon'})" name="2" class="left h200 chain-list">
         <div class="chain-device" :class="{active: item.serialId === chainActiveDevice.serialId}" v-for="(item, index) in chainDeviceList" :key="index" @click="onChainDeviceClick(item)">
           <p>{{item.name}}</p>
           <p>{{item.serialId}}</p>
           <p>{{item.device_type | deviceTypeDescriptFilter(item.device_child_type)}}</p>
-          <p style="text-align: right;">{{item.online ? '在线' : '离线'}}</p>
+          <p style="text-align: right;">{{item.online ? $t('message.status', {STATUS: 'online'}) : $t('message.status', {STATUS: 'offline'})}}</p>
         </div>
         <div class="chain-device-actions">
           <div class="chain-action__item" v-if="isSocket()">
@@ -78,17 +78,17 @@
           <div class="chain-action__item" v-else-if="isHumidifier()">
             <div class="title">
               <el-radio-group v-model="templureAction">
-                <el-radio-button type="plain" label="0">温度</el-radio-button>
-                <el-radio-button type="plain" label="1">湿度</el-radio-button>
+                <el-radio-button type="plain" label="0">{{$t('smart.obox.tableField', {FIELD: 'temperature'})}}</el-radio-button>
+                <el-radio-button type="plain" label="1">{{$t('smart.obox.tableField', {FIELD: 'humidifier'})}}</el-radio-button>
               </el-radio-group>
               <div class="humidifier-text">
                 <div>
-                  <span>温度</span>
-                  {{conditionModel.symbolT && conditionModel.symbolT !== '无' ? `${conditionModel.symbolT} ${conditionModel.templure}℃` : '无'}}
+                  <span>{{$t('smart.obox.tableField', {FIELD: 'temperature'})}}</span>
+                  {{conditionModel.symbolT && conditionModel.symbolT !== $t('message.none') ? `${conditionModel.symbolT} ${conditionModel.templure}℃` : $t('message.none')}}
                 </div>
                 <div>
-                  <span>湿度</span>
-                  {{conditionModel.symbolH && conditionModel.symbolH !== '无' ? `${conditionModel.symbolH} ${conditionModel.humidifier}%` : '无'}}
+                  <span>{{$t('smart.obox.tableField', {FIELD: 'humidifier'})}}</span>
+                  {{conditionModel.symbolH && conditionModel.symbolH !== $t('message.none') ? `${conditionModel.symbolH} ${conditionModel.humidifier}%` : $t('message.none')}}
                 </div>
               </div>
             </div>
@@ -100,10 +100,10 @@
                 <el-radio v-model="conditionModel.symbolH" :label="key" border v-for="(item, key) in templureCondition" :key="item">{{key}}</el-radio>
               </template>
             </div>
-            <div class="content" v-if="templureAction === '0' && conditionModel.symbolT && conditionModel.symbolT !== '无'">
+            <div class="content" v-if="templureAction === '0' && conditionModel.symbolT && conditionModel.symbolT !== $t('message.none')">
               <el-radio class="templure-value" v-model="conditionModel.templure" :label="item" border v-for="(item, index) in templureValue" :key="index">{{item}}</el-radio>
             </div>
-            <div class="content" v-if="templureAction === '1' && conditionModel.symbolH && conditionModel.symbolH !== '无'">
+            <div class="content" v-if="templureAction === '1' && conditionModel.symbolH && conditionModel.symbolH !== $t('message.none')">
               <el-radio class="templure-value" v-model="conditionModel.humidifier" :label="item" border v-for="(item, index) in humidifierValue" :key="index">{{item}}</el-radio>
             </div>
           </div>
@@ -111,7 +111,7 @@
       </el-tab-pane>
     </el-tabs>
     <div class="footer">
-      <el-button type="primary" @click="handleSelectedCondition">确 认</el-button>
+      <el-button type="primary" @click="handleSelectedCondition">{{$t('message.confirm')}}</el-button>
     </div>
   </div>
 </template>
