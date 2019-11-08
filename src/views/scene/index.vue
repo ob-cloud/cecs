@@ -206,7 +206,7 @@ export default {
     execute (row) {
       const loader = this.$loading({
         lock: true,
-        text: this.$t('smart.scene.message', {MESSAGE: 'loading'})
+        text: this.$t('smart.scene.message', {MESSAGE: 'excuting'})
       })
       SceneAPI.executeScene(row.scene_number).then(res => {
         loader.close()

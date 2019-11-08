@@ -80,7 +80,7 @@ export default {
       search: '{FIELD, select, serial{設備序列號} devices{所有設備} type{設備類型} name{設備名稱} other{}}',
       tableField: '{FIELD, select, temperature{溫度} humidifier{濕度} date{時間} serial{設備序列號} name{設備名稱} status{設備狀態} type{設備類型} subtype{子設備類型} version{設備版本} action{操作} other{}}',
       slide: '{FIELD, select, panel{三鍵開關控制面板} humidifier{溫濕度} other{}}',
-      placeholder: '{FIELD, select, lamp{燈開關} humidifier{溫濕度} other{}}',
+      placeholder: '{FIELD, select, lamp{開關} humidifier{溫濕度} other{}}',
       message: '{MESSAGE, select, powerswitch{電源開關已} direct{操作指令發送成功} fetchFail{設備獲取失敗} loading{設備刪除中...} delConfirm{確認刪除設備？} delDevice{設備刪除} setSuccess{設置成功} setFail{設置失敗} history{歷史數據} nowadays{今日數據} other{}}',
       ac: '{FIELD, select, temperature{溫度} humidifier{濕度} auto{自動} speed{風速} fans{風扇} weak{弱風} medium{中風} strong{強風} cold{製冷} hot{制熱} dehum{抽濕} supply{送風} mode{模式} switch{開關} type{設備類型} subtype{子設備類型} version{設備版本} action{操作} other{无数据}}'
     },
@@ -102,7 +102,7 @@ export default {
       search: '{FIELD, select, build{全部樓棟} floor{全部樓層} room{全部房間} name{場景名稱} other{}}',
       action: '{FIELD, select, create{創建場景} excute{執行場景} edit{編輯場景} delete{刪除} other{}}',
       tableField: '{FIELD, select, name{場景名稱} build{樓棟} floor{樓層} room{房間} status{場景狀態} action{操作} other{}}',
-      message: '{MESSAGE, select, fetchFail{場景獲取失敗} loading{場景刪除中...} delConfirm{確認刪除場景？} delDevice{場景刪除} update{場景狀態更新} excute{場景執行} other{}}',
+      message: '{MESSAGE, select, fetchFail{場景獲取失敗} loading{場景刪除中...} delConfirm{確認刪除場景？} delDevice{場景刪除} update{場景狀態更新} excute{場景執行} excuting{場景執行中...} other{}}',
       create: '{FIELD, select, inputNameTip{輸入場景名稱(英文字母數字_組合)} empty{場景名稱不能為空} invalid{名称应满足长度为6的英文字母数字_组合} deviceCon{设备条件} cons1{条件1} cons2{条件2} cons3{条件3} behavior{设备行为} actionTips{行为执行时间(单位秒)} devAction{配置设备动作} setDevAct{设备行为配置} conType{条件类型} conTip{一组最多三个条件} other{}}',
       condition: '{FIELD, select, timing{定时} timeCon{定时条件} date{日期} selDate{选择日期} selTime{选择时间} week{星期} chain{联动} chainCon{联动条件} selConTip{请正确选择条件} other{}}',
     },

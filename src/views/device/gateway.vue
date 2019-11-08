@@ -149,7 +149,7 @@ export default {
     },
     doRemove (row) {
       OboxAPI.deleteObox(row.obox_serial_id).then(res => {
-        if (res.status === 200) {
+        if (res.message.includes('success')) {
           this.$message({
             type: 'success',
             message: this.$t('smart.gateway.message', {MESSAGE: 'delDevice'}) + this.$t('message.success')
