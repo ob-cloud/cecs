@@ -460,7 +460,7 @@ export default {
       span{
         display: inline-block;
         padding: 5px;
-        color: #fff;
+        color: #999;
         font-size: 12px;
       }
     }

@@ -810,6 +810,9 @@ body.dark{
     .map-toolbar{
       border-bottom: 1px solid $medium-dark;
     }
+    .status-label span{
+      color: $medium-white;
+    }
     .map-content .image-wrapper{
       background-color: $stripe-dark;
     }
