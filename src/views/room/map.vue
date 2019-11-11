@@ -246,7 +246,7 @@ export default {
       }
     },
     handleRemovePoint () {
-      if (!this.activePointIndex) return
+      if (this.activePointIndex === '') return
       this.$confirm(this.$t('smart.map.message', {MESSAGE: 'delLocAction'}), this.$t('message.tips'), {
         confirmButtonText: this.$t('message.confirm'),
         cancelButtonText: this.$t('message.cancel'),
@@ -273,6 +273,7 @@ export default {
               message: this.$t('message.delete') + this.$t('message.fail')
             })
           }
+          this.activePointIndex = ''
           loader.close()
         }).catch(() => {
           loader.close()

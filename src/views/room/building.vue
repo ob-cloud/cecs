@@ -190,7 +190,7 @@ export default {
       const res = await RoomAPI.getSwitchGlobalType()
       if (res.status !== 0) return
       const action = res.data ? this.$t('message.status', {STATUS: 'close'}) : this.$t('message.status', {STATUS: 'open'})
-      this.$confirm(`${action}${this.$t('smart.building.message', {MESSAGE: 'switchConfirm'})}`, this.$t('message.tips'), {
+      this.$confirm(`${action}${this.$t('smart.building.message', {MESSAGE: 'switchGlobConfirm'})}`, this.$t('message.tips'), {
         confirmButtonText: this.$t('message.confirm'),
         cancelButtonText: this.$t('message.cancel'),
         type: 'warning',

@@ -67,12 +67,12 @@ export default {
     building: {
       title: '樓棟',
       dialogTitle: '{TITLE, select, edit{編輯樓棟} create{創建樓棟} other{提示框}}',
-      message: '{MESSAGE, select, switchConfirm{所有樓棟開關} loading{教室開關...} switchFail{開關操作失敗} rmRoomConfirm{確認刪除樓棟？} other{}}',
+      message: '{MESSAGE, select, switchConfirm{樓棟開關} switchGlobConfirm{所有樓棟開關} loading{教室開關...} switchFail{開關操作失敗} rmRoomConfirm{確認刪除樓棟？} other{}}',
     },
     floor: {
       title: '樓層',
       dialogTitle: '{TITLE, select, edit{編輯樓層} create{創建樓層} other{提示框}}',
-      message: '{MESSAGE, select, switchConfirm{所有樓層開關} loading{教室開關...} switchFail{開關操作失敗} rmRoomConfirm{確認刪除樓層？} other{}}',
+      message: '{MESSAGE, select, switchConfirm{樓層開關} switchGlobConfirm{所有樓棟開關} loading{教室開關...} switchFail{開關操作失敗} rmRoomConfirm{確認刪除樓層？} other{}}',
     },
     devicemodule: '設備管理',
     obox: {
