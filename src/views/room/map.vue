@@ -1,7 +1,21 @@
 <template>
   <div class="map-wrapper ui-container" :style="{height: height + 'px'}">
-    <div class="map-toolbar">
-      <el-button size="small" type="primary" icon="el-icon-refresh" :disabled="isEditing" @click="handleRefresh()">刷新</el-button>
+    <div class="map-toolbar clearfix">
+      <div class="status-label">
+        <div class="label">
+          <div class="point-status on"></div>
+          <span>{{$t('message.switchStatus', {SWITCH: 'on'})}}</span>
+        </div>
+        <div class="label">
+          <div class="point-status off"></div>
+          <span>{{$t('message.switchStatus', {SWITCH: 'off'})}}</span>
+        </div>
+        <div class="label">
+          <div class="point-status"></div>
+          <span>{{$t('message.switchStatus', {SWITCH: 'noDev'})}}</span>
+        </div>
+      </div>
+      <el-button size="small" type="primary" icon="el-icon-refresh" :disabled="isEditing" @click="handleRefresh()">{{$t('message.refresh')}}</el-button>
       <el-upload
         class="upload-btn"
         :disabled="isEditing"
@@ -34,9 +48,9 @@
         <el-tooltip placement="top" effect="light" v-for="(item, index) in points" :key="index">
           <div slot="content">
             <p style="padding: 5px; font-size: 16px; text-align: center;">{{`${item.buildingName || '-'}${$t('message.building')}${item.floorName || '-'}${$t('message.floor')}${item.roomName || '-'}`}}</p>
-            <p style="padding: 5px; color: #333; text-align: center;">{{`${$t('message.switchStatus', {SWITCH: 'label'})}-${isBuildingActive(item.deviceState) ? $t('message.switchStatus', {SWITCH: 'oepn'}) : $t('message.switchStatus', {SWITCH: 'close'})}`}}</p>
+            <p style="padding: 5px; color: #333; text-align: center;">{{`${$t('message.switchStatus', {SWITCH: 'label'})}-${parseBuildingLabel(item.deviceState)}`}}</p>
           </div>
-          <div class="point" :style="{left: item.x + 'px', top: item.y + 'px', background: isBuildingActive(item.deviceState) ? '#1fe650' : 'rgb(223, 45, 45)'}" @click="handlePoint(item, index)"></div>
+          <div class="point" :style="{left: item.x + 'px', top: item.y + 'px', background: parseBuildingBackground(item.deviceState)}" @click="handlePoint(item, index)"></div>
         </el-tooltip>
         <div v-if="isAdd" class="point edit" :style="{left: editPoint.x + 'px', top: editPoint.y + 'px'}"></div>
         <div v-if="isAddFinished && !isSetLocation" class="cascader" :style="{left: (editPoint.x + this.radius) + 'px', top: (editPoint.y + this.radius) + 'px'}">
@@ -61,7 +75,7 @@
             <div class="title">{{parseTitle(item)}}</div>
             <div class="detail">
               <template v-if="isKeyPanel(item.deviceChildType)">
-                <iSwitcher :state="item.deviceState" :serialId="item.deviceSerialId" :useDefaultStyle="false" styles="map power"></iSwitcher>
+                <iSwitcher :state="item.deviceState" :serialId="item.deviceSerialId" :useDefaultStyle="false" @switcher-change="onSwitcherChange" styles="map power"></iSwitcher>
               </template>
               <template v-else-if="isHumidifier(item.deviceChildType)">
                 <div class="sensors">
@@ -179,6 +193,14 @@ export default {
     },
     isBuildingActive (status) {
       return status && status.slice(0, 2) !== '00'
+    },
+    parseBuildingBackground (status) {
+      if (!status) return '#a9a6a6'
+      return status.slice(0, 2) !== '00' ? '#1fe650' : 'rgb(223, 45, 45)'
+    },
+    parseBuildingLabel (status) {
+      if (!status) return this.$t('message.switchStatus', {SWITCH: 'noDev'})
+      return status.slice(0, 2) !== '00' ? this.$t('message.switchStatus', {SWITCH: 'on'}) : this.$t('message.switchStatus', {SWITCH: 'off'})
     },
     getRoomDeviceListByRoomId (id) {
       this.curRoomDeviceList = []
@@ -394,6 +416,11 @@ export default {
         type: 'error',
         message: this.$t('message.uploadFail')
       })
+    },
+    onSwitcherChange () {
+      setTimeout(() => {
+        this.getMapPoints()
+      }, 2000)
     }
   },
 }
@@ -404,6 +431,7 @@ export default {
   // padding-left: 64px;
   overflow-y: auto;
   .map-toolbar{
+    position: relative;
     text-align: right;
     padding: 10px;
 
@@ -421,7 +449,38 @@ export default {
       color: #fff;
       font-size: 16px;
     }
+    .status-label{
+      position: absolute;
+      left: 10px;
+      bottom: 4px;
+      .label{
+        display: inline-block;
+        padding: 0 10px;
+      }
+      span{
+        display: inline-block;
+        padding: 5px;
+        color: #fff;
+        font-size: 12px;
+      }
+    }
+    .point-status{
+      display: inline-block;
+      background-color: #a9a6a6;
+      border: 1px solid #333;
+      border-radius: 100%;
+      width: 20px;
+      height: 20px;
+      vertical-align: sub;
+      &.on{
+        background-color: #1fe650;
+      }
+      &.off{
+        background-color: rgb(223, 45, 45);
+      }
+    }
   }
+
   .map-content{
     text-align: center;
     margin-top: 10px;

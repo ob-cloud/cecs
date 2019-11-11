@@ -806,6 +806,14 @@ body.dark{
       border-left-color: $light-blue;
     }
   }
+  .map-wrapper{
+    .map-toolbar{
+      border-bottom: 1px solid $medium-dark;
+    }
+    .map-content .image-wrapper{
+      background-color: $stripe-dark;
+    }
+  }
 }
 
 // light

@@ -34,6 +34,7 @@
         :prev-text="$t('message.prev')"
         :next-text="$t('message.next')"
         :page-size="searchModel.pageSize"
+        :current-page="searchModel.pageNo"
         :total="total"
         layout="prev, next"
         @current-change="onCurrentChange"
@@ -78,6 +79,7 @@ import RoomAPI from '@/api/room'
 import RoomDevice from './components/device'
 import RoomScene from './components/scene'
 import Helper from '@/common/helper'
+import { PAGINATION_PAGENO, PAGINATION_PAGESIZE } from '@/common/constants'
 export default {
   props: {
     roomPreload: {
@@ -101,8 +103,8 @@ export default {
         roomName: '',
         buildName: '',
         floorName: '',
-        pageNo: 1,
-        pageSize: 10
+        pageNo: PAGINATION_PAGENO,
+        pageSize: PAGINATION_PAGESIZE
       },
       roomModel: {
         roomName: '',
@@ -174,6 +176,10 @@ export default {
         if (resp.status === 0) {
           this.roomList = resp.data.records
           this.total = resp.total
+          if (!this.roomList.length && this.searchModel.pageNo !== 1) {
+            this.searchModel.pageNo = PAGINATION_PAGENO
+            this.getRoomList()
+          }
         } else {
           this.$message({
             message: this.$t('smart.room.message', {MESSAGE: 'fail'})

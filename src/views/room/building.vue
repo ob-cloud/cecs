@@ -30,6 +30,7 @@
         :prev-text="$t('message.prev')"
         :next-text="$t('message.next')"
         :page-size="searchModel.pageSize"
+        :current-page="searchModel.pageNo"
         :total="buildingTotal"
         layout="prev, next"
         @current-change="onCurrentChange"
@@ -54,7 +55,7 @@
 
 <script>
 import RoomAPI from '@/api/room'
-// import { PAGINATION_PAGENO, PAGINATION_PAGESIZE } from '@/common/constants'
+import { PAGINATION_PAGENO, PAGINATION_PAGESIZE } from '@/common/constants'
 import Helper from '@/common/helper'
 export default {
   props: {
@@ -80,8 +81,8 @@ export default {
       },
       searchModel: {
         buildName: '',
-        pageNo: 1,
-        pageSize: 10
+        pageNo: PAGINATION_PAGENO,
+        pageSize: PAGINATION_PAGESIZE
       },
       buildingTotal: 0,
       createModel: {
@@ -116,6 +117,10 @@ export default {
           const {data} = res
           this.buildingList = data.records
           this.buildingTotal = res.total
+          if (!this.buildingList.length && this.searchModel.pageNo !== 1) {
+            this.searchModel.pageNo = PAGINATION_PAGENO
+            this.getBuildingList()
+          }
         }
         this.loading = false
       })

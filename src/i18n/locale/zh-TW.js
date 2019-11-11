@@ -45,8 +45,8 @@ export default {
     actionSuccess: '操作成功',
     placeholder: '請{TYPE, select, input{輸入} choose{選擇} other{輸入}}{PLACEHOLDER, select, build{樓棟} floor{樓層} room{房間} deviceName{設備名稱} deviceType{設備類型} other{}}',
     rules: '{RULE, select, build{樓棟} floor{樓層} room{房間} user{用戶名} phone{手機號} pwd{密碼} role{角色} roleName{角色名稱} deviceName{設備名稱} other{}} 不能為空',
-    status: '{STATUS, select, open{打開} close{關閉} online{在線} offline{離線} on{開} off{關} other{}}',
-    switchStatus: '{SWITCH, select, label{開關} open{打開} close{關閉} other{}}',
+    status: '{STATUS, select, open{打開} close{關閉} online{在線} offline{離線} on{開} off{關} noDev{無設備} other{}}',
+    switchStatus: '{SWITCH, select, label{開關} open{打開} close{關閉} on{開} off{關} noDev{無設備} other{}}',
     image: '{IMAGE, select, pixel{請上傳規格為1080x72的圖片} type{圖片格式僅支持jpg/jpeg/png} other{}}',
     device: '{DEVICE_TEXT, select, temperature{溫度} humidifier{濕度} switch{開關} humitemp{溫濕度} Infrared{紅外轉發} other{}}'
   },

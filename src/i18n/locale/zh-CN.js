@@ -45,8 +45,8 @@ export default {
     actionSuccess: '操作成功',
     placeholder: '请{TYPE, select, input{输入} choose{选择} other{输入}}{PLACEHOLDER, select, build{楼栋} floor{楼层} room{房间} deviceName{设备名称} deviceType{设备类型} other{}}',
     rules: '{RULE, select, build{楼栋} floor{楼层} room{房间} user{用户名} phone{手机号} pwd{密码} role{角色} roleName{角色名称} deviceName{设备名称} other{}} 不能为空',
-    status: '{STATUS, select, open{打开} close{关闭} online{在线} offline{离线} on{开} off{关} other{}}',
-    switchStatus: '{SWITCH, select, label{开关} open{打开} close{关闭} other{}}',
+    status: '{STATUS, select, open{打开} close{关闭} online{在线} offline{离线} on{开} off{关} noDev{无设备} other{}}',
+    switchStatus: '{SWITCH, select, label{开关} open{打开} close{关闭} on{开} off{关} noDev{无设备} other{}}',
     image: '{IMAGE, select, pixel{请上传规格为1080x720的图片} type{图片格式仅支持jpg/jpeg/png} other{}}',
     device: '{DEVICE_TEXT, select, temperature{温度} humidifier{湿度} switch{开关} humitemp{温湿度} Infrared{红外转发} other{}}'
   },
