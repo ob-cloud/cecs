@@ -2,7 +2,7 @@
  * @Author: eamiear
  * @Date: 2019-02-06 18:37:25
  * @Last Modified by: eamiear
- * @Last Modified time: 2019-11-11 10:38:53
+ * @Last Modified time: 2019-11-12 11:09:26
  */
 
 import {
@@ -106,6 +106,7 @@ const user = {
         commit('SET_USER_INFO', null)
         commit('SET_NAME', '')
         commit('SET_PWD', '')
+        cacher.remove('permission')
         Storage.removeToken()
         cacher.setStrategy('sessionStorage').remove('pk')
         cacher.setStrategy('sessionStorage').remove('name')

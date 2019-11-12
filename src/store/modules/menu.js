@@ -8,7 +8,6 @@ import {
 
 import { navMenuList, custommenu } from '@/router/menu'
 import routeMenuList from '@/router/modules/navlist'
-import store from '@/store'
 import SystemAPI from '@/api/system'
 import {cacher} from '@/common/cache'
 
@@ -54,11 +53,12 @@ const menu = {
   },
   actions: {
     generateNavibarMenu ({ commit }) {
-      SystemAPI.getUserPrivilege().then(res => {
-        if (res.status !== 0) return
-        const privileges = res.data.records.privilege
-        const buttonPrivileges = getBtnPrivilege(privileges)
-        return new Promise(resolve => {
+      return new Promise((resolve, reject) => {
+        SystemAPI.getUserPrivilege().then(res => {
+          if (res.status !== 0) return reject()
+          const privileges = res.data.records.privilege
+          const buttonPrivileges = getBtnPrivilege(privileges)
+
           mixinMenu()
           const priMenuList = navMenuList.filter(item => {
             return privileges.find(pri => pri.id === item.id)
@@ -68,11 +68,10 @@ const menu = {
           const path = location.href.slice(location.href.indexOf('#') + 1, location.href.lastIndexOf('?'))
           const defaultMenu = priMenuList.find(item => item.path === path) || priMenuList[0]
           commit('UPDATE_MENU_NAV_ACTIVE_NAME', defaultMenu.path)
-
           cacher.set('permission', JSON.stringify(allBtnPrivileges))
-          store.dispatch('getUserInfo').then(userInfo => {
-            resolve(userInfo)
-          })
+          resolve()
+        }).catch(() => {
+          reject()
         })
       })
     },

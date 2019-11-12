@@ -2,7 +2,7 @@
  * @Author: eamiear
  * @Date: 2019-02-06 18:10:12
  * @Last Modified by: eamiear
- * @Last Modified time: 2019-11-11 15:33:57
+ * @Last Modified time: 2019-11-12 11:07:46
  */
 
 import Vue from 'vue'
@@ -24,9 +24,10 @@ const router = new VueRouter({
 router.beforeEach((to, from, next) => {
   NProgress.start()
   if (Storage.getToken()) {
-    store.dispatch('generateNavibarMenu')
+    store.dispatch('generateNavibarMenu').then(() => {
+      to.path === '/login' ? next({ path: '/' }) : next()
+    })
     // store.dispatch('getPrivilege')
-    to.path === '/login' ? next({ path: '/' }) : next()
   } else {
     to.path.includes('/login') ? next() : next({ path: '/login' })
     NProgress.done()
