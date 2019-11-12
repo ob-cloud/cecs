@@ -241,6 +241,21 @@ export default {
         this.responseHandler(res, this.$t('smart.obox.message', {MESSAGE: 'delDevice'}))
         if (res.message.includes('success')) {
           this.getDeviceList()
+        } else if (res.message.includes('obox is offline or not exist')) {
+          this.$message({
+            type: 'error',
+            message: this.$t('smart.obox.message', {MESSAGE: 'oboxoffline'})
+          })
+        } else if (res.message.includes('device does not belong to the user')) {
+          this.$message({
+            type: 'error',
+            message: this.$t('smart.obox.message', {MESSAGE: 'nobelong'})
+          })
+        } else {
+          this.$message({
+            type: 'error',
+            message: this.$t('message.actionFail')
+          })
         }
       }).catch(() => {
         loader.close()
