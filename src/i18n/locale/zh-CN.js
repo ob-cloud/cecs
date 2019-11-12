@@ -77,7 +77,7 @@ export default {
     devicemodule: '设备管理',
     obox: {
       title: 'OBOX设备',
-      search: '{FIELD, select, serial{设备序列号} devices{所有设备} type{设备类型} name{设备名称} other{}}',
+      search: '{FIELD, select, serial{设备序列号} devices{所有网关设备} type{设备类型} name{设备名称} other{}}',
       tableField: '{FIELD, select, temperature{溫度} humidifier{湿度} date{时间} serial{设备序列号} name{设备名称} status{设备状态} type{设备类型} subtype{子设备类型} version{设备版本} action{操作} other{}}',
       slide: '{FIELD, select, panel{三键开关控制面板} humidifier{温湿度} other{}}',
       placeholder: '{FIELD, select, lamp{开关} humidifier{温湿度} other{}}',

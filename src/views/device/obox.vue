@@ -13,12 +13,12 @@
       @on-page-size-change="onSizeChange">
       <slot>
         <template slot="caption">
-          <el-input @keyup.enter.native="handleSearch" class="caption-item" :placeholder="$t('smart.obox.search', {FIELD: 'serial'})" v-model="search.obox_serial_id"></el-input>
-          <el-select clearable class="caption-item" :placeholder="$t('smart.obox.search', {FIELD: 'devices'})" v-model="search.oboxId">
+          <el-input @keyup.enter.native="handleSearch" class="caption-item" :placeholder="$t('smart.obox.search', {FIELD: 'serial'})" v-model="search.serialId"></el-input>
+          <el-select clearable class="caption-item" :placeholder="$t('smart.obox.search', {FIELD: 'devices'})" v-model="search.obox_serial_id">
             <el-option :label="$t('smart.obox.search', {FIELD: 'devices'})" value=''></el-option>
             <el-option :label="item.obox_name + ' (' + (item.obox_status === 1 ? $t('message.status', {STATUS: 'online'}) : $t('message.status', {STATUS: 'offline'})) + ')'" :value='item.obox_serial_id' v-for="(item, index) in oboxList" :key="index"></el-option>
           </el-select>
-          <el-input @keyup.enter.native="handleSearch" class="caption-item" :placeholder="$t('smart.obox.search', {FIELD: 'type'})" v-model="search.device_type"></el-input>
+          <!-- <el-input @keyup.enter.native="handleSearch" class="caption-item" :placeholder="$t('smart.obox.search', {FIELD: 'type'})" v-model="search.device_type"></el-input> -->
           <el-input @keyup.enter.native="handleSearch" class="caption-item" :placeholder="$t('smart.obox.search', {FIELD: 'name'})" v-model="search.name"></el-input>
           <el-button type="primary" icon="el-icon-search" @click="handleSearch">{{$t('message.search')}}</el-button>
         </template>
@@ -68,7 +68,7 @@ export default {
         obox_serial_id: '',
         name: '',
         device_type: '',
-        oboxId: '',
+        serialId: '',
         pageNo: PAGINATION_PAGENO,
         pageSize: PAGINATION_PAGESIZE
       },
