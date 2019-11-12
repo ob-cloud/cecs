@@ -30,7 +30,7 @@ service.interceptors.response.use(({data}) => {
     Router.push({path: '/login'})
   } else if (data.status === 419) {
     Notification.error({
-      message: 'No Auth',
+      message: 'Permission Denied',
       duration: 1500
     })
   }
