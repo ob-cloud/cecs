@@ -8,7 +8,8 @@ export default {
     logout: '退出登錄',
     login: '登錄',
     logintext: '{FIELD, select, account{賬戶} pwd{密碼} erraccount{請輸入正確的用戶名} invalidMobile{手機號碼有誤} loginfail{登錄失敗，賬號或密碼錯誤} other{}}',
-    route: '{FIELD, select, devicemgr{設備管理} scenemgr{場景管理} roommgr{房間管理} usrmgr{用戶管理} logmgr{日誌管理} other{}}'
+    route: '{FIELD, select, devicemgr{設備管理} scenemgr{場景管理} roommgr{房間管理} usrmgr{用戶管理} logmgr{日誌管理} other{}}',
+    validator: '{FIELD, select, name{名稱應為英文字母、數字或下劃線組成的字符串} mobile{手機號碼格式有誤} other{}}'
   },
   message: {
     refresh: '刷新',
@@ -103,7 +104,7 @@ export default {
       action: '{FIELD, select, create{創建場景} excute{執行場景} edit{編輯場景} delete{刪除} other{}}',
       tableField: '{FIELD, select, name{場景名稱} build{樓棟} floor{樓層} room{房間} status{場景狀態} action{操作} other{}}',
       message: '{MESSAGE, select, fetchFail{場景獲取失敗} loading{場景刪除中...} delConfirm{確認刪除場景？} delDevice{場景刪除} update{場景狀態更新} excute{場景執行} excuting{場景執行中...} other{}}',
-      create: '{FIELD, select, inputNameTip{輸入場景名稱(英文字母數字_組合)} empty{場景名稱不能為空} invalid{名称应满足长度为6的英文字母数字_组合} deviceCon{设备条件} cons1{条件1} cons2{条件2} cons3{条件3} behavior{设备行为} actionTips{行为执行时间(单位秒)} devAction{配置设备动作} setDevAct{设备行为配置} conType{条件类型} conTip{一组最多三个条件} other{}}',
+      create: '{FIELD, select, inputNameTip{輸入場景名稱} empty{場景名稱不能為空} invalid{名称应为英文字母、数字或下劃線组成的字符串} deviceCon{设备条件} cons1{条件1} cons2{条件2} cons3{条件3} behavior{设备行为} actionTips{行为执行时间(单位秒)} devAction{配置设备动作} setDevAct{设备行为配置} conType{条件类型} conTip{一组最多三个条件} other{}}',
       condition: '{FIELD, select, timing{定时} timeCon{定时条件} date{日期} selDate{选择日期} selTime{选择时间} week{星期} chain{联动} chainCon{联动条件} selConTip{请正确选择条件} other{}}',
     },
     usermodule: '用戶管理',
@@ -131,7 +132,7 @@ export default {
       message: '{MESSAGE, select, fetchFail{日誌獲取失敗} other{}}',
     },
     exportrecords: {
-      title: '導出記錄',
+      title: '導出日誌',
       search: '{FIELD, select, start{開始日期} end{結束日期} week{最近一周} month{最近一個月} months{最近三個月} other{}}',
       tableField: '{FIELD, select, serial{序號} name{文件名} daterange{日期區間} datetime{操作時間} operator{執行人} other{}}',
     }

@@ -8,7 +8,8 @@ export default {
     logout: '退出登录',
     login: '登录',
     logintext: '{FIELD, select, account{账户} pwd{密码} erraccount{请输入正确的用户名} invalidMobile{手机号码有误} loginfail{登录失败，账号或密码错误} other{}}',
-    route: '{FIELD, select, devicemgr{设备管理} scenemgr{场景管理} roommgr{房间管理} usrmgr{用户管理} logmgr{日记管理} other{}}'
+    route: '{FIELD, select, devicemgr{设备管理} scenemgr{场景管理} roommgr{房间管理} usrmgr{用户管理} logmgr{日记管理} other{}}',
+    validator: '{FIELD, select, name{名称应为英文字母、数字或下划线组成的字符串} mobile{手机号码格式有误} other{}}'
   },
   message: {
     refresh: '刷新',
@@ -103,7 +104,7 @@ export default {
       action: '{FIELD, select, create{创建场景} excute{执行场景} edit{编辑场景} delete{刪除} other{}}',
       tableField: '{FIELD, select, name{场景名称} build{楼栋} floor{楼层} room{房间} status{场景状态} action{操作} other{}}',
       message: '{MESSAGE, select, fetchFail{场景获取失败} loading{场景删除中...} delConfirm{确认删除场景？} delDevice{场景删除} update{场景状态更新} excute{场景执行} excuting{场景执行中...} other{}}',
-      create: '{FIELD, select, inputNameTip{输入场景名称(英文字母数字_组合)} empty{场景名称不能为空} invalid{名称应满足长度为6的英文字母数字_组合} deviceCon{设备条件} cons1{条件1} cons2{条件2} cons3{条件3} behavior{设备行为} actionTips{行为执行时间(单位秒)} devAction{配置设备动作} setDevAct{设备行为配置} conType{条件类型} conTip{一组最多三个条件} other{}}',
+      create: '{FIELD, select, inputNameTip{输入场景名称} empty{场景名称不能为空} invalid{名称应为英文字母、数字或下划线组成的字符串} deviceCon{设备条件} cons1{条件1} cons2{条件2} cons3{条件3} behavior{设备行为} actionTips{行为执行时间(单位秒)} devAction{配置设备动作} setDevAct{设备行为配置} conType{条件类型} conTip{一组最多三个条件} other{}}',
       condition: '{FIELD, select, timing{定时} timeCon{定时条件} date{日期} selDate{选择日期} selTime{选择时间} week{星期} chain{联动} chainCon{联动条件} selConTip{请正确选择条件} other{}}',
     },
     usermodule: '用户管理',
@@ -123,15 +124,15 @@ export default {
       tableField: '{FIELD, select, serial{序号} name{角色名} status{状态} action{操作} other{}}',
       message: '{MESSAGE, select, fetchFail{角色获取失败} loading{角色删除中...} statusUpdate{状态更新成功} delConfirm{确认删除角色？} delDevice{角色刪除} other{}}',
     },
-    logmodule: '日记管理',
+    logmodule: '日志管理',
     logrecords: {
-      title: '日记记录',
-      search: '{FIELD, select, operator{执行人} description{输入描述内容} type{日记类型} device{设备管理} scene{场景管理} user{用户管理} other{}}',
+      title: '日志记录',
+      search: '{FIELD, select, operator{执行人} description{输入描述内容} type{日志类型} device{设备管理} scene{场景管理} user{用户管理} other{}}',
       tableField: '{FIELD, select, serial{序号} type{类型} action{操作行为} datetime{操作时间} operator{执行人} other{}}',
-      message: '{MESSAGE, select, fetchFail{日记获取失败} other{}}',
+      message: '{MESSAGE, select, fetchFail{日志获取失败} other{}}',
     },
     exportrecords: {
-      title: '导出日记',
+      title: '导出日志',
       search: '{FIELD, select, start{开始日期} end{结束日期} week{最近一周} month{最近一个月} months{最近三个月} other{}}',
       tableField: '{FIELD, select, serial{序号} name{文件名} daterange{日期区间} datetime{操作时间} operator{执行人} other{}}',
     }

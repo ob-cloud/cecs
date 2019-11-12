@@ -62,6 +62,25 @@ export default {
     }
   },
   data () {
+    const that = this
+    const validateMoblie = (rule, value, callback) => {
+      if (!value) {
+        callback(new Error(that.$t('message.rules', {RULE: 'phone'})))
+      } else if (!Helper.isMobile(value)) {
+        callback(new Error(that.$t('system.validator', {FIELD: 'mobile'})))
+      } else {
+        callback()
+      }
+    }
+    const validateAccount = (rule, value, callback) => {
+      if (!value) {
+        callback(new Error(that.$t('message.rules', {RULE: 'user'})))
+      } else if (!Helper.isValidAccount(value)) {
+        callback(new Error(that.$t('system.validator', {FIELD: 'name'})))
+      } else {
+        callback()
+      }
+    }
     return {
       tableLoading: false,
       tableHeight: 0,
@@ -87,9 +106,9 @@ export default {
       },
       createDialogVisible: false,
       creationRules: {
-        userName: [{ required: true, message: this.$t('message.rules', {RULE: 'user'}), trigger: 'blur' }],
-        mobile: [{ required: true, message: this.$t('message.rules', {RULE: 'phone'}), trigger: 'blur' }],
-        password: [{ required: true, message: this.$t('message.rules', {RULE: 'pwd'}), trigger: 'blur' }],
+        userName: [{ required: true, trigger: 'blur', validator: validateAccount }],
+        mobile: [{ required: true, trigger: 'blur', validator: validateMoblie}],
+        password: [{ required: true, message: this.$t('message.rules', {RULE: 'pwd'}), trigger: 'blur'}],
         roleId: [{ required: true, message: this.$t('message.rules', {RULE: 'role'}), trigger: 'blur' }]
       },
       roleList: []
