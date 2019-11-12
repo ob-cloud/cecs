@@ -1,5 +1,5 @@
 <template>
-  <div class="device smart ui-container" :style="{height: containerHeight + 'px'}">
+  <div class="device smart ui-container">
     <base-table
       :height="tableHeight"
       :tableData="tableData"
