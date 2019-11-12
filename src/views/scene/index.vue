@@ -25,7 +25,7 @@
             <el-option :label="$t('smart.scene.search', {FIELD: 'room'})" value=''></el-option>
             <el-option v-for="(item, index) in roomList" :key="item.roomName + index + item.id" :label="item.roomName" :value="item.roomId"></el-option>
           </el-select>
-          <el-input @keyup.enter.native="handleSearch" class="caption-item" :placeholder="$t('smart.scene.search', {FIELD: 'name'})" v-model="search.scene_name"></el-input>
+          <el-input clearable @keyup.enter.native="handleSearch" class="caption-item" :placeholder="$t('smart.scene.search', {FIELD: 'name'})" v-model="search.scene_name"></el-input>
           <el-button type="primary" icon="el-icon-search" @click="handleSearch">{{$t('message.search')}}</el-button>
         </template>
         <template slot="actionBar">

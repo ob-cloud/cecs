@@ -1,5 +1,5 @@
 <template>
-  <div class="ui-container">
+  <div class="ui-container" :style="{height: layoutHeight + 'px'}">
     <base-table
       :height="height"
       :tableData="tableData"
@@ -14,7 +14,7 @@
 
       <slot>
         <template slot="caption">
-          <el-input @keyup.enter.native="handleSearch" class="caption-item" :placeholder="$t('smart.role.search', {FIELD: 'name'})" v-model="search.roleName"></el-input>
+          <el-input clearable @keyup.enter.native="handleSearch" class="caption-item" :placeholder="$t('smart.role.search', {FIELD: 'name'})" v-model="search.roleName"></el-input>
           <el-select clearable class="caption-item" :placeholder="$t('smart.role.search', {FIELD: 'status'})" v-model="search.status">
             <el-option :label="$t('smart.role.search', {FIELD: 'status'})" value=''></el-option>
             <el-option :label="$t('smart.role.action', {FIELD: 'enable'})" :value='0'></el-option>
@@ -60,6 +60,10 @@ import Helper from '@/common/helper'
 export default {
   props: {
     height: {
+      type: Number,
+      default: 0
+    },
+    layoutHeight: {
       type: Number,
       default: 0
     }

@@ -9,9 +9,9 @@
         </el-button-group>
       </div>
       <div class="caption">
-        <el-input class="caption-item" @keyup.enter.native="handleSearch" v-model="searchModel.buildName" :placeholder="$t('message.placeholder', { PLACEHOLDER: 'build' })"></el-input>
-        <el-input class="caption-item" @keyup.enter.native="handleSearch" v-model="searchModel.floorName" :placeholder="$t('message.placeholder', { PLACEHOLDER: 'floor' })"></el-input>
-        <el-input class="caption-item" @keyup.enter.native="handleSearch" v-model="searchModel.roomName" :placeholder="$t('message.placeholder', { PLACEHOLDER: 'room' })"></el-input>
+        <el-input clearable class="caption-item" @keyup.enter.native="handleSearch" v-model="searchModel.buildName" :placeholder="$t('message.placeholder', { PLACEHOLDER: 'build' })"></el-input>
+        <el-input clearable class="caption-item" @keyup.enter.native="handleSearch" v-model="searchModel.floorName" :placeholder="$t('message.placeholder', { PLACEHOLDER: 'floor' })"></el-input>
+        <el-input clearable class="caption-item" @keyup.enter.native="handleSearch" v-model="searchModel.roomName" :placeholder="$t('message.placeholder', { PLACEHOLDER: 'room' })"></el-input>
         <el-button type="primary" icon="el-icon-search" @click="handleSearch">{{$t('message.search')}}</el-button>
       </div>
     </div>

@@ -10,10 +10,10 @@
       </el-tab-pane>
       <el-tab-pane :label="$t(`smart.${item.name}.title`)" :name="item.name" v-for="(item, index) in navMenu" :key="index">
         <template v-if="item.id===$submenu.account">
-          <account v-if="activeName === 'account'" :height="tableHeight"></account>
+          <account v-if="activeName === 'account'" :height="tableHeight" :layoutHeight="containerHeight"></account>
         </template>
         <template v-if="item.id===$submenu.role">
-          <role v-if="activeName === 'role'" :height="tableHeight"></role>
+          <role v-if="activeName === 'role'" :height="tableHeight" :layoutHeight="containerHeight"></role>
         </template>
       </el-tab-pane>
 
@@ -37,6 +37,7 @@ export default {
     return {
       activeName: 'account',
       tableHeight: 0,
+      containerHeight: 0,
       breadcrumb: {
         prev: this.$t('smart.usermodule'),
         current: this.$t('smart.account.title')
@@ -62,8 +63,12 @@ export default {
   },
   mounted () {
     Helper.windowOnResize(this, this.fixLayout)
+    Helper.windowOnResize(this, this.fixContainerLayout)
   },
   methods: {
+    fixContainerLayout () {
+      this.containerHeight = Helper.calculateContainerHeight() - 30
+    },
     fixLayout () {
       this.tableHeight = Helper.calculateTableHeight() - 20 - 40
     },

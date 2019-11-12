@@ -1,5 +1,5 @@
 <template>
-  <div class="ui-container">
+  <div class="ui-container" :style="{height: layoutHeight + 'px'}">
     <base-table
       :height="height"
       :tableData="tableData"
@@ -12,9 +12,9 @@
       @on-page-size-change="onSizeChange">
       <slot>
         <template slot="caption">
-          <el-input @keyup.enter.native="handleSearch" class="caption-item" :placeholder="$t('smart.wifi.search', {FIELD: 'serial'})" v-model="search.obox_serial_id"></el-input>
+          <el-input clearable @keyup.enter.native="handleSearch" class="caption-item" :placeholder="$t('smart.wifi.search', {FIELD: 'serial'})" v-model="search.obox_serial_id"></el-input>
           <!-- <el-input @keyup.enter.native="handleSearch" class="caption-item" :placeholder="$t('smart.wifi.search', {FIELD: 'type'})" v-model="search.device_type"></el-input> -->
-          <el-input @keyup.enter.native="handleSearch" class="caption-item" :placeholder="$t('smart.wifi.search', {FIELD: 'name'})" v-model="search.name"></el-input>
+          <el-input clearable @keyup.enter.native="handleSearch" class="caption-item" :placeholder="$t('smart.wifi.search', {FIELD: 'name'})" v-model="search.name"></el-input>
           <el-select clearable class="caption-item" :placeholder="$t('smart.wifi.search', {FIELD: 'status'})" v-model="search.online">
             <el-option :label="$t('smart.wifi.search', {FIELD: 'status'})" value=''></el-option>
             <el-option :label="$t('message.status', {STATUS: 'online'})" :value='true'></el-option>
@@ -57,6 +57,10 @@ export default {
   name: 'device-wifi',
   props: {
     height: {
+      type: Number,
+      default: 0
+    },
+    layoutHeight: {
       type: Number,
       default: 0
     }

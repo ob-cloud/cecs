@@ -1,5 +1,5 @@
 <template>
-  <div class="device smart  ui-container">
+  <div class="device smart  ui-container" :style="{height: layoutHeight + 'px'}">
     <base-table
       :height="height"
       :tableData="tableData"
@@ -36,6 +36,10 @@ import Helper from '@/common/helper'
 export default {
   props: {
     height: {
+      type: Number,
+      default: 0
+    },
+    layoutHeight: {
       type: Number,
       default: 0
     }

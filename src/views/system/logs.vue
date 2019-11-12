@@ -10,10 +10,10 @@
       </el-tab-pane>
       <el-tab-pane :label="$t(`smart.${item.name}.title`)" :name="item.name" v-for="(item, index) in navMenu" :key="index">
         <template v-if="item.id===$submenu.logrecords">
-          <Logs v-if="activeName === 'logrecords'" :height="tableHeight"></Logs>
+          <Logs v-if="activeName === 'logrecords'" :height="tableHeight" :layoutHeight="containerHeight"></Logs>
         </template>
         <template v-if="item.id===$submenu.exportrecords">
-          <Exports v-if="activeName === 'exportrecords'" :height="tableHeight"></Exports>
+          <Exports v-if="activeName === 'exportrecords'" :height="tableHeight" :layoutHeight="containerHeight"></Exports>
         </template>
       </el-tab-pane>
       <!-- <el-tab-pane :label="$t('smart.logrecords.title')" name="logs">
@@ -36,6 +36,7 @@ export default {
     return {
       activeName: 'logrecords',
       tableHeight: 0,
+      containerHeight: 0,
       breadcrumb: {
         prev: this.$t('smart.logmodule'),
         current: this.$t('smart.logrecords.title')
@@ -61,8 +62,12 @@ export default {
   mounted () {
     this.getMenuList()
     Helper.windowOnResize(this, this.fixLayout)
+    Helper.windowOnResize(this, this.fixContainerLayout)
   },
   methods: {
+    fixContainerLayout () {
+      this.containerHeight = Helper.calculateContainerHeight() - 30
+    },
     fixLayout () {
       this.tableHeight = Helper.calculateTableHeight() - 20 - 40
     },

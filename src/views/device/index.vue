@@ -10,13 +10,13 @@
       </el-tab-pane>
       <el-tab-pane :label="$t(`smart.${item.name}.title`)" :name="item.name" v-for="(item, index) in navMenu" :key="index">
         <template v-if="item.id===$submenu.obox">
-          <device-obox v-if="activeName === 'obox'" :height="tableHeight"></device-obox>
+          <device-obox v-if="activeName === 'obox'" :height="tableHeight" :layoutHeight="containerHeight"></device-obox>
         </template>
         <template v-if="item.id===$submenu.wifi">
-          <device-wifi v-if="activeName === 'wifi'" :height="tableHeight"></device-wifi>
+          <device-wifi v-if="activeName === 'wifi'" :height="tableHeight" :layoutHeight="containerHeight"></device-wifi>
         </template>
         <template v-if="item.id===$submenu.gateway">
-          <gateway v-if="activeName === 'gateway'" :height="tableHeight"></gateway>
+          <gateway v-if="activeName === 'gateway'" :height="tableHeight" :layoutHeight="containerHeight"></gateway>
         </template>
       </el-tab-pane>
       <!-- <el-tab-pane :label="$t('smart.obox.title')" name="obox">
@@ -43,6 +43,7 @@ export default {
     return {
       activeName: 'obox',
       tableHeight: 0,
+      containerHeight: 0,
       breadcrumb: {
         prev: this.$t('smart.devicemodule'),
         current: this.$t('smart.obox.title')
@@ -52,11 +53,6 @@ export default {
   },
   components: { DeviceObox, DeviceWifi, Gateway },
   created () {
-  },
-  computed: {
-    total () {
-      return this.tableData.length || 0
-    }
   },
   watch: {
     '$route' (val) {
@@ -74,8 +70,12 @@ export default {
   mounted () {
     this.getMenuList()
     Helper.windowOnResize(this, this.fixLayout)
+    Helper.windowOnResize(this, this.fixContainerLayout)
   },
   methods: {
+    fixContainerLayout () {
+      this.containerHeight = Helper.calculateContainerHeight() - 30
+    },
     fixLayout () {
       this.tableHeight = Helper.calculateTableHeight() - 20 - 40
     },

@@ -1,5 +1,5 @@
 <template>
-  <div class="ui-container">
+  <div class="ui-container" :style="{height: layoutHeight + 'px'}">
     <base-table
       :height="height"
       :tableData="tableData"
@@ -8,18 +8,19 @@
       v-loading="tableLoading"
       :pageTotal="total"
       :pageSize="search.pageSize"
+      :pageNo="search.pageNo"
       :toolboxSize="0"
       @on-current-page-change="onCurrentChange"
       @on-page-size-change="onSizeChange">
       <slot>
         <template slot="caption">
-          <el-input @keyup.enter.native="handleSearch" class="caption-item" :placeholder="$t('smart.obox.search', {FIELD: 'serial'})" v-model="search.serialId"></el-input>
+          <el-input clearable @keyup.enter.native="handleSearch" class="caption-item" :placeholder="$t('smart.obox.search', {FIELD: 'serial'})" v-model="search.serialId"></el-input>
           <el-select clearable class="caption-item" :placeholder="$t('smart.obox.search', {FIELD: 'devices'})" v-model="search.obox_serial_id">
             <el-option :label="$t('smart.obox.search', {FIELD: 'devices'})" value=''></el-option>
             <el-option :label="item.obox_name + ' (' + (item.obox_status === 1 ? $t('message.status', {STATUS: 'online'}) : $t('message.status', {STATUS: 'offline'})) + ')'" :value='item.obox_serial_id' v-for="(item, index) in oboxList" :key="index"></el-option>
           </el-select>
           <!-- <el-input @keyup.enter.native="handleSearch" class="caption-item" :placeholder="$t('smart.obox.search', {FIELD: 'type'})" v-model="search.device_type"></el-input> -->
-          <el-input @keyup.enter.native="handleSearch" class="caption-item" :placeholder="$t('smart.obox.search', {FIELD: 'name'})" v-model="search.name"></el-input>
+          <el-input clearable @keyup.enter.native="handleSearch" class="caption-item" :placeholder="$t('smart.obox.search', {FIELD: 'name'})" v-model="search.name"></el-input>
           <el-button type="primary" icon="el-icon-search" @click="handleSearch">{{$t('message.search')}}</el-button>
         </template>
       </slot>
@@ -59,11 +60,16 @@ export default {
     height: {
       type: Number,
       default: 0
+    },
+    layoutHeight: {
+      type: Number,
+      default: 0
     }
   },
   data () {
     return {
       tableLoading: true,
+      total: 0,
       search: {
         obox_serial_id: '',
         name: '',
@@ -97,11 +103,6 @@ export default {
     this.getOboxList()
     this.columns = this.getColumns()
     this.getDeviceList()
-  },
-  computed: {
-    total () {
-      return this.tableData.length || 0
-    }
   },
   mounted () {
     // Helper.windowOnResize(this, this.fixLayout)
@@ -174,9 +175,14 @@ export default {
     },
     getDeviceList () {
       this.tableLoading = true
-      DeviceAPI.getDeviceList(this.search).then(resp => {
-        if (resp.status === 200) {
-          this.tableData = resp.data.config
+      DeviceAPI.getOboxDeviceList(this.search).then(resp => {
+        if (resp.status === 0) {
+          this.tableData = resp.data.records
+          this.total = resp.total
+          if (!this.tableData.length && this.search.pageNo !== 1) {
+            this.search.pageNo = PAGINATION_PAGENO
+            this.getDeviceList()
+          }
         } else {
           this.$message({
             message: this.$t('smart.obox.message', {MESSAGE: 'fetchFail'})

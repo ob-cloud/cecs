@@ -81,6 +81,12 @@ export const Helper = {
     const paginationH = hasPagination ? 60 : 0
     return winH - navH - searchBarH - paginationH - (hasGap ? 50 : 0)
   },
+  calculateContainerHeight () {
+    const winH = document.body.clientHeight
+    const navH = 50
+    const breadcrumb = 45
+    return winH - navH - breadcrumb
+  },
   windowOnResize (context, fn) {
     setTimeout(() => {
       this.nextTick.call(context, fn)
