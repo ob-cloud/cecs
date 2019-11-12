@@ -2,7 +2,7 @@
  * @Author: eamiear
  * @Date: 2019-08-05 17:32:41
  * @Last Modified by: eamiear
- * @Last Modified time: 2019-11-12 14:19:50
+ * @Last Modified time: 2019-11-12 16:30:42
  */
 
 import {request} from '@/common/request'
@@ -187,6 +187,12 @@ const WifiDeviceAPI = {
     return request.get('/consumer/common', {
       CMD: 'query_ir_device',
       serialId
+    })
+  },
+  getInfratedDeviceList (wifi = {}) {
+    return request.postForm('/consumer/common', {
+      CMD: 'get_wifi',
+      wifi: JSON.stringify(wifi)
     })
   }
 }

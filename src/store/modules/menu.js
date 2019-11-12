@@ -66,11 +66,11 @@ const menu = {
           })
           const allBtnPrivileges = buttonPrivileges.concat(custommenu)
           commit('SET_MENU_NAV_LIST', priMenuList)
-          const path = location.href.slice(location.href.indexOf('#') + 1, location.href.lastIndexOf('?'))
+          const path = location.href.slice(location.href.indexOf('#') + 1, location.href.lastIndexOf('?') + 1)
           const defaultMenu = priMenuList.find(item => item.path === path) || priMenuList[0]
           commit('UPDATE_MENU_NAV_ACTIVE_NAME', defaultMenu.path)
           cacher.set('permission', JSON.stringify(allBtnPrivileges))
-          resolve()
+          resolve(priMenuList)
         }).catch(err => {
           console.log(err)
           reject()
