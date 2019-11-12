@@ -2,7 +2,7 @@
  * @Author: eamiear
  * @Date: 2019-08-07 16:43:21
  * @Last Modified by: eamiear
- * @Last Modified time: 2019-11-07 17:52:58
+ * @Last Modified time: 2019-11-12 15:37:39
  */
 
 import {request} from '@/common/request'
@@ -25,6 +25,12 @@ const OboxAPI = {
       CMD: 'delete_obox',
       obox_serial_id: oboxSerialId,
       fForce_delete: '00'
+    })
+  },
+  getOboxListV2 (obox = {}) {
+    return request.get('/consumer/common', {
+      CMD: 'get_obox',
+      obox: JSON.stringify(obox)
     })
   }
 }

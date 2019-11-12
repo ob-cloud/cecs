@@ -18,6 +18,7 @@ const mixinMenu = () => {
   })
 }
 const getBtnPrivilege = privilege => {
+  if (privilege && privilege.length === 1) return privilege[0].privilege
   return Array.from(privilege).reduce((item, next, index) => {
     if (index === 1) {
       item = item.privilege
@@ -70,7 +71,8 @@ const menu = {
           commit('UPDATE_MENU_NAV_ACTIVE_NAME', defaultMenu.path)
           cacher.set('permission', JSON.stringify(allBtnPrivileges))
           resolve()
-        }).catch(() => {
+        }).catch(err => {
+          console.log(err)
           reject()
         })
       })

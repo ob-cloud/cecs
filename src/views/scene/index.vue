@@ -1,5 +1,5 @@
 <template>
-  <div class="device smart ui-container">
+  <div class="device smart ui-container" :style="{height: containerHeight + 'px'}">
     <base-table
       :height="tableHeight"
       :tableData="tableData"
@@ -57,6 +57,7 @@ export default {
     return {
       tableLoading: true,
       tableHeight: 0,
+      containerHeight: 0,
       // buildingList: [],
       // floorList: [],
       // roomList: [],
@@ -101,8 +102,12 @@ export default {
   },
   mounted () {
     Helper.windowOnResize(this, this.fixLayout)
+    Helper.windowOnResize(this, this.fixContainerLayout)
   },
   methods: {
+    fixContainerLayout () {
+      this.containerHeight = Helper.calculateContainerHeight() - 30
+    },
     fixLayout () {
       this.tableHeight = Helper.calculateTableHeight() - 20
     },

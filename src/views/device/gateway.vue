@@ -48,7 +48,7 @@ export default {
       tableLoading: true,
       tableHeight: 0,
       search: {
-        serialId: '',
+        obox_serial_id: '',
         obox_name: '',
         obox_status: '',
         pageNo: PAGINATION_PAGENO,

@@ -2,7 +2,7 @@
  * @Author: eamiear
  * @Date: 2019-02-06 18:10:12
  * @Last Modified by: eamiear
- * @Last Modified time: 2019-11-12 11:07:46
+ * @Last Modified time: 2019-11-12 16:12:51
  */
 
 import Vue from 'vue'
@@ -26,6 +26,8 @@ router.beforeEach((to, from, next) => {
   if (Storage.getToken()) {
     store.dispatch('generateNavibarMenu').then(() => {
       to.path === '/login' ? next({ path: '/' }) : next()
+    }).catch(() => {
+      next()
     })
     // store.dispatch('getPrivilege')
   } else {
