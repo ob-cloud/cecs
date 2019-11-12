@@ -220,6 +220,11 @@ export default {
               })
               this.createDialogVisible = false
               this.getAccountList()
+            } else {
+              this.$message({
+                type: 'error',
+                message: this.$t('message.actionFail')
+              })
             }
           }).catch(() => {
             this.createDialogVisible = false

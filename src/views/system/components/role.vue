@@ -229,6 +229,11 @@ export default {
               })
               this.getRoleList()
               this.createDialogVisible = false
+            } else {
+              this.$message({
+                type: 'error',
+                message: this.$t('message.actionFail'),
+              })
             }
           }).catch(e => {
             this.$message({
