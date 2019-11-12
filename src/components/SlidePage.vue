@@ -4,7 +4,7 @@
       <div class="sidebar">
         <div class="header">
           <i class="el-icon el-icon-close" @click="pageVisible = false" title="关闭"></i>
-          <div class="title">{{title}}</div>
+          <div class="title">{{title}}{{extraLabel && `(${extraLabel})`}}</div>
         </div>
         <div class="content">
           <slot></slot>
@@ -37,6 +37,10 @@ export default {
     title: {
       type: String,
       default: '提示框'
+    },
+    extraLabel: {
+      type: String,
+      default: ''
     }
   },
   data () {
