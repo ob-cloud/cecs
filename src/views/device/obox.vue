@@ -51,6 +51,7 @@ import Humifier from './components/humifier'
 import iSwitcher from './components/switcher'
 import SlidePage from '@/components/SlidePage'
 import DeviceAPI from '@/api/device'
+import OboxAPI from '@/api/obox'
 import { PAGINATION_PAGENO, PAGINATION_PAGESIZE } from '@/common/constants'
 import Helper from '@/common/helper'
 const {default: Suit} = require('@/common/suit')
@@ -200,9 +201,9 @@ export default {
       })
     },
     getOboxList () {
-      DeviceAPI.getOboxList().then(res => {
-        if (res.status === 200) {
-          this.oboxList = res.data.oboxs
+      OboxAPI.getAllObox().then(res => {
+        if (res.status === 0) {
+          this.oboxList = res.data
         }
       })
     },

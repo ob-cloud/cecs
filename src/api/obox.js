@@ -2,7 +2,7 @@
  * @Author: eamiear
  * @Date: 2019-08-07 16:43:21
  * @Last Modified by: eamiear
- * @Last Modified time: 2019-11-12 17:12:09
+ * @Last Modified time: 2019-11-12 18:18:18
  */
 
 import {request} from '@/common/request'
@@ -31,6 +31,11 @@ const OboxAPI = {
     return request.get('/consumer/common', {
       CMD: 'get_obox',
       obox: JSON.stringify(obox)
+    })
+  },
+  getAllObox () {
+    return request.get('/consumer/common', {
+      CMD: 'get_allobox'
     })
   }
 }
