@@ -20,7 +20,7 @@
         </template>
         <template slot="actionBar">
           <el-button type="success" icon="el-icon-refresh" @click="handleRefresh">{{$t('message.refresh')}}</el-button>
-          <el-button type="primary" icon="el-icon-plus" @click="handleCreate">{{$t('message.create')}}</el-button>
+          <el-button v-isPermited="53" type="primary" icon="el-icon-plus" @click="handleCreate">{{$t('message.create')}}</el-button>
         </template>
       </slot>
     </base-table>
@@ -137,10 +137,12 @@ export default {
       }]
     },
     getToolboxRender (h, row) {
-      return [
-        <el-button size="tiny" icon="el-icon-edit" title={this.$t('message.edit')} onClick={() => this.handleEdit(row)}></el-button>,
-        <el-button size="tiny" icon="el-icon-delete" title={this.$t('message.delete')} onClick={() => this.handleRemove(row)}></el-button>
-      ]
+      const toolbox = []
+      const edit = <el-button size="tiny" icon="el-icon-edit" title={this.$t('message.edit')} onClick={() => this.handleEdit(row)}></el-button>
+      const remove = <el-button size="tiny" icon="el-icon-delete" title={this.$t('message.delete')} onClick={() => this.handleRemove(row)}></el-button>
+      this.$isPermited(52) && toolbox.push(edit)
+      this.$isPermited(54) && toolbox.push(remove)
+      return toolbox
     },
     getAccountList () {
       this.tableLoading = true

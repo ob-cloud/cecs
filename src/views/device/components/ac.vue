@@ -151,8 +151,8 @@ export default {
       DeviceAPI.getTransponderDevice(serialId).then(res => {
         if (res.status === 200) {
           this.transponderList = res.data.rs
-          this.loading = false
         }
+        this.loading = false
       }).catch(() => {
         this.loading = false
       })

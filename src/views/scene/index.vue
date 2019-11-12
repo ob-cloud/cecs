@@ -29,7 +29,7 @@
           <el-button type="primary" icon="el-icon-search" @click="handleSearch">{{$t('message.search')}}</el-button>
         </template>
         <template slot="actionBar">
-          <el-button type="primary" @click="createRemoteScene">{{$t('smart.scene.action', {FIELD: 'create'})}}</el-button>
+          <el-button v-isPermited="40" type="primary" @click="createRemoteScene">{{$t('smart.scene.action', {FIELD: 'create'})}}</el-button>
         </template>
       </slot>
     </base-table>
@@ -144,11 +144,15 @@ export default {
       }]
     },
     getToolboxRender (h, row) {
-      return [
-        <el-button size="tiny" icon="el-icon-caret-right" title={this.$t('smart.scene.action', {FIELD: 'excute'})} onClick={() => this.execute(row)}></el-button>,
-        <el-button size="tiny" icon="el-icon-edit" title={this.$t('smart.scene.action', {FIELD: 'edit'})} onClick={() => this.edit(row)}></el-button>,
-        <el-button size="tiny" icon="el-icon-delete" title={this.$t('smart.scene.action', {FIELD: 'delete'})} onClick={() => this.handleRemove(row)}></el-button>
-      ]
+      const toolbox = []
+      const execute = <el-button size="tiny" icon="el-icon-caret-right" title={this.$t('smart.scene.action', {FIELD: 'excute'})} onClick={() => this.execute(row)}></el-button>
+      const edit = <el-button size="tiny" icon="el-icon-edit" title={this.$t('smart.scene.action', {FIELD: 'edit'})} onClick={() => this.edit(row)}></el-button>
+      const remove = <el-button size="tiny" icon="el-icon-delete" title={this.$t('smart.scene.action', {FIELD: 'delete'})} onClick={() => this.handleRemove(row)}></el-button>
+
+      this.$isPermited(39) && toolbox.push(execute)
+      this.$isPermited(38) && toolbox.push(edit)
+      this.$isPermited(41) && toolbox.push(remove)
+      return toolbox
     },
     getSceneList () {
       this.tableLoading = true

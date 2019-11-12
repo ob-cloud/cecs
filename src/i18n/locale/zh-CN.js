@@ -121,7 +121,7 @@ export default {
       form: '{FIELD, select, label{角色名称} name{请输入角色名称} auth{角色权限} other{}}',
       action: '{FIELD, select, create{创建角色} edit{编辑角色} enable{启动} disable{停用} other{}}',
       tableField: '{FIELD, select, serial{序号} name{角色名} status{状态} action{操作} other{}}',
-      message: '{MESSAGE, select, fetchFail{角色获取失败} loading{角色删除中...} statusUpdate{狀態更新成功} delConfirm{确认删除角色？} delDevice{角色刪除} other{}}',
+      message: '{MESSAGE, select, fetchFail{角色获取失败} loading{角色删除中...} statusUpdate{状态更新成功} delConfirm{确认删除角色？} delDevice{角色刪除} other{}}',
     },
     logmodule: '日记管理',
     logrecords: {

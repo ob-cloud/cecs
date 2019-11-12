@@ -4,7 +4,7 @@
       <div class="caption is-right">
         <el-button-group>
           <el-button type="primary" icon="btn-icon el-icon-refresh" :title="$t('message.refresh')" @click="handleRefresh"></el-button>
-          <el-button type="primary" icon="btn-icon el-icon-circle-plus-outline" :title="$t('message.create')" @click="handleCreate"></el-button>
+          <el-button v-isPermited="42" type="primary" icon="btn-icon el-icon-circle-plus-outline" :title="$t('message.create')" @click="handleCreate"></el-button>
           <el-button type="primary" icon="btn-icon obicon obicon-switch-btn" :title="$t('message.switchControl')" @click="handleMainSwitch"></el-button>
         </el-button-group>
       </div>
@@ -18,11 +18,11 @@
     <div class="building-list" v-loading.lock="loading" :style="{height: (height - 80) + 'px'}">
       <div class="building-item" v-for="item in roomList" :key="item.id">
         <div class="header">
-          <i class="icon obicon obicon-device" :title="$t('smart.room.device')" @click="handleDevice(item)"></i>
+          <i class="icon obicon obicon-device" v-isPermited="44" :title="$t('smart.room.device')" @click="handleDevice(item)"></i>
           <!-- <i class="icon obicon obicon-scene" title="房间场景" @click="handleScene(item)"></i> -->
           <i class="icon obicon obicon-power" :title="$t('message.power')" @click="handlePower(item)"></i>
-          <i class="icon el-icon-edit" :title="$t('message.edit')" @click="handleEdit(item)"></i>
-          <i class="icon el-icon-delete" :title="$t('message.delete')" @click="handleRemove(item)"></i>
+          <i class="icon el-icon-edit" v-isPermited="42" :title="$t('message.edit')" @click="handleEdit(item)"></i>
+          <i class="icon el-icon-delete" v-isPermited="43" :title="$t('message.delete')" @click="handleRemove(item)"></i>
         </div>
         <div class="content">
           <i class="building-sign obicon obicon-classroom" :class="{'is-active': isLightActive(item.deviceState)}"></i>

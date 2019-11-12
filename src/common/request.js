@@ -3,6 +3,7 @@ import QS from 'qs'
 import Storage from '@/common/cache'
 import Router from '@/router'
 import envConfig from '@/common/config'
+import { Notification } from 'element-ui'
 
 const isProduct = process.env.NODE_ENV !== 'development'
 const requestBaseUrl = !isProduct ? envConfig.dev.baseApi : envConfig.prod.baseApi
@@ -24,9 +25,14 @@ service.interceptors.request.use(config => {
   Promise.reject(error)
 })
 service.interceptors.response.use(({data}) => {
-  if (data.code === 1002) { // invalid token
+  if (data.status === 401) { // invalid token
     Storage.removeToken()
     Router.push({path: '/login'})
+  } else if (data.status === 419) {
+    Notification.error({
+      message: 'No Auth',
+      duration: 1500
+    })
   }
   return data
 }, error => {

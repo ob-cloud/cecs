@@ -8,7 +8,21 @@
       <el-tab-pane label="" disabled class="menu-panel">
          <span slot="label" class="menu-panel__label"><i class="el-icon-menu"></i></span>
       </el-tab-pane>
-      <el-tab-pane :label="$t('smart.map.title')" name="map">
+      <el-tab-pane :label="$t(`smart.${item.name}.title`)" :name="item.name" v-for="(item, index) in navMenu" :key="index">
+        <template v-if="item.id===$submenu.map">
+          <i-map v-if="activeName === 'map'" :height="tableHeight"></i-map>
+        </template>
+        <template v-if="item.id===$submenu.room">
+          <room v-if="activeName === 'room'" :height="tableHeight" :roomPreload="roomPreload"></room>
+        </template>
+        <template v-if="item.id===$submenu.building">
+          <building v-if="activeName === 'building'" :height="tableHeight" :preload="buildingPreload"></building>
+        </template>
+        <template v-if="item.id===$submenu.floor">
+          <floor v-if="activeName === 'floor'" :height="tableHeight" :preload="floorPreload"></floor>
+        </template>
+      </el-tab-pane>
+      <!-- <el-tab-pane :label="$t('smart.map.title')" name="map" v-if="isPermited(510)">
         <i-map v-if="activeName === 'map'" :height="tableHeight"></i-map>
       </el-tab-pane>
       <el-tab-pane :label="$t('smart.room.title')" name="room">
@@ -19,7 +33,7 @@
       </el-tab-pane>
       <el-tab-pane :label="$t('smart.floor.title')" name="floor">
         <floor v-if="activeName === 'floor'" :height="tableHeight" :preload="floorPreload"></floor>
-      </el-tab-pane>
+      </el-tab-pane> -->
     </el-tabs>
   </div>
 </template>
@@ -30,6 +44,7 @@ import Floor from './floor'
 import Room from './room'
 import iMap from './map'
 import Helper from '@/common/helper'
+import {privRoomSubMenu} from '@/router/menu'
 export default {
   data () {
     return {
@@ -41,7 +56,8 @@ export default {
       breadcrumb: {
         prev: this.$t('smart.roommodule'),
         current: this.$t('smart.map.title')
-      }
+      },
+      navMenu: []
     }
   },
   components: { Building, Floor, Room, iMap },
@@ -73,11 +89,19 @@ export default {
   },
   mounted () {
     Helper.windowOnResize(this, this.fixLayout)
+    this.getMenuList()
   },
   methods: {
     fixLayout () {
       this.tableHeight = this.activeName === 'map' ? Helper.calculateTableHeight(false, false) - 50 : Helper.calculateTableHeight() - 20
       this.tableHeight -= 40
+    },
+    getMenuList () {
+      const menu = privRoomSubMenu
+      const validMenu = menu.filter(item => this.$isPermited(item.id))
+      this.navMenu = validMenu
+      this.activeName = validMenu[0] && validMenu[0].name
+      this.breadcrumb.current = this.activeName && this.$t(`smart.${this.activeName}.title`)
     }
   }
 }

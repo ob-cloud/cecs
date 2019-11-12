@@ -17,6 +17,7 @@
       </div>
       <el-button size="small" type="primary" icon="el-icon-refresh" :disabled="isEditing" @click="handleRefresh()">{{$t('message.refresh')}}</el-button>
       <el-upload
+        v-isPermited="48"
         class="upload-btn"
         :disabled="isEditing"
         :data="uploadData"
@@ -39,7 +40,7 @@
 
         <!-- <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，图片规格 1080x700 </div> -->
       </el-upload>
-      <el-button size="small" type="primary" icon="el-icon-edit" :disabled="isEditing" @click="handleEdit()">{{$t('message.edit')}}</el-button>
+      <el-button v-isPermited="49" size="small" type="primary" icon="el-icon-edit" :disabled="isEditing" @click="handleEdit()">{{$t('message.edit')}}</el-button>
     </div>
     <div class="map-content">
       <div class="image-wrapper" @mouseenter="onMouseEnter" @mousedown="onMouseDown" @mouseleave="onMouseLeave" @mouseup="onMouseUp">

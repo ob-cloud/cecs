@@ -8,12 +8,20 @@
       <el-tab-pane label="" disabled class="menu-panel">
          <span slot="label" class="menu-panel__label"><i class="el-icon-menu"></i></span>
       </el-tab-pane>
-      <el-tab-pane :label="$t('smart.logrecords.title')" name="logs">
+      <el-tab-pane :label="$t(`smart.${item.name}.title`)" :name="item.name" v-for="(item, index) in navMenu" :key="index">
+        <template v-if="item.id===$submenu.logrecords">
+          <Logs v-if="activeName === 'logrecords'" :height="tableHeight"></Logs>
+        </template>
+        <template v-if="item.id===$submenu.exportrecords">
+          <Exports v-if="activeName === 'exportrecords'" :height="tableHeight"></Exports>
+        </template>
+      </el-tab-pane>
+      <!-- <el-tab-pane :label="$t('smart.logrecords.title')" name="logs">
         <Logs v-if="activeName === 'logs'" :height="tableHeight"></Logs>
       </el-tab-pane>
       <el-tab-pane :label="$t('smart.exportrecords.title')" name="exports">
         <Exports v-if="activeName === 'exports'" :height="tableHeight"></Exports>
-      </el-tab-pane>
+      </el-tab-pane> -->
     </el-tabs>
   </div>
 </template>
@@ -22,15 +30,17 @@
 import Logs from './components/logs'
 import Exports from './components/exports'
 import Helper from '@/common/helper'
+import {privLogSubMenu} from '@/router/menu'
 export default {
   data () {
     return {
-      activeName: 'logs',
+      activeName: 'logrecords',
       tableHeight: 0,
       breadcrumb: {
         prev: this.$t('smart.logmodule'),
         current: this.$t('smart.logrecords.title')
-      }
+      },
+      navMenu: []
     }
   },
   components: { Logs, Exports },
@@ -43,17 +53,25 @@ export default {
     activeName (val) {
       if (!val) return
       this.breadcrumb.current = {
-        'logs': this.$t('smart.logrecords.title'),
-        'exports': this.$t('smart.exportrecords.title')
+        'logrecords': this.$t('smart.logrecords.title'),
+        'exportrecords': this.$t('smart.exportrecords.title')
       }[val]
     }
   },
   mounted () {
+    this.getMenuList()
     Helper.windowOnResize(this, this.fixLayout)
   },
   methods: {
     fixLayout () {
       this.tableHeight = Helper.calculateTableHeight() - 20 - 40
+    },
+    getMenuList () {
+      const menu = privLogSubMenu
+      const validMenu = menu.filter(item => this.$isPermited(item.id))
+      this.navMenu = validMenu
+      this.activeName = validMenu[0] && validMenu[0].name
+      this.breadcrumb.current = this.$t(`smart.${this.activeName}.title`)
     }
   }
 }

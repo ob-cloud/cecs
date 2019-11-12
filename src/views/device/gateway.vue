@@ -99,9 +99,10 @@ export default {
       }]
     },
     getToolboxRender (h, row) {
-      return [
-        <el-button size="tiny" icon="obicon obicon-trash" title={this.$t('message.delete')} onClick={() => this.handleRemove(row)}></el-button>
-      ]
+      const toolbox = []
+      const remove = <el-button size="tiny" icon="obicon obicon-trash" title={this.$t('message.delete')} onClick={() => this.handleRemove(row)}></el-button>
+      this.$isPermited(46) && toolbox.push(remove)
+      return toolbox
     },
     getOboxList () {
       this.tableLoading = true

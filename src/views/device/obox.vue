@@ -163,13 +163,13 @@ export default {
       // const info = <el-button size="tiny" icon="el-icon-info" onClick={() => this.checkDeviceInfo(row)}></el-button>
       const rename = <el-button size="tiny" icon="el-icon-edit" title={this.$t('message.rename')} onClick={() => this.handleRenameAction(row)}>{this.$t('message.rename')}</el-button>
       const remove = <el-button size="tiny" icon="el-icon-delete" title={this.$t('message.delete')} onClick={() => this.removeDevice(row)}>{this.$t('message.delete')}</el-button>
-      if (Suit.typeHints.isThreeKeySocketSwitch(row.device_child_type)) {
+      if (this.$isPermited(32) && Suit.typeHints.isThreeKeySocketSwitch(row.device_child_type)) {
         toolboxs.push(<el-button size="tiny" icon="obicon obicon-power" title={this.$t('smart.obox.placeholder', {FIELD: 'lamp'})} onClick={() => this.handleSwitchPower(row)}>{this.$t('smart.obox.placeholder', {FIELD: 'lamp'})}</el-button>)
-      } else if (Suit.typeHints.isHumidifierSensors(row.device_child_type)) {
+      } else if (this.$isPermited(32) && Suit.typeHints.isHumidifierSensors(row.device_child_type)) {
         toolboxs.push(<el-button size="tiny" icon="obicon obicon-humidity" title={this.$t('smart.obox.placeholder', {FIELD: 'humidifier'})} onClick={() => this.handleHumidifier(row)}>{this.$t('smart.obox.placeholder', {FIELD: 'humidifier'})}</el-button>)
       }
-      toolboxs.push(rename)
-      toolboxs.push(remove)
+      this.$isPermited(35) && toolboxs.push(rename)
+      this.$isPermited(34) && toolboxs.push(remove)
       return toolboxs
     },
     getDeviceList () {

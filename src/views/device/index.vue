@@ -8,7 +8,18 @@
       <el-tab-pane label="" disabled class="menu-panel">
          <span slot="label" class="menu-panel__label"><i class="el-icon-menu"></i></span>
       </el-tab-pane>
-      <el-tab-pane :label="$t('smart.obox.title')" name="obox">
+      <el-tab-pane :label="$t(`smart.${item.name}.title`)" :name="item.name" v-for="(item, index) in navMenu" :key="index">
+        <template v-if="item.id===$submenu.obox">
+          <device-obox v-if="activeName === 'obox'" :height="tableHeight"></device-obox>
+        </template>
+        <template v-if="item.id===$submenu.wifi">
+          <device-wifi v-if="activeName === 'wifi'" :height="tableHeight"></device-wifi>
+        </template>
+        <template v-if="item.id===$submenu.gateway">
+          <gateway v-if="activeName === 'gateway'" :height="tableHeight"></gateway>
+        </template>
+      </el-tab-pane>
+      <!-- <el-tab-pane :label="$t('smart.obox.title')" name="obox">
         <device-obox v-if="activeName === 'obox'" :height="tableHeight"></device-obox>
       </el-tab-pane>
       <el-tab-pane :label="$t('smart.wifi.title')" name="wifi">
@@ -16,7 +27,7 @@
       </el-tab-pane>
       <el-tab-pane :label="$t('smart.gateway.title')" name="gateway">
         <gateway v-if="activeName === 'gateway'" :height="tableHeight"></gateway>
-      </el-tab-pane>
+      </el-tab-pane> -->
     </el-tabs>
   </div>
 </template>
@@ -26,6 +37,7 @@ import DeviceObox from './obox'
 import DeviceWifi from './wifi'
 import Gateway from './gateway'
 import Helper from '@/common/helper'
+import {privDevSubMenu} from '@/router/menu'
 export default {
   data () {
     return {
@@ -34,7 +46,8 @@ export default {
       breadcrumb: {
         prev: this.$t('smart.devicemodule'),
         current: this.$t('smart.obox.title')
-      }
+      },
+      navMenu: []
     }
   },
   components: { DeviceObox, DeviceWifi, Gateway },
@@ -59,11 +72,19 @@ export default {
     }
   },
   mounted () {
+    this.getMenuList()
     Helper.windowOnResize(this, this.fixLayout)
   },
   methods: {
     fixLayout () {
       this.tableHeight = Helper.calculateTableHeight() - 20 - 40
+    },
+    getMenuList () {
+      const menu = privDevSubMenu
+      const validMenu = menu.filter(item => this.$isPermited(item.id))
+      this.navMenu = validMenu
+      this.activeName = validMenu[0] && validMenu[0].name
+      this.breadcrumb.current = this.$t(`smart.${this.activeName}.title`)
     }
   }
 }

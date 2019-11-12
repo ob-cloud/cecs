@@ -13,7 +13,7 @@
       <slot>
         <template slot="caption">
           <el-input @keyup.enter.native="handleSearch" class="caption-item" :placeholder="$t('smart.wifi.search', {FIELD: 'serial'})" v-model="search.obox_serial_id"></el-input>
-          <el-input @keyup.enter.native="handleSearch" class="caption-item" :placeholder="$t('smart.wifi.search', {FIELD: 'type'})" v-model="search.device_type"></el-input>
+          <!-- <el-input @keyup.enter.native="handleSearch" class="caption-item" :placeholder="$t('smart.wifi.search', {FIELD: 'type'})" v-model="search.device_type"></el-input> -->
           <el-input @keyup.enter.native="handleSearch" class="caption-item" :placeholder="$t('smart.wifi.search', {FIELD: 'name'})" v-model="search.name"></el-input>
           <el-select clearable class="caption-item" :placeholder="$t('smart.wifi.search', {FIELD: 'status'})" v-model="search.online">
             <el-option :label="$t('smart.wifi.search', {FIELD: 'status'})" value=''></el-option>
@@ -139,11 +139,11 @@ export default {
       const toolbox = []
       // const rename = <el-button size="tiny" icon="el-icon-edit" title={this.$t('message.rename')} onClick={() => this.handleRenameAction(row)}></el-button>
       const remove = <el-button size="tiny" icon="el-icon-delete" title={this.$t('message.delete')} onClick={() => this.removeDevice(row)}></el-button>
-      if (TypeHint.isTransponder(row.type)) {
+      if (this.$isPermited(32) && TypeHint.isTransponder(row.type)) {
         toolbox.push(<el-button size="tiny" icon="obicon obicon-infrared" title={this.$t('smart.wifi.placeholder', {FIELD: 'infrated'})} onClick={() => this.handleAcControl(row)}></el-button>)
       }
       // toolbox.push(rename)
-      toolbox.push(remove)
+      this.$isPermited(34) && toolbox.push(remove)
       return toolbox
     },
     getDeviceList () {
