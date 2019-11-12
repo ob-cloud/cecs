@@ -89,7 +89,7 @@ export default {
       title: 'WIFI设备',
       search: '{FIELD, select, serial{设备序列号} status{所有状态} type{设备类型} name{设备名称} other{}}',
       tableField: '{FIELD, select, serial{设备序列号} name{设备名称} status{设备状态} type{设备类型} action{操作} other{}}',
-      slide: '{FIELD, select, panel{三键开关控制面板} humidifier{温湿度} other{}}',
+      slide: '{FIELD, select, panel{红外转发控制面板} humidifier{温湿度} other{}}',
       placeholder: '{FIELD, select, infrated{红外控制} other{}}',
     },
     gateway: {

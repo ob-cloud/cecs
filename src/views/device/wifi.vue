@@ -8,17 +8,18 @@
       v-loading="tableLoading"
       :pageTotal="total"
       :pageSize="search.pageSize"
+      :pageNo="search.pageNo"
       @on-current-page-change="onCurrentChange"
       @on-page-size-change="onSizeChange">
       <slot>
         <template slot="caption">
-          <el-input clearable @keyup.enter.native="handleSearch" class="caption-item" :placeholder="$t('smart.wifi.search', {FIELD: 'serial'})" v-model="search.obox_serial_id"></el-input>
+          <el-input clearable @keyup.enter.native="handleSearch" class="caption-item" :placeholder="$t('smart.wifi.search', {FIELD: 'serial'})" v-model="search.deviceId"></el-input>
           <!-- <el-input @keyup.enter.native="handleSearch" class="caption-item" :placeholder="$t('smart.wifi.search', {FIELD: 'type'})" v-model="search.device_type"></el-input> -->
           <el-input clearable @keyup.enter.native="handleSearch" class="caption-item" :placeholder="$t('smart.wifi.search', {FIELD: 'name'})" v-model="search.name"></el-input>
           <el-select clearable class="caption-item" :placeholder="$t('smart.wifi.search', {FIELD: 'status'})" v-model="search.online">
             <el-option :label="$t('smart.wifi.search', {FIELD: 'status'})" value=''></el-option>
-            <el-option :label="$t('message.status', {STATUS: 'online'})" :value='true'></el-option>
-            <el-option :label="$t('message.status', {STATUS: 'offline'})" :value='false'></el-option>
+            <el-option :label="$t('message.status', {STATUS: 'online'})" :value='1'></el-option>
+            <el-option :label="$t('message.status', {STATUS: 'offline'})" :value='0'></el-option>
           </el-select>
           <el-button type="primary" icon="el-icon-search" @click="handleSearch">{{$t('message.search')}}</el-button>
         </template>
@@ -68,6 +69,7 @@ export default {
   data () {
     return {
       tableLoading: true,
+      total: 0,
       search: {
         deviceId: '',
         name: '',
@@ -96,11 +98,6 @@ export default {
     // this.getOboxList()
     this.columns = this.getColumns()
     this.getDeviceList()
-  },
-  computed: {
-    total () {
-      return this.tableData.length || 0
-    }
   },
   mounted () {
     // Helper.windowOnResize(this, this.fixLayout)
@@ -152,9 +149,16 @@ export default {
     },
     getDeviceList () {
       this.tableLoading = true
-      DeviceAPI.getWifiDeviceList(this.search).then(resp => {
-        if (resp.status === 200) {
-          this.tableData = resp.data.configs
+      const params = {...this.search}
+      this.search.online === '' && delete params.online
+      DeviceAPI.getInfratedDeviceList(params).then(resp => {
+        if (resp.status === 0) {
+          this.tableData = resp.data.records
+          this.total = resp.total
+          if (!this.tableData.length && this.search.pageNo !== 1) {
+            this.search.pageNo = PAGINATION_PAGENO
+            this.getDeviceList()
+          }
         } else {
           this.$message({
             message: this.$t('smart.obox.message', {MESSAGE: 'fetchFail'})
@@ -209,7 +213,7 @@ export default {
       const loader = this.$loading({
         text: this.$t('smart.obox.message', {MESSAGE: 'loading'})
       })
-      DeviceAPI.removeDevice(row.obox_serial_id, row.name).then(res => {
+      DeviceAPI.removeInfratedDevice(row.deviceId).then(res => {
         loader.close()
         this.responseHandler(res, this.$t('smart.obox.message', {MESSAGE: 'delDevice'}))
         if (res.message.includes('success')) {

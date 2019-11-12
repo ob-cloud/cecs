@@ -2,7 +2,7 @@
  * @Author: eamiear
  * @Date: 2019-08-07 16:43:21
  * @Last Modified by: eamiear
- * @Last Modified time: 2019-11-12 16:30:56
+ * @Last Modified time: 2019-11-12 17:12:09
  */
 
 import {request} from '@/common/request'
@@ -28,7 +28,7 @@ const OboxAPI = {
     })
   },
   getOboxListV2 (obox = {}) {
-    return request.postForm('/consumer/common', {
+    return request.get('/consumer/common', {
       CMD: 'get_obox',
       obox: JSON.stringify(obox)
     })

@@ -28,7 +28,7 @@ service.interceptors.response.use(({data}) => {
   if (data.status === 401) { // invalid token
     Storage.removeToken()
     Router.push({path: '/login'})
-  } else if (data.status === 419) {
+  } else if (data.status === 401) { // 419
     Notification.error({
       message: 'Permission Denied',
       duration: 1500

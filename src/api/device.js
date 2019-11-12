@@ -2,7 +2,7 @@
  * @Author: eamiear
  * @Date: 2019-08-05 17:32:41
  * @Last Modified by: eamiear
- * @Last Modified time: 2019-11-12 16:30:42
+ * @Last Modified time: 2019-11-12 17:29:18
  */
 
 import {request} from '@/common/request'
@@ -190,9 +190,15 @@ const WifiDeviceAPI = {
     })
   },
   getInfratedDeviceList (wifi = {}) {
-    return request.postForm('/consumer/common', {
+    return request.get('/consumer/common', {
       CMD: 'get_wifi',
       wifi: JSON.stringify(wifi)
+    })
+  },
+  removeInfratedDevice (deviceId) {
+    return request.postForm('/consumer/common', {
+      CMD: 'delete_ali_dev',
+      deviceId
     })
   }
 }

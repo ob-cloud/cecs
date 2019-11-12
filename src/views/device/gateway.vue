@@ -8,6 +8,7 @@
       v-loading="tableLoading"
       :pageTotal="total"
       :pageSize="search.pageSize"
+      :pageNo="search.pageNo"
       @on-current-page-change="onCurrentChange"
       @on-page-size-change="onSizeChange">
 
@@ -47,6 +48,7 @@ export default {
     return {
       tableLoading: true,
       tableHeight: 0,
+      total: 0,
       search: {
         obox_serial_id: '',
         obox_name: '',
@@ -62,11 +64,6 @@ export default {
   created () {
     this.columns = this.getColumns()
     this.getOboxList()
-  },
-  computed: {
-    total () {
-      return this.tableData.length || 0
-    }
   },
   mounted () {
     Helper.windowOnResize(this, this.fixLayout)
@@ -110,9 +107,16 @@ export default {
     },
     getOboxList () {
       this.tableLoading = true
-      OboxAPI.getOboxList(this.search).then(resp => {
-        if (resp.status === 200) {
-          this.tableData = resp.data.oboxs
+      const params = {...this.search}
+      this.search.obox_status === '' && delete params.obox_status
+      OboxAPI.getOboxListV2(params).then(resp => {
+        if (resp.status === 0) {
+          this.tableData = resp.data.records
+          this.total = resp.total
+          if (!this.tableData.length && this.search.pageNo !== 1) {
+            this.search.pageNo = PAGINATION_PAGENO
+            this.getOboxList()
+          }
         } else {
           this.$message({
             message: this.$t('smart.obox.message', {MESSAGE: 'fetchFail'})
