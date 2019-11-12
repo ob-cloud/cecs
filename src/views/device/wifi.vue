@@ -28,7 +28,7 @@
     <!-- <el-dialog top="10%" width="760px" title="设备操作历史" :visible.sync="dialogVisible" :close-on-click-modal="false">
       <device-history :serialId="activeRecord.obox_serial_id"></device-history>
     </el-dialog> -->
-    <slide-page :visible.sync="dialogVisible" :title="$t('smart.wifi.slide', {FIELD: 'panel'})" @onClose="acSerialId = ''">
+    <slide-page :visible.sync="dialogVisible" :title="$t('smart.wifi.slide', {FIELD: 'panel'})"  :extraLabel="acSerialId" @onClose="acSerialId = ''">
       <ac-control :serialId="acSerialId"></ac-control>
     </slide-page>
     <!-- <el-dialog  v-if="renameDialogVisible" top="10%" width="660px" title="重命名" :visible.sync="renameDialogVisible" :close-on-click-modal="false">
@@ -145,6 +145,7 @@ export default {
       }
       // toolbox.push(rename)
       this.$isPermited(34) && toolbox.push(remove)
+      !toolbox.length && toolbox.push(<span title="">-</span>)
       return toolbox
     },
     getDeviceList () {

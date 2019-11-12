@@ -103,6 +103,7 @@ export default {
       const toolbox = []
       const remove = <el-button size="tiny" icon="obicon obicon-trash" title={this.$t('message.delete')} onClick={() => this.handleRemove(row)}></el-button>
       this.$isPermited(46) && toolbox.push(remove)
+      !toolbox.length && toolbox.push(<span title="">-</span>)
       return toolbox
     },
     getOboxList () {

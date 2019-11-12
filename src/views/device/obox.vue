@@ -25,10 +25,10 @@
         </template>
       </slot>
     </base-table>
-    <slide-page :visible.sync="dialogVisible" :title="$t('smart.obox.slide', {FIELD: 'panel'})">
+    <slide-page :visible.sync="dialogVisible" :title="$t('smart.obox.slide', {FIELD: 'panel'})"  :extraLabel="switchSerialId">
       <i-switcher :serialId="switchSerialId" :state="switchState" @switcher-change="onSwitcherChange"></i-switcher>
     </slide-page>
-    <slide-page :visible.sync="humidifierMap.dialogVisible" :title="$t('smart.obox.slide', {FIELD: 'humidifier'})" @onClose="humidifierSerialId = ''">
+    <slide-page :visible.sync="humidifierMap.dialogVisible" :title="$t('smart.obox.slide', {FIELD: 'humidifier'})" :extraLabel="humidifierSerialId" @onClose="humidifierSerialId = ''">
       <humifier :serialId="humidifierSerialId" :state="humidifierState"></humifier>
     </slide-page>
     <el-dialog  v-if="renameDialogVisible" top="10%" width="660px" title="重命名" :visible.sync="renameDialogVisible" :close-on-click-modal="false">
@@ -171,6 +171,7 @@ export default {
       }
       this.$isPermited(35) && toolboxs.push(rename)
       this.$isPermited(34) && toolboxs.push(remove)
+      !toolboxs.length && toolboxs.push(<span title="">{this.$t('message.noAction')}</span>)
       return toolboxs
     },
     getDeviceList () {

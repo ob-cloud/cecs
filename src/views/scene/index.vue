@@ -157,6 +157,7 @@ export default {
       this.$isPermited(39) && toolbox.push(execute)
       this.$isPermited(38) && toolbox.push(edit)
       this.$isPermited(41) && toolbox.push(remove)
+      !toolbox.length && toolbox.push(<span title="">-</span>)
       return toolbox
     },
     getSceneList () {

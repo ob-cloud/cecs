@@ -165,6 +165,7 @@ export default {
       const remove = <el-button size="tiny" icon="el-icon-delete" title={this.$t('message.delete')} onClick={() => this.handleRemove(row)}></el-button>
       this.$isPermited(52) && toolbox.push(edit)
       this.$isPermited(54) && toolbox.push(remove)
+      !toolbox.length && toolbox.push(<span title="">-</span>)
       return toolbox
     },
     getAccountList () {

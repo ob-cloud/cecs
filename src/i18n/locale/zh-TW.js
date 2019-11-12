@@ -42,6 +42,7 @@ export default {
     room: '房',
     none: '無',
     action: '操作',
+    noAction: '無操作',
     actionFail: '操作失敗',
     actionSuccess: '操作成功',
     placeholder: '請{TYPE, select, input{輸入} choose{選擇} other{輸入}}{PLACEHOLDER, select, build{樓棟} floor{樓層} room{房間} deviceName{設備名稱} deviceType{設備類型} other{}}',
