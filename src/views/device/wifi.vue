@@ -128,7 +128,7 @@ export default {
         prop: 'type',
         align: 'center',
         formatter (val) {
-          return Suit.getRootDeviceDescriptor(val)
+          return that.$t('system.devtype', {FIELD: Suit.getRootDeviceDescriptor(val)})
         }
       }, {
         label: this.$t('smart.wifi.tableField', {FIELD: 'action'}),

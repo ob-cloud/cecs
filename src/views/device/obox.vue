@@ -137,14 +137,14 @@ export default {
         prop: 'device_type',
         align: 'center',
         formatter (val) {
-          return Suit.getRootDeviceDescriptor(val)
+          return that.$t('system.devtype', {FIELD: Suit.getRootDeviceDescriptor(val)})
         }
       }, {
         label: this.$t('smart.obox.tableField', {FIELD: 'subtype'}),
         prop: 'device_child_type',
         align: 'center',
         formatter (val, row) {
-          return Suit.getDeviceTypeDescriptor(row.device_type, val)
+          return that.$t('system.devtype', {FIELD: Suit.getDeviceTypeDescriptor(row.device_type, val)})
         }
       }, {
         label: this.$t('smart.obox.tableField', {FIELD: 'version'}),

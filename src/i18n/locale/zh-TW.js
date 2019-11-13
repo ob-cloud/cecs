@@ -9,7 +9,8 @@ export default {
     login: '登錄',
     logintext: '{FIELD, select, account{賬戶} pwd{密碼} erraccount{請輸入正確的用戶名} invalidMobile{手機號碼有誤} loginfail{登錄失敗，賬號或密碼錯誤} other{}}',
     route: '{FIELD, select, devicemgr{設備管理} scenemgr{場景管理} roommgr{房間管理} usrmgr{用戶管理} logmgr{日誌管理} other{}}',
-    validator: '{FIELD, select, name{名稱應為英文字母、數字或下劃線組成的字符串} mobile{手機號碼格式有誤} other{}}'
+    validator: '{FIELD, select, name{名稱應為英文字母、數字或下劃線組成的字符串} mobile{手機號碼格式有誤} other{}}',
+    devtype: '{FIELD, select, Sensor{傳感器} HumidSensors{溫濕度傳感器} Switcher{插座開關} 3KeySwitch{三路開關} Ifrate{紅外轉發器} other{}}'
   },
   message: {
     refresh: '刷新',

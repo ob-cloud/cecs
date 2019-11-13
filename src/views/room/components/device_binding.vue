@@ -92,14 +92,14 @@ export default {
         prop: 'device_type',
         align: 'center',
         formatter (val) {
-          return val && Suit.getRootDeviceDescriptor(val)
+          return val && that.$t('system.devtype', {FIELD: Suit.getRootDeviceDescriptor(val)})
         }
       }, {
         label: this.$t('smart.room.tableField', {FIELD: 'subtype'}),
         prop: 'device_child_type',
         align: 'center',
         formatter (val, row) {
-          return (val && row.device_type) && Suit.getDeviceTypeDescriptor(row.device_type, val)
+          return (val && row.device_type) && that.$t('system.devtype', {FIELD: Suit.getDeviceTypeDescriptor(row.device_type, val)})
         }
       }]
     },

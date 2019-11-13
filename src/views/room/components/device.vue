@@ -81,7 +81,7 @@ export default {
         prop: 'deviceType',
         align: 'center',
         formatter (val) {
-          return Suit.getRootDeviceDescriptor(val)
+          return that.$t('system.devtype', {FIELD: Suit.getRootDeviceDescriptor(val)})
         }
       }, {
         label: this.$t('smart.room.tableField', {FIELD: 'subtype'}),
@@ -89,7 +89,7 @@ export default {
         align: 'center',
         formatter (val, row) {
           if (Suit.typeHints.isThreeKeySocketSwitch(row.deviceChildType)) {
-            return Suit.getDeviceTypeDescriptor(row.deviceType, val)
+            return that.$t('system.devtype', {FIELD: Suit.getDeviceTypeDescriptor(row.deviceType, val)})
           }
           return '-'
         }

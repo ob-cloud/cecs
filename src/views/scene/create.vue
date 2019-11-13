@@ -80,7 +80,7 @@
                 <el-option v-for="(item, index) in deviceAction.roomList" :key="item.roomName + index + item.roomId" :label="item.roomName" :value="item.roomId"></el-option>
               </el-select>
               <el-select :placeholder="$t('message.placeholder', {TYPE: 'choose', PLACEHOLDER: 'deviceType'})" v-model="deviceAction.serialId" @change="onSelectDevice(deviceAction.serialId, index)">
-                <el-option v-for="item in deviceAction.deviceTypeList" :key="item.deviceSerialId" :label="item.deviceType | deviceTypeFilter(item.deviceChildType)" :value="item.deviceSerialId"></el-option>
+                <el-option v-for="item in deviceAction.deviceTypeList" :key="item.deviceSerialId" :label="deviceTypeFilter(item.deviceType, item.deviceChildType)" :value="item.deviceSerialId"></el-option>
               </el-select>
               <div v-if="deviceAction.serialId" class="action-item__behavior" @click="settingAction(deviceAction.serialId, index)" :title="deviceAction.actionDescriptor">
                 <p>{{deviceAction.actionDescriptor || $t('smart.scene.create', {FIELD: 'devAction'})}}</p>
@@ -197,12 +197,6 @@ export default {
       // layerList: []
     }
   },
-  filters: {
-    deviceTypeFilter (type, subtype) {
-      if (!type && !subtype) return
-      return subtype ? Suit.getDeviceTypeDescriptor(type, subtype) : Suit.getRootDeviceDescriptor(type)
-    }
-  },
   components: {SceneCondition, SceneAction},
   mounted () {
     this.getDeviceList()
@@ -219,6 +213,10 @@ export default {
     },
   },
   methods: {
+    deviceTypeFilter (type, subtype) {
+      if (!type && !subtype) return
+      return subtype ? this.$t('system.devtype', {FIELD: Suit.getDeviceTypeDescriptor(type, subtype)}) : this.$t('system.devtype', {FIELD: Suit.getRootDeviceDescriptor(type)})
+    },
     isActionDevice (deviceType, deviceSubType, isLocal) {
       return !Suit.typeHints.isSensors(deviceType)
         && !Suit.typeHints.isFinger(deviceType)
