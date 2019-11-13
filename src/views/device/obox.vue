@@ -245,16 +245,19 @@ export default {
           this.getDeviceList()
         } else if (res.message.includes('obox is offline or not exist')) {
           this.$message({
+            title: this.$t('message.fail'),
             type: 'error',
             message: this.$t('smart.obox.message', {MESSAGE: 'oboxoffline'})
           })
         } else if (res.message.includes('device does not belong to the user')) {
           this.$message({
+            title: this.$t('message.fail'),
             type: 'error',
             message: this.$t('smart.obox.message', {MESSAGE: 'nobelong'})
           })
         } else {
           this.$message({
+            title: this.$t('message.fail'),
             type: 'error',
             message: this.$t('message.actionFail')
           })
