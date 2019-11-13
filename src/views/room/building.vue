@@ -18,7 +18,7 @@
         <div class="header">
           <i class="icon obicon obicon-power" :title="$t('message.power')" @click="handlePower(item)"></i>
           <i class="icon el-icon-edit" :title="$t('message.edit')" @click="handleEdit(item)"></i>
-          <i class="icon el-icon-delete" :title="$t('message.delete')" @click="handleRemove(item)"></i>
+          <i class="icon el-icon-delete" v-isPermited="43" :title="$t('message.delete')" @click="handleRemove(item)"></i>
         </div>
         <div class="content">
           <i class="building-sign obicon obicon-building-o" :class="{'is-active': item.allType}"></i>
