@@ -709,6 +709,18 @@ body.dark{
       background-color: $light-dark;
       // right: 10px;
       box-shadow: 0 0 1px 1px $light-white;
+      &.withsizes{
+        .el-input__inner{
+          border-color: $light-white;
+          color: $light-white;
+        }
+        .el-select .el-input .el-select__caret{
+          color: $light-white;
+        }
+        .btn-prev{
+          border-top: 1px solid $light-white;
+        }
+      }
       > button:last-of-type{
         border-top-color: $light-white;
       }
@@ -852,4 +864,28 @@ body.dark{
 }
 .clearfix:after {
   clear: both
+}
+
+
+.building-list .pagination{
+  &.withsizes{
+    .el-pagination__sizes{
+      margin: 0 0 8px 0;
+    }
+    .el-select{
+      padding: 3px;
+    }
+    .el-select .el-input{
+      width: 96%;
+      margin: 0 auto;
+    }
+    .el-input__inner{
+      padding-right: 20px;
+      padding-left: 4px;
+      font-size: 12px;
+    }
+    .el-select .el-input .el-select__caret{
+      width: 21px;
+    }
+  }
 }

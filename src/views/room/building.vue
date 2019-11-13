@@ -32,7 +32,7 @@
         :page-size="searchModel.pageSize"
         :current-page="searchModel.pageNo"
         :total="buildingTotal"
-        layout="prev, next"
+        layout="sizes, prev, next"
         @current-change="onCurrentChange"
         @size-change="onSizeChange">
       </el-pagination>
