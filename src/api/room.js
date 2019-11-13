@@ -2,7 +2,7 @@
  * @Author: eamiear
  * @Date: 2019-08-07 16:43:10
  * @Last Modified by: eamiear
- * @Last Modified time: 2019-11-04 10:55:54
+ * @Last Modified time: 2019-11-13 11:13:57
  */
 
 import {request} from '@/common/request'
@@ -101,7 +101,7 @@ const RoomAPI = {
     })
   },
   getRoomCascader () {
-    return request.postForm('/consumer/common', {
+    return request.get('/consumer/common', {
       CMD: 'get_building_floor_room'
     })
   },
@@ -136,7 +136,7 @@ const RoomAPI = {
     })
   },
   getRoomDeviceListV2 (device = {}) {
-    return request.postForm('/consumer/common', {
+    return request.get('/consumer/common', {
       CMD: 'get_room_device',
       device: JSON.stringify(device)
     })
@@ -154,7 +154,7 @@ const RoomAPI = {
     })
   },
   getSwitchGlobalType () {
-    return request.postForm('/consumer/common', {
+    return request.get('/consumer/common', {
       CMD: 'get_alltype'
     })
   }

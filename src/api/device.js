@@ -2,7 +2,7 @@
  * @Author: eamiear
  * @Date: 2019-08-05 17:32:41
  * @Last Modified by: eamiear
- * @Last Modified time: 2019-11-12 17:29:18
+ * @Last Modified time: 2019-11-13 11:15:25
  */
 
 import {request} from '@/common/request'
@@ -21,7 +21,7 @@ const DeviceAPI = {
     })
   },
   getAllBuildingDeviceList (device = {}) {
-    return request.postForm('/consumer/common', {
+    return request.get('/consumer/common', {
       CMD: 'get_building_devices',
       user: JSON.stringify(device)
     })
