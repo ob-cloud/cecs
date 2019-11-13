@@ -26,6 +26,14 @@ service.interceptors.request.use(config => {
 })
 service.interceptors.response.use(({data}) => {
   if (data.status === 401) { // invalid token
+    // Message.error({
+    //   message: 'Log out of date',
+    //   duration: 2500
+    // })
+    // setTimeout(() => {
+    //   Storage.removeToken()
+    //   Router.push({path: '/login'})
+    // }, 3000)
     Storage.removeToken()
     Router.push({path: '/login'})
   } else if (data.status === 401) { // 419
