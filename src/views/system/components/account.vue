@@ -54,6 +54,7 @@ import BaseTable from '@/assets/package/table-base'
 import UserAPI from '@/api/user'
 import { PAGINATION_PAGENO, PAGINATION_PAGESIZE } from '@/common/constants'
 import Helper from '@/common/helper'
+import md5 from 'md5'
 export default {
   props: {
     height: {
@@ -236,6 +237,9 @@ export default {
       this.$refs.creation.validate(valid => {
         if (valid) {
           const action = type === 'create' ? 'createUser' : 'updateUser'
+          if (type === 'create') {
+            this.createModel.password = md5(btoa(this.createModel.password) + this.createModel.password)
+          }
           UserAPI[action](this.createModel).then(res => {
             if (res.status === 0) {
               this.$message({
