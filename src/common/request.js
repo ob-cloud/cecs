@@ -33,6 +33,11 @@ service.interceptors.response.use(({data}) => {
       message: 'Permission Denied',
       duration: 1500
     })
+  } else if (data.status === 511) { // 419
+    Notification.error({
+      message: 'System Error',
+      duration: 1500
+    })
   }
   return data
 }, error => {
