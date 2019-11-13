@@ -49,7 +49,7 @@ export default {
   },
   watch: {
     '$route' (val) {
-      this.breadcrumb.prev = val.meta.title
+      this.breadcrumb.prev = this.$t('system.route', {FIELD: val.meta.title})
     },
     activeName (val) {
       if (!val) return
