@@ -287,7 +287,7 @@ export default {
         lock: true,
         text: `${statusText}${this.$t('smart.room.message', {MESSAGE: 'loading'})}...`
       })
-      RoomAPI.triggerSwitch({buildingId: item.buildingId, roomId: item.id, floorId: item.floorId, deviceType: isActive ? 2 : 1}).then(res => {
+      RoomAPI.triggerSwitch({roomId: item.id, deviceType: isActive ? 2 : 1}).then(res => {
         if (res.status === 0) {
           this.getRoomList()
           loading.close()
