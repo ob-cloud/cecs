@@ -237,9 +237,7 @@ export default {
       this.$refs.creation.validate(valid => {
         if (valid) {
           const action = type === 'create' ? 'createUser' : 'updateUser'
-          if (type === 'create') {
-            this.createModel.password = md5(btoa(this.createModel.password) + this.createModel.password)
-          }
+          this.createModel.password = md5(btoa(this.createModel.password) + this.createModel.password)
           UserAPI[action](this.createModel).then(res => {
             if (res.status === 0) {
               this.$message({
