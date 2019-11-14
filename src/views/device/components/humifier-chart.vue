@@ -16,34 +16,62 @@ export default {
         tooltip: {
           trigger: 'axis',
           axisPointer: {
-            type: 'cross',
+            type: 'none',
             crossStyle: {
               color: '#999'
             }
           }
         },
         legend: {
-          data: ['温度', '湿度']
+          data: [this.$t('smart.obox.tableField', {FIELD: 'temperature'}), this.$t('smart.obox.tableField', {FIELD: 'humidifier'})]
+        },
+        color: ['#8FC1FE', '#0FFF7B'],
+        textStyle: {
+          color: '#bcc6d0',
         },
         xAxis: [{
           type: 'category',
-          data: this.xAxis
+          data: this.xAxis,
+          splitLine: {
+            show: false
+          },
+          axisLine: {
+            lineStyle: {
+              color: '#A2AAB5'
+            }
+          }
         }],
         yAxis: [{
           type: 'value',
-          name: '温度',
+          name: this.$t('smart.obox.tableField', {FIELD: 'temperature'}),
           min: 0,
           max: 100,
           interval: 20,
+          splitLine: {
+            show: false
+          },
+          axisLine: {
+            lineStyle: {
+              color: '#A2AAB5'
+            }
+          },
           axisLabel: {
             formatter: '{value} °C'
           }
         }, {
           type: 'value',
-          name: '湿度',
+          name: this.$t('smart.obox.tableField', {FIELD: 'humidifier'}),
           min: 0,
           max: 100,
           interval: 10,
+          splitLine: {
+            show: false
+          },
+          axisLine: {
+            lineStyle: {
+              color: '#A2AAB5'
+            }
+          },
           axisLabel: {
             formatter: '{value} %'
           }

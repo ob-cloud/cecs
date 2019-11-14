@@ -116,12 +116,38 @@ export default {
         this.series.push({
           name: this.$t('smart.obox.tableField', {FIELD: 'temperature'}),
           type: 'line',
-          data: temperature
+          data: temperature,
+          smooth: true,
+          symbol: 'circle',
+          symbolSize: 6,
+          itemStyle: {
+            normal: {
+              color: '#2C3449',
+              borderColor: '#45D9FF',
+              borderWidth: 1,
+            }
+          },
+          lineStyle: {
+            color: '#45D9FF'
+          }
         })
         this.series.push({
           name: this.$t('smart.obox.tableField', {FIELD: 'humidifier'}),
-          type: 'bar',
-          data: humidifier
+          type: 'line',
+          smooth: true,
+          data: humidifier,
+          symbol: 'circle',
+          symbolSize: 6,
+          itemStyle: {
+            normal: {
+              color: '#2C3449',
+              borderColor: '#0FFF7B',
+              borderWidth: 1,
+            }
+          },
+          lineStyle: {
+            color: '#0FFF7B'
+          }
         })
       }
     },
