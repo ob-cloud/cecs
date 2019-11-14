@@ -14,6 +14,7 @@ $deep-blue: #246CDA;
 $light-blue: #8FC1FE;
 $bright-blue: #45D9FF;
 $purple: #4D4EC5;
+$green: #0FFF7B;
 
 $yellow: #d8d815;
 
@@ -525,7 +526,12 @@ body.dark{
       color: $light-white!important;
     }
     .humidifier-status .item i{
-      color: $light-blue!important;
+      // color: $light-blue!important;
+      color: $green;
+
+      &.obicon-temperature-o{
+        color: $bright-blue;
+      }
     }
     .humidifier-status .item > span{
       color: $white!important;

@@ -81,7 +81,7 @@ export default {
     obox: {
       title: 'OBOX设备',
       search: '{FIELD, select, serial{设备序列号} devices{所有网关设备} type{设备类型} name{设备名称} other{}}',
-      tableField: '{FIELD, select, temperature{溫度} humidifier{湿度} date{时间} serial{设备序列号} name{设备名称} status{设备状态} type{设备类型} subtype{子设备类型} version{设备版本} action{操作} other{}}',
+      tableField: '{FIELD, select, temperature{温度} humidifier{湿度} date{时间} serial{设备序列号} name{设备名称} status{设备状态} type{设备类型} subtype{子设备类型} version{设备版本} action{操作} other{}}',
       slide: '{FIELD, select, panel{三键开关控制面板} humidifier{温湿度} other{}}',
       placeholder: '{FIELD, select, lamp{开关} humidifier{温湿度} other{}}',
       message: '{MESSAGE, select, powerswitch{电源开关已} direct{操作指令发送成功} fetchFail{设备获取失败} loading{设备删除中...} delConfirm{确认删除设备？} delDevice{设备删除} setSuccess{设置成功} setFail{设置失败} history{历史数据} nowadays{今日数据} oboxoffline{OBOX离线或不存在} nobelong{没有权限操作该设备} other{}}',

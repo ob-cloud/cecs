@@ -11,7 +11,7 @@
       </div>
     </div>
     <el-tabs tab-position="right" class="humidifier-table">
-      <el-tab-pane :label="$t('smart.obox.message', {MESSAGE: 'history'})">
+      <el-tab-pane :label="$t('smart.obox.message', {MESSAGE: 'history'})" style="max-height: 400px; min-height: 360px;">
         <base-table
           v-loading="tableLoading"
           stripe
@@ -20,7 +20,7 @@
           :columns="columns"
           :showPagination="false"></base-table>
       </el-tab-pane>
-      <el-tab-pane :label="$t('smart.obox.message', {MESSAGE: 'nowadays'})" style="max-height: 400px; min-height: 360px;">
+      <el-tab-pane :label="$t('smart.obox.message', {MESSAGE: 'nowadays'})" style="width: 100%; height: 360px;max-height: 400px; min-height: 360px;">
         <HumifierChart v-if="isCharListValid" :data="series" :xAxis="labels" style="margin: 0 auto;"></HumifierChart>
       </el-tab-pane>
     </el-tabs>
@@ -46,7 +46,7 @@ export default {
   data () {
     return {
       tableLoading: true,
-      tableHeight: 320,
+      tableHeight: 350,
       tableData: [],
       columns: [{label: this.$t('smart.obox.tableField', {FIELD: 'temperature'}), prop: 'temperature', align: 'center' }, {label: this.$t('smart.obox.tableField', {FIELD: 'humidifier'}), prop: 'humidifier', align: 'center' }, {label: this.$t('smart.obox.tableField', {FIELD: 'date'}), prop: 'time', align: 'center' }],
       isCharListValid: false,
@@ -198,7 +198,12 @@ export default {
     }
     .item i {
       font-size: 32px;
-      color: rgba(5, 100, 184, 0.9);
+      // color: rgba(5, 100, 184, 0.9);
+      color: #0FFF7B;
+
+      &.obicon-temperature-o{
+        color: #45D9FF;
+      }
     }
     .item > span{
       display: inline-block;
