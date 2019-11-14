@@ -90,7 +90,7 @@ export default {
       return this.parseHumidifierHistoryByDay(data.history)
     },
     parseHumidifierHistoryByDay (list, fmt) {
-      return Array.from(list.concat(list)).map(item => {
+      return Array.from(list).map(item => {
         const temperature = +parseInt(item.status.slice(2, 4), 16).toString(10) - 30
         const humidifier = +parseInt(item.status.slice(6, 8), 16).toString(10)
         const time = Helper.parseTime(new Date(item.time * 1000), fmt || '{h}:{i}')
