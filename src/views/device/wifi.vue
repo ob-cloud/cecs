@@ -121,7 +121,7 @@ export default {
         prop: 'online',
         align: 'center',
         formatter (status, row) {
-          return status === false ? that.$t('message.status', {STATUS: 'offline'}) : that.$t('message.status', {STATUS: 'online'})
+          return status === 0 ? that.$t('message.status', {STATUS: 'offline'}) : that.$t('message.status', {STATUS: 'online'})
         }
       }, {
         label: this.$t('smart.wifi.tableField', {FIELD: 'type'}),
