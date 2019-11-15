@@ -85,7 +85,7 @@ export default {
       slide: '{FIELD, select, panel{三鍵開關控制面板} humidifier{溫濕度} other{}}',
       placeholder: '{FIELD, select, lamp{開關} humidifier{溫濕度} other{}}',
       message: '{MESSAGE, select, powerswitch{電源開關已} direct{操作指令發送成功} fetchFail{設備獲取失敗} loading{設備刪除中...} delConfirm{確認刪除設備？} delDevice{設備刪除} setSuccess{設置成功} setFail{設置失敗} history{歷史數據} nowadays{今日數據} oboxoffline{OBOX離線或不存在} nobelong{沒有權限操作該設備} other{}}',
-      ac: '{FIELD, select, temperature{溫度} humidifier{濕度} auto{自動} speed{風速} fans{風扇} weak{弱風} medium{中風} strong{強風} cold{製冷} hot{制熱} dehum{抽濕} supply{送風} mode{模式} switch{開關} type{設備類型} subtype{子設備類型} version{設備版本} action{操作} other{无数据}}'
+      ac: '{FIELD, select, temperature{溫度} humidifier{濕度} auto{自動} speed{風速} fans{風扇} weak{弱風} medium{中風} strong{強風} cold{製冷} hot{制熱} dehum{抽濕} supply{送風} mode{模式} switch{開關} type{設備類型} subtype{子設備類型} version{設備版本} action{操作} other{無資料}}'
     },
     wifi: {
       title: 'WIFI設備',
@@ -137,6 +137,7 @@ export default {
       title: '導出日誌',
       search: '{FIELD, select, start{開始日期} end{結束日期} week{最近一周} month{最近一個月} months{最近三個月} other{}}',
       tableField: '{FIELD, select, serial{序號} name{文件名} daterange{日期區間} datetime{操作時間} operator{執行人} other{}}',
+      message: '{MESSAGE, select, chooseDate{請選擇導出日期} other{}}',
     }
   },
   ...zhTWLocale

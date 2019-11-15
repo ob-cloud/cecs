@@ -2,7 +2,7 @@
  * @Author: eamiear
  * @Date: 2019-08-07 15:19:34
  * @Last Modified by: eamiear
- * @Last Modified time: 2019-10-29 10:58:12
+ * @Last Modified time: 2019-11-15 09:42:31
  */
 
 import {request} from '@/common/request'
@@ -49,6 +49,12 @@ const SceneAPI = {
     return request.get('/consumer/common', {
       CMD: 'get_scene_devices',
       user: JSON.stringify(user)
+    })
+  },
+  getSmartSceneList (scene = {}) {
+    return request.get('/consumer/common', {
+      CMD: 'get_smart_scene',
+      scene: JSON.stringify(scene)
     })
   }
 }

@@ -2,7 +2,7 @@
  * @Author: eamiear
  * @Date: 2019-02-06 21:34:24
  * @Last Modified by: eamiear
- * @Last Modified time: 2019-11-11 10:31:46
+ * @Last Modified time: 2019-11-15 11:46:29
  */
 
 import {request} from '@/common/request'
@@ -60,6 +60,12 @@ const SystemAPI = {
       CMD: 'get_sys_log',
       log: JSON.stringify(log)
     })
+  },
+  exportsLogs (beginTime, endTime) {
+    return request.getRequestUrl('/facade/getExportLog', {beginTime, endTime})
+    // return request.postForm('consumer/facade/getExportLog', {
+    //   beginTime, endTime
+    // })
   },
   getUserPrivilege () {
     return request.get('/consumer/common', {

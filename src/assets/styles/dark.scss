@@ -775,27 +775,27 @@ body.dark{
 
   // login
   .ura-login{
-    // background-color: $stripe-dark!important;
+    background-color: $medium-dark!important;
   }
   .ura-login-container{
-    // background-color: #5D687B!important; // $light-dark!important;
-    color: $dark;
-    // box-shadow: 0 0 10px rgba(255, 255, 255, 0.35)!important;
+    background-color: $stripe-dark!important; // #5D687B!important; // $light-dark!important;
+    color: $light-white;
+    box-shadow: 0 0 10px $dark!important;// rgba(255, 255, 255, 0.35)!important;
     // background-image: $blue-gradient!important;
 
     .el-input__inner{
-      border-color: $light-dark;
-      color: $dark;
+      // border-color: $light-dark;
+      // color: $dark;
 
-      // border-color: $light-white;
-      // color: $white;
+      border-color: $light-white;
+      color: $light-white;
 
       // border-color: $light-blue;
       // color: $light-blue;
     }
     .el-button--primary{
       border-color: transparent;
-      color: $white;
+      color: $light-white;
 
       border: none;
       // background-image: $light-blue-gradient;

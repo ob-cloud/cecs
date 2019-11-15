@@ -17,6 +17,7 @@
             type="datetimerange"
             :picker-options="pickerOptions"
             range-separator="-"
+            value-format="yyyy-MM-dd hh:mm:ss"
             :start-placeholder="$t('smart.exportrecords.search', {FIELD: 'start'})"
             :end-placeholder="$t('smart.exportrecords.search', {FIELD: 'end'})"
             align="right">
@@ -30,7 +31,7 @@
 
 <script>
 import BaseTable from '@/assets/package/table-base'
-// import SystemAPI from '@/api/system'
+import SystemAPI from '@/api/system'
 import { PAGINATION_PAGENO, PAGINATION_PAGESIZE } from '@/common/constants'
 import Helper from '@/common/helper'
 export default {
@@ -81,7 +82,7 @@ export default {
       },
       pickerValue: '',
       tableData: [],
-      columns: []
+      columns: [],
     }
   },
   components: { BaseTable },
@@ -160,7 +161,16 @@ export default {
       this.getLogsList()
     },
     handleExport () {
-      console.log(this.pickerValue)
+      if (!this.pickerValue || (this.pickerValue && !this.pickerValue.length)) {
+        return this.$message({
+          type: 'warning',
+          message: this.$t('smart.exportrecords.message', {MESSAGE: 'chooseDate'})
+        })
+      }
+      window.open(SystemAPI.exportsLogs(this.pickerValue[0], this.pickerValue[1]))
+      setTimeout(() => {
+        this.getLogsList()
+      }, 2000)
     }
   }
 }

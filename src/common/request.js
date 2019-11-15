@@ -71,8 +71,9 @@ const _defaults = (method, url, params, headers) => {
 }
 export const request = {
   axios,
-  getRequestUrl (url) {
-    return requestBaseUrl + url
+  getRequestUrl (url, params = {}, needAuth = true) {
+    needAuth && (params.access_token = Storage.getToken())
+    return requestBaseUrl + url + (QS.stringify(params) && ('?' + QS.stringify(params)))
   },
   get (url, params = {}, headers) {
     return service(_defaults('GET', url, params, headers))

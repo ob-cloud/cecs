@@ -6,8 +6,9 @@
       :columns="columns"
       stripe
       v-loading="tableLoading"
-      :pageTotal="total"
       :pageSize="search.pageSize"
+      :pageNo="search.pageNo"
+      :pageTotal="total"
       @on-current-page-change="onCurrentChange"
       @on-page-size-change="onSizeChange">
 
@@ -57,6 +58,7 @@ export default {
     return {
       tableLoading: true,
       tableHeight: 0,
+      total: 0,
       containerHeight: 0,
       // buildingList: [],
       // floorList: [],
@@ -95,11 +97,6 @@ export default {
       this.getRoomList(val)
     },
   },
-  computed: {
-    total () {
-      return this.tableData.length || 0
-    }
-  },
   mounted () {
     Helper.windowOnResize(this, this.fixLayout)
     Helper.windowOnResize(this, this.fixContainerLayout)
@@ -115,19 +112,19 @@ export default {
       const _this = this
       return [{
         label: this.$t('smart.scene.tableField', {FIELD: 'name'}),
-        prop: 'scene_name',
+        prop: 'sceneName',
         align: 'center'
       }, {
         label: this.$t('smart.scene.tableField', {FIELD: 'build'}),
-        prop: 'building',
+        prop: 'buildingName',
         align: 'center'
       }, {
         label: this.$t('smart.scene.tableField', {FIELD: 'floor'}),
-        prop: 'floor',
+        prop: 'floorName',
         align: 'center'
       }, {
         label: this.$t('smart.scene.tableField', {FIELD: 'room'}),
-        prop: 'room',
+        prop: 'roomName',
         align: 'center'
       }, {
         label: this.$t('smart.scene.tableField', {FIELD: 'status'}),
@@ -135,7 +132,7 @@ export default {
         renderBody (h, row) {
           return (
             <el-switch onChange={() => { _this.handleChangeStatus(row) }}
-              value={[false, true][row.scene_status]}
+              value={[false, true][row.sceneStatus]}
               active-color='#246CDA'
               inactive-color='#282A39'>
             </el-switch>
@@ -162,9 +159,18 @@ export default {
     },
     getSceneList () {
       this.tableLoading = true
-      SceneAPI.getSceneList(this.search).then(resp => {
-        if (resp.status === 200) {
-          this.tableData = resp.data.scenes
+      const param = {...this.search}
+      param.buildingId === '' && delete param.buildingId
+      param.floorId === '' && delete param.floorId
+      param.roomId === '' && delete param.roomId
+      SceneAPI.getSmartSceneList(param).then(resp => {
+        if (resp.status === 0) {
+          this.tableData = resp.data.records
+          this.total = resp.total
+          if (!this.tableData.length && this.search.pageNo !== 1) {
+            this.search.pageNo = PAGINATION_PAGENO
+            this.getSceneList()
+          }
         } else {
           this.$message({
             message: this.$t('smart.scene.message', {MESSAGE: 'fetchFail'})
@@ -194,8 +200,8 @@ export default {
       this.getSceneList()
     },
     handleChangeStatus (row) {
-      row.scene_status = 1 - row.scene_status
-      SceneAPI.chageSceneStatus(`0${row.scene_status}`, row.scene_number).then(res => {
+      row.sceneStatus = 1 - row.sceneStatus
+      SceneAPI.chageSceneStatus(`0${row.sceneStatus}`, row.sceneNumber).then(res => {
         this.responseHandler(res, this.$t('smart.scene.message', {MESSAGE: 'update'}))
       }).catch(err => {
         this.responseHandler({message: 'error'}, this.$t('smart.scene.message', {MESSAGE: 'update'}))
@@ -218,7 +224,7 @@ export default {
         lock: true,
         text: this.$t('smart.scene.message', {MESSAGE: 'excuting'})
       })
-      SceneAPI.executeScene(row.scene_number).then(res => {
+      SceneAPI.executeScene(row.sceneNumber).then(res => {
         loader.close()
         this.responseHandler(res, this.$t('smart.scene.message', {MESSAGE: 'excute'}))
         if (res.message.includes('success')) {

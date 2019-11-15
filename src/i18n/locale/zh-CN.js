@@ -137,6 +137,7 @@ export default {
       title: '导出日志',
       search: '{FIELD, select, start{开始日期} end{结束日期} week{最近一周} month{最近一个月} months{最近三个月} other{}}',
       tableField: '{FIELD, select, serial{序号} name{文件名} daterange{日期区间} datetime{操作时间} operator{执行人} other{}}',
+      message: '{MESSAGE, select, chooseDate{请选择导出日期} other{}}',
     }
   },
   ...zhLocale
