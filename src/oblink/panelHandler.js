@@ -65,12 +65,26 @@ export const getAirConditionKeys = (templure, mode, speed, windVertical, windHor
 
 export const hasVerticalWind = keys => {
   if (!keys || !keys.length) return false
-  const key = keys[0].key
-  return key.includes('_') && (key.includes('u0') || key.includes('u1')) && !key.includes('*')
+  const index = keys.findIndex(item => {
+    const key = item.key
+    return key.includes('_') && (key.includes('u0') || key.includes('u1')) && !key.includes('*')
+  })
+  return index !== -1
+  // const key = keys[0].key
+  // return key.includes('_') && (key.includes('u0') || key.includes('u1')) && !key.includes('*')
 }
 
 export const hasHorizontalWind = keys => {
   if (!keys || !keys.length) return false
-  const key = keys[0].key
-  return key.includes('_') && (key.includes('l0') || key.includes('l1')) && !key.includes('*')
+  const index = keys.findIndex(item => {
+    const key = item.key
+    return key.includes('_') && (key.includes('l0') || key.includes('l1')) && !key.includes('*')
+  })
+  return index !== -1
+  // const key = keys[0].key
+  // return key.includes('_') && (key.includes('l0') || key.includes('l1')) && !key.includes('*')
+}
+
+export const isV3Ac = rmodel => {
+  return rmodel && rmodel.toLowerCase().includes('v3')
 }

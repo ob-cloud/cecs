@@ -158,9 +158,14 @@ export default {
       })
     },
     getActionKey () {
-      const hasVW = panelHandler.hasVerticalWind(this.currentDevice.keys)
-      const hasHW = panelHandler.hasHorizontalWind(this.currentDevice.keys)
-      return panelHandler.getAirConditionKeys(this.airAction.templure, this.airAction.mode, this.airAction.speed, +hasVW, +hasHW)
+      const isV3 = panelHandler.isV3Ac(this.currentDevice.rmodel)
+      let hasVW = ''
+      let hasHW = ''
+      if (!isV3) {
+        hasVW = +panelHandler.hasVerticalWind(this.currentDevice.keys)
+        hasHW = +panelHandler.hasHorizontalWind(this.currentDevice.keys)
+      }
+      return panelHandler.getAirConditionKeys(this.airAction.templure, this.airAction.mode, this.airAction.speed, hasVW, hasHW)
     }
   },
 }

@@ -152,11 +152,17 @@ export default {
         // this.$emit('action-change', {action: panelHandler.changeSwitchButtonToAction(this.powerStatus, this.actionObject), extra: this.powerStatus}, false)
         this.$emit('action-change', {action: panelHandler.changeSwitchButtonToAction(this.powerStatus, this.actionObject, room), extra: this.powerStatus.map(item => (item ? '开' : '关')).join('/')}, false)
       } else if (this.isTransponder()) {
-        const hasVW = panelHandler.hasVerticalWind(this.currentTransponderDevice.keys)
-        const hasHW = panelHandler.hasHorizontalWind(this.currentTransponderDevice.keys)
+        const isV3 = panelHandler.isV3Ac(this.currentTransponderDevice.rmodel)
+        let hasVW = ''
+        let hasHW = ''
+        if (!isV3) {
+          hasVW = +panelHandler.hasVerticalWind(this.currentTransponderDevice.keys)
+          hasHW = +panelHandler.hasHorizontalWind(this.currentTransponderDevice.keys)
+        }
+
         const action = {
           index: this.currentTransponderDevice.index,
-          key: this.currentTransponderDevice ? panelHandler.getAirConditionKeys(this.airAction.templure, this.airAction.mode, this.airAction.speed, +hasVW, +hasHW) : '',
+          key: this.currentTransponderDevice ? panelHandler.getAirConditionKeys(this.airAction.templure, this.airAction.mode, this.airAction.speed, hasVW, hasHW) : '',
           keyType: 0,
           name: this.currentTransponderDevice.name
         }
