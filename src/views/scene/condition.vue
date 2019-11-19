@@ -2,7 +2,7 @@
   <div>
     <el-tabs v-model="conditionType" class="condition-type" type="border-card" @tab-click="onConditionTabClick">
       <el-tab-pane :label="$t('smart.scene.condition', {FIELD: 'timeCon'})" name="1">
-        <Cron></Cron>
+        <Cron v-model="conditionModel.cron"></Cron>
           <!-- <el-tabs tab-position="left" class="timing h200" v-model="conditionTimeType">
             <el-tab-pane :label="$t('smart.scene.condition', {FIELD: 'date'})" name="1">
               <el-date-picker
@@ -158,6 +158,7 @@ export default {
       conditionType: '1',
       conditionTimeType: '1',
       conditionModel: {
+        cron: '',
         year: '',
         month: '',
         day: '',
@@ -295,49 +296,50 @@ export default {
       return type === '0436'
     },
     getDateTimeCondition () {
-      const conmodel = this.conditionModel
-      const desc = []
-      const cronMap = {'second': '*', 'minute': '*', 'hour': '*', 'date': '*', 'month': '*', 'week': '*', 'year': '*'}
-      const year = conmodel.year
-      const week = conmodel.week
-      const month = conmodel.month
-      const date = conmodel.date
-      const time = conmodel.time
-      let hour = ''
-      let minute = ''
-      if (time) {
-        hour = time.split(':')[0]
-        minute = time.split(':')[1]
-      }
-      cronMap.year = year || ''
-      cronMap.week = (week && this.weeks.find(item => item.label === week).value) || '?'
-      cronMap.month = month || '*'
-      cronMap.date = date || '*'
-      cronMap.hour = hour || '*'
-      cronMap.minute = minute || '*'
-      cronMap.second = '0'
-      const index = Object.keys(cronMap).reverse().findIndex(key => cronMap[key] && cronMap[key] !== '*' && cronMap[key] !== '?')
-      const map = index ? Object.fromEntries(Object.entries(cronMap).slice(0, -index)) : cronMap
-      desc[0] = (`${map.year && map.year !== '*' ? map.year : '每'}年`)
-      desc[1] = (`${map.month && map.month !== '*' ? map.month : '每'}月`)
-      desc[3] = (`${map.date && map.date !== '*' ? map.date : '每'}日 `)
-      const reverseKeys = Object.keys(map).reverse()
-      if (reverseKeys[0] === 'month') {
-        map.date = map.date || '*'
-        desc[2] = ''
-      } else if (reverseKeys[0] === 'week') {
-        map.month = map.month || '*'
-        map.date = '?'
-        desc[3] = ''
-        desc[2] = (`${map.week && ('周' + map.week)} `)
-      }
-      map.hour = map.hour || 0
-      map.minute = map.minute || 0
-      desc[4] = (`${map.hour && map.hour !== '*' ? map.hour : 0}时`)
-      desc[5] = (`${map.minute && map.minute !== '*' ? map.minute : 0}分`)
-      conmodel.conditionDesc = desc.join('')
-      console.log('condition ', Object.values({...cronMap, ...map}).join(' '))
-      return Object.values({...cronMap, ...map}).join(' ')
+      return this.conditionModel.cron
+      // const conmodel = this.conditionModel
+      // const desc = []
+      // const cronMap = {'second': '*', 'minute': '*', 'hour': '*', 'date': '*', 'month': '*', 'week': '*', 'year': '*'}
+      // const year = conmodel.year
+      // const week = conmodel.week
+      // const month = conmodel.month
+      // const date = conmodel.date
+      // const time = conmodel.time
+      // let hour = ''
+      // let minute = ''
+      // if (time) {
+      //   hour = time.split(':')[0]
+      //   minute = time.split(':')[1]
+      // }
+      // cronMap.year = year || ''
+      // cronMap.week = (week && this.weeks.find(item => item.label === week).value) || '?'
+      // cronMap.month = month || '*'
+      // cronMap.date = date || '*'
+      // cronMap.hour = hour || '*'
+      // cronMap.minute = minute || '*'
+      // cronMap.second = '0'
+      // const index = Object.keys(cronMap).reverse().findIndex(key => cronMap[key] && cronMap[key] !== '*' && cronMap[key] !== '?')
+      // const map = index ? Object.fromEntries(Object.entries(cronMap).slice(0, -index)) : cronMap
+      // desc[0] = (`${map.year && map.year !== '*' ? map.year : '每'}年`)
+      // desc[1] = (`${map.month && map.month !== '*' ? map.month : '每'}月`)
+      // desc[3] = (`${map.date && map.date !== '*' ? map.date : '每'}日 `)
+      // const reverseKeys = Object.keys(map).reverse()
+      // if (reverseKeys[0] === 'month') {
+      //   map.date = map.date || '*'
+      //   desc[2] = ''
+      // } else if (reverseKeys[0] === 'week') {
+      //   map.month = map.month || '*'
+      //   map.date = '?'
+      //   desc[3] = ''
+      //   desc[2] = (`${map.week && ('周' + map.week)} `)
+      // }
+      // map.hour = map.hour || 0
+      // map.minute = map.minute || 0
+      // desc[4] = (`${map.hour && map.hour !== '*' ? map.hour : 0}时`)
+      // desc[5] = (`${map.minute && map.minute !== '*' ? map.minute : 0}分`)
+      // conmodel.conditionDesc = desc.join('')
+      // console.log('condition ', Object.values({...cronMap, ...map}).join(' '))
+      // return Object.values({...cronMap, ...map}).join(' ')
     },
     getDeviceCondition () {
       let condition = ''
