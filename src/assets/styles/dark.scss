@@ -841,6 +841,77 @@ body.dark{
       background-color: $stripe-dark;
     }
   }
+
+  .cron {
+    background: none;
+    border: none;
+    box-shadow: none;
+
+    .el-radio{
+      color: $light-white;
+    }
+    .el-radio__inner{
+      background-color: $stripe-dark;
+      border-color: $medium-dark;
+    }
+    .el-radio__inner::after{
+      background-color: $stripe-dark;
+      border-color: $medium-dark;
+    }
+    .el-radio.is-bordered{
+      border-color: $medium-dark;
+    }
+    .el-radio.is-bordered.is-checked,
+    .el-radio__input.is-checked .el-radio__inner{
+      border-color: $light-blue;
+    }
+    .el-radio__input.is-checked + .el-radio__label,
+    .el-checkbox__input.is-checked + .el-checkbox__label{
+      color: $light-blue;
+    }
+    .el-checkbox{
+      color: $light-white;
+    }
+    .el-checkbox+.el-checkbox{
+      margin-left: 0;
+    }
+    .el-checkbox__inner{
+      background-color: $medium-dark;
+      border-color: $medium-dark;
+    }
+    .el-checkbox__input.is-checked .el-checkbox__inner{
+      background-color: $dark;
+      border-color: $dark;
+    }
+    .el-checkbox__inner::after{
+      border-color: $light-blue;
+    }
+    .el-input__inner{
+      border-color: $medium-dark;
+    }
+    .el-table{
+      line-height: 20px;
+    }
+    // .el-table .el-table__header-wrapper th, .el-table .el-table__body-wrapper .el-table__row td{
+    //   padding: 4px 0;
+    // }
+  }
+  .el-input-number__increase, .el-input-number__decrease{
+    background-color: transparent;
+    color: $light-white;
+  }
+  .el-input-number.is-controls-right .el-input-number__increase{
+    border-bottom-color: $medium-dark;
+  }
+  .el-input-number__increase{
+    border-left-color: $medium-dark;
+  }
+  .el-input-number.is-controls-right .el-input-number__decrease{
+    border-color: $medium-dark;
+  }
+  .el-input .el-select__caret{
+    color: $light-white;
+  }
 }
 
 // light

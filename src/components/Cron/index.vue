@@ -1,9 +1,9 @@
 <template lang="html">
   <div class="cron" :val="value_">
     <el-tabs v-model="activeName">
-      <el-tab-pane label="秒" name="s">
+      <!-- <el-tab-pane label="秒" name="s">
         <second-and-minute v-model="sVal" lable="秒"></second-and-minute >
-      </el-tab-pane>
+      </el-tab-pane> -->
       <el-tab-pane label="分" name="m">
         <second-and-minute v-model="mVal" lable="分"></second-and-minute >
       </el-tab-pane>
@@ -27,39 +27,40 @@
     <el-table
        :data="tableData"
        size="mini"
-       style="width: 100%;">
+       style="width: 100%; margin-top: 20px;">
        <el-table-column
          prop="sVal"
-         label="秒"
-         width="70">
+         align="center"
+         label="秒">
        </el-table-column>
        <el-table-column
          prop="mVal"
-         label="分"
-         width="70">
+         align="center"
+         label="分">
        </el-table-column>
        <el-table-column
          prop="hVal"
-         label="时"
-         width="70">
+         align="center"
+         label="时">
        </el-table-column>
        <el-table-column
          prop="dVal"
-         label="日"
-         width="70">
+         align="center"
+         label="日">
        </el-table-column>
        <el-table-column
          prop="monthVal"
-         label="月"
-         width="70">
+         align="center"
+         label="月">
        </el-table-column>
        <el-table-column
          prop="weekVal"
-         label="周"
-         width="70">
+         align="center"
+         label="周">
        </el-table-column>
        <el-table-column
          prop="yearVal"
+         align="center"
          label="年">
        </el-table-column>
      </el-table>
@@ -82,7 +83,7 @@ export default {
   data () {
     return {
       //
-      activeName: 's',
+      activeName: 'm',
       sVal: '',
       mVal: '',
       hVal: '',
@@ -154,6 +155,7 @@ export default {
 .cron {
   text-align: left;
   padding: 10px;
+  line-height: 40px;
   background: #fff;
   border: 1px solid #dcdfe6;
   box-shadow: 0 2px 4px 0 rgba(0,0,0,.12), 0 0 6px 0 rgba(0,0,0,.04);
