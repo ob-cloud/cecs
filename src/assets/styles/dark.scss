@@ -375,6 +375,7 @@ body.dark{
       margin-left: 10px;
     }
   }
+  .el-date-picker__header--bordered,
   .el-date-range-picker__time-header{
     border-bottom-color: $medium-dark;
   }
@@ -412,6 +413,10 @@ body.dark{
     .el-picker-panel__icon-btn{
       color: $light-blue;
     }
+  }
+  .el-month-table td .cell,
+  .el-year-table td .cell{
+    color: $white;
   }
   .el-time-panel{
     .el-time-panel__content::after, .el-time-panel__content::before{

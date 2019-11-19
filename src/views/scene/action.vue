@@ -8,7 +8,7 @@
       </el-checkbox-group>
     </div>
     <div v-if="isTransponder()" class="list transponder" v-loading="transponderLoading">
-      <div v-if="!transponderList.length" style="text-align:center;">无数据</div>
+      <div v-if="actionObject.serialId && !transponderList.length" style="text-align:center;">无数据</div>
       <div class="item" :class="{active: item.index === currentTransponderDevice.index}" v-for="(item, index) in transponderList" :key="index" @click="currentTransponderDevice = item">
         <p class="item-icon">
           <i class="obicon obicon-ac" :class="transponderIconFilter(item.deviceType)"></i>
@@ -134,6 +134,11 @@ export default {
     },
     getTransponderDeviceList () {
       this.transponderLoading = true
+      if (!this.actionObject.serialId) {
+        this.transponderLoading = false
+        this.currentTransponderDevice.deviceType = 7
+        return
+      }
       DeviceAPI.getTransponderDevice(this.actionObject.serialId).then(res => {
         if (res.status === 200) {
           this.transponderLoading = false
@@ -143,14 +148,14 @@ export default {
     },
     handleSelected () {
       const room = {
-        buildingId: this.actionObject.buildingId,
-        floorId: this.actionObject.floorId,
-        roomId: this.actionObject.roomId,
+        // buildingId: this.actionObject.buildingId,
+        // floorId: this.actionObject.floorId,
+        // roomId: this.actionObject.roomId,
         action_time: this.actionObject.action_time
       }
       if (this.is3KeyPanel()) {
         // this.$emit('action-change', {action: panelHandler.changeSwitchButtonToAction(this.powerStatus, this.actionObject), extra: this.powerStatus}, false)
-        this.$emit('action-change', {action: panelHandler.changeSwitchButtonToAction(this.powerStatus, this.actionObject, room), extra: this.powerStatus.map(item => (item ? '开' : '关')).join('/')}, false)
+        this.$emit('action-change', {action: panelHandler.changeSwitchButtonToAction(this.powerStatus, this.actionObject, room), extra: this.powerStatus[0] ? '开关 - 开' : '开关 - 关'}, false)
       } else if (this.isTransponder()) {
         const isV3 = panelHandler.isV3Ac(this.currentTransponderDevice.rmodel)
         let hasVW = ''
@@ -164,7 +169,7 @@ export default {
           index: this.currentTransponderDevice.index,
           key: this.currentTransponderDevice ? panelHandler.getAirConditionKeys(this.airAction.templure, this.airAction.mode, this.airAction.speed, hasVW, hasHW) : '',
           keyType: 0,
-          name: this.currentTransponderDevice.name
+          name: this.currentTransponderDevice.name || ''
         }
         this.$emit('action-change', {action: panelHandler.changeAirConditionToAction(JSON.stringify(action), this.currentTransponderDevice, room), extra: action.name + action.key}, false)
       }

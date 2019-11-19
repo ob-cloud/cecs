@@ -22,6 +22,17 @@
           </el-option>
         </el-select>
       </el-form-item> -->
+      <el-form-item label="位置" prop="location.buildingId" class="location">
+        <el-select :placeholder="$t('message.placeholder', {TYPE: 'choose', PLACEHOLDER: 'build'})" v-model="sceneModel.location.buildingId" filterable clearable>
+          <el-option v-for="(item, index) in buildingList" :key="item.buildingName + index + item.buildingId" :label="item.buildingName" :value="item.buildingId"></el-option>
+        </el-select>
+        <el-select :placeholder="$t('message.placeholder', {TYPE: 'choose', PLACEHOLDER: 'floor'})" v-model="sceneModel.location.floorId" filterable clearable>
+          <el-option v-for="(item, index) in floorList" :key="item.floorName + index + item.floorId" :label="item.floorName" :value="item.floorId"></el-option>
+        </el-select>
+        <el-select :placeholder="$t('message.placeholder', {TYPE: 'choose', PLACEHOLDER: 'room'})" v-model="sceneModel.location.roomId" filterable clearable>
+          <el-option v-for="(item, index) in roomList" :key="item.roomName + index + item.roomId" :label="item.roomName" :value="item.roomId"></el-option>
+        </el-select>
+      </el-form-item>
       <el-form-item :label="$t('smart.scene.create', {FIELD: 'deviceCon'})" class="box-card">
         <el-tabs class="condition w8" v-model="conditionsTab" type="border-card">
           <el-tab-pane :label="$t('smart.scene.create', {FIELD: 'cons1'})" name="c1" class="panel">
@@ -65,24 +76,18 @@
       <el-form-item label="设备行为">
         <div class="action-content">
           <div class="condition-item clearfix" v-for="(deviceAction, index) in deviceActionModel" :key="index">
-            <i class="el-icon-close fr" @click="handleRemoveAction(index)"></i>
+            <i v-if="index !== 0" class="el-icon-close fr" @click="handleRemoveAction(index)"></i>
             <div class="action-item">
               <el-tooltip :content="$t('smart.scene.create', {FIELD: 'actionTips'})" placement="top">
                 <el-input-number v-model="deviceAction.action_time" controls-position="right" :min="0"></el-input-number>
               </el-tooltip>
-              <el-select :placeholder="$t('message.placeholder', {TYPE: 'choose', PLACEHOLDER: 'build'})" v-model="deviceAction.buildingId" filterable @change="onSelectChange(deviceAction.buildingId, index, 0)">
-                <el-option v-for="(item, index) in deviceAction.buildingList" :key="item.buildingName + index + item.buildingId" :label="item.buildingName" :value="item.buildingId"></el-option>
-              </el-select>
-              <el-select :placeholder="$t('message.placeholder', {TYPE: 'choose', PLACEHOLDER: 'floor'})" v-model="deviceAction.floorId" filterable @change="onSelectChange(deviceAction.floorId, index, 1)">
-                <el-option v-for="(item, index) in deviceAction.floorList" :key="item.floorName + index + item.floorId" :label="item.floorName" :value="item.floorId"></el-option>
-              </el-select>
-              <el-select :placeholder="$t('message.placeholder', {TYPE: 'choose', PLACEHOLDER: 'room'})" v-model="deviceAction.roomId" filterable @change="onSelectChange(deviceAction.roomId, index, 2)">
-                <el-option v-for="(item, index) in deviceAction.roomList" :key="item.roomName + index + item.roomId" :label="item.roomName" :value="item.roomId"></el-option>
-              </el-select>
-              <el-select :placeholder="$t('message.placeholder', {TYPE: 'choose', PLACEHOLDER: 'deviceType'})" v-model="deviceAction.serialId" @change="onSelectDevice(deviceAction.serialId, index)">
+              <el-select v-if="deviceAction.serialId" :placeholder="$t('message.placeholder', {TYPE: 'choose', PLACEHOLDER: 'deviceType'})" v-model="deviceAction.serialId" @change="onSelectDevice(deviceAction.serialId, index)">
                 <el-option v-for="item in deviceAction.deviceTypeList" :key="item.deviceSerialId" :label="deviceTypeFilter(item.deviceType, item.deviceChildType)" :value="item.deviceSerialId"></el-option>
               </el-select>
-              <div v-if="deviceAction.serialId" class="action-item__behavior" @click="settingAction(deviceAction.serialId, index)" :title="deviceAction.actionDescriptor">
+              <el-select v-else :placeholder="$t('message.placeholder', {TYPE: 'choose', PLACEHOLDER: 'deviceType'})" v-model="deviceAction.deviceType" @change="onSelectDevice(deviceAction.serialId, index, deviceAction.deviceType)">
+                <el-option v-for="item in deviceAction.deviceTypeList" :key="item.deviceType" :label="deviceTypeFilter(item.deviceType, item.deviceChildType)" :value="item.deviceType"></el-option>
+              </el-select>
+              <div v-if="deviceAction.serialId || deviceAction.deviceType" class="action-item__behavior" @click="settingAction(deviceAction.serialId, index, deviceAction.deviceType)" :title="deviceAction.actionDescriptor">
                 <p>{{deviceAction.actionDescriptor || $t('smart.scene.create', {FIELD: 'devAction'})}}</p>
               </div>
             </div>
@@ -151,21 +156,14 @@ export default {
         scene_group: '00',
         msg_alter: 0,
         actions: [], // 摄像头设备行为
-        conditions: [] // 联动设备行为条件
+        conditions: [], // 联动设备行为条件
+        location: {
+          buildingId: '',
+          floorId: '',
+          roomId: ''
+        }
       },
-      deviceActionModel: [{
-        action_time: 0,
-        buildingId: '',
-        floorId: '',
-        roomId: '',
-        serialId: '',
-        actionDescriptor: '',
-        action: '',
-        buildingList: [],
-        floorList: [],
-        roomList: [],
-        deviceTypeList: []
-      }],
+      deviceActionModel: this.initActionModel(),
       currentAction: null, // 当前操作action项
       activeDevice: null, // 当前选中设备类型对象
       conditionsTab: 'c1',
@@ -181,26 +179,20 @@ export default {
         scene_name: [{ required: true, trigger: 'blur', message: this.$t('smart.scene.create', {FIELD: 'empty'})}],
         msg_alter: [{ required: true, trigger: 'blur', message: '消息推送不能为空'}],
         // deviceIdList: [{ required: true, trigger: 'blur', validator: validateAction}]
+        'location.buildingId': [{ required: true, trigger: 'change', message: '楼栋不能为空'}],
       },
-      deviceTypeList: [{
-        serialId: 1,
-        name: '面板',
-        device_type: '04',
-        device_child_type: '21'
-      }, {
-        serialId: '17e25c3a7d',
-        name: '红外',
-        device_type: '51'
-      }],
+      deviceTypeList: this.initDeviceType(),
       actionDialogVisible: false,
+      locationBuilList: []
       // buildingList: [],
       // layerList: []
     }
   },
   components: {SceneCondition, SceneAction},
   mounted () {
-    this.getDeviceList()
+    // this.getDeviceList()
     this.getSceneDeviceList().then(buildingList => {
+      this.locationBuilList = buildingList
       this.deviceActionModel[0].buildingList = buildingList
     })
     console.log('mounted ', this.deviceTypeList)
@@ -211,8 +203,63 @@ export default {
         return this.deviceList.find(device => serialId === device.serialId)
       })
     },
+    'sceneModel.location.buildingId' (id) {
+      if (!id) return
+      this.sceneModel.location.floorId = ''
+      this.sceneModel.location.roomId = ''
+      this.floorList = []
+      this.roomList = []
+      this.getFloorList(id)
+      this.deviceActionModel = this.initActionModel()
+      this.deviceActionModel[0].deviceTypeList = this.initDeviceType()
+    },
+    'sceneModel.location.floorId' (id) {
+      if (!id) return
+      this.sceneModel.location.roomId = ''
+      this.roomList = []
+      this.getRoomList(id)
+      this.deviceActionModel = this.initActionModel()
+      this.deviceActionModel[0].deviceTypeList = this.initDeviceType()
+    },
+    'sceneModel.location.roomId' (id) {
+      if (!id) {
+        this.deviceTypeList = []
+        this.deviceActionModel = this.initActionModel()
+        this.deviceActionModel[0].deviceTypeList = this.initDeviceType()
+        return
+      }
+      this.getDeviceTypeListByRoomId(id)
+      this.deviceTypeList = this.deviceTypeList.filter(item => {
+        return this.isActionDevice(item.deviceType, item.deviceChildType)
+      })
+      this.deviceActionModel = this.initActionModel()
+      this.deviceActionModel[0].deviceTypeList = this.deviceTypeList
+    }
   },
   methods: {
+    initDeviceType () {
+      return [{
+        name: '面板',
+        deviceType: '04',
+        deviceChildType: '17'
+      }, {
+        name: '红外',
+        deviceType: '51'
+      }]
+    },
+    initActionModel () {
+      return [{
+        action_time: 0,
+        buildingId: '',
+        floorId: '',
+        roomId: '',
+        serialId: '',
+        deviceType: '',
+        actionDescriptor: '',
+        action: '',
+        deviceTypeList: []
+      }]
+    },
     deviceTypeFilter (type, subtype) {
       if (!type && !subtype) return
       return subtype ? this.$t('system.devtype', {FIELD: Suit.getDeviceTypeDescriptor(type, subtype)}) : this.$t('system.devtype', {FIELD: Suit.getRootDeviceDescriptor(type)})
@@ -240,9 +287,9 @@ export default {
         }
       })
     },
-    settingAction (serialId, index) {
+    settingAction (serialId, index, deviceType) {
       this.actionDialogVisible = true
-      this.onSelectDevice(serialId, index)
+      this.onSelectDevice(serialId, index, deviceType)
     },
     addCondition () {
       this.conDialogVisible = true
@@ -269,50 +316,26 @@ export default {
       this.currentAction.actionDescriptor = actionData.extra // .map(item => (item ? '开' : '关')).join('/')
       this.currentAction.action = actionData.action
     },
-    onSelectChange (id, index, type) {
-      const activeActionModel = this.deviceActionModel[index]
-      if (type === 0) { // building
-        activeActionModel.floorId = ''
-        activeActionModel.roomId = ''
-        activeActionModel.serialId = ''
-        activeActionModel.floorList = []
-        activeActionModel.roomList = []
-        activeActionModel.deviceTypeList = []
-        this.getFloorList(id)
-        activeActionModel.floorList = this.floorList
-      } else if (type === 1) { // floor
-        activeActionModel.roomId = ''
-        activeActionModel.roomList = []
-        activeActionModel.serialId = ''
-        activeActionModel.deviceTypeList = []
-        this.getRoomList(id)
-        activeActionModel.roomList = this.roomList
-      } else { // room
-        activeActionModel.serialId = ''
-        activeActionModel.deviceTypeList = []
-        this.getDeviceTypeListByRoomId(id)
-        activeActionModel.deviceTypeList = this.deviceTypeList
-        activeActionModel.deviceTypeList = this.deviceTypeList.filter(item => {
-          return this.isActionDevice(item.deviceType, item.deviceChildType)
-        })
-        console.log('deviceTypeList ', activeActionModel.deviceTypeList, id)
-      }
-    },
-    onSelectDevice (serialId, index) {
+    onSelectDevice (serialId, index, deviceType) {
       const activeActionModel = this.deviceActionModel[index]
       const device = activeActionModel.deviceTypeList.find(item => item.deviceSerialId === serialId)
-      this.activeDevice = {
-        device_child_type: device.deviceChildType,
-        device_type: device.deviceType,
-        device_name: device.deviceName,
-        serialId: device.deviceSerialId,
-        obox_serial_id: device.oboxSerialId,
-        state: device.deviceState,
-        addr: device.rfAddress,
-        buildingId: activeActionModel.buildingId,
-        floorId: activeActionModel.floorId,
-        roomId: activeActionModel.roomId,
-        action_time: activeActionModel.action_time
+      this.activeDevice = {}
+      if (device) { // 根据设备序列号
+        this.activeDevice = {
+          device_child_type: device.deviceChildType,
+          device_type: device.deviceType,
+          device_name: device.deviceName,
+          serialId: device.deviceSerialId,
+          obox_serial_id: device.oboxSerialId,
+          state: device.deviceState,
+          addr: device.rfAddress,
+          action_time: activeActionModel.action_time
+        }
+      } else if (deviceType) { // 根据设备类型
+        const item = activeActionModel.deviceTypeList.find(type => type.deviceType === deviceType)
+        this.activeDevice.device_type = item.deviceType
+        this.activeDevice.device_child_type = item.deviceChildType
+        this.activeDevice.action_time = activeActionModel.action_time
       }
       this.currentAction = activeActionModel
       this.currentAction.actionDescriptor = ''
@@ -327,12 +350,10 @@ export default {
         floorId: '',
         roomId: '',
         serialId: '',
+        deviceType: '',
         actionDescriptor: '',
         action: '',
-        buildingList: this.buildingList,
-        floorList: [],
-        roomList: [],
-        deviceTypeList: []
+        deviceTypeList: this.deviceTypeList
       })
     },
     handleSelectedCondition () {
@@ -341,11 +362,11 @@ export default {
       this.sceneModel.actions = actions
       this.sceneModel.conditions.push(...conditions)
       console.log(this.sceneModel)
-      // this.$refs.sceneForm.validate(valid => {
-      //   if (valid) {
-      //     this.$emit('scene-ready', this.sceneModel, false)
-      //   }
-      // })
+      this.$refs.sceneForm.validate(valid => {
+        // if (valid) {
+        //   this.$emit('scene-ready', this.sceneModel, false)
+        // }
+      })
     },
     close () {
       this.$emit('close')
@@ -357,9 +378,9 @@ export default {
       let str = ''
       console.log('---- ', condition)
       if (condition.model.type === '1') {
-        str = `${this.$t('smart.scene.condition', {FIELD: 'timing'})} ${condition.model.date ? condition.model.date : condition.model.week || ''} ${condition.model.time || ''}`
+        str = `${this.$t('smart.scene.condition', {FIELD: 'timing'})} ${condition.model.conditionDesc || ''} ( ${condition.model.condition})`
       } else if (condition.model.type === '2') {
-        const type = Suit.getDeviceTypeDescriptor(condition.selected.device_type, condition.selected.device_child_type)
+        const type = this.$t('system.devtype', {FIELD: Suit.getDeviceTypeDescriptor(condition.selected.device_type, condition.selected.device_child_type)})
         str = `${this.$t('smart.scene.condition', {FIELD: 'chain'})} ${type} ${condition.model.action}`
       }
       return str
@@ -480,8 +501,10 @@ export default {
 }
 .condition .panel .add-btn{
   position: absolute;
-  top: 26px;
-  right: 10px;
+  // top: 26px;
+  // right: 10px;
+  top: 0;
+  right: 0;
   padding: 5px;
   font-size: 16px;
 }
@@ -492,24 +515,24 @@ export default {
   position: absolute;
   // top: 10px;
   top: 22px;
-  right: -10px;
+  right: 15%;
   padding: 5px;
 }
 .action-content .condition-item{
-  width: 96%;
+  width: 80%;
   padding: 14px 5px;
   border-radius: 4px;
   // padding: 5px;
   // margin: 0 auto;
 }
 .condition-item .action-item > div{
-  width: 110px;
+  width: 130px;
   margin-right: 5px;
 }
 .condition-item .action-item > div:first-of-type{
   width: 70px;
 }
-.condition-item .action-item > div:last-of-type{
+.condition-item .action-item > .action-item__behavior{
   width: 150px;
   vertical-align: bottom;
   & p{
@@ -520,6 +543,7 @@ export default {
 }
 .action-item__behavior{
   display: inline-block;
+  text-align: center;
   border: 1px dashed #ccc;
   border-radius: 4px;
   color: #ccc;
@@ -619,6 +643,9 @@ export default {
   left: -3px;
   border-top: none;
 }
+.location .el-select{
+  margin-right: 28px;
+}
 </style>
 <style lang="css">
 .condition-type.el-tabs--border-card,
@@ -650,4 +677,6 @@ export default {
   padding-left: 2px;
   padding-right: 30px;
 }
+
+
 </style>

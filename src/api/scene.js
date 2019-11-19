@@ -2,7 +2,7 @@
  * @Author: eamiear
  * @Date: 2019-08-07 15:19:34
  * @Last Modified by: eamiear
- * @Last Modified time: 2019-11-15 09:42:31
+ * @Last Modified time: 2019-11-19 15:02:08
  */
 
 import {request} from '@/common/request'
@@ -43,6 +43,12 @@ const SceneAPI = {
     return request.get('/consumer/common', {
       CMD: 'setting_sc_info',
       scene
+    })
+  },
+  setSmartScene (scene = {}) {
+    return request.postForm('/consumer/common', {
+      CMD: 'set_smart_scene',
+      scene: JSON.stringify(scene)
     })
   },
   getSceneDeviceList (user = {}) {

@@ -2,13 +2,33 @@
   <div>
     <el-tabs v-model="conditionType" class="condition-type" type="border-card" @tab-click="onConditionTabClick">
       <el-tab-pane :label="$t('smart.scene.condition', {FIELD: 'timeCon'})" name="1">
-          <el-tabs tab-position="left" class="timing h200" v-model="conditionTimeType">
+        <Cron></Cron>
+          <!-- <el-tabs tab-position="left" class="timing h200" v-model="conditionTimeType">
             <el-tab-pane :label="$t('smart.scene.condition', {FIELD: 'date'})" name="1">
+              <el-date-picker
+                class="picker"
+                v-model="conditionModel.year"
+                align="right"
+                type="year"
+                format="yyyy"
+                value-format="yyyy"
+                placeholder="每年">
+              </el-date-picker>
+              <el-date-picker
+                class="picker"
+                v-model="conditionModel.month"
+                align="right"
+                type="month"
+                format="M"
+                value-format="M"
+                placeholder="每月">
+              </el-date-picker>
               <el-date-picker
                 class="picker"
                 v-model="conditionModel.date"
                 type="date"
-                value-format="yyyy-MM-dd"
+                format="d"
+                value-format="d"
                 :placeholder="$t('smart.scene.condition', {FIELD: 'selDate'})">
               </el-date-picker>
               <el-time-picker
@@ -33,17 +53,17 @@
                 </el-time-picker>
               </div>
             </el-tab-pane>
-          </el-tabs>
+          </el-tabs> -->
       </el-tab-pane>
       <el-tab-pane :label="$t('smart.scene.condition', {FIELD: 'chainCon'})" name="2" class="left h200 chain-list">
         <div class="chain-device" :class="{active: item.serialId === chainActiveDevice.serialId}" v-for="(item, index) in chainDeviceList" :key="index" @click="onChainDeviceClick(item)">
           <p>{{item.name}}</p>
           <p>{{item.serialId}}</p>
-          <p>{{item.device_type | deviceTypeDescriptFilter(item.device_child_type)}}</p>
+          <p>{{$t('system.devtype', {FIELD: deviceTypeDescriptFilter(item.device_type, item.device_child_type)})}}</p>
           <p style="text-align: right;">{{item.online ? $t('message.status', {STATUS: 'online'}) : $t('message.status', {STATUS: 'offline'})}}</p>
         </div>
         <div class="chain-device-actions">
-          <div class="chain-action__item" v-if="isSocket()">
+          <!-- <div class="chain-action__item" v-if="isSocket()">
             <p class="title">面板哪个按钮被按下</p>
             <div class="content" v-if="isSixScenePanelSocket()">
               <el-radio v-model="conditionModel.pick" label="1" border>情景按钮1</el-radio>
@@ -74,8 +94,9 @@
               <el-radio v-model="conditionModel.pick" label="0" border>关</el-radio>
               <el-radio v-model="conditionModel.pick" label="1" border>开</el-radio>
             </div>
-          </div>
-          <div class="chain-action__item" v-else-if="isHumidifier()">
+          </div> -->
+          <!-- <div class="chain-action__item" v-else-if="isHumidifier()"> -->
+          <div class="chain-action__item">
             <div class="title">
               <el-radio-group v-model="templureAction">
                 <el-radio-button type="plain" label="0">{{$t('smart.obox.tableField', {FIELD: 'temperature'})}}</el-radio-button>
@@ -118,6 +139,7 @@
 
 <script>
 const {default: Suit} = require('@/common/suit')
+import Cron from '@/components/Cron/index'
 export default {
   name: 'scene-condition',
   props: {
@@ -130,11 +152,15 @@ export default {
       default: () => []
     }
   },
+  components: { Cron },
   data () {
     return {
       conditionType: '1',
       conditionTimeType: '1',
       conditionModel: {
+        year: '',
+        month: '',
+        day: '',
         date: '',
         time: '',
         week: '',
@@ -147,9 +173,10 @@ export default {
         templure: '',
         humidifier: '',
         conditionType: '',
-        condition: ''
+        condition: '',
+        conditionDesc: ''
       },
-      weeks: [{label: '星期一', value: '40'}, {label: '星期二', value: '20'}, {label: '星期三', value: '10'}, {label: '星期四', value: '08'}, {label: '星期五', value: '04'}, {label: '星期六', value: '02'}, {label: '星期日', value: '7f'}, {label: '每日', value: '80'}],
+      weeks: [{label: '星期一', value: '1'}, {label: '星期二', value: '2'}, {label: '星期三', value: '3'}, {label: '星期四', value: '4'}, {label: '星期五', value: '5'}, {label: '星期六', value: '6'}, {label: '星期日', value: '7'}],
       templureCondition: {'>': '49', '=': '4a', '>=': '4b', '<': '4c', '<=': '4e', '无': ''},
       templureValue: [],
       humidifierValue: [],
@@ -157,11 +184,6 @@ export default {
       tempHumCondition: [],
       chainDeviceList: [],
       chainActiveDevice: ''
-    }
-  },
-  filters: {
-    deviceTypeDescriptFilter (val, deviceSubType) {
-      return Suit.getDeviceTypeDescriptor(val, deviceSubType)
     }
   },
   watch: {
@@ -207,12 +229,21 @@ export default {
     }
   },
   methods: {
+    deviceTypeDescriptFilter (val, deviceSubType) {
+      return Suit.getDeviceTypeDescriptor(val, deviceSubType)
+    },
     getChainDeviceList () {
-      if (this.chainDeviceList.length) return
-      const chainList = this.deviceList.filter(item => {
-        return this.isChainType(item.device_type, item.device_child_type, this.isLocal)
-      })
-      this.chainDeviceList = chainList
+      // if (this.chainDeviceList.length) return
+      // const chainList = this.deviceList.filter(item => {
+      //   return this.isChainType(item.device_type, item.device_child_type, this.isLocal)
+      // })
+      // this.chainDeviceList = chainList
+      this.chainDeviceList = [{
+        serialId: '',
+        name: '温湿度类型设备',
+        device_type: 'b',
+        device_child_type: 'b'
+      }]
     },
     isChainType (deviceType, deviceSubType, isLocal) {
       return Suit.typeHints.isSensors(deviceType)
@@ -264,24 +295,49 @@ export default {
       return type === '0436'
     },
     getDateTimeCondition () {
-      let isValid = false
-      const condition = new Array(8).fill('00', 0, 8)
-      condition[1] = '08'
-      const val = this.conditionModel
-      if (this.conditionTimeType === '1') { // 日期
-        if (val.date) {
-          const dateList = val.date.split('-')
-          condition[2] = Suit.converter.toHex(dateList[0].slice(2), 10)
-          condition[3] = Suit.converter.toHex(dateList[1], 10)
-          condition[4] = Suit.converter.toHex(dateList[2], 10)
-        }
-      } else if (this.conditionTimeType === '2') { // 星期
-        val.week && (condition[0] = this.weeks.find(item => item.label === val.week).value)
+      const conmodel = this.conditionModel
+      const desc = []
+      const cronMap = {'second': '*', 'minute': '*', 'hour': '*', 'date': '*', 'month': '*', 'week': '*', 'year': '*'}
+      const year = conmodel.year
+      const week = conmodel.week
+      const month = conmodel.month
+      const date = conmodel.date
+      const time = conmodel.time
+      let hour = ''
+      let minute = ''
+      if (time) {
+        hour = time.split(':')[0]
+        minute = time.split(':')[1]
       }
-      val.time && (condition[5] = Suit.converter.toHex(val.time.split(':')[0], 10))
-      val.time && (condition[6] = Suit.converter.toHex(val.time.split(':')[1], 10))
-      isValid = (val.date || val.week) && val.time
-      return isValid && condition.join('')
+      cronMap.year = year || ''
+      cronMap.week = (week && this.weeks.find(item => item.label === week).value) || '?'
+      cronMap.month = month || '*'
+      cronMap.date = date || '*'
+      cronMap.hour = hour || '*'
+      cronMap.minute = minute || '*'
+      cronMap.second = '0'
+      const index = Object.keys(cronMap).reverse().findIndex(key => cronMap[key] && cronMap[key] !== '*' && cronMap[key] !== '?')
+      const map = index ? Object.fromEntries(Object.entries(cronMap).slice(0, -index)) : cronMap
+      desc[0] = (`${map.year && map.year !== '*' ? map.year : '每'}年`)
+      desc[1] = (`${map.month && map.month !== '*' ? map.month : '每'}月`)
+      desc[3] = (`${map.date && map.date !== '*' ? map.date : '每'}日 `)
+      const reverseKeys = Object.keys(map).reverse()
+      if (reverseKeys[0] === 'month') {
+        map.date = map.date || '*'
+        desc[2] = ''
+      } else if (reverseKeys[0] === 'week') {
+        map.month = map.month || '*'
+        map.date = '?'
+        desc[3] = ''
+        desc[2] = (`${map.week && ('周' + map.week)} `)
+      }
+      map.hour = map.hour || 0
+      map.minute = map.minute || 0
+      desc[4] = (`${map.hour && map.hour !== '*' ? map.hour : 0}时`)
+      desc[5] = (`${map.minute && map.minute !== '*' ? map.minute : 0}分`)
+      conmodel.conditionDesc = desc.join('')
+      console.log('condition ', Object.values({...cronMap, ...map}).join(' '))
+      return Object.values({...cronMap, ...map}).join(' ')
     },
     getDeviceCondition () {
       let condition = ''
@@ -302,23 +358,11 @@ export default {
     },
     handleSelectedCondition () {
       if (this.conditionType === '1') {
-        if (!((this.conditionModel.date || this.conditionModel.week) && this.conditionModel.time)) {
-          return this.$message({
-            type: 'warning',
-            message: '请正确选择条件'
-          })
-        }
         this.conditionModel.type = '1'
         this.conditionModel.conditionType = '00'
         this.conditionModel.condition = this.getDateTimeCondition()
         this.$emit('condition-change', {model: this.conditionModel, selected: null}, false)
       } else if (this.conditionType === '2') {
-        // if (!(this.chainActiveDevice && this.conditionModel.pick)) {
-        //   return this.$message({
-        //     type: 'warning',
-        //     message: '请正确选择条件'
-        //   })
-        // }
         if (this.isHumidifier()) {
           this.conditionModel.condition = this.tempHumCondition.join('')
           this.conditionModel.action = `(温度${this.conditionModel.symbolT}${this.conditionModel.templure} / 湿度${this.conditionModel.symbolH}${this.conditionModel.humidifier})`
