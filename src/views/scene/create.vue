@@ -378,7 +378,7 @@ export default {
       let str = ''
       console.log('---- ', condition)
       if (condition.model.type === '1') {
-        str = `${this.$t('smart.scene.condition', {FIELD: 'timing'})} ${condition.model.conditionDesc || ''} ( ${condition.model.condition})`
+        str = `${this.$t('smart.scene.condition', {FIELD: 'timing'})} ${condition.model.condition}`
       } else if (condition.model.type === '2') {
         const type = this.$t('system.devtype', {FIELD: Suit.getDeviceTypeDescriptor(condition.selected.device_type, condition.selected.device_child_type)})
         str = `${this.$t('smart.scene.condition', {FIELD: 'chain'})} ${type} ${condition.model.action}`

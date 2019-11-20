@@ -1,9 +1,9 @@
 <template lang="html">
   <div class="cron" :val="value_">
     <el-tabs v-model="activeName">
-      <!-- <el-tab-pane label="秒" name="s">
+      <el-tab-pane label="秒" name="s">
         <second-and-minute v-model="sVal" lable="秒"></second-and-minute >
-      </el-tab-pane> -->
+      </el-tab-pane>
       <el-tab-pane label="分" name="m">
         <second-and-minute v-model="mVal" lable="分"></second-and-minute >
       </el-tab-pane>
@@ -83,7 +83,7 @@ export default {
   data () {
     return {
       //
-      activeName: 'm',
+      activeName: 's',
       sVal: '',
       mVal: '',
       hVal: '',
