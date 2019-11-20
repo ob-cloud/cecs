@@ -44,7 +44,7 @@
 </template>
 
 <script>
-import BaseTable from '@/assets/package/table-base'
+// import BaseTable from '@/assets/package/table-base'
 import SystemAPI from '@/api/system'
 import { PAGINATION_PAGENO, PAGINATION_PAGESIZE } from '@/common/constants'
 import Helper from '@/common/helper'
@@ -99,7 +99,7 @@ export default {
       columns: [],
     }
   },
-  components: { BaseTable },
+  // components: { BaseTable },
   created () {
     this.columns = this.getColumns()
     this.getLogsList()
