@@ -55,6 +55,9 @@ export const changeAirConditionToAction = (action, device, room) => {
   return toAction(action, {'device_child_type': '01', addr: 'fe', 'device_type': device.deviceType, name: device.name, index: device.index, node_type: '07'}, room)
 }
 
+export const getAireConditionPowerKey = power => {
+  return power ? 'on' : 'off'
+}
 export const getAirConditionKeys = (templure, mode, speed, windVertical, windHorizon) => {
   const modeMap = {0: 'a', 1: 'r', 2: 'd', 3: 'w', 4: 'h'}[mode]
   const speedMap = {0: 's0', 1: 's1', 2: 's2', 3: 's3'}[speed]
