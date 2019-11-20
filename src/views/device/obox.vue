@@ -146,11 +146,13 @@ export default {
         formatter (val, row) {
           return that.$t('system.devtype', {FIELD: Suit.getDeviceTypeDescriptor(row.device_type, val)})
         }
-      }, {
-        label: this.$t('smart.obox.tableField', {FIELD: 'version'}),
-        prop: 'version',
-        align: 'center'
-      }, {
+      },
+      // {
+      //   label: this.$t('smart.obox.tableField', {FIELD: 'version'}),
+      //   prop: 'version',
+      //   align: 'center'
+      // },
+      {
         label: this.$t('smart.obox.tableField', {FIELD: 'action'}),
         align: 'center',
         // minWidth: '180px',
