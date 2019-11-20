@@ -892,9 +892,11 @@ body.dark{
     .el-table{
       line-height: 20px;
     }
-    // .el-table .el-table__header-wrapper th, .el-table .el-table__body-wrapper .el-table__row td{
-    //   padding: 4px 0;
-    // }
+  }
+  .location{
+    .el-input .el-select__caret{
+      color: $light-white;
+    }
   }
   .el-input-number__increase, .el-input-number__decrease{
     background-color: transparent;
