@@ -96,9 +96,7 @@
 <script>
 import SceneCondition from './condition'
 import SceneAction from './action'
-import DeviceAPI from '@/api/device'
 const {default: Suit} = require('@/common/suit')
-import { PAGINATION_PAGENO } from '@/common/constants'
 import scene from './scene'
 export default {
   mixins: [scene],
@@ -113,32 +111,21 @@ export default {
     }
   },
   data () {
-    // const that = this
-    // const validateAction = (rule, value, callback) => {
-    //   if (!that.deviceSelectedList.length) {
-    //     callback(new Error('请选择行为设备'))
-    //   } else {
-    //     callback()
-    //   }
-    // }
     return {
       name: '',
       deviceActionList: [],
       deviceList: [],
       deviceIdList: '',
       deviceSelectedList: [],
-      pageNo: PAGINATION_PAGENO,
-      pageSize: 300,
-      push: 0,
       sceneModel: {
         scene_type: '00',
         scene_status: '01',
-        scene_number: 0, // 新增 0
+        scene_number: 0, // create 0
         scene_name: '',
         scene_group: '00',
         msg_alter: 0,
-        actions: [], // 摄像头设备行为
-        conditions: [], // 联动设备行为条件
+        actions: [], // device behaviors
+        conditions: [], // device conditions
         location: {
           buildingId: '',
           floorId: '',
@@ -146,10 +133,10 @@ export default {
         }
       },
       deviceActionModel: this.initActionModel(),
-      currentAction: null, // 当前操作action项
-      activeDevice: null, // 当前选中设备类型对象
+      currentAction: null, // current handling action
+      activeDevice: null, // current active device
       conditionsTab: 'c1',
-      conDialogVisible: false,
+      conDialogVisible: false, // condition dialog visible controller flag
       conditionObject: null,
       conditionList: [],
       conditionMapList: {
@@ -159,25 +146,17 @@ export default {
       },
       sceneModelRules: {
         scene_name: [{ required: true, trigger: 'blur', message: this.$t('smart.scene.create', {FIELD: 'empty'})}],
-        msg_alter: [{ required: true, trigger: 'blur', message: '消息推送不能为空'}],
-        // deviceIdList: [{ required: true, trigger: 'blur', validator: validateAction}]
-        'location.buildingId': [{ required: true, trigger: 'change', message: '楼栋不能为空'}],
+        'location.buildingId': [{ required: true, trigger: 'change', message: this.$t('smart.scene.create', {FIELD: 'locationEmpty'})}],
       },
-      deviceTypeList: this.initDeviceType(),
+      deviceTypeList: this.initDeviceType(), // list of device's type
       actionDialogVisible: false,
-      locationBuilList: []
-      // buildingList: [],
-      // layerList: []
     }
   },
   components: {SceneCondition, SceneAction},
   mounted () {
-    // this.getDeviceList()
     this.getSceneDeviceList().then(buildingList => {
-      this.locationBuilList = buildingList
       this.deviceActionModel[0].buildingList = buildingList
     })
-    console.log('mounted ', this.deviceTypeList)
   },
   watch: {
     deviceIdList (serialIds) {
@@ -185,7 +164,7 @@ export default {
         return this.deviceList.find(device => serialId === device.serialId)
       })
     },
-    'sceneModel.location.buildingId' (id) {
+    'sceneModel.location.buildingId' (id) { // get floor's list by building id
       if (!id) return
       this.sceneModel.location.floorId = ''
       this.sceneModel.location.roomId = ''
@@ -195,7 +174,7 @@ export default {
       this.deviceActionModel = this.initActionModel()
       this.deviceActionModel[0].deviceTypeList = this.initDeviceType()
     },
-    'sceneModel.location.floorId' (id) {
+    'sceneModel.location.floorId' (id) { // get room's list by floor id
       if (!id) return
       this.sceneModel.location.roomId = ''
       this.roomList = []
@@ -203,8 +182,8 @@ export default {
       this.deviceActionModel = this.initActionModel()
       this.deviceActionModel[0].deviceTypeList = this.initDeviceType()
     },
-    'sceneModel.location.roomId' (id) {
-      if (!id) {
+    'sceneModel.location.roomId' (id) { // get device's list by room id
+      if (!id) { // init by default data
         this.deviceTypeList = []
         this.deviceActionModel = this.initActionModel()
         this.deviceActionModel[0].deviceTypeList = this.initDeviceType()
@@ -221,11 +200,11 @@ export default {
   methods: {
     initDeviceType () {
       return [{
-        name: '面板',
+        name: '3 way switch',
         deviceType: '04',
         deviceChildType: '17'
       }, {
-        name: '红外',
+        name: 'Ifrate',
         deviceType: '51'
       }]
     },
@@ -254,21 +233,6 @@ export default {
         && !(Suit.typeHints.isSocketSwitch(deviceType) && Suit.typeHints.isSceneSocketSwitch(deviceSubType))
         && !(Suit.typeHints.isSocketSwitch(deviceType) && Suit.typeHints.isMixSocketSwitch(deviceSubType))
     },
-    getActionDeviceList (deviceList) {
-      const actionList = deviceList.filter(item => {
-        return this.isActionDevice(item.device_type, item.device_child_type)
-      })
-      this.deviceActionList = actionList
-      console.log('action List ', this.deviceActionList)
-    },
-    getDeviceList () {
-      DeviceAPI.getDeviceList({pageNo: this.pageNo, pageSize: this.pageSize}).then(res => {
-        if (res.status === 200) {
-          this.deviceList = res.data.config
-          this.getActionDeviceList(this.deviceList)
-        }
-      })
-    },
     settingAction (serialId, index, deviceType) {
       this.actionDialogVisible = true
       this.onSelectDevice(serialId, index, deviceType)
@@ -280,7 +244,7 @@ export default {
       this.conditionList.splice(index, 1)
       this.conditionMapList[this.conditionsTab].splice(index, 1)
     },
-    onConditionChange (condition, dialogVisible) {
+    onConditionChange (condition, dialogVisible) { // when finishing choosing conditions, enter this callback function
       console.log(condition)
       if (this.conditionMapList[this.conditionsTab].length >= 3) {
         this.$message({
@@ -293,16 +257,16 @@ export default {
       this.conditionMapList[this.conditionsTab].push(condition)
       this.conDialogVisible = dialogVisible
     },
-    onActionChange (actionData, dialogVisible) {
+    onActionChange (actionData, dialogVisible) { // when finishing handling actions, enter this callback function
       this.actionDialogVisible = dialogVisible
-      this.currentAction.actionDescriptor = actionData.extra // .map(item => (item ? '开' : '关')).join('/')
+      this.currentAction.actionDescriptor = actionData.extra
       this.currentAction.action = actionData.action
     },
     onSelectDevice (serialId, index, deviceType) {
       const activeActionModel = this.deviceActionModel[index]
       const device = activeActionModel.deviceTypeList.find(item => item.deviceSerialId === serialId)
       this.activeDevice = {}
-      if (device) { // 根据设备序列号
+      if (device) { // by device's serial number
         this.activeDevice = {
           device_child_type: device.deviceChildType,
           device_type: device.deviceType,
@@ -313,7 +277,7 @@ export default {
           addr: device.rfAddress,
           action_time: activeActionModel.action_time
         }
-      } else if (deviceType) { // 根据设备类型
+      } else if (deviceType) { // by device's type
         const item = activeActionModel.deviceTypeList.find(type => type.deviceType === deviceType)
         this.activeDevice.device_type = item.deviceType
         this.activeDevice.device_child_type = item.deviceChildType
@@ -343,6 +307,7 @@ export default {
       const conditions = this.getModelCondition()
       this.sceneModel.actions = actions
       this.sceneModel.conditions.push(...conditions)
+      this.sceneModel.location = this.getLocation()
       console.log(this.sceneModel)
       this.$refs.sceneForm.validate(valid => {
         // if (valid) {
@@ -369,9 +334,6 @@ export default {
     },
     parseAction (device) {
       // const type = Suit.getDeviceTypeDescriptor(device.device_type, device.device_child_type)
-      if (device.channel) {
-        return `拍照`
-      }
     },
     getModelCondition () {
       const conditions = Object.keys(this.conditionMapList).map(key => {
@@ -393,9 +355,6 @@ export default {
                 serialId: device.serialId
               }
             }
-            if (this.isGateSensors(device)) {
-              cons.condition = '4a01000000000000'
-            }
           }
           return cons
         })
@@ -405,6 +364,13 @@ export default {
     },
     getModelAction () {
       return this.deviceActionModel.map(item => item.action)
+    },
+    getLocation () {
+      const location = {...this.sceneModel.location}
+      location.buildingId === '' && delete location.buildingId
+      location.floorId === '' && delete location.floorId
+      location.roomId === '' && delete location.roomId
+      return location
     },
     parseSceneData () {
       if (this.scene) {
