@@ -57,7 +57,7 @@ export default {
   },
   data () {
     return {
-      type: '5', // 类型
+      type: '1', // 类型
       cycle: { // 周期
         start: 0,
         end: 0

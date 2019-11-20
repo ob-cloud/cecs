@@ -1,26 +1,26 @@
 <template lang="html">
   <div class="cron" :val="value_">
     <el-tabs v-model="activeName">
-      <el-tab-pane :label="$t('system.cron', {FIELD: 'second'})" name="s">
-        <second-and-minute v-model="sVal" :lable="$t('system.cron', {FIELD: 'second'})"></second-and-minute >
-      </el-tab-pane>
-      <el-tab-pane :label="$t('system.cron', {FIELD: 'minute'})" name="m">
-        <second-and-minute v-model="mVal" :lable="$t('system.cron', {FIELD: 'minute'})"></second-and-minute >
-      </el-tab-pane>
-      <el-tab-pane :label="$t('system.cron', {FIELD: 'hour'})" name="h">
-        <hour v-model="hVal" :lable="$t('system.cron', {FIELD: 'hour'})"></hour>
-      </el-tab-pane>
-      <el-tab-pane :label="$t('system.cron', {FIELD: 'day'})" name="d">
-        <day v-model="dVal" :lable="$t('system.cron', {FIELD: 'day'})"></day>
-      </el-tab-pane>
-      <el-tab-pane :label="$t('system.cron', {FIELD: 'month'})" name="month">
-        <month v-model="monthVal" :lable="$t('system.cron', {FIELD: 'month'})"></month>
+      <el-tab-pane :label="$t('system.cron', {FIELD: 'year'})" name="year">
+        <year v-model="yearVal" :lable="$t('system.cron', {FIELD: 'year'})"></year>
       </el-tab-pane>
       <el-tab-pane :label="$t('system.cron', {FIELD: 'week'})" name="week">
         <week v-model="weekVal" :lable="$t('system.cron', {FIELD: 'week'})"></week>
       </el-tab-pane>
-      <el-tab-pane :label="$t('system.cron', {FIELD: 'year'})" name="year">
-        <year v-model="yearVal" :lable="$t('system.cron', {FIELD: 'year'})"></year>
+      <el-tab-pane :label="$t('system.cron', {FIELD: 'month'})" name="month">
+        <month v-model="monthVal" :lable="$t('system.cron', {FIELD: 'month'})"></month>
+      </el-tab-pane>
+      <el-tab-pane :label="$t('system.cron', {FIELD: 'day'})" name="d">
+        <day v-model="dVal" :lable="$t('system.cron', {FIELD: 'day'})"></day>
+      </el-tab-pane>
+      <el-tab-pane :label="$t('system.cron', {FIELD: 'hour'})" name="h">
+        <hour v-model="hVal" :lable="$t('system.cron', {FIELD: 'hour'})"></hour>
+      </el-tab-pane>
+      <el-tab-pane :label="$t('system.cron', {FIELD: 'minute'})" name="m">
+        <second-and-minute v-model="mVal" :lable="$t('system.cron', {FIELD: 'minute'})"></second-and-minute >
+      </el-tab-pane>
+      <el-tab-pane :label="$t('system.cron', {FIELD: 'second'})" name="s">
+        <second-and-minute v-model="sVal" :lable="$t('system.cron', {FIELD: 'second'})"></second-and-minute >
       </el-tab-pane>
     </el-tabs>
     <!-- table -->
@@ -29,29 +29,9 @@
        size="mini"
        style="width: 100%; margin-top: 20px;">
        <el-table-column
-         prop="sVal"
+         prop="yearVal"
          align="center"
-         :label="$t('system.cron', {FIELD: 'second'})">
-       </el-table-column>
-       <el-table-column
-         prop="mVal"
-         align="center"
-         :label="$t('system.cron', {FIELD: 'minute'})">
-       </el-table-column>
-       <el-table-column
-         prop="hVal"
-         align="center"
-         :label="$t('system.cron', {FIELD: 'hour'})">
-       </el-table-column>
-       <el-table-column
-         prop="dVal"
-         align="center"
-         :label="$t('system.cron', {FIELD: 'day'})">
-       </el-table-column>
-       <el-table-column
-         prop="monthVal"
-         align="center"
-         :label="$t('system.cron', {FIELD: 'month'})">
+         :label="$t('system.cron', {FIELD: 'year'})">
        </el-table-column>
        <el-table-column
          prop="weekVal"
@@ -59,9 +39,29 @@
          :label="$t('system.cron', {FIELD: 'week'})">
        </el-table-column>
        <el-table-column
-         prop="yearVal"
+         prop="monthVal"
          align="center"
-         :label="$t('system.cron', {FIELD: 'year'})">
+         :label="$t('system.cron', {FIELD: 'month'})">
+       </el-table-column>
+       <el-table-column
+         prop="dVal"
+         align="center"
+         :label="$t('system.cron', {FIELD: 'day'})">
+       </el-table-column>
+       <el-table-column
+         prop="hVal"
+         align="center"
+         :label="$t('system.cron', {FIELD: 'hour'})">
+       </el-table-column>
+       <el-table-column
+         prop="mVal"
+         align="center"
+         :label="$t('system.cron', {FIELD: 'minute'})">
+       </el-table-column>
+       <el-table-column
+         prop="sVal"
+         align="center"
+         :label="$t('system.cron', {FIELD: 'second'})">
        </el-table-column>
      </el-table>
   </div>
@@ -83,7 +83,7 @@ export default {
   data () {
     return {
       //
-      activeName: 's',
+      activeName: 'year',
       sVal: '',
       mVal: '',
       hVal: '',
