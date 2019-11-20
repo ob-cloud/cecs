@@ -8,7 +8,7 @@
       </el-checkbox-group>
     </div>
     <div v-if="isTransponder()" class="list transponder" v-loading="transponderLoading">
-      <div v-if="actionObject.serialId && !transponderList.length" style="text-align:center;">无数据</div>
+      <div v-if="actionObject.serialId && !transponderList.length" style="text-align:center;">{{$t('smart.obox.ac', {FIELD: ''})}}</div>
       <div class="item" :class="{active: item.index === currentTransponderDevice.index}" v-for="(item, index) in transponderList" :key="index" @click="currentTransponderDevice = item">
         <p class="item-icon">
           <i class="obicon obicon-ac" :class="transponderIconFilter(item.deviceType)"></i>
@@ -20,36 +20,36 @@
         <div class="panel">
           <div class="templure">
             <p>{{airCondition.isPowerOn ? airAction.templure : '--'}}<span>℃</span></p>
-            <p>温度</p>
+            <p>{{$t('smart.obox.ac', {FIELD: 'temperature'})}}</p>
           </div>
           <div class="control-style">
-            <div class="mode">{{airCondition.isPowerOn ? speedFilter(airAction.speed): '--'}} 风速</div>
-            <div class="fans">{{airCondition.isPowerOn ? modeFilter(airAction.mode) : '--'}} 模式</div>
+            <div class="mode">{{airCondition.isPowerOn ? speedFilter(airAction.speed): '--'}} {{$t('smart.obox.ac', {FIELD: 'speed'})}}</div>
+            <div class="fans">{{airCondition.isPowerOn ? modeFilter(airAction.mode) : '--'}} {{$t('smart.obox.ac', {FIELD: 'mode'})}}</div>
           </div>
           <div class="btn-controller">
             <div class="btn" :class="{inactive: !isFanSpeedEnable()}">
               <i class="obicon obicon-wing-o" @click="keyHandler(1)"></i>
-              <p>风扇</p>
+              <p>{{$t('smart.obox.ac', {FIELD: 'fans'})}}</p>
             </div>
             <div class="btn" :class="{on: airCondition.isPowerOn, off: !airCondition.isPowerOn}">
               <i class="obicon obicon-power" @click="keyHandler(0)"></i>
-              <p>开关</p>
+              <p>{{$t('smart.obox.ac', {FIELD: 'switch'})}}</p>
             </div>
             <div class="btn" :class="{inactive: !airCondition.isPowerOn}">
               <i class="obicon obicon-mode-o" @click="keyHandler(2)"></i>
-              <p>模式</p>
+              <p>{{$t('smart.obox.ac', {FIELD: 'mode'})}}</p>
             </div>
           </div>
           <div class="btn-controller templure " :class="{inactive: !isTemplureEnable()}">
             <i class="obicon obicon-minus" @click="keyHandler(3, -1)"></i>
-            <p>温度</p>
+            <p>{{$t('smart.obox.ac', {FIELD: 'temperature'})}}</p>
             <i class="obicon obicon-plus" @click="keyHandler(3, 1)"></i>
           </div>
         </div>
       </div>
     </div>
     <div class="footer">
-      <el-button type="primary" @click="handleSelected">确 认</el-button>
+      <el-button type="primary" @click="handleSelected">{{$t('message.confirm')}}</el-button>
     </div>
   </div>
 </template>
@@ -68,15 +68,16 @@ export default {
   data () {
     return {
       powers: [],
-      powerStatus: [0, 0, 0],
+      powerStatus: [0, 0, 0], // switcher panel controller panel status
       transponderList: [],
       currentTransponderDevice: {},
       transponderLoading: false,
       airCondition: {
-        isPowerOn: false
+        isPowerOn: false,
+        isHanlePanel: false, // is handle controller panel keys
       },
       airAction: {
-        templure: 25,
+        templure: 26,
         speed: 0,
         mode: 0,
         power: 0
@@ -125,6 +126,10 @@ export default {
     isAirCondition () {
       return this.currentTransponderDevice.deviceType === 7
     },
+    isJustTouchPower () {
+      // has touch the power key and other key's value is default
+      return this.airCondition.isHanlePanel && (this.airAction.power === 0 || this.airAction.power === 1) && this.airAction.templure === 26 && this.airAction.speed === 0 && this.airAction.mode === 0
+    },
     changeStatus (power) {
       // this.powerStatus.forEach((element, index) => {
       //   const isExist = power.find(item => item === index + 1)
@@ -148,37 +153,48 @@ export default {
     },
     handleSelected () {
       const room = {
-        // buildingId: this.actionObject.buildingId,
-        // floorId: this.actionObject.floorId,
-        // roomId: this.actionObject.roomId,
         action_time: this.actionObject.action_time
       }
       if (this.is3KeyPanel()) {
         // this.$emit('action-change', {action: panelHandler.changeSwitchButtonToAction(this.powerStatus, this.actionObject), extra: this.powerStatus}, false)
-        this.$emit('action-change', {action: panelHandler.changeSwitchButtonToAction(this.powerStatus, this.actionObject, room), extra: this.powerStatus[0] ? '开关 - 开' : '开关 - 关'}, false)
+        this.$emit('action-change', {action: panelHandler.changeSwitchButtonToAction(this.powerStatus, this.actionObject, room), extra: this.powerStatus[0] ? this.$t('message.switchStatus', {SWITCH: 'switchOn'}) : this.$t('message.switchStatus', {SWITCH: 'switchOff'})}, false)
       } else if (this.isTransponder()) {
-        const isV3 = panelHandler.isV3Ac(this.currentTransponderDevice.rmodel)
-        let hasVW = ''
-        let hasHW = ''
-        if (!isV3) {
-          hasVW = +panelHandler.hasVerticalWind(this.currentTransponderDevice.keys)
-          hasHW = +panelHandler.hasHorizontalWind(this.currentTransponderDevice.keys)
+        if (!this.airCondition.isHanlePanel) {
+          return this.$message({
+            title: false,
+            type: 'warning',
+            message: this.$t('smart.obox.ac', {FIELD: 'noKeyHandle'})
+          })
+        }
+        let keys = ''
+        if (this.isJustTouchPower()) { // get power keys
+          keys = panelHandler.getAireConditionPowerKey(this.airAction.power)
+        } else { // get other condition keys
+          let hasVW = ''
+          let hasHW = ''
+          const isV3 = panelHandler.isV3Ac(this.currentTransponderDevice.rmodel)
+          if (!isV3 && this.currentTransponderDevice.keys) {
+            hasVW = +panelHandler.hasVerticalWind(this.currentTransponderDevice.keys)
+            hasHW = +panelHandler.hasHorizontalWind(this.currentTransponderDevice.keys)
+          }
+          keys = this.currentTransponderDevice ? panelHandler.getAirConditionKeys(this.airAction.templure, this.airAction.mode, this.airAction.speed, hasVW, hasHW) : ''
         }
 
         const action = {
           index: this.currentTransponderDevice.index,
-          key: this.currentTransponderDevice ? panelHandler.getAirConditionKeys(this.airAction.templure, this.airAction.mode, this.airAction.speed, hasVW, hasHW) : '',
+          key: keys,
           keyType: 0,
           name: this.currentTransponderDevice.name || ''
         }
+        this.airCondition.isHanlePanel = false
         this.$emit('action-change', {action: panelHandler.changeAirConditionToAction(JSON.stringify(action), this.currentTransponderDevice, room), extra: action.name + action.key}, false)
       }
     },
     speedFilter (val) {
-      return {0: '自动', 1: '弱风', 2: '中风', 3: '强风'}[val] || '自动'
+      return {0: this.$t('smart.obox.ac', {FIELD: 'auto'}), 1: this.$t('smart.obox.ac', {FIELD: 'weak'}), 2: this.$t('smart.obox.ac', {FIELD: 'medium'}), 3: this.$t('smart.obox.ac', {FIELD: 'strong'})}[val] || this.$t('smart.obox.ac', {FIELD: 'auto'})
     },
     modeFilter (val) {
-      return {0: '自动', 1: '制冷', 2: '抽湿', 3: '送风', 4: '制热'}[val] || '制冷'
+      return {0: this.$t('smart.obox.ac', {FIELD: 'auto'}), 1: this.$t('smart.obox.ac', {FIELD: 'cold'}), 2: this.$t('smart.obox.ac', {FIELD: 'dehum'}), 3: this.$t('smart.obox.ac', {FIELD: 'supply'}), 4: this.$t('smart.obox.ac', {FIELD: 'hot'})}[val] || this.$t('smart.obox.ac', {FIELD: 'cold'})
     },
     isTemplureEnable () {
       return this.airCondition.isPowerOn && (this.airAction.mode === 4 || this.airAction.mode === 1)
@@ -189,12 +205,14 @@ export default {
     keyHandler (type, subtype) {
       if (type === 0) {
         this.airCondition.isPowerOn = !this.airCondition.isPowerOn
-        this.airAction = {
-          templure: 26,
-          speed: 0,
-          mode: 1,
-          power: 0
-        }
+        this.airCondition.isHanlePanel = true
+        this.airAction.power = +this.airCondition.isPowerOn
+        // this.airAction = {
+        //   templure: 26,
+        //   speed: 0,
+        //   mode: 1,
+        //   power: 0
+        // }
         return
       }
       if (!this.airCondition.isPowerOn) return

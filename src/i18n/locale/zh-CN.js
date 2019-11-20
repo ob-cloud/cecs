@@ -49,9 +49,9 @@ export default {
     placeholder: '请{TYPE, select, input{输入} choose{选择} other{输入}}{PLACEHOLDER, select, build{楼栋} floor{楼层} room{房间} deviceName{设备名称} deviceType{设备类型} other{}}',
     rules: '{RULE, select, build{楼栋} floor{楼层} room{房间} user{用户名} phone{手机号} pwd{密码} role{角色} roleName{角色名称} deviceName{设备名称} other{}} 不能为空',
     status: '{STATUS, select, open{打开} close{关闭} online{在线} offline{离线} on{开} off{关} noDev{无设备} other{}}',
-    switchStatus: '{SWITCH, select, label{开关} open{打开} close{关闭} on{开} off{关} noDev{无设备} other{}}',
+    switchStatus: '{SWITCH, select, label{开关} open{打开} close{关闭} on{开} off{关} noDev{无设备} switchOn{开关 - 开} switchOff{开关 - 关} other{}}',
     image: '{IMAGE, select, pixel{请上传规格为1080x720的图片} type{图片格式仅支持jpg/jpeg/png} other{}}',
-    device: '{DEVICE_TEXT, select, temperature{温度} humidifier{湿度} switch{开关} humitemp{温湿度} Infrared{红外转发} other{}}'
+    device: '{DEVICE_TEXT, select, temperature{温度} humidifier{湿度} switch{开关} humitemp{温湿度} Infrared{红外转发} humDev{温湿度类型设备} other{}}'
   },
   smart: {
     roommodule: '房间管理',
@@ -85,7 +85,7 @@ export default {
       slide: '{FIELD, select, panel{三键开关控制面板} humidifier{温湿度} other{}}',
       placeholder: '{FIELD, select, lamp{开关} humidifier{温湿度} other{}}',
       message: '{MESSAGE, select, powerswitch{电源开关已} direct{操作指令发送成功} fetchFail{设备获取失败} loading{设备删除中...} delConfirm{确认删除设备？} delDevice{设备删除} setSuccess{设置成功} setFail{设置失败} history{历史数据} nowadays{今日数据} oboxoffline{OBOX离线或不存在} nobelong{没有权限操作该设备} other{}}',
-      ac: '{FIELD, select, temperature{温度} humidifier{湿度} auto{自动} speed{风速} fans{风扇} weak{弱风} medium{中风} strong{强风} cold{制冷} hot{制热} dehum{抽湿} supply{送风} mode{模式} switch{开关} type{设备类型} subtype{子设备类型} version{设备版本} action{操作} other{无数据}}'
+      ac: '{FIELD, select, temperature{温度} humidifier{湿度} auto{自动} speed{风速} fans{风扇} weak{弱风} medium{中风} strong{强风} cold{制冷} hot{制热} dehum{抽湿} supply{送风} mode{模式} switch{开关} type{设备类型} subtype{子设备类型} version{设备版本} action{操作} noKeyHandle{请进行按键设置} other{无数据}}'
     },
     wifi: {
       title: 'WIFI设备',
@@ -106,7 +106,7 @@ export default {
       action: '{FIELD, select, create{创建场景} excute{执行场景} edit{编辑场景} delete{刪除} other{}}',
       tableField: '{FIELD, select, name{场景名称} build{楼栋} floor{楼层} room{房间} status{场景状态} action{操作} other{}}',
       message: '{MESSAGE, select, fetchFail{场景获取失败} loading{场景删除中...} delConfirm{确认删除场景？} delDevice{场景删除} update{场景状态更新} excute{场景执行} excuting{场景执行中...} other{}}',
-      create: '{FIELD, select, inputNameTip{输入场景名称} empty{场景名称不能为空} invalid{名称应为英文字母、数字或下划线组成的字符串} deviceCon{设备条件} cons1{条件1} cons2{条件2} cons3{条件3} behavior{设备行为} actionTips{行为执行时间(单位秒)} devAction{配置设备动作} setDevAct{设备行为配置} conType{条件类型} conTip{一组最多三个条件} other{}}',
+      create: '{FIELD, select, inputNameTip{输入场景名称} empty{场景名称不能为空} invalid{名称应为英文字母、数字或下划线组成的字符串} location{位置} deviceCon{设备条件} cons1{条件1} cons2{条件2} cons3{条件3} behavior{设备行为} actionTips{行为执行时间(单位秒)} devAction{配置设备动作} setDevAct{设备行为配置} conType{条件类型} conTip{一组最多三个条件} other{}}',
       condition: '{FIELD, select, timing{定时} timeCon{定时条件} date{日期} selDate{选择日期} selTime{选择时间} week{星期} chain{联动} chainCon{联动条件} selConTip{请正确选择条件} other{}}',
     },
     usermodule: '用户管理',

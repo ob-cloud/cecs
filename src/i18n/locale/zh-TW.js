@@ -49,9 +49,9 @@ export default {
     placeholder: '請{TYPE, select, input{輸入} choose{選擇} other{輸入}}{PLACEHOLDER, select, build{樓棟} floor{樓層} room{房間} deviceName{設備名稱} deviceType{設備類型} other{}}',
     rules: '{RULE, select, build{樓棟} floor{樓層} room{房間} user{用戶名} phone{手機號} pwd{密碼} role{角色} roleName{角色名稱} deviceName{設備名稱} other{}} 不能為空',
     status: '{STATUS, select, open{打開} close{關閉} online{在線} offline{離線} on{開} off{關} noDev{無設備} other{}}',
-    switchStatus: '{SWITCH, select, label{開關} open{打開} close{關閉} on{開} off{關} noDev{無設備} other{}}',
+    switchStatus: '{SWITCH, select, label{開關} open{打開} close{關閉} on{開} off{關} noDev{無設備} switchOn{開關 - 開} switchOff{開關 - 關} other{}}',
     image: '{IMAGE, select, pixel{請上傳規格為1080x72的圖片} type{圖片格式僅支持jpg/jpeg/png} other{}}',
-    device: '{DEVICE_TEXT, select, temperature{溫度} humidifier{濕度} switch{開關} humitemp{溫濕度} Infrared{紅外轉發} other{}}'
+    device: '{DEVICE_TEXT, select, temperature{溫度} humidifier{濕度} switch{開關} humitemp{溫濕度} humDev{溫濕度類型設備} Infrared{紅外轉發} other{}}'
   },
   smart: {
     roommodule: '房間管理',
@@ -85,7 +85,7 @@ export default {
       slide: '{FIELD, select, panel{三鍵開關控制面板} humidifier{溫濕度} other{}}',
       placeholder: '{FIELD, select, lamp{開關} humidifier{溫濕度} other{}}',
       message: '{MESSAGE, select, powerswitch{電源開關已} direct{操作指令發送成功} fetchFail{設備獲取失敗} loading{設備刪除中...} delConfirm{確認刪除設備？} delDevice{設備刪除} setSuccess{設置成功} setFail{設置失敗} history{歷史數據} nowadays{今日數據} oboxoffline{OBOX離線或不存在} nobelong{沒有權限操作該設備} other{}}',
-      ac: '{FIELD, select, temperature{溫度} humidifier{濕度} auto{自動} speed{風速} fans{風扇} weak{弱風} medium{中風} strong{強風} cold{製冷} hot{制熱} dehum{抽濕} supply{送風} mode{模式} switch{開關} type{設備類型} subtype{子設備類型} version{設備版本} action{操作} other{無資料}}'
+      ac: '{FIELD, select, temperature{溫度} humidifier{濕度} auto{自動} speed{風速} fans{風扇} weak{弱風} medium{中風} strong{強風} cold{製冷} hot{制熱} dehum{抽濕} supply{送風} mode{模式} switch{開關} type{設備類型} subtype{子設備類型} version{設備版本} action{操作} noKeyHandle{請進行按鍵設置} other{無資料}}'
     },
     wifi: {
       title: 'WIFI設備',
@@ -106,8 +106,8 @@ export default {
       action: '{FIELD, select, create{創建場景} excute{執行場景} edit{編輯場景} delete{刪除} other{}}',
       tableField: '{FIELD, select, name{場景名稱} build{樓棟} floor{樓層} room{房間} status{場景狀態} action{操作} other{}}',
       message: '{MESSAGE, select, fetchFail{場景獲取失敗} loading{場景刪除中...} delConfirm{確認刪除場景？} delDevice{場景刪除} update{場景狀態更新} excute{場景執行} excuting{場景執行中...} other{}}',
-      create: '{FIELD, select, inputNameTip{輸入場景名稱} empty{場景名稱不能為空} invalid{名称应为英文字母、数字或下劃線组成的字符串} deviceCon{设备条件} cons1{条件1} cons2{条件2} cons3{条件3} behavior{设备行为} actionTips{行为执行时间(单位秒)} devAction{配置设备动作} setDevAct{设备行为配置} conType{条件类型} conTip{一组最多三个条件} other{}}',
-      condition: '{FIELD, select, timing{定时} timeCon{定时条件} date{日期} selDate{选择日期} selTime{选择时间} week{星期} chain{联动} chainCon{联动条件} selConTip{请正确选择条件} other{}}',
+      create: '{FIELD, select, inputNameTip{輸入場景名稱} empty{場景名稱不能為空} invalid{名稱應為英文字母、數字或下劃線组成的字符串} location{位置} deviceCon{設備條件} cons1{條件1} cons2{條件2} cons3{條件3} behavior{設備行為} actionTips{行為執行時間(單位秒)} devAction{配置設備動作} setDevAct{設備行為配置} conType{條件類型} conTip{一組最多三個條件} other{}}',
+      condition: '{FIELD, select, timing{定時} timeCon{定時條件} date{日期} selDate{選擇日期} selTime{選擇時間} week{星期} chain{聯動} chainCon{聯動條件} selConTip{請選擇正確條件} other{}}',
     },
     usermodule: '用戶管理',
     account: {
