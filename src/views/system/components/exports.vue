@@ -1,6 +1,20 @@
 <template>
   <div class="device smart  ui-container" :style="{height: layoutHeight + 'px'}">
-    <base-table
+    <div class="actionBar">
+      <el-date-picker
+        v-model="pickerValue"
+        type="datetimerange"
+        :picker-options="pickerOptions"
+        range-separator="-"
+        value-format="yyyy-MM-dd hh:mm:ss"
+        :start-placeholder="$t('smart.exportrecords.search', {FIELD: 'start'})"
+        :end-placeholder="$t('smart.exportrecords.search', {FIELD: 'end'})"
+        align="right">
+      </el-date-picker>
+      <el-button type="primary" icon="obicon obicon-cloud-download" @click="handleExport">{{$t('message.exports')}}</el-button>
+    </div>
+
+    <!-- <base-table
       :height="height"
       :tableData="tableData"
       :columns="columns"
@@ -25,7 +39,7 @@
           <el-button type="primary" icon="obicon obicon-cloud-download" @click="handleExport">{{$t('message.exports')}}</el-button>
         </template>
       </slot>
-    </base-table>
+    </base-table> -->
   </div>
 </template>
 
@@ -175,3 +189,9 @@ export default {
   }
 }
 </script>
+<style lang="scss">
+  .actionBar{
+    padding: 30px;
+    text-align: right;
+  }
+</style>
