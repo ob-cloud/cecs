@@ -236,6 +236,16 @@ export default {
         this.conditionModel.type = '1'
         this.conditionModel.conditionType = '00'
         this.conditionModel.condition = this.getDateTimeCondition()
+        const cronArr = this.conditionModel.condition.split(' ')
+        const day = cronArr[3]
+        const week = cronArr[5]
+        console.log('day ' + day, 'week ' + week)
+        if (day === '?' && week === '?') {
+          return this.$message.error({title: false, message: this.$t('system.cron', {FIELD: 'dateWeekPointAt'})})
+        }
+        if (day !== '?' && week !== '?') {
+          return this.$message.error({title: false, message: this.$t('system.cron', {FIELD: 'dateWeekNoPointAt'})})
+        }
         this.$emit('condition-change', {model: this.conditionModel, selected: null}, false)
       } else if (this.conditionType === '2') {
         if (this.isHumidifier()) {

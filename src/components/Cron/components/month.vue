@@ -3,9 +3,9 @@
     <div>
       <el-radio v-model="type" label="1" size="mini" border>{{$t('system.cron', {FIELD: 'per'})}}{{lable}}</el-radio>
     </div>
-    <div>
+    <!-- <div>
       <el-radio v-model="type" label="5" size="mini" border>{{$t('system.cron', {FIELD: 'noPointAt'})}}</el-radio>
-    </div>
+    </div> -->
     <div>
       <el-radio v-model="type" label="2" size="mini" border>{{$t('system.cron', {FIELD: 'period'})}}</el-radio>
       <span style="margin-left: 10px; margin-right: 5px;">{{$t('system.cron', {FIELD: 'from'})}}</span>
@@ -76,7 +76,7 @@ export default {
           result.push(`${this.loop.start}/${this.loop.end}`)
           break
         case '4': // 指定
-          result.push(this.appoint.join(','))
+          result.push(this.appoint.length ? this.appoint.join(',') : '1')
           break
         case '6': // 最后
           result.push(`${this.last === 0 ? '' : this.last}L`)
@@ -92,6 +92,11 @@ export default {
   watch: {
     'value' (a, b) {
       this.updateVal()
+    },
+    type (val) {
+      if (val !== '4') {
+        this.appoint = []
+      }
     }
   },
   methods: {

@@ -47,7 +47,7 @@ export default {
   props: {
     value: {
       type: String,
-      default: '*'
+      default: '?'
     },
     lable: {
       type: String
@@ -87,7 +87,8 @@ export default {
           result.push(`${this.loop.start}/${this.loop.end}`)
           break
         case '4': // 指定
-          result.push(this.appoint.join(','))
+          // result.push(this.appoint.join(','))
+          result.push(this.appoint.length ? this.appoint.join(',') : '1')
           break
         case '6': // 最后
           result.push(`${this.last === 0 ? '' : this.last}L`)
@@ -106,6 +107,11 @@ export default {
   watch: {
     'value' (a, b) {
       this.updateVal()
+    },
+    type (val) {
+      if (val !== '4') {
+        this.appoint = []
+      }
     }
   },
   methods: {

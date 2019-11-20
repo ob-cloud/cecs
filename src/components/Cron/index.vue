@@ -115,10 +115,10 @@ export default {
         return ''
       }
       if (this.dVal === '?' && this.weekVal === '?') {
-        this.$message.error(this.$t('system.cron', {FIELD: 'dateWeekPointAt'}))
+        this.$message.error({title: false, message: this.$t('system.cron', {FIELD: 'dateWeekPointAt'})})
       }
       if (this.dVal !== '?' && this.weekVal !== '?') {
-        this.$message.error(this.$t('system.cron', {FIELD: 'dateWeekNoPointAt'}))
+        this.$message.error({title: false, message: this.$t('system.cron', {FIELD: 'dateWeekNoPointAt'})})
       }
       const v = `${this.sVal} ${this.mVal} ${this.hVal} ${this.dVal} ${this.monthVal} ${this.weekVal} ${this.yearVal}`
       if (v !== this.value) {
