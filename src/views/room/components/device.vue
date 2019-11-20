@@ -95,12 +95,13 @@ export default {
         }
       }, {
         label: this.$t('smart.room.tableField', {FIELD: 'status'}),
-        prop: 'deviceStatus',
+        prop: 'deviceState',
         align: 'center',
         formatter (status, row) {
           // return Suit.getStatusDescriptor(status, row.deviceType, row.deviceChildType)
+          if (!status) return '-'
           if (Suit.typeHints.isThreeKeySocketSwitch(row.deviceChildType)) {
-            return status === '0' ? that.$t('message.status', {STATUS: 'off'}) : that.$t('message.status', {STATUS: 'on'})
+            return status.slice(0, 2) === '00' ? that.$t('message.status', {STATUS: 'off'}) : that.$t('message.status', {STATUS: 'on'})
           }
           return '-'
         }
