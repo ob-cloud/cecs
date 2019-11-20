@@ -44,7 +44,7 @@ export default {
   },
   data () {
     return {
-      type: '1', // 类型
+      type: '4', // 类型
       cycle: { // 周期
         start: 0,
         end: 0
@@ -59,7 +59,7 @@ export default {
       },
       work: 0,
       last: 0,
-      appoint: [] // 指定
+      appoint: ['00'] // 指定
     }
   },
   computed: {
