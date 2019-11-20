@@ -2,7 +2,7 @@
  * @Author: eamiear
  * @Date: 2019-02-06 21:34:24
  * @Last Modified by: eamiear
- * @Last Modified time: 2019-11-15 11:46:29
+ * @Last Modified time: 2019-11-20 10:42:39
  */
 
 import {request} from '@/common/request'
@@ -62,7 +62,7 @@ const SystemAPI = {
     })
   },
   exportsLogs (beginTime, endTime) {
-    return request.getRequestUrl('/facade/getExportLog', {beginTime, endTime})
+    return request.getRequestUrl('/consumer/facade/getExportLog', {beginTime, endTime})
     // return request.postForm('consumer/facade/getExportLog', {
     //   beginTime, endTime
     // })
