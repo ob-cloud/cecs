@@ -1,16 +1,16 @@
 <template lang="html">
   <div :val="value_">
     <div>
-      <el-radio v-model="type" label="1" size="mini" border>每周</el-radio>
+      <el-radio v-model="type" label="1" size="mini" border>{{$t('system.cron', {FIELD: 'per'})}}{{lable}}</el-radio>
     </div>
     <div>
-      <el-radio v-model="type" label="5" size="mini" border>不指定</el-radio>
+      <el-radio v-model="type" label="5" size="mini" border>{{$t('system.cron', {FIELD: 'noPointAt'})}}</el-radio>
     </div>
     <div>
-      <el-radio v-model="type" label="2" size="mini" border>周期</el-radio>
-      <span style="margin-left: 10px; margin-right: 5px;">从星期</span>
+      <el-radio v-model="type" label="2" size="mini" border>{{$t('system.cron', {FIELD: 'period'})}}</el-radio>
+      <span style="margin-left: 10px; margin-right: 5px;">{{$t('system.cron', {FIELD: 'from'})}}{{$t('system.cron', {FIELD: 'weekday'})}}</span>
       <el-input-number controls-position="right" @change="type = '2'" v-model="cycle.start" :min="1" :max="7" size="mini" style="width: 100px;"></el-input-number>
-      <span style="margin-left: 5px; margin-right: 5px;">至星期</span>
+      <span style="margin-left: 5px; margin-right: 5px;">{{$t('system.cron', {FIELD: 'to'})}}{{$t('system.cron', {FIELD: 'weekday'})}}</span>
       <el-input-number controls-position="right" @change="type = '2'" v-model="cycle.end" :min="2" :max="7" size="mini" style="width: 100px;"></el-input-number>
     </div>
     <!-- <div>
@@ -34,9 +34,9 @@
       <el-input-number controls-position="right" @change="type = '6'" v-model="last" :min="1" :max="7" size="mini" style="width: 100px;"></el-input-number>
     </div> -->
     <div>
-      <el-radio v-model="type" label="4" size="mini" border>指定</el-radio>
+      <el-radio v-model="type" label="4" size="mini" border>{{$t('system.cron', {FIELD: 'pointAt'})}}</el-radio>
       <el-checkbox-group v-model="appoint" style="margin-left: 50px;  line-height: 25px;">
-          <el-checkbox @change="type = '4'"  v-for="i in 7" :key="i" :label="i"></el-checkbox>
+          <el-checkbox @change="type = '4'"  v-for="i in 7" :key="i" :label="'' + i"></el-checkbox>
       </el-checkbox-group>
     </div>
   </div>
@@ -48,6 +48,9 @@ export default {
     value: {
       type: String,
       default: '*'
+    },
+    lable: {
+      type: String
     }
   },
   data () {

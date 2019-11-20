@@ -11,7 +11,7 @@ export default {
     route: '{FIELD, select, devicemgr{設備管理} scenemgr{場景管理} roommgr{房間管理} usrmgr{用戶管理} logmgr{日誌管理} other{}}',
     validator: '{FIELD, select, name{名稱應為英文字母、數字或下劃線組成的字符串} mobile{手機號碼格式有誤} other{}}',
     devtype: '{FIELD, select, Sensor{傳感器} HumidSensors{溫濕度傳感器} Switcher{插座開關} 3KeySwitch{三路開關} Ifrate{紅外轉發器} other{}}',
-    cron: '{FIELD, select, second{秒} minute{分} hour{時} day{日} month{月} week{週} year{年} perSecond{每秒} perMinute{每分} perHour{每時} perDay{每日} perMonth{每月} perWeek{每週} perYear{每年} period{週期} pointAt{指定} noPointAt{不指定} dateWeekPointAt{日期與星期不可以同時為“不指定”} dateWeekNoPointAt{日期與星期必須有一個為“不指定”} from{從} to{至} per{每} other{}}',
+    cron: '{FIELD, select, second{秒} minute{分} hour{時} day{日} month{月} week{週} weekday{星期} year{年} perSecond{每秒} perMinute{每分} perHour{每時} perDay{每日} perMonth{每月} perWeek{每週} perYear{每年} period{週期} pointAt{指定} noPointAt{不指定} dateWeekPointAt{日期與星期不可以同時為“不指定”} dateWeekNoPointAt{日期與星期必須有一個為“不指定”} from{從} to{至} per{每} other{}}',
   },
   message: {
     refresh: '刷新',
@@ -107,7 +107,7 @@ export default {
       action: '{FIELD, select, create{創建場景} excute{執行場景} edit{編輯場景} delete{刪除} other{}}',
       tableField: '{FIELD, select, name{場景名稱} build{樓棟} floor{樓層} room{房間} status{場景狀態} action{操作} other{}}',
       message: '{MESSAGE, select, fetchFail{場景獲取失敗} loading{場景刪除中...} delConfirm{確認刪除場景？} delDevice{場景刪除} update{場景狀態更新} excute{場景執行} excuting{場景執行中...} other{}}',
-      create: '{FIELD, select, inputNameTip{輸入場景名稱} empty{場景名稱不能為空} invalid{名稱應為英文字母、數字或下劃線组成的字符串} location{位置} deviceCon{設備條件} cons1{條件1} cons2{條件2} cons3{條件3} behavior{設備行為} actionTips{行為執行時間(單位秒)} devAction{配置設備動作} setDevAct{設備行為配置} conType{條件類型} conTip{一組最多三個條件} other{}}',
+      create: '{FIELD, select, inputNameTip{輸入場景名稱} empty{場景名稱不能為空} locationEmpty{樓棟不能為空}  invalid{名稱應為英文字母、數字或下劃線组成的字符串} location{位置} deviceCon{設備條件} cons1{條件1} cons2{條件2} cons3{條件3} behavior{設備行為} actionTips{行為執行時間(單位秒)} devAction{配置設備動作} setDevAct{設備行為配置} conType{條件類型} conTip{一組最多三個條件} other{}}',
       condition: '{FIELD, select, timing{定時} timeCon{定時條件} date{日期} selDate{選擇日期} selTime{選擇時間} week{星期} chain{聯動} chainCon{聯動條件} selConTip{請選擇正確條件} other{}}',
     },
     usermodule: '用戶管理',
