@@ -6,13 +6,13 @@ export function isAuth (key, permissions = []) {
 }
 
 export function $isPermited (key) {
-  return isAuth(key, JSON.parse(cacher.get('permission')))
+  return isAuth(key, JSON.parse(cacher.setStrategy('localStorage').get('permission')))
 }
 
 export default {
   inserted (el, binding, vnode) {
     const { value } = binding
-    if (value && !isAuth(value, JSON.parse(cacher.get('permission')))) {
+    if (value && !isAuth(value, JSON.parse(cacher.setStrategy('localStorage').get('permission')))) {
       el.parentNode && el.parentNode.removeChild(el)
     }
   }

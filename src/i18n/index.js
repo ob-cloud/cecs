@@ -12,7 +12,7 @@ const messages = {
   'zh-TW': zhTWLocale
 }
 export function getLanguage () {
-  const lang = cacher.get('language')
+  const lang = cacher.setStrategy('localStorage').get('language')
   if (lang) return lang
 
   const language = (navigator.language || navigator.browserLanguage)

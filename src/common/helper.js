@@ -2,7 +2,7 @@
  * @Author: eamiear
  * @Date: 2019-02-19 10:38:33
  * @Last Modified by: eamiear
- * @Last Modified time: 2019-11-12 14:12:16
+ * @Last Modified time: 2019-11-20 16:25:09
  */
 
 const _toString = Object.prototype.toString
@@ -161,6 +161,27 @@ export const Helper = {
   },
   isValidAccount (s) {
     return /^[a-zA-Z0-9_]+$/.test(s)
+  },
+  seti18nSystemTitle (title) {
+    document.title = title
+  //   const getLanguage = () => {
+  //     const language = (navigator.language || navigator.browserLanguage)
+  //     const languages = {
+  //       'en-US': 'Campus Energy Conservation Central Control Platform',
+  //       'zh-CN': '校园节能中控平台',
+  //       'zh-TW': '校園節能中控平台'
+  //     }
+  //     const locales = Object.keys(languages)
+  //     for (const locale of locales) {
+  //       if (language.indexOf(locale) > -1) {
+  //         return languages[locale]
+  //       }
+  //     }
+  //     return languages['zh-TW']
+  //   }
+  //   window.onload = () => {
+  //     document.title = getLanguage()
+  //   }
   }
 }
 

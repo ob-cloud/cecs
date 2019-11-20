@@ -69,7 +69,7 @@ const menu = {
           const path = location.href.slice(location.href.indexOf('#') + 1, location.href.lastIndexOf('?'))
           const defaultMenu = priMenuList.find(item => item.path === path) || priMenuList[0]
           commit('UPDATE_MENU_NAV_ACTIVE_NAME', defaultMenu.path)
-          cacher.set('permission', JSON.stringify(allBtnPrivileges))
+          cacher.setStrategy('localStorage').set('permission', JSON.stringify(allBtnPrivileges))
           resolve(priMenuList)
         }).catch(err => {
           console.log(err)
