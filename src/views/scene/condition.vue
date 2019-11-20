@@ -239,7 +239,6 @@ export default {
         const cronArr = this.conditionModel.condition.split(' ')
         const day = cronArr[3]
         const week = cronArr[5]
-        console.log('day ' + day, 'week ' + week)
         if (day === '?' && week === '?') {
           return this.$message.error({title: false, message: this.$t('system.cron', {FIELD: 'dateWeekPointAt'})})
         }
