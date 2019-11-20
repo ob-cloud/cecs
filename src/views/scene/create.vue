@@ -310,9 +310,9 @@ export default {
       this.sceneModel.location = this.getLocation()
       console.log(this.sceneModel)
       this.$refs.sceneForm.validate(valid => {
-        // if (valid) {
-        //   this.$emit('scene-ready', this.sceneModel, false)
-        // }
+        if (valid) {
+          this.$emit('scene-ready', this.sceneModel, false)
+        }
       })
     },
     close () {

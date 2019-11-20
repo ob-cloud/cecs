@@ -2,7 +2,7 @@
  * @Author: eamiear
  * @Date: 2019-08-07 15:19:34
  * @Last Modified by: eamiear
- * @Last Modified time: 2019-11-19 15:02:08
+ * @Last Modified time: 2019-11-20 17:17:31
  */
 
 import {request} from '@/common/request'
@@ -49,6 +49,24 @@ const SceneAPI = {
     return request.postForm('/consumer/common', {
       CMD: 'set_smart_scene',
       scene: JSON.stringify(scene)
+    })
+  },
+  executeSmartScene (sceneNumber) {
+    return request.postForm('/consumer/common', {
+      CMD: 'execute_smart_scene',
+      scene_number: sceneNumber
+    })
+  },
+  // TODO
+  getSmartSceneById () {
+    return request.get('/consumer/common', {
+      CMD: ''
+    })
+  },
+  // TODO
+  deleteSmartScene () {
+    return request.postForm('/consumer/common', {
+      CMD: ''
     })
   },
   getSceneDeviceList (user = {}) {

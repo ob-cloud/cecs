@@ -269,6 +269,7 @@ export default {
     },
     onSceneReady (scene, dialogVisible) {
       SceneAPI.setSmartScene(scene).then(res => {
+        console.log('res --- ', res)
         this.responseHandler(res, this.$t('smart.scene.action', {MESSAGE: 'create'}))
         if (res.message.includes('success')) {
           this.createDialogVisible = false
