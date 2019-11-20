@@ -1,26 +1,26 @@
 <template lang="html">
   <div class="cron" :val="value_">
     <el-tabs v-model="activeName">
-      <el-tab-pane label="秒" name="s">
-        <second-and-minute v-model="sVal" lable="秒"></second-and-minute >
+      <el-tab-pane :label="$t('system.cron', {FIELD: 'second'})" name="s">
+        <second-and-minute v-model="sVal" :lable="$t('system.cron', {FIELD: 'second'})"></second-and-minute >
       </el-tab-pane>
-      <el-tab-pane label="分" name="m">
-        <second-and-minute v-model="mVal" lable="分"></second-and-minute >
+      <el-tab-pane :label="$t('system.cron', {FIELD: 'minute'})" name="m">
+        <second-and-minute v-model="mVal" :lable="$t('system.cron', {FIELD: 'minute'})"></second-and-minute >
       </el-tab-pane>
-      <el-tab-pane label="时" name="h">
-        <hour v-model="hVal" lable="时"></hour>
+      <el-tab-pane :label="$t('system.cron', {FIELD: 'hour'})" name="h">
+        <hour v-model="hVal" :lable="$t('system.cron', {FIELD: 'hour'})"></hour>
       </el-tab-pane>
-      <el-tab-pane label="日" name="d">
-        <day v-model="dVal" lable="日"></day>
+      <el-tab-pane :label="$t('system.cron', {FIELD: 'day'})" name="d">
+        <day v-model="dVal" :lable="$t('system.cron', {FIELD: 'day'})"></day>
       </el-tab-pane>
-      <el-tab-pane label="月" name="month">
-        <month v-model="monthVal" lable="月"></month>
+      <el-tab-pane :label="$t('system.cron', {FIELD: 'month'})" name="month">
+        <month v-model="monthVal" :lable="$t('system.cron', {FIELD: 'month'})"></month>
       </el-tab-pane>
-      <el-tab-pane label="周" name="week">
-        <week v-model="weekVal" lable="周"></week>
+      <el-tab-pane :label="$t('system.cron', {FIELD: 'week'})" name="week">
+        <week v-model="weekVal" :lable="$t('system.cron', {FIELD: 'week'})"></week>
       </el-tab-pane>
-      <el-tab-pane label="年" name="year">
-        <year v-model="yearVal" lable="年"></year>
+      <el-tab-pane :label="$t('system.cron', {FIELD: 'year'})" name="year">
+        <year v-model="yearVal" :lable="$t('system.cron', {FIELD: 'year'})"></year>
       </el-tab-pane>
     </el-tabs>
     <!-- table -->
@@ -31,37 +31,37 @@
        <el-table-column
          prop="sVal"
          align="center"
-         label="秒">
+         :label="$t('system.cron', {FIELD: 'second'})">
        </el-table-column>
        <el-table-column
          prop="mVal"
          align="center"
-         label="分">
+         :label="$t('system.cron', {FIELD: 'minute'})">
        </el-table-column>
        <el-table-column
          prop="hVal"
          align="center"
-         label="时">
+         :label="$t('system.cron', {FIELD: 'hour'})">
        </el-table-column>
        <el-table-column
          prop="dVal"
          align="center"
-         label="日">
+         :label="$t('system.cron', {FIELD: 'day'})">
        </el-table-column>
        <el-table-column
          prop="monthVal"
          align="center"
-         label="月">
+         :label="$t('system.cron', {FIELD: 'month'})">
        </el-table-column>
        <el-table-column
          prop="weekVal"
          align="center"
-         label="周">
+         :label="$t('system.cron', {FIELD: 'week'})">
        </el-table-column>
        <el-table-column
          prop="yearVal"
          align="center"
-         label="年">
+         :label="$t('system.cron', {FIELD: 'year'})">
        </el-table-column>
      </el-table>
   </div>
@@ -115,10 +115,10 @@ export default {
         return ''
       }
       if (this.dVal === '?' && this.weekVal === '?') {
-        this.$message.error('日期与星期不可以同时为“不指定”')
+        this.$message.error(this.$t('system.cron', {FIELD: 'dateWeekPointAt'}))
       }
       if (this.dVal !== '?' && this.weekVal !== '?') {
-        this.$message.error('日期与星期必须有一个为“不指定”')
+        this.$message.error(this.$t('system.cron', {FIELD: 'dateWeekNoPointAt'}))
       }
       const v = `${this.sVal} ${this.mVal} ${this.hVal} ${this.dVal} ${this.monthVal} ${this.weekVal} ${this.yearVal}`
       if (v !== this.value) {

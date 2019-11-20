@@ -2,13 +2,13 @@
 <template lang="html">
   <div :val="value_">
     <div>
-      <el-radio v-model="type" label="1" size="mini" border>每{{lable}}</el-radio>
+      <el-radio v-model="type" label="1" size="mini" border>{{$t('system.cron', {FIELD: 'per'})}}{{lable}}</el-radio>
     </div>
     <div>
-      <el-radio v-model="type" label="2" size="mini" border>周期</el-radio>
-      <span style="margin-left: 10px; margin-right: 5px;">从</span>
+      <el-radio v-model="type" label="2" size="mini" border>{{$t('system.cron', {FIELD: 'period'})}}</el-radio>
+      <span style="margin-left: 10px; margin-right: 5px;">{{$t('system.cron', {FIELD: 'from'})}}</span>
       <el-input-number controls-position="right" @change="type = '2'" v-model="cycle.start" :min="1" :max="59" size="mini" style="width: 100px;"></el-input-number>
-      <span style="margin-left: 5px; margin-right: 5px;">至</span>
+      <span style="margin-left: 5px; margin-right: 5px;">{{$t('system.cron', {FIELD: 'to'})}}</span>
       <el-input-number controls-position="right" @change="type = '2'" v-model="cycle.end" :min="2" :max="59" size="mini" style="width: 100px;"></el-input-number>
       {{lable}}
     </div>
@@ -21,7 +21,7 @@
       {{lable}}执行一次
     </div> -->
     <div>
-      <el-radio v-model="type" label="4" size="mini" border>指定</el-radio>
+      <el-radio v-model="type" label="4" size="mini" border>{{$t('system.cron', {FIELD: 'pointAt'})}}</el-radio>
       <el-checkbox-group v-model="appoint">
         <div  v-for="i in 6" :key="i" style="margin-left: 10px; line-height: 25px;">
           <el-checkbox @change="type = '4'"  v-for="j in 10" :key="j" :label="(i - 1) + '' + (j - 1)"></el-checkbox>

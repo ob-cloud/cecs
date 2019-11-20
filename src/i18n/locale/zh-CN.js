@@ -10,7 +10,8 @@ export default {
     logintext: '{FIELD, select, account{账户} pwd{密码} erraccount{请输入正确的用户名} invalidMobile{手机号码有误} loginfail{登录失败，账号或密码错误} other{}}',
     route: '{FIELD, select, devicemgr{设备管理} scenemgr{场景管理} roommgr{房间管理} usrmgr{用户管理} logmgr{日志管理} other{}}',
     validator: '{FIELD, select, name{名称应为英文字母、数字或下划线组成的字符串} mobile{手机号码格式有误} other{}}',
-    devtype: '{FIELD, select, Sensor{传感器} HumidSensors{温湿度传感器} Switcher{插座开关} 3KeySwitch{3路开关} Ifrate{红外转发器} other{}}'
+    devtype: '{FIELD, select, Sensor{传感器} HumidSensors{温湿度传感器} Switcher{插座开关} 3KeySwitch{3路开关} Ifrate{红外转发器} other{}}',
+    cron: '{FIELD, select, second{秒} minute{分} hour{时} day{日} month{月} week{周} year{年} perSecond{每秒} perMinute{每分} perHour{每时} perDay{每日} perMonth{每月} perWeek{每周} perYear{每年} period{周期} pointAt{指定} noPointAt{不指定} dateWeekPointAt{日期与星期不可以同时为“不指定”} dateWeekNoPointAt{日期与星期必须有一个为“不指定”} from{从} to{至} per{每} other{}}',
   },
   message: {
     refresh: '刷新',

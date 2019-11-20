@@ -1,18 +1,18 @@
 <template lang="html">
   <div :val="value_">
     <div>
-      <el-radio v-model="type" label="1" size="mini" border>每年</el-radio>
+      <el-radio v-model="type" label="1" size="mini" border>{{$t('system.cron', {FIELD: 'per'})}}{{lable}}</el-radio>
     </div>
     <div>
-      <el-radio v-model="type" label="5" size="mini" border>不指定</el-radio>
+      <el-radio v-model="type" label="5" size="mini" border>{{$t('system.cron', {FIELD: 'noPointAt'})}}</el-radio>
     </div>
     <div>
-      <el-radio v-model="type" label="2" size="mini" border>周期</el-radio>
-      <span style="margin-left: 10px; margin-right: 5px;">从</span>
+      <el-radio v-model="type" label="2" size="mini" border>{{$t('system.cron', {FIELD: 'period'})}}</el-radio>
+      <span style="margin-left: 10px; margin-right: 5px;">{{$t('system.cron', {FIELD: 'from'})}}</span>
       <el-input-number controls-position="right" @change="type = '2'" v-model="cycle.start" :min="2000" size="mini" style="width: 100px;"></el-input-number>
-      <span style="margin-left: 5px; margin-right: 5px;">至</span>
+      <span style="margin-left: 5px; margin-right: 5px;">{{$t('system.cron', {FIELD: 'to'})}}</span>
       <el-input-number controls-position="right" @change="type = '2'" v-model="cycle.end" :min="2000"  size="mini" style="width: 100px;"></el-input-number>
-      年
+      {{lable}}
     </div>
   </div>
 </template>
@@ -23,6 +23,9 @@ export default {
     value: {
       type: String,
       default: '*'
+    },
+    lable: {
+      type: String
     }
   },
   data () {

@@ -21,13 +21,13 @@
       <el-input-number controls-position="right" @change="type = '3'" v-model="loop.end" :min="1" :max="7" size="mini" style="width: 100px;"></el-input-number>
       天执行一次
     </div> -->
-    <div>
+    <!-- <div>
       <el-radio v-model="type" label="7" size="mini" border>指定周</el-radio>
       <span style="margin-left: 10px; margin-right: 5px;">本月第</span>
       <el-input-number controls-position="right" @change="type = '7'" v-model="week.start" :min="1" :max="4" size="mini" style="width: 100px;"></el-input-number>
       <span style="margin-left: 5px; margin-right: 5px;">周，星期</span>
       <el-input-number controls-position="right" @change="type = '7'" v-model="week.end" :min="1" :max="7" size="mini" style="width: 100px;"></el-input-number>
-    </div>
+    </div> -->
     <!-- <div>
       <el-radio v-model="type" label="6" size="mini" border>本月最后一个</el-radio>
       <span style="margin-left: 10px; margin-right: 5px;">星期</span>

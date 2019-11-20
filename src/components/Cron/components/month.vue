@@ -1,18 +1,18 @@
 <template lang="html">
   <div :val="value_">
     <div>
-      <el-radio v-model="type" label="1" size="mini" border>每月</el-radio>
+      <el-radio v-model="type" label="1" size="mini" border>{{$t('system.cron', {FIELD: 'per'})}}{{lable}}</el-radio>
     </div>
     <div>
-      <el-radio v-model="type" label="5" size="mini" border>不指定</el-radio>
+      <el-radio v-model="type" label="5" size="mini" border>{{$t('system.cron', {FIELD: 'noPointAt'})}}</el-radio>
     </div>
     <div>
-      <el-radio v-model="type" label="2" size="mini" border>周期</el-radio>
-      <span style="margin-left: 10px; margin-right: 5px;">从</span>
+      <el-radio v-model="type" label="2" size="mini" border>{{$t('system.cron', {FIELD: 'period'})}}</el-radio>
+      <span style="margin-left: 10px; margin-right: 5px;">{{$t('system.cron', {FIELD: 'from'})}}</span>
       <el-input-number controls-position="right" @change="type = '2'" v-model="cycle.start" :min="1" :max="12" size="mini" style="width: 100px;"></el-input-number>
-      <span style="margin-left: 5px; margin-right: 5px;">至</span>
+      <span style="margin-left: 5px; margin-right: 5px;">{{$t('system.cron', {FIELD: 'to'})}}</span>
       <el-input-number controls-position="right" @change="type = '2'" v-model="cycle.end" :min="2" :max="12" size="mini" style="width: 100px;"></el-input-number>
-      月
+      {{lable}}
     </div>
     <!-- <div>
       <el-radio v-model="type" label="3" size="mini" border>循环</el-radio>
@@ -23,7 +23,7 @@
       月执行一次
     </div> -->
     <div>
-      <el-radio v-model="type" label="4" size="mini" border>指定</el-radio>
+      <el-radio v-model="type" label="4" size="mini" border>{{$t('system.cron', {FIELD: 'pointAt'})}}</el-radio>
       <el-checkbox-group v-model="appoint" style="margin-left: 0px;  line-height: 25px;">
         <el-checkbox @change="type = '4'"  v-for="i in 12" :key="'key'+i" :label="''+i"></el-checkbox>
       </el-checkbox-group>
@@ -37,6 +37,9 @@ export default {
     value: {
       type: String,
       default: '*'
+    },
+    lable: {
+      type: String
     }
   },
   data () {
