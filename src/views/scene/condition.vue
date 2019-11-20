@@ -3,57 +3,6 @@
     <el-tabs v-model="conditionType" class="condition-type" type="border-card" @tab-click="onConditionTabClick">
       <el-tab-pane :label="$t('smart.scene.condition', {FIELD: 'timeCon'})" name="1">
         <Cron v-model="conditionModel.cron"></Cron>
-          <!-- <el-tabs tab-position="left" class="timing h200" v-model="conditionTimeType">
-            <el-tab-pane :label="$t('smart.scene.condition', {FIELD: 'date'})" name="1">
-              <el-date-picker
-                class="picker"
-                v-model="conditionModel.year"
-                align="right"
-                type="year"
-                format="yyyy"
-                value-format="yyyy"
-                placeholder="每年">
-              </el-date-picker>
-              <el-date-picker
-                class="picker"
-                v-model="conditionModel.month"
-                align="right"
-                type="month"
-                format="M"
-                value-format="M"
-                placeholder="每月">
-              </el-date-picker>
-              <el-date-picker
-                class="picker"
-                v-model="conditionModel.date"
-                type="date"
-                format="d"
-                value-format="d"
-                :placeholder="$t('smart.scene.condition', {FIELD: 'selDate'})">
-              </el-date-picker>
-              <el-time-picker
-                class="picker"
-                v-model="conditionModel.time"
-                format="HH:mm"
-                value-format="HH:mm"
-                :placeholder="$t('smart.scene.condition', {FIELD: 'selTime'})">
-              </el-time-picker>
-            </el-tab-pane>
-            <el-tab-pane :label="$t('smart.scene.condition', {FIELD: 'week'})" name="2">
-              <div class="weeks">
-                <el-radio-group v-model="conditionModel.week">
-                  <el-radio-button type="plain" v-for="(week, index) in weeks" :key="index" :label="week.label"></el-radio-button>
-                </el-radio-group>
-                <el-time-picker
-                  class="picker"
-                  v-model="conditionModel.time"
-                  format="HH:mm"
-                  value-format="HH:mm"
-                  :placeholder="$t('smart.scene.condition', {FIELD: 'selTime'})">
-                </el-time-picker>
-              </div>
-            </el-tab-pane>
-          </el-tabs> -->
       </el-tab-pane>
       <el-tab-pane :label="$t('smart.scene.condition', {FIELD: 'chainCon'})" name="2" class="left h200 chain-list">
         <div class="chain-device" :class="{active: item.serialId === chainActiveDevice.serialId}" v-for="(item, index) in chainDeviceList" :key="index" @click="onChainDeviceClick(item)">
@@ -63,40 +12,8 @@
           <p style="text-align: right;">{{item.online ? $t('message.status', {STATUS: 'online'}) : $t('message.status', {STATUS: 'offline'})}}</p>
         </div>
         <div class="chain-device-actions">
-          <!-- <div class="chain-action__item" v-if="isSocket()">
-            <p class="title">面板哪个按钮被按下</p>
-            <div class="content" v-if="isSixScenePanelSocket()">
-              <el-radio v-model="conditionModel.pick" label="1" border>情景按钮1</el-radio>
-              <el-radio v-model="conditionModel.pick" label="2" border>情景按钮2</el-radio>
-              <el-radio v-model="conditionModel.pick" label="3" border>情景按钮3</el-radio>
-              <el-radio v-model="conditionModel.pick" label="4" border>情景按钮4</el-radio>
-              <el-radio v-model="conditionModel.pick" label="5" border>情景按钮5</el-radio>
-              <el-radio v-model="conditionModel.pick" label="6" border>情景按钮6</el-radio>
-            </div>
-            <div class="content" v-else>
-              <el-radio v-model="conditionModel.pick" label="1" border>情景按钮1</el-radio>
-              <el-radio v-model="conditionModel.pick" label="2" border>情景按钮2</el-radio>
-              <el-radio v-model="conditionModel.pick" label="3" border>情景按钮3</el-radio>
-              <el-radio v-model="conditionModel.pick" label="4" border>挥手感应</el-radio>
-            </div>
-          </div>
-          <div class="chain-action__item" v-else-if="isLock()">
-            <p class="title">门锁操作</p>
-            <div class="content">
-              <el-radio v-model="conditionModel.pick" label="1" border>用户</el-radio>
-              <el-radio v-model="conditionModel.pick" label="2" border>远程授权开锁</el-radio>
-              <el-radio v-model="conditionModel.pick" label="3" border>卡开锁</el-radio>
-            </div>
-          </div>
-          <div class="chain-action__item" v-else-if="isGate()">
-            <p class="title">门窗磁操作</p>
-            <div class="content">
-              <el-radio v-model="conditionModel.pick" label="0" border>关</el-radio>
-              <el-radio v-model="conditionModel.pick" label="1" border>开</el-radio>
-            </div>
-          </div> -->
           <!-- <div class="chain-action__item" v-else-if="isHumidifier()"> -->
-          <div class="chain-action__item">
+          <div class="chain-action__item" v-if="isHumidifier()">
             <div class="title">
               <el-radio-group v-model="templureAction">
                 <el-radio-button type="plain" label="0">{{$t('smart.obox.tableField', {FIELD: 'temperature'})}}</el-radio-button>
@@ -177,8 +94,7 @@ export default {
         condition: '',
         conditionDesc: ''
       },
-      weeks: [{label: '星期一', value: '1'}, {label: '星期二', value: '2'}, {label: '星期三', value: '3'}, {label: '星期四', value: '4'}, {label: '星期五', value: '5'}, {label: '星期六', value: '6'}, {label: '星期日', value: '7'}],
-      templureCondition: {'>': '49', '=': '4a', '>=': '4b', '<': '4c', '<=': '4e', '无': ''},
+      templureCondition: {'>': '49', '=': '4a', '>=': '4b', '<': '4c', '<=': '4e', [this.$t('message.none')]: ''},
       templureValue: [],
       humidifierValue: [],
       templureAction: '0',
@@ -241,7 +157,7 @@ export default {
       // this.chainDeviceList = chainList
       this.chainDeviceList = [{
         serialId: '',
-        name: '温湿度类型设备',
+        name: this.$t('message.device', {DEVICE_TEXT: 'humDev'}),
         device_type: 'b',
         device_child_type: 'b'
       }]
@@ -297,49 +213,6 @@ export default {
     },
     getDateTimeCondition () {
       return this.conditionModel.cron
-      // const conmodel = this.conditionModel
-      // const desc = []
-      // const cronMap = {'second': '*', 'minute': '*', 'hour': '*', 'date': '*', 'month': '*', 'week': '*', 'year': '*'}
-      // const year = conmodel.year
-      // const week = conmodel.week
-      // const month = conmodel.month
-      // const date = conmodel.date
-      // const time = conmodel.time
-      // let hour = ''
-      // let minute = ''
-      // if (time) {
-      //   hour = time.split(':')[0]
-      //   minute = time.split(':')[1]
-      // }
-      // cronMap.year = year || ''
-      // cronMap.week = (week && this.weeks.find(item => item.label === week).value) || '?'
-      // cronMap.month = month || '*'
-      // cronMap.date = date || '*'
-      // cronMap.hour = hour || '*'
-      // cronMap.minute = minute || '*'
-      // cronMap.second = '0'
-      // const index = Object.keys(cronMap).reverse().findIndex(key => cronMap[key] && cronMap[key] !== '*' && cronMap[key] !== '?')
-      // const map = index ? Object.fromEntries(Object.entries(cronMap).slice(0, -index)) : cronMap
-      // desc[0] = (`${map.year && map.year !== '*' ? map.year : '每'}年`)
-      // desc[1] = (`${map.month && map.month !== '*' ? map.month : '每'}月`)
-      // desc[3] = (`${map.date && map.date !== '*' ? map.date : '每'}日 `)
-      // const reverseKeys = Object.keys(map).reverse()
-      // if (reverseKeys[0] === 'month') {
-      //   map.date = map.date || '*'
-      //   desc[2] = ''
-      // } else if (reverseKeys[0] === 'week') {
-      //   map.month = map.month || '*'
-      //   map.date = '?'
-      //   desc[3] = ''
-      //   desc[2] = (`${map.week && ('周' + map.week)} `)
-      // }
-      // map.hour = map.hour || 0
-      // map.minute = map.minute || 0
-      // desc[4] = (`${map.hour && map.hour !== '*' ? map.hour : 0}时`)
-      // desc[5] = (`${map.minute && map.minute !== '*' ? map.minute : 0}分`)
-      // conmodel.conditionDesc = desc.join('')
-      // console.log('condition ', Object.values({...cronMap, ...map}).join(' '))
-      // return Object.values({...cronMap, ...map}).join(' ')
     },
     getDeviceCondition () {
       let condition = ''
@@ -367,13 +240,7 @@ export default {
       } else if (this.conditionType === '2') {
         if (this.isHumidifier()) {
           this.conditionModel.condition = this.tempHumCondition.join('')
-          this.conditionModel.action = `(温度${this.conditionModel.symbolT}${this.conditionModel.templure} / 湿度${this.conditionModel.symbolH}${this.conditionModel.humidifier})`
-        }
-        if (this.isSocket()) {
-          this.conditionModel.condition = this.getDeviceCondition()
-        }
-        if (this.isGate()) {
-          this.conditionModel.action = this.conditionModel.pick === '0' ? '当门窗关闭' : '当门窗打开'
+          this.conditionModel.action = `(${this.$t('message.device', {DEVICE_TEXT: 'temperature'})}${this.conditionModel.symbolT}${this.conditionModel.templure} / ${this.$t('message.device', {DEVICE_TEXT: 'humidifier'})}${this.conditionModel.symbolH}${this.conditionModel.humidifier})`
         }
         this.conditionModel.type = '2'
         this.conditionModel.conditionType = '01'

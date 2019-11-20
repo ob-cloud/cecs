@@ -4,25 +4,7 @@
       <el-form-item :label="$t('smart.scene.tableField', {FIELD: 'name'})" prop="scene_name">
         <el-input class="caption-item w8" :placeholder="$t('smart.scene.create', {FIELD: 'inputNameTip'})" v-model="sceneModel.scene_name"></el-input>
       </el-form-item>
-      <!-- <el-form-item label="消息推送" prop="msg_alter">
-        <el-radio-group v-model="sceneModel.msg_alter">
-          <el-radio :label="0">无推送</el-radio>
-          <el-radio :label="1">APP推送</el-radio>
-          <el-radio :label="2">短信推送</el-radio>
-          <el-radio :label="3">APP/短息推送</el-radio>
-        </el-radio-group>
-      </el-form-item> -->
-      <!-- <el-form-item label="行为设备" prop="deviceIdList">
-        <el-select v-model="deviceIdList" multiple placeholder="请选择设备" class="w8">
-          <el-option
-            v-for="item in deviceActionList"
-            :key="item.id"
-            :label="item.name"
-            :value="item.serialId">
-          </el-option>
-        </el-select>
-      </el-form-item> -->
-      <el-form-item label="位置" prop="location.buildingId" class="location">
+      <el-form-item :label="$t('smart.scene.create', {FIELD: 'location'})" prop="location.buildingId" class="location">
         <el-select :placeholder="$t('message.placeholder', {TYPE: 'choose', PLACEHOLDER: 'build'})" v-model="sceneModel.location.buildingId" filterable clearable>
           <el-option v-for="(item, index) in buildingList" :key="item.buildingName + index + item.buildingId" :label="item.buildingName" :value="item.buildingId"></el-option>
         </el-select>
@@ -73,10 +55,10 @@
           </el-tab-pane>
         </el-tabs>
       </el-form-item>
-      <el-form-item label="设备行为">
+      <el-form-item :label="$t('smart.scene.create', {FIELD: 'behavior'})">
         <div class="action-content">
           <div class="condition-item clearfix" v-for="(deviceAction, index) in deviceActionModel" :key="index">
-            <i v-if="index !== 0" class="el-icon-close fr" @click="handleRemoveAction(index)"></i>
+            <i class="el-icon-close fr" @click="handleRemoveAction(index)"></i>
             <div class="action-item">
               <el-tooltip :content="$t('smart.scene.create', {FIELD: 'actionTips'})" placement="top">
                 <el-input-number v-model="deviceAction.action_time" controls-position="right" :min="0"></el-input-number>
