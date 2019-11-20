@@ -34,9 +34,9 @@
           </div>
         </div>
         <div class="btn-controller templure" :class="{inactive: !isTemplureEnable()}">
-          <i class="obicon obicon-minus" @click="keyHandler(3, -1)"></i>
+          <i class="obicon obicon-minus" @click="keyHandler(3, -1, isTemplureEnable())"></i>
           <p>{{$t('smart.obox.ac', {FIELD: 'temperature'})}}</p>
-          <i class="obicon obicon-plus" @click="keyHandler(3, 1)"></i>
+          <i class="obicon obicon-plus" @click="keyHandler(3, 1, isTemplureEnable())"></i>
         </div>
       </div>
     </div>
@@ -95,7 +95,7 @@ export default {
     isFanSpeedEnable () {
       return this.airCondition.isPowerOn && ([0, 1, 4].includes(this.airAction.mode))
     },
-    keyHandler (type, subtype) {
+    keyHandler (type, subtype, temperatureEnable) {
       if (type === 0) { // 电源
         this.airCondition.isPowerOn = !this.airCondition.isPowerOn
         this.airAction = {
@@ -123,6 +123,9 @@ export default {
         this.airAction.templure += subtype
         this.airAction.templure < 16 && (this.airAction.templure += 1)
         this.airAction.templure > 30 && (this.airAction.templure -= 1)
+        if (!temperatureEnable) {
+          return
+        }
       } else if (type === 1) { // 风扇
         this.airAction.speed += 1
         this.airAction.speed > 3 && (this.airAction.speed = 0)
