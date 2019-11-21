@@ -76,6 +76,7 @@ export default {
       columns: [],
       createDialogVisible: false,
       dialogAction: this.$t('smart.scene.action', {FIELD: 'create'}),
+      dialogActionType: 'create',
       sceneData: null
     }
   },
@@ -237,8 +238,15 @@ export default {
     },
     edit (row) {
       this.createDialogVisible = true
-      this.dialogAction = this.$t('smart.scene.action', {MESSAGE: 'edit'})
-      this.sceneData = row
+      this.dialogActionType = 'edit'
+      this.dialogAction = this.$t('smart.scene.action', {FIELD: 'edit'})
+      SceneAPI.getSmartSceneById(row.sceneNumber).then(res => {
+        if (res.status === 0) {
+          this.sceneData = res.data
+        } else {
+          this.sceneData = null
+        }
+      })
     },
     handleRemove (row) {
       this.$confirm(this.$t('smart.scene.message', {MESSAGE: 'delConfirm'}), this.$t('message.tips'), {
@@ -263,20 +271,22 @@ export default {
       })
     },
     createRemoteScene () {
-      this.dialogAction = this.$t('smart.scene.action', {MESSAGE: 'create'})
+      this.dialogAction = this.$t('smart.scene.action', {FIELD: 'create'})
       this.createDialogVisible = true
+      this.dialogActionType = 'create'
       this.sceneData = null
     },
     onSceneReady (scene, dialogVisible) {
-      SceneAPI.setSmartScene(scene).then(res => {
+      const action = this.dialogActionType === 'create' ? 'setSmartScene' : 'updateSmartScene'
+      SceneAPI[action](scene).then(res => {
         console.log('res --- ', res)
-        this.responseHandler(res, this.$t('smart.scene.action', {MESSAGE: 'create'}))
+        this.responseHandler(res, this.$t('smart.scene.action', {FIELD: 'create'}))
         if (res.message.includes('success')) {
           this.createDialogVisible = false
           this.getSceneList()
         }
       }).catch(err => {
-        this.responseHandler({message: 'error'}, this.$t('smart.scene.action', {MESSAGE: 'create'}))
+        this.responseHandler({message: 'error'}, this.$t('smart.scene.action', {FIELD: 'create'}))
       })
     }
   }
