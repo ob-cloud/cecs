@@ -164,6 +164,7 @@ export default {
             type: 'success',
             message: this.$t('smart.gateway.message', {MESSAGE: 'delDevice'}) + this.$t('message.success')
           })
+          this.getOboxList()
         } else {
           this.$message({
             type: 'error',
