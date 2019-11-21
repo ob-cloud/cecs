@@ -108,7 +108,7 @@ export default {
       tableField: '{FIELD, select, name{场景名称} build{楼栋} floor{楼层} room{房间} status{场景状态} action{操作} other{}}',
       message: '{MESSAGE, select, fetchFail{场景获取失败} loading{场景删除中...} delConfirm{确认删除场景？} delDevice{场景删除} update{场景状态更新} excute{场景执行} excuting{场景执行中...} other{}}',
       create: '{FIELD, select, inputNameTip{输入场景名称} empty{场景名称不能为空} locationEmpty{楼栋不能为空} invalid{名称应为英文字母、数字或下划线组成的字符串} location{位置} deviceCon{设备条件} cons1{条件1} cons2{条件2} cons3{条件3} behavior{设备行为} actionTips{行为执行时间(单位秒)} devAction{配置设备动作} setDevAct{设备行为配置} conType{条件类型} conTip{一组最多三个条件} other{}}',
-      condition: '{FIELD, select, timing{定时} timeCon{定时条件} date{日期} selDate{选择日期} selTime{选择时间} week{星期} chain{联动} chainCon{联动条件} selConTip{请正确选择条件} other{}}',
+      condition: '{FIELD, select, timing{定时} timeCon{定时条件} date{日期} selDate{选择日期} selTime{选择时间} week{星期} chain{联动} chainCon{联动条件} selConTip{请正确选择条件} setChainDevCon{请配置联动条件} setActionBehavior{请补全设备行为} other{}}',
     },
     usermodule: '用户管理',
     account: {

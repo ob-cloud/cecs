@@ -247,7 +247,7 @@ export default {
         type: 'warning',
         closeOnClickModal: false
       }).then(() => {
-        this.doRemove(row.scene_number)
+        this.doRemove(row.sceneNumber)
       }).catch(() => {
         console.log('cancel')
       })

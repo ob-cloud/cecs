@@ -58,7 +58,7 @@
       <el-form-item :label="$t('smart.scene.create', {FIELD: 'behavior'})">
         <div class="action-content">
           <div class="condition-item clearfix" v-for="(deviceAction, index) in deviceActionModel" :key="index">
-            <i class="el-icon-close fr" @click="handleRemoveAction(index)"></i>
+            <i v-if="index !== 0" class="el-icon-close fr" @click="handleRemoveAction(index)"></i>
             <div class="action-item">
               <el-tooltip :content="$t('smart.scene.create', {FIELD: 'actionTips'})" placement="top">
                 <el-input-number v-model="deviceAction.action_time" controls-position="right" :min="0"></el-input-number>
@@ -184,7 +184,7 @@ export default {
     },
     'sceneModel.location.roomId' (id) { // get device's list by room id
       if (!id) { // init by default data
-        this.deviceTypeList = []
+        this.deviceTypeList = this.initDeviceType()
         this.deviceActionModel = this.initActionModel()
         this.deviceActionModel[0].deviceTypeList = this.initDeviceType()
         return
@@ -198,7 +198,7 @@ export default {
     }
   },
   methods: {
-    initDeviceType () {
+    initDeviceType () { // for building or floor location
       return [{
         name: '3 way switch',
         deviceType: '04',
@@ -208,12 +208,9 @@ export default {
         deviceType: '51'
       }]
     },
-    initActionModel () {
+    initActionModel () { // model for device to save action messages
       return [{
         action_time: 0,
-        buildingId: '',
-        floorId: '',
-        roomId: '',
         serialId: '',
         deviceType: '',
         actionDescriptor: '',
@@ -225,7 +222,7 @@ export default {
       if (!type && !subtype) return
       return subtype ? this.$t('system.devtype', {FIELD: Suit.getDeviceTypeDescriptor(type, subtype)}) : this.$t('system.devtype', {FIELD: Suit.getRootDeviceDescriptor(type)})
     },
-    isActionDevice (deviceType, deviceSubType, isLocal) {
+    isActionDevice (deviceType, deviceSubType, isLocal) { // only some device can be set
       return !Suit.typeHints.isSensors(deviceType)
         && !Suit.typeHints.isFinger(deviceType)
         && !Suit.typeHints.isDoorLock(deviceType)
@@ -302,16 +299,23 @@ export default {
         deviceTypeList: this.deviceTypeList
       })
     },
+    hasEmptyAction (actions) {
+      return !actions || !actions.length || actions.findIndex(item => !item) > -1
+    },
     handleSelectedCondition () {
       const actions = this.getModelAction()
       const conditions = this.getModelCondition()
       this.sceneModel.actions = actions
       this.sceneModel.conditions.push(...conditions)
-      this.sceneModel.location = this.getLocation()
-      console.log(this.sceneModel)
+      const model = {...this.sceneModel}
+      model.location = this.getLocation()
+      console.log('model  ', model)
+      if (this.hasEmptyAction(actions)) {
+        return this.$message.warning({title: false, message: this.$t('smart.scene.condition', {FIELD: 'setActionBehavior'})})
+      }
       this.$refs.sceneForm.validate(valid => {
         if (valid) {
-          this.$emit('scene-ready', this.sceneModel, false)
+          this.$emit('scene-ready', model, false)
         }
       })
     },
@@ -321,9 +325,8 @@ export default {
     isGateSensors (device) {
       return Suit.typeHints.isGateSensors(device.device_child_type)
     },
-    parseCondition (condition) {
+    parseCondition (condition) { // parse condition to readable text
       let str = ''
-      console.log('---- ', condition)
       if (condition.model.type === '1') {
         str = `${this.$t('smart.scene.condition', {FIELD: 'timing'})} ${condition.model.condition}`
       } else if (condition.model.type === '2') {
@@ -359,7 +362,6 @@ export default {
           return cons
         })
       })
-      console.log('conditions ', conditions)
       return conditions
     },
     getModelAction () {
