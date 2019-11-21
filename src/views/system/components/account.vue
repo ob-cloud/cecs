@@ -246,6 +246,11 @@ export default {
               })
               this.createDialogVisible = false
               this.getAccountList()
+            } else if (res.status === 411) {
+              this.$message({
+                type: 'error',
+                message: res.message
+              })
             } else {
               this.$message({
                 type: 'error',
