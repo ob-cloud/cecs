@@ -79,7 +79,8 @@ export default {
       // date.setHours(0)
       // date.setMinutes(0)
       // date.setSeconds(0)
-      return date.setHours(0, 0, 0, 0)
+      date.setHours(0, 0, 0, 0)
+      return date
     },
     async getHumidifierStatusHistoryByWeek (serialId) {
       const nowaday = new Date()
