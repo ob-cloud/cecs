@@ -5,13 +5,13 @@
         <el-input class="caption-item w8" :placeholder="$t('smart.scene.create', {FIELD: 'inputNameTip'})" v-model="sceneModel.scene_name"></el-input>
       </el-form-item>
       <el-form-item :label="$t('smart.scene.create', {FIELD: 'location'})" prop="location.buildingId" class="location">
-        <el-select :placeholder="$t('message.placeholder', {TYPE: 'choose', PLACEHOLDER: 'build'})" v-model="sceneModel.location.buildingId" filterable clearable>
+        <el-select :placeholder="$t('message.placeholder', {TYPE: 'choose', PLACEHOLDER: 'build'})" v-model="sceneModel.location.buildingId" filterable clearable :disabled="!!this.sceneNumber">
           <el-option v-for="(item, index) in buildingList" :key="item.buildingName + index + item.buildingId" :label="item.buildingName" :value="item.buildingId"></el-option>
         </el-select>
-        <el-select :placeholder="$t('message.placeholder', {TYPE: 'choose', PLACEHOLDER: 'floor'})" v-model="sceneModel.location.floorId" filterable clearable>
+        <el-select :placeholder="$t('message.placeholder', {TYPE: 'choose', PLACEHOLDER: 'floor'})" v-model="sceneModel.location.floorId" filterable clearable :disabled="!!this.sceneNumber">
           <el-option v-for="(item, index) in floorList" :key="item.floorName + index + item.floorId" :label="item.floorName" :value="item.floorId"></el-option>
         </el-select>
-        <el-select :placeholder="$t('message.placeholder', {TYPE: 'choose', PLACEHOLDER: 'room'})" v-model="sceneModel.location.roomId" filterable clearable>
+        <el-select :placeholder="$t('message.placeholder', {TYPE: 'choose', PLACEHOLDER: 'room'})" v-model="sceneModel.location.roomId" filterable clearable :disabled="!!this.sceneNumber">
           <el-option v-for="(item, index) in roomList" :key="item.roomName + index + item.roomId" :label="item.roomName" :value="item.roomId"></el-option>
         </el-select>
       </el-form-item>
@@ -80,7 +80,7 @@
     </el-form>
     <!-- 条件类型弹窗 -->
     <el-dialog v-if="conDialogVisible" width="950px" top="10%" :title="$t('smart.scene.create', {FIELD: 'conType'})" :visible.sync="conDialogVisible" :close-on-click-modal="false" append-to-body>
-      <scene-condition :isLcal="true" :deviceList="deviceList" @condition-change="onConditionChange"></scene-condition>
+      <scene-condition :isLcal="true" @condition-change="onConditionChange"></scene-condition>
     </el-dialog>
     <!-- action -->
     <el-dialog v-if="actionDialogVisible" :width="activeDevice.device_type === '51' ? '80%' : '600px'" :title="$t('smart.scene.create', {FIELD: 'devAction'})" :visible.sync="actionDialogVisible" :close-on-click-modal="false" append-to-body>
@@ -98,6 +98,7 @@ import SceneCondition from './condition'
 import SceneAction from './action'
 const {default: Suit} = require('@/common/suit')
 import scene from './scene'
+import SceneAPI from '@/api/scene'
 export default {
   mixins: [scene],
   props: {
@@ -105,19 +106,15 @@ export default {
       type: Boolean,
       default: true
     },
-    scene: {
-      type: Object,
-      default: () => {}
+    sceneNumber: {
+      type: Number,
+      default: 0
     }
   },
   data () {
     return {
       name: '',
-      deviceActionList: [],
-      deviceList: [],
-      deviceIdList: '',
-      deviceSelectedList: [],
-      sceneModel: {
+      sceneModel: { // the scene created or edited model object
         scene_type: '00',
         scene_status: '01',
         scene_number: 0, // create 0
@@ -135,11 +132,10 @@ export default {
       deviceActionModel: this.initActionModel(),
       currentAction: null, // current handling action
       activeDevice: null, // current active device
-      conditionsTab: 'c1',
       conDialogVisible: false, // condition dialog visible controller flag
-      conditionObject: null,
-      conditionList: [],
-      conditionMapList: {
+      conditionList: [], // list to store conditions
+      conditionsTab: 'c1', // condition 'c1' for the default or active tab
+      conditionMapList: { // condition tab map list
         'c1': [],
         'c2': [],
         'c3': []
@@ -150,24 +146,26 @@ export default {
       },
       deviceTypeList: this.initDeviceType(), // list of device's type
       actionDialogVisible: false,
+      isEditScene: false
     }
   },
   components: {SceneCondition, SceneAction},
   mounted () {
     this.getSceneDeviceList().then(buildingList => {
-      this.deviceActionModel[0].buildingList = buildingList
+      if (this.sceneNumber) { // when there is a sceneNumber, It's in an editable mode
+        this.isEditScene = true
+        this.getSceneDataBySceneNumber()
+      } else {
+        this.isEditScene = false
+      }
     })
   },
   watch: {
-    deviceIdList (serialIds) {
-      this.deviceSelectedList = serialIds.map(serialId => {
-        return this.deviceList.find(device => serialId === device.serialId)
-      })
-    },
     'sceneModel.location.buildingId' (id) { // get floor's list by building id
-      if (!id) return
-      this.sceneModel.location.floorId = ''
-      this.sceneModel.location.roomId = ''
+      if (!this.isEditScene) {
+        this.sceneModel.location.floorId = ''
+        this.sceneModel.location.roomId = ''
+      }
       this.floorList = []
       this.roomList = []
       this.getFloorList(id)
@@ -175,8 +173,7 @@ export default {
       this.deviceActionModel[0].deviceTypeList = this.initDeviceType()
     },
     'sceneModel.location.floorId' (id) { // get room's list by floor id
-      if (!id) return
-      this.sceneModel.location.roomId = ''
+      !this.isEditScene && (this.sceneModel.location.roomId = '')
       this.roomList = []
       this.getRoomList(id)
       this.deviceActionModel = this.initActionModel()
@@ -195,6 +192,7 @@ export default {
       })
       this.deviceActionModel = this.initActionModel()
       this.deviceActionModel[0].deviceTypeList = this.deviceTypeList
+      this.isEditScene = false // after finishing rendering location, reset isEditScene variable
     }
   },
   methods: {
@@ -218,11 +216,11 @@ export default {
         deviceTypeList: []
       }]
     },
-    deviceTypeFilter (type, subtype) {
+    deviceTypeFilter (type, subtype) { // get description text of device's type
       if (!type && !subtype) return
       return subtype ? this.$t('system.devtype', {FIELD: Suit.getDeviceTypeDescriptor(type, subtype)}) : this.$t('system.devtype', {FIELD: Suit.getRootDeviceDescriptor(type)})
     },
-    isActionDevice (deviceType, deviceSubType, isLocal) { // only some device can be set
+    isActionDevice (deviceType, deviceSubType, isLocal) { // only some device can be set action
       return !Suit.typeHints.isSensors(deviceType)
         && !Suit.typeHints.isFinger(deviceType)
         && !Suit.typeHints.isDoorLock(deviceType)
@@ -230,11 +228,11 @@ export default {
         && !(Suit.typeHints.isSocketSwitch(deviceType) && Suit.typeHints.isSceneSocketSwitch(deviceSubType))
         && !(Suit.typeHints.isSocketSwitch(deviceType) && Suit.typeHints.isMixSocketSwitch(deviceSubType))
     },
-    settingAction (serialId, index, deviceType) {
+    settingAction (serialId, index, deviceType) { // click area of the action behavior and set
       this.actionDialogVisible = true
       this.onSelectDevice(serialId, index, deviceType)
     },
-    addCondition () {
+    addCondition () { // for condition modal/dialog controller
       this.conDialogVisible = true
     },
     removeCondition (index) {
@@ -242,7 +240,6 @@ export default {
       this.conditionMapList[this.conditionsTab].splice(index, 1)
     },
     onConditionChange (condition, dialogVisible) { // when finishing choosing conditions, enter this callback function
-      console.log(condition)
       if (this.conditionMapList[this.conditionsTab].length >= 3) {
         this.$message({
           message: this.$t('smart.scene.create', {FIELD: 'conTip'}),
@@ -283,30 +280,33 @@ export default {
       this.currentAction = activeActionModel
       this.currentAction.actionDescriptor = ''
     },
-    handleRemoveAction (index) {
+    handleRemoveAction (index) { // remove device's action
       this.deviceActionModel.splice(index, 1)
     },
-    handleAddAction () {
+    handleAddAction () { // add device's action
       this.deviceActionModel.push({
         action_time: 0,
-        buildingId: '',
-        floorId: '',
-        roomId: '',
-        serialId: '',
+        serialId: this.getSerialIdFromTypeListBySceneNumber() || '',
         deviceType: '',
         actionDescriptor: '',
         action: '',
         deviceTypeList: this.deviceTypeList
       })
     },
+    getSerialIdFromTypeListBySceneNumber () { // edit mode, get serialId for deviceActionModel
+      if (this.sceneNumber) {
+        const typeObj = this.deviceTypeList.find(type => type.deviceSerialId)
+        return typeObj && typeObj.deviceSerialId
+      }
+    },
     hasEmptyAction (actions) {
       return !actions || !actions.length || actions.findIndex(item => !item) > -1
     },
-    handleSelectedCondition () {
+    handleSelectedCondition () { // combine the arguments and save
       const actions = this.getModelAction()
       const conditions = this.getModelCondition()
       this.sceneModel.actions = actions
-      this.sceneModel.conditions.push(...conditions)
+      this.sceneModel.conditions = [...conditions]
       const model = {...this.sceneModel}
       model.location = this.getLocation()
       console.log('model  ', model)
@@ -322,9 +322,6 @@ export default {
     close () {
       this.$emit('close')
     },
-    isGateSensors (device) {
-      return Suit.typeHints.isGateSensors(device.device_child_type)
-    },
     parseCondition (condition) { // parse condition to readable text
       let str = ''
       if (condition.model.type === '1') {
@@ -335,18 +332,15 @@ export default {
       }
       return str
     },
-    parseAction (device) {
-      // const type = Suit.getDeviceTypeDescriptor(device.device_type, device.device_child_type)
-    },
-    getModelCondition () {
+    getModelCondition () { // get condition arguments
       const conditions = Object.keys(this.conditionMapList).map(key => {
         return this.conditionMapList[key].map(condition => {
           const device = condition.selected
-          let cons = {
+          let cons = { // for timing condition
             condition: condition.model.condition,
             condition_type: condition.model.conditionType,
           }
-          if (device) {
+          if (device) { // for chain's device condition
             cons = {
               ...cons,
               ...{
@@ -364,38 +358,102 @@ export default {
       })
       return conditions
     },
-    getModelAction () {
-      return this.deviceActionModel.map(item => item.action)
+    getModelAction () { // get action model and set serialId
+      console.log('action model   ', this.deviceActionModel)
+      return this.deviceActionModel.map(item => {
+        return {...item.action, serialId: item.serialId}
+      })
     },
-    getLocation () {
+    getLocation () { // get validable location
       const location = {...this.sceneModel.location}
       location.buildingId === '' && delete location.buildingId
       location.floorId === '' && delete location.floorId
       location.roomId === '' && delete location.roomId
       return location
     },
-    parseSceneData () {
-      if (this.scene) {
-        this.sceneModel = {...this.sceneModel, ...this.scene}
-        this.deviceSelectedList = this.scene.actions
-        this.deviceIdList = this.deviceSelectedList.map(device => device.serialId)
-        const conditionArray = this.scene.conditions && this.scene.conditions.length && this.scene.conditions[0]
-        this.conditionList = conditionArray.map(condition => {
-          return {
-            model: {
-              type: '',
-              action: '',
-              pick: '',
-              name: this.scene.scene_name
-            },
-            selected: {
-              name: condition.conditionID,
-              ...condition
-            }
-          }
-        })
+    getSceneDataBySceneNumber () { // init sceneModel data
+      if (!this.sceneNumber) return
+      SceneAPI.getSmartSceneById(this.sceneNumber).then(res => {
+        if (res.status === 0) {
+          this.sceneModel.location = res.data.location
+          this.sceneModel.scene_type = res.data.scene_type || '00'
+          this.sceneModel.scene_status = res.data.scene_status || '01'
+          this.sceneModel.scene_number = res.data.scene_number || this.sceneNumber
+          this.sceneModel.scene_name = res.data.scene_name || ''
+          this.sceneModel.scene_group = res.data.scene_group || '00'
+          this.sceneModel.msg_alter = res.data.msg_alter || 0
+
+          console.log('res  --- ', res.data)
+          const conditions = res.data.conditions
+          this.conditionMapList.c1 = this.inverseCondition(conditions[0] || [])
+          this.conditionMapList.c2 = this.inverseCondition(conditions[1] || [])
+          this.conditionMapList.c3 = this.inverseCondition(conditions[2] || [])
+          console.log('mo con ', this.conditionMapList)
+          setTimeout(() => {
+            this.deviceActionModel = this.inverseActions(res.data.actions)
+            console.log('inverse action ', this.deviceActionModel)
+          }, 0)
+        }
+      })
+    },
+    inverseActions (actions) { // convert action data to created structure
+      const parseKey = act => {
+        let actObj = {}
+        try {
+          actObj = JSON.parse(act)
+        } catch (err) {
+          console.log(err)
+        }
+        return actObj.key
       }
-    }
+      const parseSwitch = act => {
+        return act.slice(0, 2) === '00' ? this.$t('message.switchStatus', {SWITCH: 'switchOff'}) : this.$t('message.switchStatus', {SWITCH: 'switchOn'})
+      }
+      const isTransponder = act => {
+        return act.indexOf('{') !== -1
+      }
+      // filter actions by device's type of the room, it's useable only the device of room existing
+      const usableActionArr = Array.from(actions || []).filter(act => {
+        return this.deviceTypeList.find(type => (type.deviceType === '51' && isTransponder(act.action)) || (act.device_type === type.deviceType))
+      })
+
+      return usableActionArr.map(action => {
+        let actionDesc = ''
+        if (action.action) {
+          actionDesc = isTransponder(action.action) ? parseKey(action.action) : parseSwitch(action.action)
+        }
+        return {
+          deviceTypeList: this.deviceTypeList,
+          serialId: action.serialId,
+          deviceType: action.device_type,
+          action_time: action.action_time,
+          actionDescriptor: actionDesc,
+          action: action
+        }
+      })
+    },
+    inverseCondition (conditions) { // convert condition to created mode
+      return conditions.map(condition => {
+        const conMap = {
+          model: {
+            type: '',
+            action: '',
+            condition: condition.condition,
+            conditionType: '00'
+          },
+          selected: null
+        }
+        if (condition.serialId) { // chain's device condition
+          conMap.model.type = '2'
+          conMap.model.condition_type = '01'
+          conMap.selected = {...condition}
+        } else { // timing condition
+          conMap.model.type = '1'
+          conMap.model.conditionType = '00'
+        }
+        return conMap
+      })
+    },
   },
 }
 </script>

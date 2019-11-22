@@ -2,7 +2,7 @@
  * @Author: eamiear
  * @Date: 2019-08-07 15:19:34
  * @Last Modified by: eamiear
- * @Last Modified time: 2019-11-20 17:17:31
+ * @Last Modified time: 2019-11-22 15:53:06
  */
 
 import {request} from '@/common/request'
@@ -51,16 +51,22 @@ const SceneAPI = {
       scene: JSON.stringify(scene)
     })
   },
+  updateSmartScene (scene = {}) {
+    return request.postForm('/consumer/common', {
+      CMD: 'modify_smart_scene',
+      scene: JSON.stringify(scene)
+    })
+  },
   executeSmartScene (sceneNumber) {
     return request.postForm('/consumer/common', {
       CMD: 'execute_smart_scene',
       scene_number: sceneNumber
     })
   },
-  // TODO
-  getSmartSceneById () {
+  getSmartSceneById (sceneNumber) {
     return request.get('/consumer/common', {
-      CMD: ''
+      CMD: 'get_smart_single_scene',
+      scene_number: sceneNumber
     })
   },
   // TODO

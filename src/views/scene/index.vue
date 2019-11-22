@@ -35,7 +35,7 @@
       </slot>
     </base-table>
     <el-dialog v-if="createDialogVisible" top="10%" width="960px" :title="dialogAction" :visible.sync="createDialogVisible" :close-on-click-modal="false">
-      <scene-create @scene-ready="onSceneReady" :scene="sceneData" @close="createDialogVisible = false"></scene-create>
+      <scene-create @scene-ready="onSceneReady" :sceneNumber="sceneNumber" @close="createDialogVisible = false"></scene-create>
       <!-- <div slot="footer" class="dialog-footer text-center" >
         <el-button @click="createDialogVisible = false">取 消</el-button>
         <el-button type="primary" @click="createDialogVisible = false">确 认</el-button>
@@ -77,7 +77,7 @@ export default {
       createDialogVisible: false,
       dialogAction: this.$t('smart.scene.action', {FIELD: 'create'}),
       dialogActionType: 'create',
-      sceneData: null
+      sceneNumber: null
     }
   },
   components: { BaseTable, SceneCreate },
@@ -240,13 +240,14 @@ export default {
       this.createDialogVisible = true
       this.dialogActionType = 'edit'
       this.dialogAction = this.$t('smart.scene.action', {FIELD: 'edit'})
-      SceneAPI.getSmartSceneById(row.sceneNumber).then(res => {
-        if (res.status === 0) {
-          this.sceneData = res.data
-        } else {
-          this.sceneData = null
-        }
-      })
+      this.sceneNumber = row.sceneNumber
+      // SceneAPI.getSmartSceneById(row.sceneNumber).then(res => {
+      //   if (res.status === 0) {
+      //     this.sceneData = res.data
+      //   } else {
+      //     this.sceneData = null
+      //   }
+      // })
     },
     handleRemove (row) {
       this.$confirm(this.$t('smart.scene.message', {MESSAGE: 'delConfirm'}), this.$t('message.tips'), {
@@ -274,7 +275,7 @@ export default {
       this.dialogAction = this.$t('smart.scene.action', {FIELD: 'create'})
       this.createDialogVisible = true
       this.dialogActionType = 'create'
-      this.sceneData = null
+      this.sceneNumber = 0
     },
     onSceneReady (scene, dialogVisible) {
       const action = this.dialogActionType === 'create' ? 'setSmartScene' : 'updateSmartScene'

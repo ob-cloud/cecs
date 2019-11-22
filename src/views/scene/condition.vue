@@ -158,8 +158,8 @@ export default {
       this.chainDeviceList = [{
         serialId: '',
         name: this.$t('message.device', {DEVICE_TEXT: 'humDev'}),
-        device_type: 'b',
-        device_child_type: 'b'
+        device_type: '0b',
+        device_child_type: '0b'
       }]
     },
     isChainType (deviceType, deviceSubType, isLocal) {
