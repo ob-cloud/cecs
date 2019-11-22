@@ -75,7 +75,7 @@
           <div class="item" v-for="(item, index) in curRoomDeviceList" :key="index">
             <div class="title">{{parseTitle(item)}}</div>
             <div class="detail">
-              <template v-if="isKeyPanel(item.deviceChildType)">
+              <template v-isPermited="32" v-if="isKeyPanel(item.deviceChildType)">
                 <iSwitcher :state="item.deviceState" :serialId="item.deviceSerialId" :useDefaultStyle="false" @switcher-change="onSwitcherChange" styles="map power"></iSwitcher>
               </template>
               <template v-else-if="isHumidifier(item.deviceChildType)">
@@ -88,7 +88,7 @@
                   <span>{{parseHumidifier(item.deviceState)}}%</span>
                 </div>
               </template>
-              <template v-else-if="isTransponder(item.deviceType)">
+              <template v-isPermited="32" v-else-if="isTransponder(item.deviceType)">
                 <AireCondition class="map" :serialId="item.deviceSerialId"></AireCondition>
               </template>
             </div>
@@ -98,7 +98,7 @@
             <div class="detail">
               <div class="action">
                 <el-tooltip :content="$t('smart.map.message', {MESSAGE: 'delRoom'})" placement="bottom" effect="light">
-                  <el-button size="small" type="danger" icon="obicon obicon-trash" @click="handleRemovePoint"></el-button>
+                  <el-button size="small" type="danger" icon="obicon obicon-trash" @click="handleRemovePoint" v-isPermited="43"></el-button>
                 </el-tooltip>
               </div>
             </div>

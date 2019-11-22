@@ -75,14 +75,20 @@ export default {
         d: date.getDate()
       }
     },
+    resetDateTime (date) {
+      // date.setHours(0)
+      // date.setMinutes(0)
+      // date.setSeconds(0)
+      return date.setHours(0, 0, 0, 0)
+    },
     async getHumidifierStatusHistoryByWeek (serialId) {
       const nowaday = new Date()
       const weeksago = new Date(nowaday.getTime() - (6 * 24 * 60 * 60 * 1000))
-      const nowadayDetail = this.getDateDetail(nowaday)
-      const weeksagoDetail = this.getDateDetail(weeksago)
+      const nowadayReset = this.resetDateTime(nowaday)
+      const weeksagoReset = this.resetDateTime(weeksago)
 
-      const toDate = parseInt(new Date(`${nowadayDetail.y}-${nowadayDetail.m}-${nowadayDetail.d} 00:00`).getTime() / 1000)
-      const fromDate = parseInt(new Date(`${weeksagoDetail.y}-${weeksagoDetail.m}-${weeksagoDetail.d} 00:00`).getTime() / 1000)
+      const toDate = parseInt(nowadayReset.getTime() / 1000)
+      const fromDate = parseInt(weeksagoReset.getTime() / 1000)
       const {data} = await DeviceAPI.getDeviceStatusHistory(serialId, fromDate, toDate, '02')
       return this.parseHumidifierHistoryByDay(data.history, '{m}-{d}')
     },
