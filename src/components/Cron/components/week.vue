@@ -36,7 +36,7 @@
     <div>
       <el-radio v-model="type" label="4" size="mini" border>{{$t('system.cron', {FIELD: 'pointAt'})}}</el-radio>
       <el-checkbox-group v-model="appoint" style="margin-left: 50px;  line-height: 25px;">
-          <el-checkbox @change="type = '4'"  v-for="i in 7" :key="i" :label="'' + i"></el-checkbox>
+          <el-checkbox @change="type = '4'"  v-for="i in 7" :key="i" :label="'' + i">{{weeks[i - 1]}}</el-checkbox>
       </el-checkbox-group>
     </div>
   </div>
@@ -70,7 +70,8 @@ export default {
       },
       work: 0,
       last: 0,
-      appoint: [] // 指定
+      appoint: [], // 指定
+      weeks: ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT']
     }
   },
   computed: {

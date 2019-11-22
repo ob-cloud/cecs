@@ -25,7 +25,7 @@
     <div>
       <el-radio v-model="type" label="4" size="mini" border>{{$t('system.cron', {FIELD: 'pointAt'})}}</el-radio>
       <el-checkbox-group v-model="appoint" style="margin-left: 0px;  line-height: 25px;">
-        <el-checkbox @change="type = '4'"  v-for="i in 12" :key="'key'+i" :label="''+i"></el-checkbox>
+        <el-checkbox @change="type = '4'"  v-for="i in 12" :key="'key'+i" :label="''+ (i-1)">{{i}}</el-checkbox>
       </el-checkbox-group>
     </div>
   </div>
