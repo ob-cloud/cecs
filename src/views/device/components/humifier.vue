@@ -68,10 +68,21 @@ export default {
     this.parseState()
   },
   methods: {
+    getDateDetail (date) {
+      return {
+        y: date.getFullYear(),
+        m: date.getMonth() + 1,
+        d: date.getDate()
+      }
+    },
     async getHumidifierStatusHistoryByWeek (serialId) {
-      const now = new Date().getTime()
-      const toDate = parseInt(now / 1000)
-      const fromDate = parseInt((now - (6 * 24 * 60 * 60 * 1000)) / 1000)
+      const nowaday = new Date()
+      const weeksago = new Date(nowaday.getTime() - (6 * 24 * 60 * 60 * 1000))
+      const nowadayDetail = this.getDateDetail(nowaday)
+      const weeksagoDetail = this.getDateDetail(weeksago)
+
+      const toDate = parseInt(new Date(`${nowadayDetail.y}-${nowadayDetail.m}-${nowadayDetail.d} 00:00`).getTime() / 1000)
+      const fromDate = parseInt(new Date(`${weeksagoDetail.y}-${weeksagoDetail.m}-${weeksagoDetail.d} 00:00`).getTime() / 1000)
       const {data} = await DeviceAPI.getDeviceStatusHistory(serialId, fromDate, toDate, '02')
       return this.parseHumidifierHistoryByDay(data.history, '{m}-{d}')
     },
@@ -91,7 +102,8 @@ export default {
     },
     parseHumidifierHistoryByDay (list, fmt) {
       return Array.from(list).map(item => {
-        const temperature = +parseInt(item.status.slice(2, 4), 16).toString(10) - 30
+        const tempValue = +parseInt(item.status.slice(2, 4), 16).toString(10)
+        const temperature = tempValue ? tempValue - 30 : 0
         const humidifier = +parseInt(item.status.slice(6, 8), 16).toString(10)
         const time = Helper.parseTime(new Date(item.time * 1000), fmt || '{h}:{i}')
         return {
@@ -153,7 +165,8 @@ export default {
     },
     parseState () {
       if (!this.state) return
-      this.temperature = +parseInt(this.state.slice(2, 4), 16).toString(10) - 30
+      const tempValue = +parseInt(this.state.slice(2, 4), 16).toString(10)
+      this.temperature = tempValue ? tempValue - 30 : 0
       this.humidifier = +parseInt(this.state.slice(6, 8), 16).toString(10)
     }
   },
