@@ -387,7 +387,6 @@ export default {
           this.conditionMapList.c3 = this.inverseCondition(conditions[2] || [])
           setTimeout(() => {
             this.deviceActionModel = this.inverseActions(res.data.actions)
-            console.log('inverse action ', this.deviceActionModel)
           }, 0)
         }
       })
