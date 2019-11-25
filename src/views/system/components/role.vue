@@ -278,7 +278,6 @@ export default {
       this.createDialogVisible = true
       const { roleId, roleName, privilege } = {...row}
       this.createModel = {roleId, roleName, privilege}
-      console.log('==== ', privilege)
       // setTimeout(() => {
       //   this.setCheckedNodes(privilege)
       // }, 0)
@@ -323,7 +322,6 @@ export default {
       Array.from(nodes).forEach(item => {
         subnodes = subnodes.concat(item.privilege)
       })
-      console.log('subnodes ', subnodes)
       return this.$refs.authTree.setCheckedNodes(subnodes)
     }
   }

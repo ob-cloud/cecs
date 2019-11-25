@@ -221,9 +221,6 @@ export default {
       this.search.pageNo = PAGINATION_PAGENO
       this.getDeviceList()
     },
-    editDevice (row) {
-      console.log('edit ', row)
-    },
     removeDevice (row) {
       this.$confirm(this.$t('smart.obox.message', {MESSAGE: 'delConfirm'}), this.$t('message.tips'), {
         confirmButtonText: this.$t('message.confirm'),
@@ -301,7 +298,6 @@ export default {
       })
     },
     handleSwitchPower (row) {
-      console.log('power ', row)
       this.switchSerialId = row.serialId
       this.switchState = row.state
       this.dialogVisible = true

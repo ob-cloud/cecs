@@ -222,7 +222,6 @@ export default {
       this.getRoomList()
     },
     onSelectChange (val) {
-      console.log('select ', val)
       if (val) {
         this.roomModel.floorId = ''
       }

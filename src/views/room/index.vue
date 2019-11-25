@@ -99,7 +99,6 @@ export default {
     getMenuList () {
       const menu = privRoomSubMenu
       const validMenu = menu.filter(item => this.$isPermited(item.id))
-      console.log(validMenu)
       this.navMenu = validMenu
       this.activeName = validMenu[0] && validMenu[0].name
       this.breadcrumb.current = this.activeName && this.$t(`smart.${this.activeName}.title`)

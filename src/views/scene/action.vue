@@ -104,8 +104,6 @@ export default {
 
   },
   mounted () {
-    console.log(this.deviceType, this.deviceSubType)
-    console.log(this.actionObject)
     this.isTransponder() && this.getTransponderDeviceList()
   },
   methods: {

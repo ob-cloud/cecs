@@ -16,7 +16,6 @@ export default {
           if (res.status === 0) {
             this.sceneDeviceList = res.data.records
             this.buildingList = res.data.records
-            console.log(res)
             resolve(this.buildingList)
           }
         })

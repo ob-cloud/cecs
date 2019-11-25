@@ -2,7 +2,7 @@
  * @Author: eamiear
  * @Date: 2019-02-06 18:37:25
  * @Last Modified by: eamiear
- * @Last Modified time: 2019-11-12 11:09:26
+ * @Last Modified time: 2019-11-25 17:48:39
  */
 
 import {
@@ -95,7 +95,7 @@ const user = {
     },
     getPrivilege () {
       SystemAPI.getUserPrivilege().then(res => {
-        console.log('privilege ', res)
+        // console.log('privilege ', res)
       })
     },
 

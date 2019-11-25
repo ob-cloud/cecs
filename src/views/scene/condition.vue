@@ -168,11 +168,6 @@ export default {
         || Suit.typeHints.isDoorLock(deviceType)
         || (Suit.typeHints.isSocketSwitch(deviceType) && (Suit.typeHints.isSceneSocketSwitch(deviceSubType) || Suit.typeHints.isMixSocketSwitch(deviceSubType)))
     },
-    onCondAction (e) {
-      const actionType = +e.target.dataset.type
-      // this.conDialogVisible = false
-      console.log(actionType)
-    },
     getTemplureValue () {
       for (let i = 0; i < 52; i++) {
         this.templureValue[i] = '' + (-11 + i)
@@ -253,13 +248,10 @@ export default {
         }
         this.conditionModel.type = '2'
         this.conditionModel.conditionType = '01'
-        console.log('model ', this.conditionModel)
         if (!this.conditionModel.condition) {
           return this.$message.warning({title: false, message: this.$t('smart.scene.condition', {FIELD: 'setChainDevCon'})})
         }
         this.$emit('condition-change', {model: this.conditionModel, selected: this.chainActiveDevice}, false)
-      } else {
-        console.log(2)
       }
     }
   },

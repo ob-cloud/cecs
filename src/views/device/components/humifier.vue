@@ -59,7 +59,6 @@ export default {
   components: {BaseTable, HumifierChart},
   watch: {
     serialId (val) {
-      console.log(val)
       val && this.handleData(val)
     }
   },

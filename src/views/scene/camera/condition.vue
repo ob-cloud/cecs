@@ -102,7 +102,6 @@ export default {
     onCondAction (e) {
       const actionType = +e.target.dataset.type
       // this.conDialogVisible = false
-      console.log(actionType)
     },
     onChainDeviceClick (device) {
       this.chainActiveDevice = device
