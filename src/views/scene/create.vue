@@ -300,7 +300,7 @@ export default {
       }
     },
     hasEmptyAction (actions) {
-      return !actions || !actions.length || actions.findIndex(item => !item) > -1
+      return !actions || !actions.length || actions.findIndex(item => !item || !Object.keys(item).length) > -1
     },
     handleSelectedCondition () { // combine the arguments and save
       const actions = this.getModelAction()
@@ -309,7 +309,6 @@ export default {
       this.sceneModel.conditions = [...conditions]
       const model = {...this.sceneModel}
       model.location = this.getLocation()
-      console.log('model  ', model)
       if (this.hasEmptyAction(actions)) {
         return this.$message.warning({title: false, message: this.$t('smart.scene.condition', {FIELD: 'setActionBehavior'})})
       }
@@ -359,9 +358,8 @@ export default {
       return conditions
     },
     getModelAction () { // get action model and set serialId
-      console.log('action model   ', this.deviceActionModel)
       return this.deviceActionModel.map(item => {
-        return {...item.action, serialId: item.serialId}
+        return item.serialId ? {...item.action, serialId: item.serialId} : {...item.action}
       })
     },
     getLocation () { // get validable location
@@ -383,12 +381,10 @@ export default {
           this.sceneModel.scene_group = res.data.scene_group || '00'
           this.sceneModel.msg_alter = res.data.msg_alter || 0
 
-          console.log('res  --- ', res.data)
           const conditions = res.data.conditions
           this.conditionMapList.c1 = this.inverseCondition(conditions[0] || [])
           this.conditionMapList.c2 = this.inverseCondition(conditions[1] || [])
           this.conditionMapList.c3 = this.inverseCondition(conditions[2] || [])
-          console.log('mo con ', this.conditionMapList)
           setTimeout(() => {
             this.deviceActionModel = this.inverseActions(res.data.actions)
             console.log('inverse action ', this.deviceActionModel)
@@ -433,11 +429,19 @@ export default {
       })
     },
     inverseCondition (conditions) { // convert condition to created mode
+      const parseChainAction = condition => {
+        const temSymbol = condition.slice(0, 2)
+        const temperature = condition.slice(2, 4) === '4C' ? '' : Suit.converter.toDecimal(condition.slice(2, 4), 16) - 30
+        const humSymbol = condition.slice(4, 6)
+        const humidifier = condition.slice(6, 8) === '00' ? '' : Suit.converter.toDecimal(condition.slice(6, 8), 16)
+        const symbol = {'49': '>', '4a': '=', '4b': '>=', '4c': '<', '4e': '<=', '4C': this.$t('message.none'), '00': this.$t('message.none')}
+        return `${this.$t('message.device', {DEVICE_TEXT: 'temperature'})}${symbol[temSymbol]}${temperature} / ${this.$t('message.device', {DEVICE_TEXT: 'humidifier'})}${symbol[humSymbol]}${humidifier}`
+      }
       return conditions.map(condition => {
         const conMap = {
           model: {
             type: '',
-            action: '',
+            action: condition.condition,
             condition: condition.condition,
             conditionType: '00'
           },
@@ -446,6 +450,7 @@ export default {
         if (condition.serialId) { // chain's device condition
           conMap.model.type = '2'
           conMap.model.condition_type = '01'
+          conMap.model.action = parseChainAction(condition.condition)
           conMap.selected = {...condition}
         } else { // timing condition
           conMap.model.type = '1'
