@@ -18,13 +18,24 @@ $green: #0FFF7B;
 
 $yellow: #d8d815;
 
+@mixin linearGradientBackground ($deg: 45deg, $start: #0185ED, $end: #4D4EC5) {
+  background-color: $start;
+  background-image: -moz-linear-gradient($deg, $start, $end);
+  background-image: -webkit-gradient(linear,100% 100%,0 0,from($start),to($end));
+  background-image: -webkit-linear-gradient(45deg, $start, $end);
+  background-image: -o-linear-gradient(45deg, $start, $end);
+  background-image: -ms-linear-gradient($deg, $start, $end);
+  background-image: linear-gradient($deg, $start, $end);
+}
+
 body.dark{
   background-color: $dark;
 }
 .dark{
   // HEADER NAVIBAR
   .app-header{
-    background: $blue-gradient;
+    // background-image: $blue-gradient;
+    @include linearGradientBackground()
   }
   .navbar{
     text-align: center;
@@ -138,9 +149,14 @@ body.dark{
     background-color: transparent;
     border-bottom: none;
   }
+  .el-table .el-table__header-wrapper .el-table__header{
+    @include linearGradientBackground();
+  }
   .el-table thead tr{
     color: $white;
-    background: $blue-gradient;
+    // background-image: $blue-gradient;
+    // @include linearGradientBackground();
+    background-color: transparent;
   }
   .el-table th.is-leaf, .el-table td{
 
