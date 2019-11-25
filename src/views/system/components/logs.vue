@@ -48,6 +48,7 @@ export default {
     return {
       tableLoading: false,
       tableHeight: 0,
+      total: 0,
       search: {
         sysType: '',
         operator: '',
@@ -63,11 +64,6 @@ export default {
   created () {
     this.columns = this.getColumns()
     this.getLogsList()
-  },
-  computed: {
-    total () {
-      return this.tableData.length || 0
-    }
   },
   mounted () {
     // Helper.windowOnResize(this, this.fixLayout)
@@ -107,6 +103,7 @@ export default {
       SystemAPI.getSysLogs(this.search).then(resp => {
         if (resp.status === 0) {
           this.tableData = resp.data.records
+          this.total = resp.total
         } else {
           this.$message({
             message: this.$t('smart.logrecords.message', {MESSAGE: 'fetchFail'})
