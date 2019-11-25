@@ -5,9 +5,6 @@
         <i class="obicon obicon-switch-btn"></i>
       </el-checkbox-button>
     </el-checkbox-group>
-    <!-- <div class="footer">
-      <el-button type="primary" @click="handleSelected">确 认</el-button>
-    </div> -->
   </div>
 </template>
 
@@ -44,12 +41,6 @@ export default {
       return this.useDefaultStyle ? 'ura-switcher list' : this.styles ? this.styles : ''
     }
   },
-  watch: {
-    powers (val) {
-      // this.changeStatus(val)
-      // this.changeStatus(val.length ? 1 : 0)
-    }
-  },
   mounted () {
     if (this.isLightActive(this.state)) {
       this.powers = [1]
@@ -62,16 +53,11 @@ export default {
       return state !== '00'
     },
     changeStatus (power) {
-      // this.powerStatus.forEach((element, index) => {
-      //   const isExist = power.find(item => item === index + 1)
-      //   this.powerStatus[index] = +!!isExist
-      // })
       this.powerStatus.fill(power)
     },
     handleSelected (item) {
       this.changeStatus(+item)
       const status = panelHandler.getSwitchButtonStatus(this.powerStatus)
-      console.log('status ', status)
       if (!this.serialId) return
       DeviceAPI.setSwitchStatus(this.serialId, status).then(res => {
         if (res.message.includes('success')) {
@@ -85,6 +71,8 @@ export default {
             type: 'error',
             message: this.$t('smart.obox.message', {MESSAGE: 'setFail'})
           })
+          // reset powers when fail
+          this.powers = [+!item]
         }
       }).catch(() => {
         this.$message({
