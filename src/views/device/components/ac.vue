@@ -112,6 +112,13 @@ export default {
               type: 'success',
               message: this.$t('smart.obox.message', {MESSAGE: 'powerswitch'}) + (this.airCondition.isPowerOn ? this.$t('message.status', {STATUS: 'on'}) : this.$t('message.status', {STATUS: 'off'}))
             })
+          } else {
+            this.$message({
+              title: false,
+              type: 'error',
+              message: this.$t('smart.obox.message', {MESSAGE: 'setFail'})
+            })
+            this.airCondition.isPowerOn = !this.airCondition.isPowerOn
           }
           this.controlPanelLoading = false
         }).catch(() => {
@@ -140,6 +147,12 @@ export default {
           this.$message({
             type: 'success',
             message: this.$t('smart.obox.message', {MESSAGE: 'direct'})
+          })
+        } else {
+          this.$message({
+            title: false,
+            type: 'error',
+            message: this.$t('smart.obox.message', {MESSAGE: 'setFail'})
           })
         }
         this.controlPanelLoading = false
