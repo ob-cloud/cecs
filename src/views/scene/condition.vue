@@ -9,7 +9,7 @@
           <p>{{item.name}}</p>
           <p>{{item.serialId}}</p>
           <p>{{$t('system.devtype', {FIELD: deviceTypeDescriptFilter(item.device_type, item.device_child_type)})}}</p>
-          <p style="text-align: right;">{{item.online ? $t('message.status', {STATUS: 'online'}) : $t('message.status', {STATUS: 'offline'})}}</p>
+          <!-- <p style="text-align: right;">{{item.online ? $t('message.status', {STATUS: 'online'}) : $t('message.status', {STATUS: 'offline'})}}</p> -->
         </div>
         <div class="chain-device-actions">
           <!-- <div class="chain-action__item" v-else-if="isHumidifier()"> -->

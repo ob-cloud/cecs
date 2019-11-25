@@ -888,6 +888,11 @@ body.dark{
     }
     .el-input__inner{
       border-color: $medium-dark;
+      height: 28px;
+      line-height: 28px;
+    }
+    .el-input .el-select__caret{
+      color: $light-white;
     }
     .el-table{
       line-height: 20px;
