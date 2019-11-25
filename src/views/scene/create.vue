@@ -305,7 +305,7 @@ export default {
       }
     },
     hasEmptyAction (actions) {
-      return !actions || !actions.length || actions.findIndex(item => !item || !Object.keys(item).length) > -1
+      return !actions || !actions.length || actions.findIndex(item => !item || !Object.keys(item).length || !item.action) > -1
     },
     handleSelectedCondition () { // combine the arguments and save
       const actions = this.getModelAction()
