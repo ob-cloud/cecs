@@ -9,9 +9,25 @@
     <div>
       <el-radio v-model="type" label="2" size="mini" border>{{$t('system.cron', {FIELD: 'period'})}}</el-radio>
       <span style="margin-left: 10px; margin-right: 5px;">{{$t('system.cron', {FIELD: 'from'})}}{{$t('system.cron', {FIELD: 'weekday'})}}</span>
-      <el-input-number controls-position="right" @change="type = '2'" v-model="cycle.start" :min="1" :max="7" size="mini" style="width: 100px;"></el-input-number>
+      <!-- <el-input-number controls-position="right" @change="type = '2'" v-model="cycle.start" :min="1" :max="7" size="mini" style="width: 100px;"></el-input-number> -->
+      <el-select v-model="cycle.start" style="width: 100px;" clearable @change="type = '2'">
+        <el-option
+          v-for="(i, v) in weeks"
+          :key="'key'+i"
+          :label="i"
+          :value="''+ (v+1)">
+        </el-option>
+      </el-select>
       <span style="margin-left: 5px; margin-right: 5px;">{{$t('system.cron', {FIELD: 'to'})}}{{$t('system.cron', {FIELD: 'weekday'})}}</span>
-      <el-input-number controls-position="right" @change="type = '2'" v-model="cycle.end" :min="2" :max="7" size="mini" style="width: 100px;"></el-input-number>
+      <!-- <el-input-number controls-position="right" @change="type = '2'" v-model="cycle.end" :min="2" :max="7" size="mini" style="width: 100px;"></el-input-number> -->
+      <el-select v-model="cycle.end" style="width: 100px;" clearable @change="type = '2'">
+        <el-option
+          v-for="(i, v) in weeks"
+          :key="'key'+i"
+          :label="i"
+          :value="''+ (v+1)">
+        </el-option>
+      </el-select>
     </div>
     <!-- <div>
       <el-radio v-model="type" label="3" size="mini" border>循环</el-radio>
@@ -57,8 +73,8 @@ export default {
     return {
       type: '5', // 类型
       cycle: { // 周期
-        start: 0,
-        end: 0
+        start: '2',
+        end: '2'
       },
       loop: { // 循环
         start: 0,
@@ -71,7 +87,7 @@ export default {
       work: 0,
       last: 0,
       appoint: [], // 指定
-      weeks: ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT']
+      weeks: ['日', '一', '二', '三', '四', '五', '六'],
     }
   },
   computed: {

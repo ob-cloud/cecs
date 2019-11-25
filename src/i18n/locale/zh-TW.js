@@ -11,7 +11,7 @@ export default {
     route: '{FIELD, select, devicemgr{設備管理} scenemgr{場景管理} roommgr{房間管理} usrmgr{用戶管理} logmgr{日誌管理} other{}}',
     validator: '{FIELD, select, name{名稱應為英文字母、數字或下劃線組成的字符串} mobile{手機號碼格式有誤} other{}}',
     devtype: '{FIELD, select, Sensor{傳感器} HumidSensors{溫濕度傳感器} Switcher{插座開關} 3KeySwitch{三路開關} Ifrate{紅外轉發器} other{}}',
-    cron: '{FIELD, select, second{秒} minute{分} hour{時} day{日} month{月} week{週} weekday{星期} year{年} perSecond{每秒} perMinute{每分} perHour{每時} perDay{每日} perMonth{每月} perWeek{每週} perYear{每年} period{週期} pointAt{指定} noPointAt{不指定} dateWeekPointAt{日期與星期不可以同時為“不指定”} dateWeekNoPointAt{日期與星期必須有一個為“不指定”} from{從} to{至} per{每} other{}}',
+    cron: '{FIELD, select, second{秒} minute{分} hour{時} day{日} month{月} week{週} weekday{星期} year{年} perSecond{每秒} perMinute{每分} perHour{每時} perDay{每日} perMonth{每月} perWeek{每週} perYear{每年} period{週期} pointAt{指定} noPointAt{不指定} dateWeekPointAt{日期與星期不可以同時為“不指定”} dateWeekNoPointAt{日期與星期必須有一個為“不指定”} from{從} to{至} per{每}  sun{日} mon{一} tue{二} wed{三} thu{四} fri{五} sat{六} other{}}',
   },
   message: {
     refresh: '刷新',

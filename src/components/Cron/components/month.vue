@@ -9,9 +9,25 @@
     <div>
       <el-radio v-model="type" label="2" size="mini" border>{{$t('system.cron', {FIELD: 'period'})}}</el-radio>
       <span style="margin-left: 10px; margin-right: 5px;">{{$t('system.cron', {FIELD: 'from'})}}</span>
-      <el-input-number controls-position="right" @change="type = '2'" v-model="cycle.start" :min="1" :max="12" size="mini" style="width: 100px;"></el-input-number>
+      <!-- <el-input-number controls-position="right" @change="type = '2'" v-model="cycle.start" :min="1" :max="12" size="mini" style="width: 100px;"></el-input-number> -->
+      <el-select v-model="cycle.start" style="width: 100px;" clearable @change="type = '2'">
+        <el-option
+          v-for="i in 12"
+          :key="'key'+i"
+          :label="i"
+          :value="''+ (i-1)">
+        </el-option>
+      </el-select>
       <span style="margin-left: 5px; margin-right: 5px;">{{$t('system.cron', {FIELD: 'to'})}}</span>
-      <el-input-number controls-position="right" @change="type = '2'" v-model="cycle.end" :min="2" :max="12" size="mini" style="width: 100px;"></el-input-number>
+      <!-- <el-input-number controls-position="right" @change="type = '2'" v-model="cycle.end" :min="2" :max="12" size="mini" style="width: 100px;"></el-input-number> -->
+      <el-select v-model="cycle.end" style="width: 100px;" clearable @change="type = '2'">
+        <el-option
+          v-for="i in 12"
+          :key="'key'+i"
+          :label="i"
+          :value="''+ (i-1)">
+        </el-option>
+      </el-select>
       {{lable}}
     </div>
     <!-- <div>
@@ -46,8 +62,8 @@ export default {
     return {
       type: '1', // 类型
       cycle: { // 周期
-        start: 0,
-        end: 0
+        start: '0',
+        end: '0'
       },
       loop: { // 循环
         start: 0,
@@ -76,7 +92,7 @@ export default {
           result.push(`${this.loop.start}/${this.loop.end}`)
           break
         case '4': // 指定
-          result.push(this.appoint.length ? this.appoint.join(',') : '1')
+          result.push(this.appoint.length ? this.appoint.join(',') : '0')
           break
         case '6': // 最后
           result.push(`${this.last === 0 ? '' : this.last}L`)
