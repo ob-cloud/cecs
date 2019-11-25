@@ -142,7 +142,6 @@ export default {
       }, {
         label: this.$t('smart.scene.tableField', {FIELD: 'action'}),
         align: 'center',
-        minWidth: '180px',
         renderBody: this.getToolboxRender
       }]
     },
