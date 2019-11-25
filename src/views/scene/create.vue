@@ -61,7 +61,7 @@
             <i v-if="index !== 0" class="el-icon-close fr" @click="handleRemoveAction(index)"></i>
             <div class="action-item">
               <el-tooltip :content="$t('smart.scene.create', {FIELD: 'actionTips'})" placement="top">
-                <el-input-number v-model="deviceAction.action_time" controls-position="right" :min="0"></el-input-number>
+                <el-input-number v-model="deviceAction.action_time" controls-position="right" :min="0" @change="onSelectDevice('', index)"></el-input-number>
               </el-tooltip>
               <el-select v-if="deviceAction.serialId" :placeholder="$t('message.placeholder', {TYPE: 'choose', PLACEHOLDER: 'deviceType'})" v-model="deviceAction.serialId" @change="onSelectDevice(deviceAction.serialId, index)">
                 <el-option v-for="item in deviceAction.deviceTypeList" :key="item.deviceSerialId" :label="deviceTypeFilter(item.deviceType, item.deviceChildType)" :value="item.deviceSerialId"></el-option>
@@ -261,6 +261,7 @@ export default {
       const device = activeActionModel.deviceTypeList.find(item => item.deviceSerialId === serialId)
       this.activeDevice = {}
       if (device) { // by device's serial number
+        // select a device type depends on a serial number and pass to action component
         this.activeDevice = {
           device_child_type: device.deviceChildType,
           device_type: device.deviceType,
@@ -278,7 +279,11 @@ export default {
         this.activeDevice.action_time = activeActionModel.action_time
       }
       this.currentAction = activeActionModel
-      this.currentAction.actionDescriptor = ''
+      if (!serialId && !deviceType) { // change action time
+        this.activeDevice.action_time = activeActionModel.action_time
+      } else { // reset only by select a device
+        this.currentAction.actionDescriptor = ''
+      }
     },
     handleRemoveAction (index) { // remove device's action
       this.deviceActionModel.splice(index, 1)
@@ -359,7 +364,7 @@ export default {
     },
     getModelAction () { // get action model and set serialId
       return this.deviceActionModel.map(item => {
-        return item.serialId ? {...item.action, serialId: item.serialId} : {...item.action}
+        return item.serialId ? {...item.action, serialId: item.serialId, action_time: item.action_time} : {...item.action, action_time: item.action_time}
       })
     },
     getLocation () { // get validable location
