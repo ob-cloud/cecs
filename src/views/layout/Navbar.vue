@@ -134,11 +134,12 @@ export default {
       this.$refs.passwordRef.validate(valid => {
         if (valid) {
           this.loading = true
-          let pwd = this.passwordModel.rePassword
-          pwd = md5(btoa(pwd) + pwd)
-          SystemAPI.resetPassword(pwd).then(response => {
+          const oldPwd = this.encrypt(this.passwordModel.oldPassword)
+          const confirmPwd = this.encrypt(this.passwordModel.newPassword)
+          const newPwd = this.encrypt(this.passwordModel.rePassword)
+          SystemAPI.resetPassword({oldPwd, newPwd, confirmPwd}).then(response => {
             this.loading = false
-            if (response.message.includes('update success')) {
+            if (response.status === 0 || response.message.includes('success')) {
               this.$message({
                 type: 'success',
                 message: this.$t('system.reset', {FIELD: 'resetsuccess'})
@@ -147,6 +148,11 @@ export default {
                 this.passwordModelVisible = false
                 this.logout()
               }, 1500)
+            } else if (response.status === 700 || response.status === 800) {
+              this.$message({
+                type: 'error',
+                message: response.message || ''
+              })
             } else {
               this.$message({
                 type: 'error',
@@ -162,6 +168,9 @@ export default {
           })
         }
       })
+    },
+    encrypt (text) {
+      return md5(btoa(text) + text)
     },
     isOldPwdCorrect (pwd) {
       return this.pwd === pwd

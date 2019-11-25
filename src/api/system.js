@@ -28,11 +28,10 @@ const SystemAPI = {
       params: {accessToken: oldAccessToken}
     })
   },
-  resetPassword (pwd) {
+  resetPassword (pwd = {}) {
     return request.get('/consumer/common', {
-      CMD: 'set_pwd',
-      type: '00',
-      pwd
+      CMD: 'reset_smarthome_pwd',
+      pwd: JSON.stringify(pwd)
     })
   },
   // 获取七牛token
