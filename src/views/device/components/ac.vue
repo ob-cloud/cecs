@@ -96,6 +96,7 @@ export default {
       return this.airCondition.isPowerOn && ([0, 1, 4].includes(this.airAction.mode))
     },
     keyHandler (type, subtype, temperatureEnable) {
+      if (temperatureEnable === false) return
       if (type === 0) { // 电源
         this.airCondition.isPowerOn = !this.airCondition.isPowerOn
         this.airAction = {
@@ -123,10 +124,8 @@ export default {
         this.airAction.templure += subtype
         this.airAction.templure < 16 && (this.airAction.templure += 1)
         this.airAction.templure > 30 && (this.airAction.templure -= 1)
-        if (!temperatureEnable) {
-          return
-        }
       } else if (type === 1) { // 风扇
+        if (!this.isFanSpeedEnable()) return
         this.airAction.speed += 1
         this.airAction.speed > 3 && (this.airAction.speed = 0)
       } else if (type === 2) { // 模式
