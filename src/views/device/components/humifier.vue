@@ -95,13 +95,8 @@ export default {
     },
     async getHumidifierStatusHistoryByDay (serialId) {
       const date = new Date()
-      const dateObj = {
-        y: date.getFullYear(),
-        m: date.getMonth() + 1,
-        d: date.getDate()
-      }
-      const fromDate = parseInt(new Date(`${dateObj.y}-${dateObj.m}-${dateObj.d} 00:00`).getTime() / 1000)
-      const toDate = parseInt(new Date(`${dateObj.y}-${dateObj.m}-${dateObj.d} 23:59`).getTime() / 1000)
+      const fromDate = parseInt(date.setHours(0, 0, 0, 0) / 1000)
+      const toDate = parseInt(date.setHours(23, 59, 0, 0) / 1000)
       this.tableLoading = true
       const {data} = await DeviceAPI.getDeviceStatusHistory(serialId, fromDate, toDate, '01')
       this.tableLoading = false
