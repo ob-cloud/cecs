@@ -2,7 +2,7 @@
  * @Author: eamiear
  * @Date: 2019-08-07 15:19:34
  * @Last Modified by: eamiear
- * @Last Modified time: 2019-11-22 15:53:06
+ * @Last Modified time: 2019-11-26 11:29:24
  */
 
 import {request} from '@/common/request'
@@ -67,12 +67,6 @@ const SceneAPI = {
     return request.get('/consumer/common', {
       CMD: 'get_smart_single_scene',
       scene_number: sceneNumber
-    })
-  },
-  // TODO
-  deleteSmartScene () {
-    return request.postForm('/consumer/common', {
-      CMD: ''
     })
   },
   getSceneDeviceList (user = {}) {

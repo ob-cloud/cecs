@@ -2,7 +2,7 @@
  * @Author: eamiear
  * @Date: 2019-08-05 17:32:41
  * @Last Modified by: eamiear
- * @Last Modified time: 2019-11-13 11:15:25
+ * @Last Modified time: 2019-11-26 11:27:46
  */
 
 import {request} from '@/common/request'
@@ -90,91 +90,6 @@ const DeviceAPI = {
     })
   }
 }
-const doorLock = {
-  getDoorLockList (serialId) {
-    return request.postForm('/consumer/common', {
-      CMD: 'query_intelligent_fingerHome',
-      serialId
-    })
-  },
-  getDoorLockOpenRecord (serialId) {
-    return request.postForm('/consumer/common', {
-      CMD: 'query_intelligent_openRecord',
-      serialId
-    })
-  },
-  getDoorLockAlarmRecord (serialId) {
-    return request.postForm('/consumer/common', {
-      CMD: 'query_intelligent_warningRecord',
-      serialId
-    })
-  },
-  getDoorLockUserList (serialId) {
-    return request.postForm('/consumer/common', {
-      CMD: 'query_intelligent_useringRecord',
-      serialId
-    })
-  },
-  /**
-  * @param {*} params
-  * params.serialId
-  * params.pin
-  * params.nickName
-  * params.mobile
-  * params.validateCode
-  */
-  updateDoorLockUserInfo (params) {
-    return request.postForm('/consumer/common', {
-      CMD: 'edit_intelligent_user',
-      ...params
-    })
-  },
-  /**
-   *
-   * @param {*} params
-   * params.pin
-   * params.mobile
-   */
-  getDoorLockCaptcha (params) {
-    return request.postForm('/consumer/common', {
-      CMD: 'end_intelligent_validateCode',
-      ...params
-    })
-  }
-}
-
-const LampAPI = {
-  setLampPower (type, serialId, status) {
-    const maps = {
-      '开': `ff${status.slice(2, (status.length - 1))}2`,
-      '关': `00${status.slice(2, status.length - 1)}2`
-    }
-    return request.postForm('/consumer/common', {
-      CMD: 'setting_node_status',
-      serialId,
-      status: maps[type]
-    })
-  },
-  openLamp (serialId, status) {
-    status = `ff${status.slice(2)}`
-    return request.postForm('/consumer/common', {
-      CMD: 'setting_node_status',
-      serialId,
-      status
-    })
-  },
-  closeLamp (serialId, status) {
-    status = `00${status.slice(2)}`
-    return request.postForm('/consumer/common', {
-      CMD: 'setting_node_status',
-      serialId,
-      status
-    })
-  },
-  adjustBrightness (serialId, status) {
-
-  }
-}
 
 const WifiDeviceAPI = {
   getWifiDeviceList () {
@@ -203,14 +118,6 @@ const WifiDeviceAPI = {
   }
 }
 
-const RemotDeviceAPI = {
-  getRemoter () {
-    return request.postForm('/consumer/common', {
-      CMD: 'query_remoter'
-    })
-  }
-}
-
 // 开关控制
 const KeySwitchAPI = {
   setSwitchStatus (serialId, status) {
@@ -234,4 +141,4 @@ const AcControlAPI = {
     })
   }
 }
-export default {...DeviceAPI, ...doorLock, ...LampAPI, ...WifiDeviceAPI, ...RemotDeviceAPI, ...KeySwitchAPI, ...AcControlAPI}
+export default {...DeviceAPI, ...WifiDeviceAPI, ...KeySwitchAPI, ...AcControlAPI}
