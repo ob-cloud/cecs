@@ -18,9 +18,6 @@ export default {
   components: {
     Navbar
   },
-  created () {
-    // this.getUserInfo()
-  },
   mounted () {
     this.resetDocumentClientHeight()
     window.onresize = () => {
@@ -44,9 +41,6 @@ export default {
   methods: {
     resetDocumentClientHeight () {
       this.$store.dispatch('updateDocumentClientHeight', document.documentElement.clientHeight)
-    },
-    getUserInfo () {
-      this.$store.dispatch('getUserInfo')
     }
   }
 }

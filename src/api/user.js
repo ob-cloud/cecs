@@ -1,12 +1,6 @@
 import {request} from '@/common/request'
 
 const UserAPI = {
-  getUserInfo (uid) {
-    return request.post({
-      url: 'user/info',
-      params: {uid}
-    })
-  },
   getUserList (user = {}) {
     return request.get('/consumer/common', {
       CMD: 'get_smart_user',
@@ -31,18 +25,6 @@ const UserAPI = {
       user: JSON.stringify({userId})
     })
   },
-  enableUser (uid) {
-    return request.post({
-      url: 'user/enable',
-      params: {uid}
-    })
-  },
-  disableUser (uid) {
-    return request.post({
-      url: 'user/disable',
-      params: {uid}
-    })
-  }
 }
 
 const RoleAPI = {
@@ -83,7 +65,4 @@ const RoleAPI = {
   }
 }
 
-// const AccountAPI = {
-
-// }
 export default {...UserAPI, ...RoleAPI}

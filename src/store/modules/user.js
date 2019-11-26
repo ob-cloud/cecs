@@ -2,7 +2,7 @@
  * @Author: eamiear
  * @Date: 2019-02-06 18:37:25
  * @Last Modified by: eamiear
- * @Last Modified time: 2019-11-26 11:21:33
+ * @Last Modified time: 2019-11-26 11:24:14
  */
 
 import {
@@ -74,25 +74,6 @@ const user = {
       })
     },
 
-    // 获取用户信息
-    getUserInfo ({ commit, state }) {
-      return new Promise((resolve, reject) => {
-        // UserAPI.getUserInfo(state.uid).then(data => {
-        //   const userData = data.data
-        //   if (data.code === 0) {
-        //     commit('SET_USER_INFO', userData)
-        //     commit('SET_NAME', userData.userName || userData.nickname)
-        //     commit('SET_AVATAR', userData.portrait)
-        //     commit('SET_INTRODUCTION', userData.introduction)
-        //   } else {
-        //     console.log(data)
-        //   }
-        //   resolve(userData)
-        // }).catch(error => {
-        //   reject(error)
-        // })
-      })
-    },
     getPrivilege () {
       SystemAPI.getUserPrivilege().then(res => {
         // console.log('privilege ', res)
