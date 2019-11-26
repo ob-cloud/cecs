@@ -151,7 +151,7 @@ export default {
         text: this.$t('smart.room.message', {MESSAGE: 'binding'})
       })
       this.deviceDialogVisible = false
-      RoomAPI.bindDeviceToRoomV2(this.room, selection.id, selection.serialId).then(res => {
+      RoomAPI.bindDeviceToRoomV2(this.room, selection.id, selection.serialId, selection.device_type, selection.device_child_type).then(res => {
         loader.close()
         this.responseHandler(res, this.$t('message.binddev'))
         if (res.message.includes('success')) {
@@ -199,7 +199,7 @@ export default {
       const loader = this.$loading({
         text: this.$t('smart.room.message', {MESSAGE: 'unbinding'})
       })
-      RoomAPI.unbindRoomDevice(this.room, row.deviceId, row.deviceSerialId).then(res => {
+      RoomAPI.unbindRoomDevice(this.room, row.deviceId, row.deviceSerialId, row.deviceType, row.deviceChildType).then(res => {
         loader.close()
         this.responseHandler(res, this.$t('message.unbinddev'))
         if (res.message.includes('success')) {
