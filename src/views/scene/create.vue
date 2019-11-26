@@ -1,5 +1,5 @@
 <template>
-  <div class="scene-create">
+  <div class="scene-create" v-loading="loadingEditData">
     <el-form ref="sceneForm" :rules="sceneModelRules" :model="sceneModel" label-width="100px">
       <el-form-item :label="$t('smart.scene.tableField', {FIELD: 'name'})" prop="scene_name">
         <el-input class="caption-item w8" :placeholder="$t('smart.scene.create', {FIELD: 'inputNameTip'})" v-model="sceneModel.scene_name"></el-input>
@@ -146,7 +146,8 @@ export default {
       },
       deviceTypeList: this.initDeviceType(), // list of device's type
       actionDialogVisible: false,
-      isEditScene: false
+      isEditScene: false,
+      loadingEditData: false
     }
   },
   components: {SceneCondition, SceneAction},
@@ -154,6 +155,7 @@ export default {
     this.getSceneDeviceList().then(buildingList => {
       if (this.sceneNumber) { // when there is a sceneNumber, It's in an editable mode
         this.isEditScene = true
+        this.loadingEditData = true
         this.getSceneDataBySceneNumber()
       } else {
         this.isEditScene = false
@@ -394,6 +396,7 @@ export default {
             this.deviceActionModel = this.inverseActions(res.data.actions)
           }, 0)
         }
+        this.loadingEditData = false
       })
     },
     inverseActions (actions) { // convert action data to created structure
