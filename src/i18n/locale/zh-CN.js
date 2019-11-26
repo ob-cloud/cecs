@@ -1,7 +1,7 @@
 import zhLocale from 'element-ui/lib/locale/lang/zh-CN'
 export default {
   system: {
-    title: '校园节能中控平台',
+    title: '校园节能中控系统',
     reset: '{FIELD, select, title{重设密码} oldpwd{旧密码} newpwd{新密码} confirm{确认新密码} resetsuccess{重置成功，即将退出重新登录} fail{重置失败} other{}}',
     rules: '{FIELD, select, length{密码长度不能小于6位} erroldpwd{旧密码不正确} empty{密码不能为空} errconfirm{两次输入密码不一致} other{}}',
     resetpwd: '重置密码',
