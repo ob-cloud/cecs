@@ -2,7 +2,7 @@
  * @Author: eamiear
  * @Date: 2019-02-06 21:34:24
  * @Last Modified by: eamiear
- * @Last Modified time: 2019-11-20 10:42:39
+ * @Last Modified time: 2019-11-26 11:19:39
  */
 
 import {request} from '@/common/request'
@@ -17,10 +17,7 @@ const SystemAPI = {
     })
   },
   logout (accessToken) {
-    return request.post({
-      url: 'logout',
-      params: {accessToken}
-    })
+    return request.delete('/oauth/token/' + accessToken)
   },
   reNewAcessToken (oldAccessToken) {
     return request.post({
@@ -34,27 +31,7 @@ const SystemAPI = {
       pwd: JSON.stringify(pwd)
     })
   },
-  // 获取七牛token
-  getQiniuToken () {
-    return request.post({
-      url: 'getQiniuToken'
-    })
-  },
-  /**
-   * 根据key获取七牛图片访问url
-   * @param {String} key 七牛key
-   */
-  getReqUrlByQiniuKey (key) {
-    return request.post({
-      url: 'qiniu/url',
-      params: {key}
-    })
-  },
   getSysLogs (log = {}) {
-    // return request.postForm('/consumer/common', {
-    //   CMD: 'get_sys_log',
-    //   log: JSON.stringify(log)
-    // })
     return request.get('/consumer/common', {
       CMD: 'get_sys_log',
       log: JSON.stringify(log)
@@ -62,9 +39,6 @@ const SystemAPI = {
   },
   exportsLogs (beginTime, endTime) {
     return request.getRequestUrl('/consumer/facade/getExportLog', {beginTime, endTime})
-    // return request.postForm('consumer/facade/getExportLog', {
-    //   beginTime, endTime
-    // })
   },
   getUserPrivilege () {
     return request.get('/consumer/common', {

@@ -2,7 +2,7 @@
  * @Author: eamiear
  * @Date: 2019-02-06 18:37:25
  * @Last Modified by: eamiear
- * @Last Modified time: 2019-11-25 17:48:39
+ * @Last Modified time: 2019-11-26 11:21:33
  */
 
 import {
@@ -102,23 +102,23 @@ const user = {
     // 登出
     logOut ({ commit, state }) {
       return new Promise((resolve, reject) => {
-        commit('SET_TOKEN', '')
-        commit('SET_USER_INFO', null)
-        commit('SET_NAME', '')
-        commit('SET_PWD', '')
-        cacher.remove('permission')
-        Storage.removeToken()
-        cacher.setStrategy('sessionStorage').remove('pk')
-        cacher.setStrategy('sessionStorage').remove('name')
-        resolve()
-        // SystemAPI.logout(state.token).then(() => {
-        //   commit('SET_TOKEN', '')
-        //   commit('SET_USER_INFO', null)
-        //   Storage.removeToken()
-        //   resolve()
-        // }).catch(error => {
-        //   reject(error)
-        // })
+        SystemAPI.logout(state.token).then(res => {
+          if (res.message.includes('success')) {
+            commit('SET_TOKEN', '')
+            commit('SET_USER_INFO', null)
+            commit('SET_NAME', '')
+            commit('SET_PWD', '')
+            cacher.remove('permission')
+            Storage.removeToken()
+            cacher.setStrategy('sessionStorage').remove('pk')
+            cacher.setStrategy('sessionStorage').remove('name')
+            resolve()
+          } else {
+            reject(res.message)
+          }
+        }).catch(error => {
+          reject(error)
+        })
       })
     },
 
