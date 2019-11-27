@@ -15,11 +15,11 @@
         <template slot="caption">
           <el-input clearable @keyup.enter.native="handleSearch" class="caption-item" :placeholder="$t('smart.logrecords.search', {FIELD: 'operator'})" v-model="search.operator"></el-input>
           <el-input clearable @keyup.enter.native="handleSearch" class="caption-item" :placeholder="$t('smart.logrecords.search', {FIELD: 'description'})" v-model="search.sysDesc"></el-input>
-          <el-select clearable class="caption-item" :placeholder="$t('smart.logrecords.search', {FIELD: 'type'})" v-model="search.sysType">
-            <el-option :label="$t('smart.logrecords.search', {FIELD: 'type'})" value=''></el-option>
-            <el-option :label="$t('smart.logrecords.search', {FIELD: 'device'})" value='设备管理'></el-option>
-            <el-option :label="$t('smart.logrecords.search', {FIELD: 'scene'})" value='场景管理'></el-option>
-            <el-option :label="$t('smart.logrecords.search', {FIELD: 'user'})" value='用户管理'></el-option>
+          <el-select class="caption-item" :placeholder="$t('smart.logrecords.search', {FIELD: 'type'})" v-model="search.logType">
+            <el-option :label="$t('smart.logrecords.search', {FIELD: 'type'})" :value='-1'></el-option>
+            <el-option :label="$t('smart.logrecords.search', {FIELD: 'device'})" :value='1'></el-option>
+            <el-option :label="$t('smart.logrecords.search', {FIELD: 'scene'})" :value='2'></el-option>
+            <el-option :label="$t('smart.logrecords.search', {FIELD: 'user'})" :value='3'></el-option>
           </el-select>
           <el-button type="primary" icon="el-icon-search" @click="handleSearch">{{$t('message.search')}}</el-button>
         </template>
@@ -50,7 +50,7 @@ export default {
       tableHeight: 0,
       total: 0,
       search: {
-        sysType: '',
+        logType: -1,
         operator: '',
         sysDesc: '',
         pageNo: PAGINATION_PAGENO,
