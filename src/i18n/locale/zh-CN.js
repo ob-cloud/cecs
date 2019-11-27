@@ -43,6 +43,7 @@ export default {
     floor: '层',
     room: '房',
     none: '无',
+    noData: '无',
     action: '操作',
     noAction: '无操作',
     actionFail: '操作失败',

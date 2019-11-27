@@ -20,8 +20,9 @@
           :columns="columns"
           :showPagination="false"></base-table>
       </el-tab-pane>
-      <el-tab-pane :label="$t('smart.obox.message', {MESSAGE: 'nowadays'})" style="width: 100%; height: 360px;max-height: 400px; min-height: 360px;">
+      <el-tab-pane :label="$t('smart.obox.message', {MESSAGE: 'nowadays'})" style="width: 100%; height: 360px;max-height: 400px; min-height: 360px; position: relative; text-align: center;">
         <HumifierChart v-if="isCharListValid" :data="series" :xAxis="labels" style="margin: 0 auto;"></HumifierChart>
+        <div v-else style="position: absolute; top: 30%; color: #999; width: 100%;">{{$t('message.noData')}}</div>
       </el-tab-pane>
     </el-tabs>
   </div>
