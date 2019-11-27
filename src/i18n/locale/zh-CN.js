@@ -87,7 +87,7 @@ export default {
       slide: '{FIELD, select, panel{三键开关控制面板} humidifier{温湿度} other{}}',
       placeholder: '{FIELD, select, lamp{开关} humidifier{温湿度} other{}}',
       message: '{MESSAGE, select, powerswitch{电源开关已} direct{操作指令发送成功} fetchFail{设备获取失败} loading{设备删除中...} delConfirm{确认删除设备？} delDevice{设备删除} setSuccess{设置成功} setFail{设置失败} history{历史数据} nowadays{今日数据} oboxoffline{OBOX离线或不存在} nobelong{没有权限操作该设备} other{}}',
-      ac: '{FIELD, select, temperature{温度} humidifier{湿度} auto{自动} speed{风速} fans{风扇} weak{弱风} medium{中风} strong{强风} cold{制冷} hot{制热} dehum{抽湿} supply{送风} mode{模式} switch{开关} type{设备类型} subtype{子设备类型} version{设备版本} action{操作} noKeyHandle{请进行按键设置} other{无数据}}'
+      ac: '{FIELD, select, temperature{温度} humidifier{湿度} auto{自动} speed{风速} fans{风扇} weak{弱风} medium{中风} strong{强风} cold{制冷} hot{制热} dehum{抽湿} supply{送风} mode{模式} switch{开关} type{设备类型} subtype{子设备类型} version{设备版本} action{操作} noKeyHandle{请进行按键设置} other{暂无数据}}'
     },
     wifi: {
       title: 'WIFI设备',

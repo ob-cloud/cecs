@@ -125,8 +125,10 @@ export default {
     getColumns () {
       const that = this
       return [{
-        label: this.$t('smart.role.tableField', {FIELD: 'serial'}),
-        prop: 'roleId',
+        // label: this.$t('smart.role.tableField', {FIELD: 'serial'}),
+        // prop: 'roleId',
+        type: 'index',
+        width: '60px',
         align: 'center'
       }, {
         label: this.$t('smart.role.tableField', {FIELD: 'name'}),
