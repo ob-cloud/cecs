@@ -416,11 +416,12 @@ export default {
         return act.indexOf('{') !== -1
       }
       // filter actions by device's type of the room, it's useable only the device of room existing
-      const usableActionArr = Array.from(actions || []).filter(act => {
-        return this.deviceTypeList.find(type => (type.deviceType === '51' && isTransponder(act.action)) || (act.device_type === type.deviceType))
-      })
+      // const usableActionArr = Array.from(actions || []).filter(act => {
+      //   return this.deviceTypeList.find(type => (type.deviceType === '51' && isTransponder(act.action)) || (act.device_type === type.deviceType))
+      //   // return this.deviceTypeList.find(type => type.deviceSerialId === act.serialId)
+      // })
 
-      return usableActionArr.map(action => {
+      return actions.map(action => {
         let actionDesc = ''
         if (action.action) {
           actionDesc = isTransponder(action.action) ? parseKey(action.action) : parseSwitch(action.action)
@@ -456,7 +457,7 @@ export default {
         }
         if (condition.serialId) { // chain's device condition
           conMap.model.type = '2'
-          conMap.model.condition_type = '01'
+          conMap.model.conditionType = '01'
           conMap.model.action = parseChainAction(condition.condition)
           conMap.selected = {...condition}
         } else { // timing condition

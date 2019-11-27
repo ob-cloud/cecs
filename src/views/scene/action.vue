@@ -185,7 +185,7 @@ export default {
           name: this.currentTransponderDevice.name || ''
         }
         this.airCondition.isHanlePanel = false
-        this.$emit('action-change', {action: panelHandler.changeAirConditionToAction(JSON.stringify(action), this.currentTransponderDevice, room), extra: action.key}, false)
+        this.$emit('action-change', {action: panelHandler.changeAirConditionToAction(JSON.stringify(action), {...this.currentTransponderDevice, deviceType: '51'}, room), extra: action.key}, false)
       }
     },
     speedFilter (val) {
