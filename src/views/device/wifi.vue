@@ -18,8 +18,8 @@
           <el-input clearable @keyup.enter.native="handleSearch" class="caption-item" :placeholder="$t('smart.wifi.search', {FIELD: 'name'})" v-model="search.name"></el-input>
           <el-select clearable class="caption-item" :placeholder="$t('smart.wifi.search', {FIELD: 'status'})" v-model="search.online">
             <el-option :label="$t('smart.wifi.search', {FIELD: 'status'})" value=''></el-option>
-            <el-option :label="$t('message.status', {STATUS: 'online'})" :value='1'></el-option>
-            <el-option :label="$t('message.status', {STATUS: 'offline'})" :value='0'></el-option>
+            <el-option :label="$t('message.status', {STATUS: 'online'})" :value='0'></el-option>
+            <el-option :label="$t('message.status', {STATUS: 'offline'})" :value='1'></el-option>
           </el-select>
           <el-button type="primary" icon="el-icon-search" @click="handleSearch">{{$t('message.search')}}</el-button>
         </template>
@@ -121,7 +121,7 @@ export default {
         prop: 'online',
         align: 'center',
         formatter (status, row) {
-          return status === 0 ? that.$t('message.status', {STATUS: 'offline'}) : that.$t('message.status', {STATUS: 'online'})
+          return status === 0 ? that.$t('message.status', {STATUS: 'online'}) : that.$t('message.status', {STATUS: 'offline'})
         }
       }, {
         label: this.$t('smart.wifi.tableField', {FIELD: 'type'}),
