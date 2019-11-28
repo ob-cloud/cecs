@@ -32,9 +32,9 @@
         <el-form-item :label="$t('smart.account.form', {FIELD: 'mobile'})" prop="mobile">
           <el-input v-model="createModel.mobile" :placeholder="$t('smart.account.form', {FIELD: 'phone'})"></el-input>
         </el-form-item>
-        <!-- <el-form-item :label="$t('smart.account.tableField', {FIELD: 'pwd'})" prop="password">
+        <el-form-item v-if="dialogStatus === 'create'" :label="$t('smart.account.tableField', {FIELD: 'pwd'})" prop="password">
           <el-input type="password" v-model="createModel.password" :placeholder="$t('smart.account.form', {FIELD: 'pwd'})"></el-input>
-        </el-form-item> -->
+        </el-form-item>
         <el-form-item :label="$t('smart.account.form', {FIELD: 'roleName'})" prop="roleId">
           <el-select clearable class="caption-item" :placeholder="$t('smart.account.form', {FIELD: 'role'})" v-model="createModel.roleId" style="width: 100%;">
             <el-option :label='item.roleName' :value='item.roleId' v-for="(item, index) in roleList" :key="index"></el-option>
@@ -54,7 +54,7 @@ import BaseTable from '@/assets/package/table-base'
 import UserAPI from '@/api/user'
 import { PAGINATION_PAGENO, PAGINATION_PAGESIZE } from '@/common/constants'
 import Helper from '@/common/helper'
-// import md5 from 'md5'
+import md5 from 'md5'
 export default {
   props: {
     height: {
@@ -106,14 +106,14 @@ export default {
       createModel: {
         userName: '',
         mobile: '',
-        // password: '',
+        password: '',
         roleId: ''
       },
       createDialogVisible: false,
       creationRules: {
         userName: [{ required: true, trigger: 'blur', validator: validateAccount }],
         mobile: [{ required: true, trigger: 'blur', validator: validateMoblie}],
-        // password: [{ required: true, message: this.$t('message.rules', {RULE: 'pwd'}), trigger: 'blur'}],
+        password: [{ required: true, message: this.$t('message.rules', {RULE: 'pwd'}), trigger: 'blur'}],
         roleId: [{ required: true, message: this.$t('message.rules', {RULE: 'role'}), trigger: 'blur' }]
       },
       roleList: []
@@ -236,8 +236,9 @@ export default {
       this.$refs.creation.validate(valid => {
         if (valid) {
           const action = type === 'create' ? 'createUser' : 'updateUser'
-          // this.createModel.password = md5(btoa(this.createModel.password) + this.createModel.password)
-          UserAPI[action](this.createModel).then(res => {
+          const params = {...this.createModel}
+          type === 'create' ? (params.password = md5(btoa(params.password) + params.password)) : delete params.password
+          UserAPI[action](params).then(res => {
             if (res.status === 0) {
               this.$message({
                 type: 'success',

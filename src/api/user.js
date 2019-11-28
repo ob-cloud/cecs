@@ -28,7 +28,7 @@ const UserAPI = {
   resetPassword (userId, newPwd = '') {
     return request.postForm('/consumer/common', {
       CMD: 'reset_subuser_pwd',
-      user: JSON.stringify({userId, newPwd})
+      pwd: JSON.stringify({userId, newPwd})
     })
   }
 }
