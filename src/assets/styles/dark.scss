@@ -74,7 +74,8 @@ body.dark{
     background-image: $light-blue-gradient;
   }
   .el-tabs__nav-wrap::after{
-    background-image: $blue-gradient;
+    // background-image: $blue-gradient;
+    @include linearGradientBackground();
   }
 
   // tabs-left
@@ -243,7 +244,8 @@ body.dark{
     padding: 10px 20px;
   }
   .el-button--primary{
-    background-image: $blue-gradient;
+    // background-image: $blue-gradient;
+    @include linearGradientBackground();
     border: 1px solid $light-dark;
   }
   .el-button--primary:hover, .el-button--primary:focus{
