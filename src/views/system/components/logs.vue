@@ -20,6 +20,7 @@
             <el-option :label="$t('smart.logrecords.search', {FIELD: 'device'})" :value='1'></el-option>
             <el-option :label="$t('smart.logrecords.search', {FIELD: 'scene'})" :value='2'></el-option>
             <el-option :label="$t('smart.logrecords.search', {FIELD: 'user'})" :value='3'></el-option>
+            <el-option :label="$t('smart.logrecords.search', {FIELD: 'room'})" :value='4'></el-option>
           </el-select>
           <el-button type="primary" icon="el-icon-search" @click="handleSearch">{{$t('message.search')}}</el-button>
         </template>

@@ -132,7 +132,7 @@ export default {
     logmodule: '日志管理',
     logrecords: {
       title: '日志记录',
-      search: '{FIELD, select, operator{执行人} description{输入描述内容} type{日志类型} device{设备管理} scene{场景管理} user{用户管理} other{}}',
+      search: '{FIELD, select, operator{执行人} description{输入描述内容} type{日志类型} device{设备管理} scene{场景管理} user{用户管理} room{房间管理} other{}}',
       tableField: '{FIELD, select, serial{序号} type{类型} action{操作行为} datetime{操作时间} operator{执行人} other{}}',
       message: '{MESSAGE, select, fetchFail{日志获取失败} other{}}',
     },
