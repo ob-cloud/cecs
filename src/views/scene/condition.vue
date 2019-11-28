@@ -98,7 +98,7 @@ export default {
       templureValue: [],
       humidifierValue: [],
       templureAction: '0',
-      tempHumCondition: [],
+      tempHumCondition: ['', '', '', '', ''],
       chainDeviceList: [],
       chainActiveDevice: ''
     }
@@ -117,20 +117,24 @@ export default {
     'conditionModel.symbolT' (val) {
       if (this.templureCondition[val]) {
         this.tempHumCondition[0] = this.templureCondition[val]
+        this.tempHumCondition[1] = '' // change symbol, reset temperature's value
       } else {
         this.tempHumCondition[0] = '4C'
         this.tempHumCondition[1] = 'FF'
         this.templureAction = '1'
       }
+      this.conditionModel.templure = '' // changing symbole, reset templure model
       this.tempHumCondition[4] = '000000000000'
     },
     'conditionModel.symbolH' (val) {
       if (this.templureCondition[val]) {
         this.tempHumCondition[2] = this.templureCondition[val]
+        this.tempHumCondition[3] = ''
       } else {
         this.tempHumCondition[2] = '00'
         this.tempHumCondition[3] = '00'
       }
+      this.conditionModel.humidifier = ''
       this.tempHumCondition[4] = '000000000000'
     },
     'conditionModel.templure' (val) {
@@ -190,41 +194,14 @@ export default {
         this.getHumidifierValue()
       }
     },
-    isSocket () {
-      return Suit.typeHints.isSocketSwitch(this.chainActiveDevice.device_type)
-    },
-    isLock () {
-      return Suit.typeHints.isDoorLock(this.chainActiveDevice.device_type)
-    },
-    isGate () {
-      return Suit.typeHints.isGateSensors(this.chainActiveDevice.device_child_type)
-    },
     isHumidifier () {
       return Suit.typeHints.isHumidifierSensors(this.chainActiveDevice.device_child_type)
     },
-    isSixScenePanelSocket () {
-      const type = `${Suit.converter.toDecimal(this.chainActiveDevice.device_type, 16)}${Suit.converter.toDecimal(this.chainActiveDevice.device_child_type, 16)}`
-      return type === '0436'
+    hasEmptyHumCondition () {
+      return this.tempHumCondition.findIndex(con => !con) !== -1
     },
     getDateTimeCondition () {
       return this.conditionModel.cron
-    },
-    getDeviceCondition () {
-      let condition = ''
-      if (this.isSocket()) {
-        const conditionPrefix = {
-          0: '4a01',
-          1: '4a02',
-          2: '4a04',
-          3: '4a08',
-          4: '4a10',
-          5: '4a20',
-          6: '4a40',
-          7: '4a80'
-        }[this.conditionModel.pick]
-        condition += conditionPrefix + '00000000'
-        return condition
-      }
     },
     handleSelectedCondition () {
       if (this.conditionType === '1') {
@@ -248,7 +225,7 @@ export default {
         }
         this.conditionModel.type = '2'
         this.conditionModel.conditionType = '01'
-        if (!this.conditionModel.condition) {
+        if (!this.conditionModel.condition || this.hasEmptyHumCondition()) {
           return this.$message.warning({title: false, message: this.$t('smart.scene.condition', {FIELD: 'setChainDevCon'})})
         }
         this.$emit('condition-change', {model: this.conditionModel, selected: this.chainActiveDevice}, false)
