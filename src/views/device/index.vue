@@ -19,15 +19,6 @@
           <gateway v-if="activeName === 'gateway'" :height="tableHeight" :layoutHeight="containerHeight"></gateway>
         </template>
       </el-tab-pane>
-      <!-- <el-tab-pane :label="$t('smart.obox.title')" name="obox">
-        <device-obox v-if="activeName === 'obox'" :height="tableHeight"></device-obox>
-      </el-tab-pane>
-      <el-tab-pane :label="$t('smart.wifi.title')" name="wifi">
-        <device-wifi v-if="activeName === 'wifi'" :height="tableHeight"></device-wifi>
-      </el-tab-pane>
-      <el-tab-pane :label="$t('smart.gateway.title')" name="gateway">
-        <gateway v-if="activeName === 'gateway'" :height="tableHeight"></gateway>
-      </el-tab-pane> -->
     </el-tabs>
   </div>
 </template>
@@ -92,8 +83,6 @@ export default {
 
 <style lang="scss" scoped>
 .smart{
-  // width: 94%;
-  // margin: 12px auto;
   margin: 0 auto;
 }
 

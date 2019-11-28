@@ -25,6 +25,12 @@ const UserAPI = {
       user: JSON.stringify({userId})
     })
   },
+  resetPassword (userId, newPwd = '') {
+    return request.postForm('/consumer/common', {
+      CMD: 'reset_subuser_pwd',
+      user: JSON.stringify({userId, newPwd})
+    })
+  }
 }
 
 const RoleAPI = {

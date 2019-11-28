@@ -32,9 +32,9 @@
         <el-form-item :label="$t('smart.account.form', {FIELD: 'mobile'})" prop="mobile">
           <el-input v-model="createModel.mobile" :placeholder="$t('smart.account.form', {FIELD: 'phone'})"></el-input>
         </el-form-item>
-        <el-form-item :label="$t('smart.account.tableField', {FIELD: 'pwd'})" prop="password">
+        <!-- <el-form-item :label="$t('smart.account.tableField', {FIELD: 'pwd'})" prop="password">
           <el-input type="password" v-model="createModel.password" :placeholder="$t('smart.account.form', {FIELD: 'pwd'})"></el-input>
-        </el-form-item>
+        </el-form-item> -->
         <el-form-item :label="$t('smart.account.form', {FIELD: 'roleName'})" prop="roleId">
           <el-select clearable class="caption-item" :placeholder="$t('smart.account.form', {FIELD: 'role'})" v-model="createModel.roleId" style="width: 100%;">
             <el-option :label='item.roleName' :value='item.roleId' v-for="(item, index) in roleList" :key="index"></el-option>
@@ -54,7 +54,7 @@ import BaseTable from '@/assets/package/table-base'
 import UserAPI from '@/api/user'
 import { PAGINATION_PAGENO, PAGINATION_PAGESIZE } from '@/common/constants'
 import Helper from '@/common/helper'
-import md5 from 'md5'
+// import md5 from 'md5'
 export default {
   props: {
     height: {
@@ -106,14 +106,14 @@ export default {
       createModel: {
         userName: '',
         mobile: '',
-        password: '',
+        // password: '',
         roleId: ''
       },
       createDialogVisible: false,
       creationRules: {
         userName: [{ required: true, trigger: 'blur', validator: validateAccount }],
         mobile: [{ required: true, trigger: 'blur', validator: validateMoblie}],
-        password: [{ required: true, message: this.$t('message.rules', {RULE: 'pwd'}), trigger: 'blur'}],
+        // password: [{ required: true, message: this.$t('message.rules', {RULE: 'pwd'}), trigger: 'blur'}],
         roleId: [{ required: true, message: this.$t('message.rules', {RULE: 'role'}), trigger: 'blur' }]
       },
       roleList: []
@@ -148,12 +148,9 @@ export default {
         prop: 'mobile',
         align: 'center'
       }, {
-        label: this.$t('smart.account.tableField', {FIELD: 'pwd'}),
-        prop: 'password',
-        align: 'center',
-        formatter (val) {
-          return new Array(6).fill('*')
-        }
+        label: this.$t('smart.account.tableField', {FIELD: 'roleName'}),
+        prop: 'roleName',
+        align: 'center'
       }, {
         label: this.$t('smart.account.tableField', {FIELD: 'action'}),
         align: 'center',
@@ -162,8 +159,10 @@ export default {
     },
     getToolboxRender (h, row) {
       const toolbox = []
+      const reset = <el-button size="tiny" icon="obicon obicon-refresh" title={this.$t('message.reset')} onClick={() => this.handleReset(row)}></el-button>
       const edit = <el-button size="tiny" icon="el-icon-edit" title={this.$t('message.edit')} onClick={() => this.handleEdit(row)}></el-button>
       const remove = <el-button size="tiny" icon="el-icon-delete" title={this.$t('message.delete')} onClick={() => this.handleRemove(row)}></el-button>
+      this.$isPermited(52) && toolbox.push(reset)
       this.$isPermited(52) && toolbox.push(edit)
       this.$isPermited(54) && toolbox.push(remove)
       !toolbox.length && toolbox.push(<span title="">-</span>)
@@ -237,7 +236,7 @@ export default {
       this.$refs.creation.validate(valid => {
         if (valid) {
           const action = type === 'create' ? 'createUser' : 'updateUser'
-          this.createModel.password = md5(btoa(this.createModel.password) + this.createModel.password)
+          // this.createModel.password = md5(btoa(this.createModel.password) + this.createModel.password)
           UserAPI[action](this.createModel).then(res => {
             if (res.status === 0) {
               this.$message({
@@ -266,6 +265,36 @@ export default {
             })
           })
         }
+      })
+    },
+    handleReset (row) {
+      this.$confirm(this.$t('smart.account.message', {MESSAGE: 'resetPwdConfirm'}), this.$t('message.tips'), {
+        confirmButtonText: this.$t('message.confirm'),
+        cancelButtonText: this.$t('message.cancel'),
+        type: 'warning',
+        closeOnClickModal: false
+      }).then(() => {
+        // const newPwd = md5(btoa('12345678') + '12345678')
+        UserAPI.resetPassword(row.userId).then(res => {
+          if (res.status === 0) {
+            this.$message({
+              type: 'success',
+              message: this.$t('message.actionSuccess')
+            })
+          } else {
+            this.$message({
+              type: 'error',
+              message: this.$t('message.actionFail')
+            })
+          }
+        }).catch(() => {
+          this.$message({
+            message: this.$t('message.exception'),
+            type: 'error'
+          })
+        })
+      }).catch(() => {
+        console.log('cancel')
       })
     },
     handleEdit (row) {

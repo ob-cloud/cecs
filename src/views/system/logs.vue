@@ -16,12 +16,6 @@
           <Exports v-if="activeName === 'exportrecords'" :height="tableHeight" :layoutHeight="containerHeight"></Exports>
         </template>
       </el-tab-pane>
-      <!-- <el-tab-pane :label="$t('smart.logrecords.title')" name="logs">
-        <Logs v-if="activeName === 'logs'" :height="tableHeight"></Logs>
-      </el-tab-pane>
-      <el-tab-pane :label="$t('smart.exportrecords.title')" name="exports">
-        <Exports v-if="activeName === 'exports'" :height="tableHeight"></Exports>
-      </el-tab-pane> -->
     </el-tabs>
   </div>
 </template>

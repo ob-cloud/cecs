@@ -18,6 +18,7 @@ export default {
     edit: '编辑',
     create: '添加',
     delete: '刪除',
+    reset: '重置密码',
     cancel: '取消',
     confirm: '确认',
     close: '关闭',
@@ -117,8 +118,8 @@ export default {
       search: '{FIELD, select, name{输入用户名} phone{输入手机号码} other{}}',
       form: '{FIELD, select, name{输入用户名} phone{输入手机号码} pwd{输入密码} role{请选择角色} mobile{手机号} roleName{角色} other{}}',
       action: '{FIELD, select, create{添加账户} edit{编辑账户} other{}}',
-      tableField: '{FIELD, select, name{用户名} phone{手机号码} pwd{密码} action{操作} other{}}',
-      message: '{MESSAGE, select, fetchFail{用户获取失败} loading{账户删除中...} delConfirm{确认删除账户？} delDevice{账户删除} other{}}',
+      tableField: '{FIELD, select, name{用户名} phone{手机号码} pwd{密码} roleName{角色名} action{操作} other{}}',
+      message: '{MESSAGE, select, fetchFail{用户获取失败} loading{账户删除中...} delConfirm{确认删除账户？} resetPwdConfirm{密码将重置为 12345678} delDevice{账户删除} other{}}',
     },
     role: {
       title: '角色管理',

@@ -18,6 +18,7 @@ export default {
     edit: '編輯',
     create: '添加',
     delete: '刪除',
+    reset: '重置密碼',
     cancel: '取消',
     confirm: '確認',
     close: '關閉',
@@ -117,8 +118,8 @@ export default {
       search: '{FIELD, select, name{輸入用戶名} phone{輸入手機號碼} other{}}',
       form: '{FIELD, select, name{輸入用戶名} phone{輸入手機號碼} pwd{輸入密碼} role{請選擇角色} mobile{手機號} roleName{角色} other{}}',
       action: '{FIELD, select, create{添加賬戶} edit{編輯賬戶} other{}}',
-      tableField: '{FIELD, select, name{用戶名} phone{手機號碼} pwd{密碼} action{操作} other{}}',
-      message: '{MESSAGE, select, fetchFail{用戶獲取失敗} loading{賬戶刪除中...} delConfirm{確認刪除賬戶？} delDevice{賬戶刪除} other{}}',
+      tableField: '{FIELD, select, name{用戶名} phone{手機號碼} pwd{密碼} roleName{角色名} action{操作} other{}}',
+      message: '{MESSAGE, select, fetchFail{用戶獲取失敗} loading{賬戶刪除中...} delConfirm{確認刪除賬戶？} resetPwdConfirm{密碼將重置為 12345678} delDevice{賬戶刪除} other{}}',
     },
     role: {
       title: '角色管理',

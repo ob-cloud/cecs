@@ -2,7 +2,7 @@
  * @Author: eamiear
  * @Date: 2019-02-06 21:24:22
  * @Last Modified by: eamiear
- * @Last Modified time: 2019-11-07 14:30:57
+ * @Last Modified time: 2019-11-28 15:00:05
  */
 
 export default [
@@ -25,29 +25,11 @@ export default [
     meta: {title: 'roommgr'},
     component: () => import('views/room/index.vue')
   }, {
-    name: '/obox/index.html',
-    path: '/obox/index.html',
-    desc: 'OBOX管理',
-    meta: {title: 'obxmgr'},
-    component: () => import('views/obox/index.vue')
-  }, {
-    name: '/nvr/index.html',
-    path: '/nvr/index.html',
-    desc: 'NVR管理',
-    meta: {title: 'NVR管理'},
-    component: () => import('views/nvr/index.vue')
-  }, {
     name: '/system/logs.html',
     path: '/system/logs.html',
     desc: '日志管理',
     meta: {title: 'logmgr'},
     component: () => import('views/system/logs.vue')
-  }, {
-    name: '/room/map.html',
-    path: '/room/map.html',
-    desc: '电子地图',
-    meta: {title: 'mapmgr'},
-    component: () => import('views/room/map.vue')
   }, {
     name: '/system/user.html',
     path: '/system/user.html',

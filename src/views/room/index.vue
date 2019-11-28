@@ -22,18 +22,6 @@
           <floor v-if="activeName === 'floor'" :height="tableHeight" :preload="floorPreload"></floor>
         </template>
       </el-tab-pane>
-      <!-- <el-tab-pane :label="$t('smart.map.title')" name="map" v-if="isPermited(510)">
-        <i-map v-if="activeName === 'map'" :height="tableHeight"></i-map>
-      </el-tab-pane>
-      <el-tab-pane :label="$t('smart.room.title')" name="room">
-        <room v-if="activeName === 'room'" :height="tableHeight" :roomPreload="roomPreload"></room>
-      </el-tab-pane>
-      <el-tab-pane :label="$t('smart.building.title')" name="building">
-        <building v-if="activeName === 'building'" :height="tableHeight" :preload="buildingPreload"></building>
-      </el-tab-pane>
-      <el-tab-pane :label="$t('smart.floor.title')" name="floor">
-        <floor v-if="activeName === 'floor'" :height="tableHeight" :preload="floorPreload"></floor>
-      </el-tab-pane> -->
     </el-tabs>
   </div>
 </template>
@@ -63,16 +51,6 @@ export default {
   components: { Building, Floor, Room, iMap },
   created () {
   },
-  // watch: {
-  //   activeName (val) {
-  //     if (!val) return
-  //     // this.mapPreload = val === 'map'
-  //     this.roomPreload = val === 'room'
-  //     this.buildingPreload = val === 'building'
-  //     this.floorPreload = val === 'floor'
-  //     console.log(this.roomPreload)
-  //   }
-  // },
   watch: {
     '$route' (val) {
       this.breadcrumb.prev = this.$t('system.route', {FIELD: val.meta.title})
@@ -106,25 +84,3 @@ export default {
   }
 }
 </script>
-
-<style lang="scss" scoped>
-.smart{
-  // padding: 10px;
-  // padding-left: 30px;
-  // width: 94%;
-  // margin: 0 auto;
-  // margin: 12px auto;
-}
-</style>
-<style lang="scss">
-  // .room-container{
-  //   position: relative;
-  //   .el-tabs__header.is-left{
-  //     position: fixed;
-  //     z-index: 1;
-  //   }
-  //   .el-tabs__content{
-  //     padding-left: 64px;
-  //   }
-  // }
-</style>

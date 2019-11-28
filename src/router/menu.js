@@ -12,23 +12,11 @@ export const navMenuList = [
     id: 25,
     name: '场景管理',
     path: '/scene/index.html'
-  },
-  // {
-  //   id: 4,
-  //   name: 'OBOX管理',
-  //   path: '/obox/index.html'
-  // },
-  // {
-  //   id: 5,
-  //   name: 'NVR管理',
-  //   path: '/nvr/index.html'
-  // },
-  {
+  }, {
     id: 29,
     name: '用户管理',
     path: '/system/user.html'
-  },
-  {
+  }, {
     id: 30,
     name: '日志管理',
     path: '/system/logs.html'

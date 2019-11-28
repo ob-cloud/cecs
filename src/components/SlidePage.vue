@@ -14,17 +14,6 @@
     </transition>
     <div class="cover" v-if="pageVisible"></div>
   </div>
-  <!-- <transition name="slide-fade" v-if="pageVisible">
-    <div class="sidebar">
-      <div class="header">
-        <i class="el-icon el-icon-close" @click="pageVisible = false" title="关闭"></i>
-        <div class="title">rrr</div>
-      </div>
-      <div class="content">
-      </div>
-    </div>
-
-  </transition> -->
 </template>
 
 <script>

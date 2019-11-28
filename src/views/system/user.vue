@@ -16,13 +16,6 @@
           <role v-if="activeName === 'role'" :height="tableHeight" :layoutHeight="containerHeight"></role>
         </template>
       </el-tab-pane>
-
-      <!-- <el-tab-pane :label="$t('smart.account.title')" name="account" v-isPermited="51">
-        <account v-if="activeName === 'account'" :height="tableHeight"></account>
-      </el-tab-pane>
-      <el-tab-pane :label="$t('smart.role.title')" name="role" v-isPermited="57">
-        <role v-if="activeName === 'role'" :height="tableHeight"></role>
-      </el-tab-pane> -->
     </el-tabs>
   </div>
 </template>
