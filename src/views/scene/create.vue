@@ -61,7 +61,7 @@
             <i v-if="index !== 0" class="el-icon-close fr" @click="handleRemoveAction(index)"></i>
             <div class="action-item">
               <el-tooltip :content="$t('smart.scene.create', {FIELD: 'actionTips'})" placement="top">
-                <el-input-number v-model="deviceAction.action_time" controls-position="right" :min="0" @change="onSelectDevice('', index)"></el-input-number>
+                <el-input-number v-model="deviceAction.action_time" controls-position="right" :min="0" @change="onSelectDevice('', index, '', 1)"></el-input-number>
               </el-tooltip>
               <el-select v-if="deviceAction.serialId" :placeholder="$t('message.placeholder', {TYPE: 'choose', PLACEHOLDER: 'deviceType'})" v-model="deviceAction.serialId" @change="onSelectDevice(deviceAction.serialId, index)">
                 <el-option v-for="item in deviceAction.deviceTypeList" :key="item.deviceSerialId" :label="deviceTypeFilter(item.deviceType, item.deviceChildType)" :value="item.deviceSerialId"></el-option>
@@ -69,7 +69,7 @@
               <el-select v-else :placeholder="$t('message.placeholder', {TYPE: 'choose', PLACEHOLDER: 'deviceType'})" v-model="deviceAction.deviceType" @change="onSelectDevice(deviceAction.serialId, index, deviceAction.deviceType)">
                 <el-option v-for="item in deviceAction.deviceTypeList" :key="item.deviceType" :label="deviceTypeFilter(item.deviceType, item.deviceChildType)" :value="item.deviceType"></el-option>
               </el-select>
-              <div v-if="deviceAction.serialId || deviceAction.deviceType" class="action-item__behavior" @click="settingAction(deviceAction.serialId, index, deviceAction.deviceType)" :title="deviceAction.actionDescriptor">
+              <div v-if="deviceAction.serialId || deviceAction.deviceType" class="action-item__behavior" @click="settingAction(deviceAction.serialId, index, deviceAction.deviceType, 2)" :title="deviceAction.actionDescriptor">
                 <p>{{deviceAction.actionDescriptor || $t('smart.scene.create', {FIELD: 'devAction'})}}</p>
               </div>
             </div>
@@ -230,9 +230,9 @@ export default {
         && !(Suit.typeHints.isSocketSwitch(deviceType) && Suit.typeHints.isSceneSocketSwitch(deviceSubType))
         && !(Suit.typeHints.isSocketSwitch(deviceType) && Suit.typeHints.isMixSocketSwitch(deviceSubType))
     },
-    settingAction (serialId, index, deviceType) { // click area of the action behavior and set
+    settingAction (serialId, index, deviceType, type) { // click area of the action behavior and set
       this.actionDialogVisible = true
-      this.onSelectDevice(serialId, index, deviceType)
+      this.onSelectDevice(serialId, index, deviceType, type)
     },
     addCondition () { // for condition modal/dialog controller
       this.conDialogVisible = true
@@ -258,7 +258,13 @@ export default {
       this.currentAction.actionDescriptor = actionData.extra
       this.currentAction.action = actionData.action
     },
-    onSelectDevice (serialId, index, deviceType) {
+    /**
+     * @param {String} serialId
+     * @param {Number} index  action index
+     * @param {String} deviceType
+     * @param {Number} actionType action type: 1-timing, 2-action description
+     */
+    onSelectDevice (serialId, index, deviceType, actionType) {
       const activeActionModel = this.deviceActionModel[index]
       const device = activeActionModel.deviceTypeList.find(item => item.deviceSerialId === serialId)
       this.activeDevice = {}
@@ -281,8 +287,8 @@ export default {
         this.activeDevice.action_time = activeActionModel.action_time
       }
       this.currentAction = activeActionModel
-      if (!serialId && !deviceType) { // change action time
-        this.activeDevice.action_time = activeActionModel.action_time
+      if (actionType) { // change action time & change action description
+        actionType === 1 && (this.activeDevice.action_time = activeActionModel.action_time)
       } else { // reset only by select a device
         this.currentAction.actionDescriptor = ''
       }
