@@ -104,8 +104,8 @@ export default {
     }
     return {
       loginForm: {
-        account: '13828486833',
-        password: '12345678'
+        account: '',
+        password: ''
       },
       loginRules: {
         account: [{ required: true, trigger: 'blur', validator: validateAccount }],
