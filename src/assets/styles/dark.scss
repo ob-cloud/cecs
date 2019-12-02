@@ -802,7 +802,7 @@ body.dark{
   }
   .ura-login-container{
     background-color: $stripe-dark!important; // #5D687B!important; // $light-dark!important;
-    color: $light-white;
+    color: $medium-white;
     box-shadow: 0 0 10px $dark!important;// rgba(255, 255, 255, 0.35)!important;
     // background-image: $blue-gradient!important;
 
@@ -818,7 +818,8 @@ body.dark{
     }
     .el-button--primary{
       border-color: transparent;
-      color: $light-white;
+      // color: $light-white;
+      color: $medium-white;
 
       border: none;
       // background-image: $light-blue-gradient;
