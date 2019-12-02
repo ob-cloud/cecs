@@ -15,14 +15,14 @@ export function getLanguage () {
   const lang = cacher.setStrategy('localStorage').get('language')
   if (lang) return lang
 
-  const language = (navigator.language || navigator.browserLanguage)
-  const locales = Object.keys(messages)
-  for (const locale of locales) {
-    if (language.indexOf(locale) > -1) {
-      return locale
-    }
-  }
-  return 'zh-CN'
+  // const language = (navigator.language || navigator.browserLanguage)
+  // const locales = Object.keys(messages)
+  // for (const locale of locales) {
+  //   if (language.indexOf(locale) > -1) {
+  //     return locale
+  //   }
+  // }
+  return 'zh-TW'
 }
 
 const locale = getLanguage() // default locale
