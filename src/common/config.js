@@ -2,7 +2,7 @@
  * @Author: eamiear
  * @Date: 2019-02-19 10:38:23
  * @Last Modified by: eamiear
- * @Last Modified time: 2019-10-11 16:05:28
+ * @Last Modified time: 2019-12-06 15:13:21
  */
 
 const config = {
@@ -10,8 +10,7 @@ const config = {
     baseApi: 'http://localhost:8080/'
   },
   prod: {
-    // baseApi: 'https://192.168.200.254'
-    baseApi: 'https://aliiot.on-bright.com'
+    baseApi: 'https://203.67.23.180'
   }
 }
 export default config
