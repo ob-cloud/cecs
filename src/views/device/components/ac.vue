@@ -173,12 +173,13 @@ export default {
       })
     },
     getActionKey () {
-      const isV3 = panelHandler.isV3Ac(this.currentDevice.rmodel)
       let hasVW = ''
       let hasHW = ''
-      if (!isV3) {
-        hasVW = +panelHandler.hasVerticalWind(this.currentDevice.keys)
-        hasHW = +panelHandler.hasHorizontalWind(this.currentDevice.keys)
+      if (panelHandler.hasVerticalWind(this.currentDevice.keys)) {
+        hasVW = 0
+      }
+      if (panelHandler.hasHorizontalWind(this.currentDevice.keys)) {
+        hasHW = 0
       }
       return panelHandler.getAirConditionKeys(this.airAction.templure, this.airAction.mode, this.airAction.speed, hasVW, hasHW)
     }

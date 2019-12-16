@@ -2,7 +2,7 @@
  * @Author: eamiear
  * @Date: 2019-02-06 18:37:25
  * @Last Modified by: eamiear
- * @Last Modified time: 2019-11-26 11:24:14
+ * @Last Modified time: 2019-12-16 10:12:50
  */
 
 import {
@@ -23,11 +23,11 @@ const user = {
   state: {
     user: '',
     token: Storage.getToken(),
-    name: cacher.setStrategy('sessionStorage').get('name'),
+    name: cacher.setStrategy('localStorage').get('name'),
     avatar: '',
     introduction: '',
     userInfo: null,
-    pwd: cacher.setStrategy('sessionStorage').get('pk')
+    pwd: cacher.setStrategy('localStorage').get('pk')
   },
   mutations: {
     [SET_TOKEN] (state, token) {
@@ -60,8 +60,8 @@ const user = {
           if (data) {
             const token = data.access_token
             Storage.setToken(token)
-            cacher.setStrategy('sessionStorage').set('pk', password)
-            cacher.setStrategy('sessionStorage').set('name', userInfo.account.trim())
+            cacher.setStrategy('localStorage').set('pk', password)
+            cacher.setStrategy('localStorage').set('name', userInfo.account.trim())
             commit('SET_TOKEN', token)
             commit('SET_NAME', userInfo.account.trim())
             commit('SET_USER_INFO', data)
@@ -91,8 +91,8 @@ const user = {
             commit('SET_PWD', '')
             cacher.remove('permission')
             Storage.removeToken()
-            cacher.setStrategy('sessionStorage').remove('pk')
-            cacher.setStrategy('sessionStorage').remove('name')
+            cacher.setStrategy('localStorage').remove('pk')
+            cacher.setStrategy('localStorage').remove('name')
             resolve()
           } else {
             reject(res.message)
