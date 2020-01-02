@@ -8,7 +8,7 @@ export default {
     logout: '退出登录',
     login: '登录',
     logintext: '{FIELD, select, account{手机号} pwd{密码} erraccount{请输入正确的手机号} invalidMobile{手机号码有误} loginfail{登录失败，账号或密码错误} other{}}',
-    route: '{FIELD, select, devicemgr{设备管理} scenemgr{场景管理} roommgr{房间管理} usrmgr{用户管理} logmgr{日志管理} other{}}',
+    route: '{FIELD, select, devicemgr{设备管理} scenemgr{场景管理} roommgr{教室管理} usrmgr{用户管理} logmgr{日志管理} other{}}',
     validator: '{FIELD, select, name{名称应为英文字母、数字或下划线组成的字符串} mobile{手机号码格式有误} other{}}',
     devtype: '{FIELD, select, Sensor{传感器} HumidSensors{温湿度传感器} Switcher{插座开关} 3KeySwitch{3路开关} Ifrate{红外转发器} other{}}',
     cron: '{FIELD, select, second{秒} minute{分} hour{时} day{日} month{月} week{周} weekday{星期} year{年} perSecond{每秒} perMinute{每分} perHour{每时} perDay{每日} perMonth{每月} perWeek{每周} perYear{每年} period{周期} pointAt{指定} noPointAt{不指定} dateWeekPointAt{日期与星期不可以同时为“不指定”} dateWeekNoPointAt{日期与星期必须有一个为“不指定”} from{从} to{至} per{每} sun{日} mon{一} tue{二} wed{三} thu{四} fri{五} sat{六} other{}}',
@@ -49,25 +49,25 @@ export default {
     noAction: '无操作',
     actionFail: '操作失败',
     actionSuccess: '操作成功',
-    placeholder: '请{TYPE, select, input{输入} choose{选择} other{输入}}{PLACEHOLDER, select, build{楼栋} floor{楼层} room{房间} deviceName{设备名称} deviceType{设备类型} other{}}',
-    rules: '{RULE, select, build{楼栋} floor{楼层} room{房间} user{用户名} phone{手机号} pwd{密码} role{角色} roleName{角色名称} deviceName{设备名称} other{}} 不能为空',
+    placeholder: '请{TYPE, select, input{输入} choose{选择} other{输入}}{PLACEHOLDER, select, build{楼栋} floor{楼层} room{教室} deviceName{设备名称} deviceType{设备类型} other{}}',
+    rules: '{RULE, select, build{楼栋} floor{楼层} room{教室} user{用户名} phone{手机号} pwd{密码} role{角色} roleName{角色名称} deviceName{设备名称} other{}} 不能为空',
     status: '{STATUS, select, open{打开} close{关闭} online{在线} offline{离线} on{开} off{关} noDev{无设备} other{}}',
     switchStatus: '{SWITCH, select, label{开关} open{打开} close{关闭} on{开} off{关} noDev{无设备} switchOn{开关 - 开} switchOff{开关 - 关} other{}}',
     image: '{IMAGE, select, pixel{请上传规格为1080x720的图片} type{图片格式仅支持jpg/jpeg/png} other{}}',
     device: '{DEVICE_TEXT, select, temperature{温度} humidifier{湿度} switch{开关} humitemp{温湿度} Infrared{红外转发} humDev{温湿度类型设备} other{}}'
   },
   smart: {
-    roommodule: '房间管理',
+    roommodule: '教室管理',
     map: {
       title: '地图',
-      message: '{MESSAGE, select, delRoom{删除房间} setLocation{位置设置中...} setLocSuccess{设置成功} roomExist{该房间已存在} delLocAction{确认删除节点？} delLoc{位置删除中...} other{}}'
+      message: '{MESSAGE, select, delRoom{删除教室} setLocation{位置设置中...} setLocSuccess{设置成功} roomExist{该教室已存在} delLocAction{确认删除节点？} delLoc{位置删除中...} other{}}'
     },
     room: {
-      title: '房间',
-      device: '房间设备',
-      label: '{LABEL, select, build{楼栋} floor{楼层} room{房间} other{}}名称',
-      dialogTitle: '{TITLE, select, device{房间设备列表} scene{房间场景列表} edit{房间编辑} create{创建房间} other{提示框}}',
-      message: '{MESSAGE, select, fail{房间获取失败} err{服务出错} switchConfirm{所有房间开关} loading{教室开关...} switchFail{开关操作失败} rmRoomConfirm{确认删除房间？} fetchRoomDev{获取房间设备} binding{设备绑定中...} unbinding{设备解绑中...} unbindConfirm{确认解绑设备？} other{}}',
+      title: '教室',
+      device: '教室设备',
+      label: '{LABEL, select, build{楼栋} floor{楼层} room{教室} other{}}名称',
+      dialogTitle: '{TITLE, select, device{教室设备列表} scene{教室场景列表} edit{教室编辑} create{创建教室} other{提示框}}',
+      message: '{MESSAGE, select, fail{教室获取失败} err{服务出错} switchConfirm{所有教室开关} loading{教室开关...} switchFail{开关操作失败} rmRoomConfirm{确认删除教室？} fetchRoomDev{获取教室设备} binding{设备绑定中...} unbinding{设备解绑中...} unbindConfirm{确认解绑设备？} other{}}',
       tableField: '{FIELD, select, option{选项} obxSerial{obox序列号} serial{设备序列号} name{设备名称} status{设备状态} type{设备类型} subtype{子设备类型} version{设备版本} action{操作} other{}}',
     },
     building: {
@@ -105,9 +105,9 @@ export default {
     },
     scenemodule: '场景管理',
     scene: {
-      search: '{FIELD, select, build{全部楼栋} floor{全部楼层} room{全部房间} name{场景名称} other{}}',
+      search: '{FIELD, select, build{全部楼栋} floor{全部楼层} room{全部教室} name{场景名称} other{}}',
       action: '{FIELD, select, create{创建场景} excute{执行场景} edit{编辑场景} delete{刪除} other{}}',
-      tableField: '{FIELD, select, name{场景名称} build{楼栋} floor{楼层} room{房间} status{场景状态} action{操作} other{}}',
+      tableField: '{FIELD, select, name{场景名称} build{楼栋} floor{楼层} room{教室} status{场景状态} action{操作} other{}}',
       message: '{MESSAGE, select, fetchFail{场景获取失败} loading{场景删除中...} delConfirm{确认删除场景？} delDevice{场景删除} update{场景状态更新} excute{场景执行} excuting{场景执行中...} other{}}',
       create: '{FIELD, select, inputNameTip{输入场景名称} empty{场景名称不能为空} locationEmpty{楼栋不能为空} invalid{名称应为英文字母、数字或下划线组成的字符串} location{位置} deviceCon{设备条件} cons1{条件1} cons2{条件2} cons3{条件3} behavior{设备行为} actionTips{行为执行时间(单位秒)} devAction{配置设备动作} setDevAct{设备行为配置} conType{条件类型} conTip{一组最多三个条件} other{}}',
       condition: '{FIELD, select, timing{定时} timeCon{定时条件} date{日期} selDate{选择日期} selTime{选择时间} week{星期} chain{联动} chainCon{联动条件} selConTip{请正确选择条件} setChainDevCon{请配置联动条件} setActionBehavior{请补全设备行为} other{}}',
@@ -132,7 +132,7 @@ export default {
     logmodule: '日志管理',
     logrecords: {
       title: '日志记录',
-      search: '{FIELD, select, operator{执行人} description{输入描述内容} type{日志类型} device{设备管理} scene{场景管理} user{用户管理} room{房间管理} other{}}',
+      search: '{FIELD, select, operator{执行人} description{输入描述内容} type{日志类型} device{设备管理} scene{场景管理} user{用户管理} room{教室管理} other{}}',
       tableField: '{FIELD, select, serial{序号} type{类型} action{操作行为} datetime{操作时间} operator{执行人} other{}}',
       message: '{MESSAGE, select, fetchFail{日志获取失败} other{}}',
     },

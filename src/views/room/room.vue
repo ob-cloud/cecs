@@ -19,7 +19,7 @@
       <div class="building-item" v-for="item in roomList" :key="item.id">
         <div class="header">
           <i class="icon obicon obicon-device" v-isPermited="44" :title="$t('smart.room.device')" @click="handleDevice(item)"></i>
-          <!-- <i class="icon obicon obicon-scene" title="房间场景" @click="handleScene(item)"></i> -->
+          <!-- <i class="icon obicon obicon-scene" title="教室场景" @click="handleScene(item)"></i> -->
           <i class="icon obicon obicon-power" :title="$t('message.power')" @click="handlePower(item)"></i>
           <i class="icon el-icon-edit" v-isPermited="42" :title="$t('message.edit')" @click="handleEdit(item)"></i>
           <i class="icon el-icon-delete" v-isPermited="43" :title="$t('message.delete')" @click="handleRemove(item)"></i>
@@ -126,7 +126,7 @@ export default {
         edit: this.$t('smart.room.dialogTitle', {TITLE: 'edit'}),
         create: this.$t('smart.room.dialogTitle', {TITLE: 'create'})
       },
-      // 当前选中房间号
+      // 当前选中教室号
       deviceActiveRoom: '',
       sceneActiveRoom: '',
     }

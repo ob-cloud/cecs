@@ -351,7 +351,7 @@ export default {
     },
     onMouseUp (e) {
       if (this.isAddFinished) return
-      // 房间交集
+      // 教室交集
       const hasCross = this.points.slice(0, -1).find(point => {
         return this.isCross(point, this.editPoint)
       })

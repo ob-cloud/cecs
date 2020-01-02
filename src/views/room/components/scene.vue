@@ -129,7 +129,7 @@ export default {
           this.tableData = resp.data.scenes
         } else {
           this.$message({
-            message: resp.message || '房间场景获取失败'
+            message: resp.message || '教室场景获取失败'
           })
         }
         this.tableLoading = false

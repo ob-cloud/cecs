@@ -58,7 +58,7 @@ const RoomAPI = {
       layer: params.layer
     })
   },
-  // 添加设备到房间
+  // 添加设备到教室
   setRoomDevice (params) {
     return request.postForm('/consumer/common', {
       CMD: 'set_device_location',
@@ -77,7 +77,7 @@ const RoomAPI = {
       location: params.location
     })
   },
-  // 绑定场景到房间
+  // 绑定场景到教室
   setRoomScene (params) {
     return request.postForm('/consumer/common', {
       CMD: 'set_scene_location',
@@ -86,7 +86,7 @@ const RoomAPI = {
       location: params.location
     })
   },
-  // 删除房间场景
+  // 删除教室场景
   removeRoomScene (location, sceneNumber) {
     return request.postForm('/consumer/common', {
       CMD: 'delete_scene_location',

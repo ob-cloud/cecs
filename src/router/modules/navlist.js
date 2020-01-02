@@ -21,7 +21,7 @@ export default [
   }, {
     name: '/room/index.html',
     path: '/room/index.html',
-    desc: '房间管理',
+    desc: '教室管理',
     meta: {title: 'roommgr'},
     component: () => import('views/room/index.vue')
   }, {

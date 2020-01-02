@@ -2,7 +2,7 @@
  * @Author: eamiear
  * @Date: 2018-11-27 11:32:42
  * @Last Modified by: eamiear
- * @Last Modified time: 2019-11-08 15:59:53
+ * @Last Modified time: 2020-01-02 10:48:41
  */
 
 const isProduction = process.env.NODE_ENV === 'production'
@@ -36,7 +36,7 @@ module.exports = {
     }
   },
   configureWebpack: config => ({
-    devtool: 'source-map',
+    // devtool: 'source-map',
     // externals: {
     //   'vue': 'Vue',
     //   'vue-router': 'VueRouter',

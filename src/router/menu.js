@@ -1,7 +1,7 @@
 export const navMenuList = [
   {
     id: 26,
-    name: '房间管理',
+    name: '教室管理',
     path: '/room/index.html'
   }, {
     id: 24,

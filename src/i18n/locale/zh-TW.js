@@ -8,7 +8,7 @@ export default {
     logout: '退出登錄',
     login: '登錄',
     logintext: '{FIELD, select, account{手機號} pwd{密碼} erraccount{請輸入正確的手機號} invalidMobile{手機號碼有誤} loginfail{登錄失敗，賬號或密碼錯誤} other{}}',
-    route: '{FIELD, select, devicemgr{設備管理} scenemgr{場景管理} roommgr{房間管理} usrmgr{用戶管理} logmgr{日誌管理} other{}}',
+    route: '{FIELD, select, devicemgr{設備管理} scenemgr{場景管理} roommgr{教室管理} usrmgr{用戶管理} logmgr{日誌管理} other{}}',
     validator: '{FIELD, select, name{名稱應為英文字母、數字或下劃線組成的字符串} mobile{手機號碼格式有誤} other{}}',
     devtype: '{FIELD, select, Sensor{傳感器} HumidSensors{溫濕度傳感器} Switcher{插座開關} 3KeySwitch{三路開關} Ifrate{紅外轉發器} other{}}',
     cron: '{FIELD, select, second{秒} minute{分} hour{時} day{日} month{月} week{週} weekday{星期} year{年} perSecond{每秒} perMinute{每分} perHour{每時} perDay{每日} perMonth{每月} perWeek{每週} perYear{每年} period{週期} pointAt{指定} noPointAt{不指定} dateWeekPointAt{日期與星期不可以同時為“不指定”} dateWeekNoPointAt{日期與星期必須有一個為“不指定”} from{從} to{至} per{每}  sun{日} mon{一} tue{二} wed{三} thu{四} fri{五} sat{六} other{}}',
@@ -49,25 +49,25 @@ export default {
     noAction: '無操作',
     actionFail: '操作失敗',
     actionSuccess: '操作成功',
-    placeholder: '請{TYPE, select, input{輸入} choose{選擇} other{輸入}}{PLACEHOLDER, select, build{樓棟} floor{樓層} room{房間} deviceName{設備名稱} deviceType{設備類型} other{}}',
-    rules: '{RULE, select, build{樓棟} floor{樓層} room{房間} user{用戶名} phone{手機號} pwd{密碼} role{角色} roleName{角色名稱} deviceName{設備名稱} other{}} 不能為空',
+    placeholder: '請{TYPE, select, input{輸入} choose{選擇} other{輸入}}{PLACEHOLDER, select, build{樓棟} floor{樓層} room{教室} deviceName{設備名稱} deviceType{設備類型} other{}}',
+    rules: '{RULE, select, build{樓棟} floor{樓層} room{教室} user{用戶名} phone{手機號} pwd{密碼} role{角色} roleName{角色名稱} deviceName{設備名稱} other{}} 不能為空',
     status: '{STATUS, select, open{打開} close{關閉} online{在線} offline{離線} on{開} off{關} noDev{無設備} other{}}',
     switchStatus: '{SWITCH, select, label{開關} open{打開} close{關閉} on{開} off{關} noDev{無設備} switchOn{開關 - 開} switchOff{開關 - 關} other{}}',
     image: '{IMAGE, select, pixel{請上傳規格為1080x72的圖片} type{圖片格式僅支持jpg/jpeg/png} other{}}',
     device: '{DEVICE_TEXT, select, temperature{溫度} humidifier{濕度} switch{開關} humitemp{溫濕度} humDev{溫濕度類型設備} Infrared{紅外轉發} other{}}'
   },
   smart: {
-    roommodule: '房間管理',
+    roommodule: '教室管理',
     map: {
       title: '地圖',
-      message: '{MESSAGE, select, delRoom{刪除房間} setLocation{位置設置中...} setLocSuccess{設置成功} roomExist{該房間已存在} delLocAction{確認刪除節點？} delLoc{位置刪除中...} other{}}'
+      message: '{MESSAGE, select, delRoom{刪除教室} setLocation{位置設置中...} setLocSuccess{設置成功} roomExist{該教室已存在} delLocAction{確認刪除節點？} delLoc{位置刪除中...} other{}}'
     },
     room: {
-      title: '房間',
-      device: '房間設備',
-      label: '{LABEL, select, build{樓棟} floor{樓層} room{房間} other{}}名稱',
-      dialogTitle: '{TITLE, select, device{房間設備列表} scene{房間場景列表} edit{房間編輯} create{創建房間} other{提示框}}',
-      message: '{MESSAGE, select, fail{房間獲取失敗} err{服務出錯} switchConfirm{所有房間開關} loading{教室開關...} switchFail{開關操作失敗} rmRoomConfirm{確認刪除房間？} fetchRoomDev{獲取房間設備} binding{設備綁定中...} unbinding{設備解綁中...} unbindConfirm{確認解綁設備？} other{}}',
+      title: '教室',
+      device: '教室設備',
+      label: '{LABEL, select, build{樓棟} floor{樓層} room{教室} other{}}名稱',
+      dialogTitle: '{TITLE, select, device{教室設備列表} scene{教室場景列表} edit{教室編輯} create{創建教室} other{提示框}}',
+      message: '{MESSAGE, select, fail{教室獲取失敗} err{服務出錯} switchConfirm{所有教室開關} loading{教室開關...} switchFail{開關操作失敗} rmRoomConfirm{確認刪除教室？} fetchRoomDev{獲取教室設備} binding{設備綁定中...} unbinding{設備解綁中...} unbindConfirm{確認解綁設備？} other{}}',
       tableField: '{FIELD, select, option{選項} obxSerial{obox序列號} serial{設備序列號} name{設備名稱} status{設備狀態} type{設備類型} subtype{子設備類型} version{設備版本} action{操作} other{}}',
     },
     building: {
@@ -105,9 +105,9 @@ export default {
     },
     scenemodule: '場景管理',
     scene: {
-      search: '{FIELD, select, build{全部樓棟} floor{全部樓層} room{全部房間} name{場景名稱} other{}}',
+      search: '{FIELD, select, build{全部樓棟} floor{全部樓層} room{全部教室} name{場景名稱} other{}}',
       action: '{FIELD, select, create{創建場景} excute{執行場景} edit{編輯場景} delete{刪除} other{}}',
-      tableField: '{FIELD, select, name{場景名稱} build{樓棟} floor{樓層} room{房間} status{場景狀態} action{操作} other{}}',
+      tableField: '{FIELD, select, name{場景名稱} build{樓棟} floor{樓層} room{教室} status{場景狀態} action{操作} other{}}',
       message: '{MESSAGE, select, fetchFail{場景獲取失敗} loading{場景刪除中...} delConfirm{確認刪除場景？} delDevice{場景刪除} update{場景狀態更新} excute{場景執行} excuting{場景執行中...} other{}}',
       create: '{FIELD, select, inputNameTip{輸入場景名稱} empty{場景名稱不能為空} locationEmpty{樓棟不能為空}  invalid{名稱應為英文字母、數字或下劃線组成的字符串} location{位置} deviceCon{設備條件} cons1{條件1} cons2{條件2} cons3{條件3} behavior{設備行為} actionTips{行為執行時間(單位秒)} devAction{配置設備動作} setDevAct{設備行為配置} conType{條件類型} conTip{一組最多三個條件} other{}}',
       condition: '{FIELD, select, timing{定時} timeCon{定時條件} date{日期} selDate{選擇日期} selTime{選擇時間} week{星期} chain{聯動} chainCon{聯動條件} selConTip{請選擇正確條件} setChainDevCon{請配置聯動條件} setActionBehavior{請補全設備行為} other{}}',
@@ -132,7 +132,7 @@ export default {
     logmodule: '日誌管理',
     logrecords: {
       title: '日誌記錄',
-      search: '{FIELD, select, operator{執行人} description{輸入描述內容} type{日誌類型} device{設備管理} scene{場景管理} user{用戶管理} room{房間管理} other{}}',
+      search: '{FIELD, select, operator{執行人} description{輸入描述內容} type{日誌類型} device{設備管理} scene{場景管理} user{用戶管理} room{教室管理} other{}}',
       tableField: '{FIELD, select, serial{序號} type{類型} action{操作行為} datetime{操作時間} operator{執行人} other{}}',
       message: '{MESSAGE, select, fetchFail{日誌獲取失敗} other{}}',
     },

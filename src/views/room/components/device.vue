@@ -181,7 +181,7 @@ export default {
       this.deviceDialogVisible = true
     },
     handleEdit (row) {
-      // console.log('房间编辑 ', row)
+      // console.log('教室编辑 ', row)
     },
     handleRemove (row) {
       this.$confirm(this.$t('smart.room.message', {MESSAGE: 'unbindConfirm'}), this.$t('message.tips'), {

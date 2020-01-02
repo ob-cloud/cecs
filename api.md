@@ -88,9 +88,9 @@ CMD:get_building_floor
 floor:{"buildingId":3}
 ```
 
-## ====== 房间 begin ======
+## ====== 教室 begin ======
 
-### 新增房间
+### 新增教室
 
 ```js
 access_token:b15f04ac-725f-4a21-85c2-6b8ad4c2d427
@@ -98,7 +98,7 @@ CMD:add_room
 room:{"roomName":"R1197","floorId":1}
 ```
 
-### 更新房间
+### 更新教室
 
 ```js
 access_token:b15f04ac-725f-4a21-85c2-6b8ad4c2d427
@@ -106,7 +106,7 @@ CMD:update_room
 room:{"roomName":"R1197","floorId":1,"id":8}
 ```
 
-### 删除房间
+### 删除教室
 
 ```js
 access_token:b15f04ac-725f-4a21-85c2-6b8ad4c2d427
@@ -114,7 +114,7 @@ CMD:delete_room
 room:{"id":8}
 ```
 
-### 获取房间列表
+### 获取教室列表
 
 ```js
 access_token:b15f04ac-725f-4a21-85c2-6b8ad4c2d427
@@ -130,7 +130,7 @@ CMD:bind_room_device
 device:{"roomId":1,"deviceId":7790,"deviceSerialId":"faad52a001","deviceType":"04","deviceChildType":"17"}
 ```
 
-### 房间设备列表
+### 教室设备列表
 
 ```js
 access_token:b15f04ac-725f-4a21-85c2-6b8ad4c2d427
