@@ -54,13 +54,13 @@ export default {
     status: '{STATUS, select, open{打開} close{關閉} online{在線} offline{離線} on{開} off{關} noDev{無設備} other{}}',
     switchStatus: '{SWITCH, select, label{開關} open{打開} close{關閉} on{開} off{關} noDev{無設備} switchOn{開關 - 開} switchOff{開關 - 關} other{}}',
     image: '{IMAGE, select, pixel{請上傳規格為1080x720的圖片} type{圖片格式僅支持jpg/jpeg/png} other{}}',
-    device: '{DEVICE_TEXT, select, temperature{溫度} humidifier{濕度} switch{開關} humitemp{溫濕度} humDev{溫濕度類型設備} Infrared{紅外轉發} other{}}'
+    device: '{DEVICE_TEXT, select, temperature{溫度} humidifier{濕度} switch{開關} humitemp{溫濕度} humDev{溫濕度類型設備} Infrared{紅外轉發} airCondition{空調} other{}}'
   },
   smart: {
     roommodule: '教室管理',
     map: {
       title: '地圖',
-      message: '{MESSAGE, select, delRoom{刪除教室} setLocation{位置設置中...} setLocSuccess{設置成功} roomExist{該教室已存在} delLocAction{確認刪除節點？} delLoc{位置刪除中...} other{}}'
+      message: '{MESSAGE, select, delRoom{刪除教室節點} setLocation{位置設置中...} setLocSuccess{設置成功} roomExist{該教室已存在} delLocAction{確認刪除教室節點？} delLoc{位置刪除中...} other{}}'
     },
     room: {
       title: '教室',
@@ -78,7 +78,7 @@ export default {
     floor: {
       title: '樓層',
       dialogTitle: '{TITLE, select, edit{編輯樓層} create{創建樓層} other{提示框}}',
-      message: '{MESSAGE, select, switchConfirm{樓層開關} switchGlobConfirm{所有樓棟開關} loading{教室開關...} switchFail{開關操作失敗} rmRoomConfirm{確認刪除樓層？} other{}}',
+      message: '{MESSAGE, select, switchConfirm{樓層開關} switchGlobConfirm{所有樓層開關} loading{教室開關...} switchFail{開關操作失敗} rmRoomConfirm{確認刪除樓層？} other{}}',
     },
     devicemodule: '設備管理',
     obox: {
@@ -87,7 +87,7 @@ export default {
       tableField: '{FIELD, select, temperature{溫度} humidifier{濕度} date{時間} serial{設備序列號} name{設備名稱} status{設備狀態} type{設備類型} subtype{子設備類型} version{設備版本} action{操作} other{}}',
       slide: '{FIELD, select, panel{三鍵開關控制面板} humidifier{溫濕度} other{}}',
       placeholder: '{FIELD, select, lamp{開關} humidifier{溫濕度} other{}}',
-      message: '{MESSAGE, select, powerswitch{電源開關已} direct{操作指令發送成功} fetchFail{設備獲取失敗} loading{設備刪除中...} delConfirm{確認刪除設備？} delDevice{設備刪除} setSuccess{設置成功} setFail{設置失敗} history{歷史數據} nowadays{今日數據} oboxoffline{OBOX離線或不存在} nobelong{沒有權限操作該設備} other{}}',
+      message: '{MESSAGE, select, airCondition{空調已} powerswitch{電源開關已} direct{操作指令發送成功} fetchFail{設備獲取失敗} loading{設備刪除中...} delConfirm{確認刪除設備？} delDevice{設備刪除} setSuccess{設置成功} setFail{設置失敗} history{歷史數據} nowadays{今日數據} oboxoffline{OBOX離線或不存在} nobelong{沒有權限操作該設備} other{}}',
       ac: '{FIELD, select, temperature{溫度} humidifier{濕度} auto{自動} speed{風速} fans{風扇} weak{弱風} medium{中風} strong{強風} cold{製冷} hot{制熱} dehum{抽濕} supply{送風} mode{模式} switch{開關} type{設備類型} subtype{子設備類型} version{設備版本} action{操作} noKeyHandle{請進行按鍵設置} other{暫無資料}}'
     },
     wifi: {

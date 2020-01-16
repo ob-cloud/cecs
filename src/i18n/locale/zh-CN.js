@@ -54,13 +54,13 @@ export default {
     status: '{STATUS, select, open{打开} close{关闭} online{在线} offline{离线} on{开} off{关} noDev{无设备} other{}}',
     switchStatus: '{SWITCH, select, label{开关} open{打开} close{关闭} on{开} off{关} noDev{无设备} switchOn{开关 - 开} switchOff{开关 - 关} other{}}',
     image: '{IMAGE, select, pixel{请上传规格为1080x720的图片} type{图片格式仅支持jpg/jpeg/png} other{}}',
-    device: '{DEVICE_TEXT, select, temperature{温度} humidifier{湿度} switch{开关} humitemp{温湿度} Infrared{红外转发} humDev{温湿度类型设备} other{}}'
+    device: '{DEVICE_TEXT, select, temperature{温度} humidifier{湿度} switch{开关} humitemp{温湿度} Infrared{红外转发} humDev{温湿度类型设备} airCondition{空调} other{}}'
   },
   smart: {
     roommodule: '教室管理',
     map: {
       title: '地图',
-      message: '{MESSAGE, select, delRoom{删除教室} setLocation{位置设置中...} setLocSuccess{设置成功} roomExist{该教室已存在} delLocAction{确认删除节点？} delLoc{位置删除中...} other{}}'
+      message: '{MESSAGE, select, delRoom{删除教室节点} setLocation{位置设置中...} setLocSuccess{设置成功} roomExist{该教室已存在} delLocAction{确认删除教室节点？} delLoc{位置删除中...} other{}}'
     },
     room: {
       title: '教室',
@@ -87,7 +87,7 @@ export default {
       tableField: '{FIELD, select, temperature{温度} humidifier{湿度} date{时间} serial{设备序列号} name{设备名称} status{设备状态} type{设备类型} subtype{子设备类型} version{设备版本} action{操作} other{}}',
       slide: '{FIELD, select, panel{三键开关控制面板} humidifier{温湿度} other{}}',
       placeholder: '{FIELD, select, lamp{开关} humidifier{温湿度} other{}}',
-      message: '{MESSAGE, select, powerswitch{电源开关已} direct{操作指令发送成功} fetchFail{设备获取失败} loading{设备删除中...} delConfirm{确认删除设备？} delDevice{设备删除} setSuccess{设置成功} setFail{设置失败} history{历史数据} nowadays{今日数据} oboxoffline{OBOX离线或不存在} nobelong{没有权限操作该设备} other{}}',
+      message: '{MESSAGE, select, airCondition{空调已} powerswitch{电源开关已} direct{操作指令发送成功} fetchFail{设备获取失败} loading{设备删除中...} delConfirm{确认删除设备？} delDevice{设备删除} setSuccess{设置成功} setFail{设置失败} history{历史数据} nowadays{今日数据} oboxoffline{OBOX离线或不存在} nobelong{没有权限操作该设备} other{}}',
       ac: '{FIELD, select, temperature{温度} humidifier{湿度} auto{自动} speed{风速} fans{风扇} weak{弱风} medium{中风} strong{强风} cold{制冷} hot{制热} dehum{抽湿} supply{送风} mode{模式} switch{开关} type{设备类型} subtype{子设备类型} version{设备版本} action{操作} noKeyHandle{请进行按键设置} other{暂无数据}}'
     },
     wifi: {
