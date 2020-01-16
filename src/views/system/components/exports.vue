@@ -6,7 +6,7 @@
         type="datetimerange"
         :picker-options="pickerOptions"
         range-separator="-"
-        value-format="yyyy-MM-dd hh:mm:ss"
+        value-format="yyyy-MM-dd HH:mm:ss"
         :start-placeholder="$t('smart.exportrecords.search', {FIELD: 'start'})"
         :end-placeholder="$t('smart.exportrecords.search', {FIELD: 'end'})"
         align="right">
