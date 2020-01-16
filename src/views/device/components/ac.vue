@@ -110,7 +110,7 @@ export default {
           if (res.message.includes('success')) {
             this.$message({
               type: 'success',
-              message: this.$t('smart.obox.message', {MESSAGE: 'powerswitch'}) + (this.airCondition.isPowerOn ? this.$t('message.status', {STATUS: 'on'}) : this.$t('message.status', {STATUS: 'off'}))
+              message: this.$t('smart.obox.message', {MESSAGE: 'airCondition'}) + (this.airCondition.isPowerOn ? this.$t('message.status', {STATUS: 'on'}) : this.$t('message.status', {STATUS: 'off'}))
             })
           } else {
             this.$message({
