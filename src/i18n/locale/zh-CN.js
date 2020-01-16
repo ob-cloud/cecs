@@ -42,7 +42,7 @@ export default {
     next: '下一屏',
     building: '栋',
     floor: '层',
-    room: '房',
+    room: '室',
     none: '无',
     noData: '无',
     action: '操作',

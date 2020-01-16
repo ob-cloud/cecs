@@ -42,7 +42,7 @@ export default {
     next: '下一屏',
     building: '棟',
     floor: '層',
-    room: '房',
+    room: '室',
     none: '無',
     noData: '暫無資料',
     action: '操作',
@@ -53,7 +53,7 @@ export default {
     rules: '{RULE, select, build{樓棟} floor{樓層} room{教室} user{用戶名} phone{手機號} pwd{密碼} role{角色} roleName{角色名稱} deviceName{設備名稱} other{}} 不能為空',
     status: '{STATUS, select, open{打開} close{關閉} online{在線} offline{離線} on{開} off{關} noDev{無設備} other{}}',
     switchStatus: '{SWITCH, select, label{開關} open{打開} close{關閉} on{開} off{關} noDev{無設備} switchOn{開關 - 開} switchOff{開關 - 關} other{}}',
-    image: '{IMAGE, select, pixel{請上傳規格為1080x72的圖片} type{圖片格式僅支持jpg/jpeg/png} other{}}',
+    image: '{IMAGE, select, pixel{請上傳規格為1080x720的圖片} type{圖片格式僅支持jpg/jpeg/png} other{}}',
     device: '{DEVICE_TEXT, select, temperature{溫度} humidifier{濕度} switch{開關} humitemp{溫濕度} humDev{溫濕度類型設備} Infrared{紅外轉發} other{}}'
   },
   smart: {

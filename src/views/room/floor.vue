@@ -47,7 +47,7 @@
           </el-select>
         </el-form-item>
         <el-form-item :label="$t('smart.room.label', { LABEL: 'floor' })" prop="floorName">
-          <el-input v-model="createModel.floorName" :placeholder="$t('message.placeholder', { TYPE: 'choose', PLACEHOLDER: 'floor' })">
+          <el-input v-model="createModel.floorName" :placeholder="$t('message.placeholder', { TYPE: 'input', PLACEHOLDER: 'floor' })">
             <template slot="append">{{$t('message.floor')}}</template>
           </el-input>
         </el-form-item>
