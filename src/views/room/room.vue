@@ -295,11 +295,18 @@ export default {
             message: `${statusText}${this.$t('message.success')}`
           })
         } else {
+          loading.close()
           this.$message({
             type: 'error',
             message: this.$t('smart.room.message', {MESSAGE: 'switchFail'})
           })
         }
+      }).catch((err) => {
+        loading.close()
+        this.$message({
+          type: 'error',
+          message: this.$t('smart.room.message', {MESSAGE: 'switchFail'})
+        })
       })
     },
     handleEdit (row) {
