@@ -16,8 +16,15 @@
         <p>{{item.name}}</p>
         <p>{{item.rmodel}}</p>
       </div>
-      <div class="controller" v-if="isAirCondition()">
-        <div class="panel">
+      <div class="controller">
+        <!-- transponderList.length === 0 -->
+        <div class="tabPicker" v-if="tabPickerVisible">
+          <el-radio-group v-model="tabActiveName" size="small">
+            <el-radio-button label="cloud" style="display: block; margin: 0; border-radius: 0;">云端码库</el-radio-button>
+            <el-radio-button label="custom"  style="display: block; margin: 10px 0; border-radius: 0;">学习按键</el-radio-button>
+          </el-radio-group>
+        </div>
+        <div class="panel" v-if="tabActiveName ? tabActiveName === 'cloud' : isAirCondition()">
           <div class="templure">
             <p>{{airCondition.isPowerOn ? airAction.templure : '--'}}<span>℃</span></p>
             <p>{{$t('smart.obox.ac', {FIELD: 'temperature'})}}</p>
@@ -44,6 +51,14 @@
             <i class="obicon obicon-minus" @click="keyHandler(3, -1)"></i>
             <p>{{$t('smart.obox.ac', {FIELD: 'temperature'})}}</p>
             <i class="obicon obicon-plus" @click="keyHandler(3, 1)"></i>
+          </div>
+        </div>
+        <!-- 学习按键区域 -->
+        <div class="panel" v-if="tabActiveName && tabActiveName === 'custom'" style="height: 424px; overflow-y: auto; ">
+          <div class="custom_key">
+            <el-radio-group v-model="customKeyPicker" size="small">
+              <el-radio-button :label="item" border v-for="(item, index) in customKeyList" :key="index">{{item.name}}</el-radio-button>
+            </el-radio-group>
           </div>
         </div>
       </div>
@@ -81,7 +96,32 @@ export default {
         speed: 0,
         mode: 0,
         power: 0
-      }
+      },
+      tabPickerVisible: false,
+      tabActiveName: '', // 云端码库或学习按键 tab
+      customKeyLoading: false,
+      customKeyList: [{
+        name: '大同1',
+        index: 8327813,
+        key: '风量小',
+        tId: 0
+      }, {
+        name: '大同2',
+        index: 83278133,
+        key: '风量小1',
+        tId: 0
+      }, {
+        name: '大同3',
+        index: 83278123,
+        key: '风量小2',
+        tId: 0
+      }, {
+        name: '大同4',
+        index: 83278153,
+        key: '风量小3',
+        tId: 0
+      }],
+      customKeyPicker: ''
       // deviceType: '',
       // deviceSubType: ''
     }
@@ -124,6 +164,9 @@ export default {
     isAirCondition () {
       return this.currentTransponderDevice.deviceType === 7
     },
+    isCustomKeyBoard () {
+
+    },
     isJustTouchPower () {
       // has touch the power key and other key's value is default
       return this.airCondition.isHanlePanel && (this.airAction.power === 0 || this.airAction.power === 1) && this.airAction.templure === 26 && this.airAction.speed === 0 && this.airAction.mode === 0
@@ -137,16 +180,30 @@ export default {
     },
     getTransponderDeviceList () {
       this.transponderLoading = true
-      if (!this.actionObject.serialId) {
+      if (!this.actionObject.serialId) { // 没有序列号
         this.transponderLoading = false
         this.currentTransponderDevice.deviceType = 7
+        this.tabActiveName = 'cloud'
+        this.tabPickerVisible = true
         return
       }
       DeviceAPI.getTransponderDevice(this.actionObject.serialId).then(res => {
         if (res.status === 200) {
-          this.transponderLoading = false
           this.transponderList = res.data.rs
+          this.tabPickerVisible = !this.transponderList.length
         }
+        this.transponderLoading = false
+      })
+    },
+    getCustomKeys () {
+      this.customKeyLoading = true
+      DeviceAPI.getIrCustomKeys().then(res => {
+        if (res.status === 200) {
+          this.customKeyList = res.data.records || []
+        }
+        this.customKeyLoading = false
+      }).catch(() => {
+        this.customKeyLoading = false
       })
     },
     handleSelected () {
@@ -157,25 +214,39 @@ export default {
         // this.$emit('action-change', {action: panelHandler.changeSwitchButtonToAction(this.powerStatus, this.actionObject), extra: this.powerStatus}, false)
         this.$emit('action-change', {action: panelHandler.changeSwitchButtonToAction(this.powerStatus, this.actionObject, room), extra: this.powerStatus[0] ? this.$t('message.switchStatus', {SWITCH: 'switchOn'}) : this.$t('message.switchStatus', {SWITCH: 'switchOff'})}, false)
       } else if (this.isTransponder()) {
-        if (!this.airCondition.isHanlePanel) {
-          return this.$message({
-            title: false,
-            type: 'warning',
-            message: this.$t('smart.obox.ac', {FIELD: 'noKeyHandle'})
-          })
-        }
         let keys = ''
-        if (this.isJustTouchPower()) { // get power keys
-          keys = panelHandler.getAireConditionPowerKey(this.airAction.power)
-        } else { // get other condition keys
-          let hasVW = ''
-          let hasHW = ''
-          const isV3 = panelHandler.isV3Ac(this.currentTransponderDevice.rmodel)
-          if (!isV3 && this.currentTransponderDevice.keys) {
-            hasVW = +panelHandler.hasVerticalWind(this.currentTransponderDevice.keys)
-            hasHW = +panelHandler.hasHorizontalWind(this.currentTransponderDevice.keys)
+        if (this.tabActiveName === 'custom') {
+          if (!this.customKeyPicker) {
+            return this.$message({
+              title: false,
+              type: 'warning',
+              message: this.$t('smart.obox.ac', {FIELD: 'noKeyHandle'})
+            })
           }
-          keys = this.currentTransponderDevice ? panelHandler.getAirConditionKeys(this.airAction.templure, this.airAction.mode, this.airAction.speed, hasVW, hasHW) : ''
+          keys = this.customKeyPicker.key
+          this.currentTransponderDevice.index = this.customKeyPicker.index
+          this.currentTransponderDevice.name = this.customKeyPicker.name
+        } else {
+          if (!this.airCondition.isHanlePanel) {
+            return this.$message({
+              title: false,
+              type: 'warning',
+              message: this.$t('smart.obox.ac', {FIELD: 'noKeyHandle'})
+            })
+          }
+
+          if (this.isJustTouchPower()) { // get power keys
+            keys = panelHandler.getAireConditionPowerKey(this.airAction.power)
+          } else { // get other condition keys
+            let hasVW = ''
+            let hasHW = ''
+            const isV3 = panelHandler.isV3Ac(this.currentTransponderDevice.rmodel)
+            if (!isV3 && this.currentTransponderDevice.keys) {
+              hasVW = +panelHandler.hasVerticalWind(this.currentTransponderDevice.keys)
+              hasHW = +panelHandler.hasHorizontalWind(this.currentTransponderDevice.keys)
+            }
+            keys = this.currentTransponderDevice ? panelHandler.getAirConditionKeys(this.airAction.templure, this.airAction.mode, this.airAction.speed, hasVW, hasHW) : ''
+          }
         }
 
         const action = {
@@ -234,8 +305,15 @@ export default {
 
 <style lang="scss" scoped>
 .controller {
+  position: relative;
   border-top: 6px double #eee;
   padding-top: 20px;
+
+  .tabPicker{
+    position: absolute;
+    left: 20px;
+    top: 20px;
+  }
   .panel{
     width: 380px;
     text-align: center;
@@ -387,6 +465,25 @@ export default {
     .obicon{
       font-size: 16px;
     }
+  }
+}
+.tabPicker,
+.custom_key{
+  .el-radio-button:first-child .el-radio-button__inner,
+  .el-radio-button:last-child .el-radio-button__inner{
+    border-radius: 0;
+  }
+  .el-radio-button__orig-radio:checked + .el-radio-button__inner {
+    border-color: none;
+  }
+}
+.custom_key{
+  margin-top: 10px;
+  .el-radio-button{
+    margin: 10px;
+  }
+  .el-radio-button .el-radio-button__inner{
+    border: 1px solid #DCDFE6;
   }
 }
 </style>

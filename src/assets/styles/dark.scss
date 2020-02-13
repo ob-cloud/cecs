@@ -701,6 +701,17 @@ body.dark{
     > .item{
       color: $light-white;
     }
+    .tabPicker{
+      .el-radio-button__inner{
+        background-color: $dark;
+        border: 1px solid $light-white;
+      }
+      .el-radio-button__orig-radio:checked + .el-radio-button__inner{
+        background-color: $dark;
+        border-color: $white;
+        box-shadow: none;
+      }
+    }
   }
 
   .building{

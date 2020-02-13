@@ -2,7 +2,7 @@
  * @Author: eamiear
  * @Date: 2019-08-05 17:32:41
  * @Last Modified by: eamiear
- * @Last Modified time: 2019-11-26 11:27:46
+ * @Last Modified time: 2020-02-13 16:15:45
  */
 
 import {request} from '@/common/request'
@@ -114,6 +114,17 @@ const WifiDeviceAPI = {
     return request.postForm('/consumer/common', {
       CMD: 'delete_ali_dev',
       deviceId
+    })
+  },
+  reNameIrDevice () {
+    return request.postForm('/consumer/common', {
+      CMD: 'rename_ir_device'
+    })
+  },
+  getIrCustomKeys () {
+    return request.postForm('/consumer/common', {
+      CMD: 'get_custom_key',
+      tId: 0
     })
   }
 }

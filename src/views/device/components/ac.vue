@@ -40,6 +40,15 @@
         </div>
       </div>
     </div>
+    <div class="controller" v-else-if="isCustomKey">
+      <div class="panel" style="height: 424px; overflow-y: auto; ">
+        <div class="custom_key">
+          <el-radio-group v-model="customKeyPicker" size="small">
+            <el-radio-button :label="item" border v-for="(item, index) in customKeyList" :key="index" @click="keyAction(item)">{{item.name}}</el-radio-button>
+          </el-radio-group>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -68,7 +77,9 @@ export default {
         speed: 0,
         mode: 0,
         power: 0
-      }
+      },
+      customKeyPicker: '',
+      customKeyList: []
     }
   },
   watch: {
@@ -78,6 +89,11 @@ export default {
   },
   mounted () {
     this.getTransponderDeviceList(this.serialId)
+  },
+  computed: {
+    isCustomKey () {
+      return this.transponderList.length && this.currentDevice.deviceType === 0
+    }
   },
   methods: {
     isValidAc () {
@@ -182,6 +198,9 @@ export default {
         hasHW = 0
       }
       return panelHandler.getAirConditionKeys(this.airAction.templure, this.airAction.mode, this.airAction.speed, hasVW, hasHW)
+    },
+    keyAction (item) {
+
     }
   },
 }
@@ -355,6 +374,22 @@ export default {
     }
     .obicon{
       font-size: 16px;
+    }
+  }
+  .custom_key{
+    margin-top: 10px;
+    .el-radio-button{
+      margin: 10px;
+    }
+    .el-radio-button .el-radio-button__inner{
+      border: 1px solid #DCDFE6;
+    }
+    .el-radio-button:first-child .el-radio-button__inner,
+    .el-radio-button:last-child .el-radio-button__inner{
+      border-radius: 0;
+    }
+    .el-radio-button__orig-radio:checked + .el-radio-button__inner {
+      border-color: none;
     }
   }
 }
