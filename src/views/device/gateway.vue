@@ -25,12 +25,24 @@
         </template>
       </slot>
     </base-table>
+    <el-dialog  v-if="renameDialogVisible" top="10%" width="660px" title="重命名" :visible.sync="renameDialogVisible" :close-on-click-modal="false">
+      <el-form class="ob-form" ref="rename" autoComplete="on" :rules="renameRules" :model="renameModel" label-position="left" label-width="80px">
+        <el-form-item :label="$t('smart.obox.tableField', { FIELD: 'name' })" prop="name">
+          <el-input v-model="renameModel.name" :placeholder="$t('message.placeholder', {TYPE: '', PLACEHOLDER: 'deviceName' })"></el-input>
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="renameDialogVisible = false">{{$t('message.cancel')}}</el-button>
+        <el-button type="primary" @click="handleRename()">{{$t('message.confirm')}}</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
 <script>
 import BaseTable from '@/assets/package/table-base'
 import OboxAPI from '@/api/obox'
+import DeviceAPI from '@/api/device'
 import { PAGINATION_PAGENO, PAGINATION_PAGESIZE } from '@/common/constants'
 import Helper from '@/common/helper'
 export default {
@@ -57,7 +69,14 @@ export default {
         pageSize: PAGINATION_PAGESIZE
       },
       tableData: [],
-      columns: []
+      columns: [],
+      renameDialogVisible: false, // 重命名
+      renameModel: {
+        name: ''
+      },
+      renameRules: {
+        name: [{ required: true, message: this.$t('message.rules', {RULE: 'deviceName'}), trigger: 'blur' }]
+      }
     }
   },
   components: { BaseTable },
@@ -101,7 +120,9 @@ export default {
     },
     getToolboxRender (h, row) {
       const toolbox = []
+      const rename = <el-button size="tiny" icon="el-icon-edit" title={this.$t('message.rename')} onClick={() => this.handleRenameAction(row)}></el-button>
       const remove = <el-button size="tiny" icon="obicon obicon-trash" title={this.$t('message.delete')} onClick={() => this.handleRemove(row)}></el-button>
+      toolbox.push(rename)
       this.$isPermited(46) && toolbox.push(remove)
       !toolbox.length && toolbox.push(<span title="">-</span>)
       return toolbox
@@ -140,6 +161,37 @@ export default {
     onSizeChange (pageSize) {
       this.search.pageSize = pageSize
       this.getOboxList()
+    },
+    handleRenameAction (row) {
+      this.renameDialogVisible = true
+      this.renameModel = {name: row.obox_name, serialId: row.obox_serial_id}
+    },
+    handleRename () {
+      this.$refs.rename.validate(valid => {
+        if (valid) {
+          DeviceAPI.modifyDeviceName(this.renameModel.serialId, this.renameModel.name).then(res => {
+            this.responseHandler(res, this.$t('message.rename'))
+            if (res.message.includes('success')) {
+              this.getOboxList()
+            }
+          }).catch(() => {
+            this.responseHandler({message: 'error'}, this.$t('message.rename'))
+          })
+          this.renameDialogVisible = false
+        }
+      })
+    },
+    responseHandler (res, msg) {
+      let message = `${msg}${this.$t('message.fail')}`
+      let type = 'error'
+      if (res.message.includes('success')) {
+        type = 'success'
+        message = `${msg}${this.$t('message.success')}`
+      }
+      this.$message({
+        type,
+        message
+      })
     },
     handleSearch () {
       this.search.pageNo = PAGINATION_PAGENO
