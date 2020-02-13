@@ -301,7 +301,7 @@ export default {
             message: this.$t('smart.room.message', {MESSAGE: 'switchFail'})
           })
         }
-      }).catch((err) => {
+      }).catch(() => {
         loading.close()
         this.$message({
           type: 'error',
