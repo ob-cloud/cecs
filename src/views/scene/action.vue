@@ -57,7 +57,7 @@
         <div class="panel" v-if="tabActiveName ? tabActiveName === 'custom' : isCustomKeyBoard()" style="height: 424px; overflow-y: auto; " v-loading="customKeyLoading">
           <div class="custom_key">
             <el-radio-group v-model="customKeyPicker" size="small">
-              <el-radio-button :label="item" border v-for="(item, index) in customKeyList" :key="index">{{item.name}} - {{item.key}}</el-radio-button>
+              <el-radio-button :label="item" border v-for="(item, index) in customKeyList" :key="index">{{item.name && `${item.name} - `}}{{item.key}}</el-radio-button>
             </el-radio-group>
           </div>
         </div>
@@ -115,6 +115,12 @@ export default {
       if (!val) return
       if (val === 'custom') {
         this.getCustomKeys()
+      }
+    },
+    currentTransponderDevice (val) {
+      if (!val) return
+      if (val.deviceType === 0) {
+        this.customKeyList = val.extendsKeys
       }
     }
   },
@@ -225,7 +231,7 @@ export default {
         this.$emit('action-change', {action: panelHandler.changeSwitchButtonToAction(this.powerStatus, this.actionObject, room), extra: this.powerStatus[0] ? this.$t('message.switchStatus', {SWITCH: 'switchOn'}) : this.$t('message.switchStatus', {SWITCH: 'switchOff'})}, false)
       } else if (this.isTransponder()) {
         let keys = ''
-        if (this.tabActiveName === 'custom') {
+        if (this.tabActiveName === 'custom' || (this.currentTransponderDevice && this.currentTransponderDevice.deviceType === 0)) { // 学习按键
           if (!this.customKeyPicker) {
             return this.$message({
               title: false,
@@ -234,8 +240,8 @@ export default {
             })
           }
           keys = this.customKeyPicker.key
-          this.currentTransponderDevice.index = this.customKeyPicker.index
-          this.currentTransponderDevice.name = this.customKeyPicker.name
+          this.currentTransponderDevice.index = this.customKeyPicker.index || this.currentTransponderDevice.index
+          this.currentTransponderDevice.name = this.customKeyPicker.name || this.currentTransponderDevice.name
         } else {
           if (!this.airCondition.isHanlePanel) {
             return this.$message({
