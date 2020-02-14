@@ -43,9 +43,10 @@
     <div class="controller" v-else-if="isCustomKey" v-loading="controlPanelLoading">
       <div class="panel" style="height: 424px; overflow-y: auto; ">
         <div class="custom_key">
-          <el-radio-group v-model="customKeyPicker" size="small" @change="customKeyAction">
-            <el-radio-button :label="item" border v-for="(item, index) in customKeyList" :key="index">{{item.key}}</el-radio-button>
-          </el-radio-group>
+          <!-- <el-radio-group v-model="customKeyPicker" size="small" >
+            <el-radio-button :label="item" border v-for="(item, index) in customKeyList" :key="index" @click.native="customKeyAction"></el-radio-button>
+          </el-radio-group> -->
+          <el-button style="margin-top: 10px;" type="info" size="small" v-for="(item, index) in customKeyList" :key="index" @click="customKeyAction(item)">{{item.key}}</el-button>
         </div>
       </div>
     </div>
@@ -403,6 +404,19 @@ export default {
     margin-top: 10px;
     .el-radio-button{
       margin: 10px;
+    }
+    .el-button--info {
+      color: #FFFFFF;
+      background-color: #909399;
+      border-color: #909399;
+    }
+    .el-button--info:hover, .el-button--info:focus {
+      background: #a6a9ad;
+      border-color: #a6a9ad;
+      color: #FFFFFF;
+    }
+    .el-button{
+      margin-top: 10px;
     }
     .el-radio-button .el-radio-button__inner{
       border: 1px solid #DCDFE6;
