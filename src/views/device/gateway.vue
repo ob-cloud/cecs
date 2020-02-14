@@ -42,7 +42,6 @@
 <script>
 import BaseTable from '@/assets/package/table-base'
 import OboxAPI from '@/api/obox'
-import DeviceAPI from '@/api/device'
 import { PAGINATION_PAGENO, PAGINATION_PAGESIZE } from '@/common/constants'
 import Helper from '@/common/helper'
 export default {
@@ -169,7 +168,7 @@ export default {
     handleRename () {
       this.$refs.rename.validate(valid => {
         if (valid) {
-          DeviceAPI.modifyDeviceName(this.renameModel.serialId, this.renameModel.name).then(res => {
+          OboxAPI.renameObox(this.renameModel.serialId, this.renameModel.name).then(res => {
             this.responseHandler(res, this.$t('message.rename'))
             if (res.message.includes('success')) {
               this.getOboxList()

@@ -2,7 +2,7 @@
  * @Author: eamiear
  * @Date: 2019-08-05 17:32:41
  * @Last Modified by: eamiear
- * @Last Modified time: 2020-02-13 16:15:45
+ * @Last Modified time: 2020-02-14 16:36:45
  */
 
 import {request} from '@/common/request'
@@ -116,9 +116,11 @@ const WifiDeviceAPI = {
       deviceId
     })
   },
-  reNameIrDevice () {
+  reNameIrDevice (serialId, name) {
     return request.postForm('/consumer/common', {
-      CMD: 'rename_ir_device'
+      CMD: 'update_ir_name',
+      device_serial_id: serialId,
+      name
     })
   },
   getIrCustomKeys () {

@@ -232,7 +232,7 @@ export default {
     handleRename () {
       this.$refs.rename.validate(valid => {
         if (valid) {
-          DeviceAPI.modifyDeviceName(this.renameModel.deviceId, this.renameModel.name).then(res => {
+          DeviceAPI.reNameIrDevice(this.renameModel.deviceId, this.renameModel.name).then(res => {
             this.responseHandler(res, this.$t('message.rename'))
             if (res.message.includes('success')) {
               this.getDeviceList()

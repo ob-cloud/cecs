@@ -46,7 +46,7 @@
           <!-- <el-radio-group v-model="customKeyPicker" size="small" >
             <el-radio-button :label="item" border v-for="(item, index) in customKeyList" :key="index" @click.native="customKeyAction"></el-radio-button>
           </el-radio-group> -->
-          <el-button style="margin-top: 10px;" type="info" size="small" v-for="(item, index) in customKeyList" :key="index" @click="customKeyAction(item)">{{item.key}}</el-button>
+          <el-button style="margin-top: 10px;" plain size="small" v-for="(item, index) in customKeyList" :key="index" @click="customKeyAction(item)">{{item.key}}</el-button>
         </div>
       </div>
     </div>
@@ -404,6 +404,17 @@ export default {
     margin-top: 10px;
     .el-radio-button{
       margin: 10px;
+    }
+    .el-button--primary {
+      color: #FFFFFF;
+      background-color: #409EFF;
+      border-color: #409EFF;
+      background-image: none;
+    }
+    .el-button--primary:hover, .el-button--primary:focus {
+      background: #66b1ff;
+      border-color: #66b1ff;
+      color: #FFFFFF;
     }
     .el-button--info {
       color: #FFFFFF;

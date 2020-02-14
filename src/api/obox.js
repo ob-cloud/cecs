@@ -2,7 +2,7 @@
  * @Author: eamiear
  * @Date: 2019-08-07 16:43:21
  * @Last Modified by: eamiear
- * @Last Modified time: 2019-11-12 18:18:18
+ * @Last Modified time: 2020-02-14 16:06:31
  */
 
 import {request} from '@/common/request'
@@ -36,6 +36,13 @@ const OboxAPI = {
   getAllObox () {
     return request.get('/consumer/common', {
       CMD: 'get_allobox'
+    })
+  },
+  renameObox (oboxSerialId, name) {
+    return request.postForm('/consumer/common', {
+      CMD: 'update_box_name',
+      obox_serial_id: oboxSerialId,
+      name
     })
   }
 }
