@@ -429,6 +429,8 @@ export default {
     .el-button{
       margin-top: 10px;
       border: 1px solid #dcdfe6;
+      color: #606266;
+      background-color: #fff;
     }
     .el-button:hover, .el-button:focus {
       background-color: #049dec;
