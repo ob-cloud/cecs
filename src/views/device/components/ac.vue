@@ -40,11 +40,11 @@
         </div>
       </div>
     </div>
-    <div class="controller" v-else-if="isCustomKey">
+    <div class="controller" v-else-if="isCustomKey" v-loading="controlPanelLoading">
       <div class="panel" style="height: 424px; overflow-y: auto; ">
         <div class="custom_key">
-          <el-radio-group v-model="customKeyPicker" size="small">
-            <el-radio-button :label="item" border v-for="(item, index) in customKeyList" :key="index" @click="keyAction(item)">{{item.name}}</el-radio-button>
+          <el-radio-group v-model="customKeyPicker" size="small" @change="customKeyAction">
+            <el-radio-button :label="item" border v-for="(item, index) in customKeyList" :key="index">{{item.key}}</el-radio-button>
           </el-radio-group>
         </div>
       </div>
@@ -85,18 +85,24 @@ export default {
   watch: {
     serialId (val) {
       this.getTransponderDeviceList(val)
+    },
+    currentDevice (device) {
+      if (!device) return
+      if (device.deviceType === 0) {
+        this.customKeyList = device.extendsKeys || []
+      }
     }
   },
   mounted () {
     this.getTransponderDeviceList(this.serialId)
   },
   computed: {
-    isCustomKey () {
+    isCustomKey () { // 是否学习按键
       return this.transponderList.length && this.currentDevice.deviceType === 0
     }
   },
   methods: {
-    isValidAc () {
+    isValidAc () { // 是否空调
       return this.transponderList.length && TypeHint.isAcDevice(this.currentDevice.deviceType)
     },
     speedFilter (val) {
@@ -199,8 +205,25 @@ export default {
       }
       return panelHandler.getAirConditionKeys(this.airAction.templure, this.airAction.mode, this.airAction.speed, hasVW, hasHW)
     },
-    keyAction (item) {
-
+    customKeyAction (item) {
+      this.controlPanelLoading = true
+      DeviceAPI.setAcAction(this.serialId, this.currentDevice.index, item.key).then(res => {
+        if (res.message.includes('success')) {
+          this.$message({
+            type: 'success',
+            message: this.$t('smart.obox.message', {MESSAGE: 'direct'})
+          })
+        } else {
+          this.$message({
+            title: false,
+            type: 'error',
+            message: this.$t('smart.obox.message', {MESSAGE: 'setFail'})
+          })
+        }
+        this.controlPanelLoading = false
+      }).catch(() => {
+        this.controlPanelLoading = false
+      })
     }
   },
 }

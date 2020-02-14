@@ -54,10 +54,10 @@
           </div>
         </div>
         <!-- 学习按键区域 -->
-        <div class="panel" v-if="tabActiveName && tabActiveName === 'custom'" style="height: 424px; overflow-y: auto; ">
+        <div class="panel" v-if="tabActiveName ? tabActiveName === 'custom' : isCustomKeyBoard()" style="height: 424px; overflow-y: auto; " v-loading="customKeyLoading">
           <div class="custom_key">
             <el-radio-group v-model="customKeyPicker" size="small">
-              <el-radio-button :label="item" border v-for="(item, index) in customKeyList" :key="index">{{item.name}}</el-radio-button>
+              <el-radio-button :label="item" border v-for="(item, index) in customKeyList" :key="index">{{item.name}} - {{item.key}}</el-radio-button>
             </el-radio-group>
           </div>
         </div>
@@ -100,27 +100,7 @@ export default {
       tabPickerVisible: false,
       tabActiveName: '', // 云端码库或学习按键 tab
       customKeyLoading: false,
-      customKeyList: [{
-        name: '大同1',
-        index: 8327813,
-        key: '风量小',
-        tId: 0
-      }, {
-        name: '大同2',
-        index: 83278133,
-        key: '风量小1',
-        tId: 0
-      }, {
-        name: '大同3',
-        index: 83278123,
-        key: '风量小2',
-        tId: 0
-      }, {
-        name: '大同4',
-        index: 83278153,
-        key: '风量小3',
-        tId: 0
-      }],
+      customKeyList: [],
       customKeyPicker: ''
       // deviceType: '',
       // deviceSubType: ''
@@ -130,6 +110,12 @@ export default {
     powers (val) {
       // this.changeStatus(val)
       this.changeStatus(val.length ? 1 : 0)
+    },
+    tabActiveName (val) {
+      if (!val) return
+      if (val === 'custom') {
+        this.getCustomKeys()
+      }
     }
   },
   computed: {
@@ -165,7 +151,7 @@ export default {
       return this.currentTransponderDevice.deviceType === 7
     },
     isCustomKeyBoard () {
-
+      return this.currentTransponderDevice.deviceType === 0
     },
     isJustTouchPower () {
       // has touch the power key and other key's value is default
@@ -198,13 +184,37 @@ export default {
     getCustomKeys () {
       this.customKeyLoading = true
       DeviceAPI.getIrCustomKeys().then(res => {
-        if (res.status === 200) {
+        if (res.status === 0) {
           this.customKeyList = res.data.records || []
         }
         this.customKeyLoading = false
       }).catch(() => {
         this.customKeyLoading = false
       })
+      // setTimeout(() => {
+      //   this.customKeyList = [{
+      //     name: '大同1',
+      //     index: 8327813,
+      //     key: '风量小',
+      //     tId: 0
+      //   }, {
+      //     name: '大同2',
+      //     index: 83278133,
+      //     key: '风量小1',
+      //     tId: 0
+      //   }, {
+      //     name: '大同3',
+      //     index: 83278123,
+      //     key: '风量小2',
+      //     tId: 0
+      //   }, {
+      //     name: '大同4',
+      //     index: 83278153,
+      //     key: '风量小3',
+      //     tId: 0
+      //   }]
+      //   this.customKeyLoading = false
+      // }, 2000)
     },
     handleSelected () {
       const room = {
