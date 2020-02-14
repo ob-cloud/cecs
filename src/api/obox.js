@@ -2,7 +2,7 @@
  * @Author: eamiear
  * @Date: 2019-08-07 16:43:21
  * @Last Modified by: eamiear
- * @Last Modified time: 2020-02-14 16:06:31
+ * @Last Modified time: 2020-02-14 16:51:32
  */
 
 import {request} from '@/common/request'
@@ -40,7 +40,7 @@ const OboxAPI = {
   },
   renameObox (oboxSerialId, name) {
     return request.postForm('/consumer/common', {
-      CMD: 'update_box_name',
+      CMD: 'update_obox_name',
       obox_serial_id: oboxSerialId,
       name
     })
