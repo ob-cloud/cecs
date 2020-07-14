@@ -22,7 +22,7 @@
       <div class="ura-login-footer">
         <el-button class="btn" type="primary" :loading="loading" @click.native.prevent="handleLogin">{{$t('system.login')}}</el-button>
       </div>
-      <!-- <LanguageSelect></LanguageSelect> -->
+      <LanguageSelect></LanguageSelect>
     </div>
 
   </section>
@@ -80,7 +80,7 @@
 </style>
 
 <script>
-// import LanguageSelect from '@/components/LanguageSelect'
+import LanguageSelect from '@/components/LanguageSelect'
 import Helper from '@/common/helper'
 export default {
   name: 'login',
@@ -114,7 +114,7 @@ export default {
       loading: false
     }
   },
-  // components: { LanguageSelect },
+  components: { LanguageSelect },
   methods: {
     handleLogin () {
       this.$refs.loginForm.validate(valid => {
