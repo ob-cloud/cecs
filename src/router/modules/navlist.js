@@ -2,7 +2,7 @@
  * @Author: eamiear
  * @Date: 2019-02-06 21:24:22
  * @Last Modified by: eamiear
- * @Last Modified time: 2019-11-28 15:00:05
+ * @Last Modified time: 2020-07-14 17:01:53
  */
 
 export default [
@@ -36,5 +36,11 @@ export default [
     desc: '用户管理',
     meta: {title: 'usrmgr'},
     component: () => import('views/system/user.vue')
+  }, {
+    name: '/system/setting.html',
+    path: '/system/setting.html',
+    desc: '配置管理',
+    meta: {title: 'setting'},
+    component: () => import('views/system/setting.vue')
   }
 ]

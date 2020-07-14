@@ -18,6 +18,9 @@
         <template v-if="item.id===$submenu.gateway">
           <gateway v-if="activeName === 'gateway'" :height="tableHeight" :layoutHeight="containerHeight"></gateway>
         </template>
+        <template v-if="item.id===$submenu.device">
+          <device v-if="activeName === 'device'" :height="tableHeight" :layoutHeight="containerHeight"></device>
+        </template>
       </el-tab-pane>
     </el-tabs>
   </div>
@@ -27,6 +30,7 @@
 import DeviceObox from './obox'
 import DeviceWifi from './wifi'
 import Gateway from './gateway'
+import Device from './device'
 import Helper from '@/common/helper'
 import {privDevSubMenu} from '@/router/menu'
 export default {
@@ -42,7 +46,7 @@ export default {
       navMenu: []
     }
   },
-  components: { DeviceObox, DeviceWifi, Gateway },
+  components: { DeviceObox, DeviceWifi, Gateway, Device },
   created () {
   },
   watch: {

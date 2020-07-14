@@ -11,12 +11,14 @@ import routeMenuList from '@/router/modules/navlist'
 import SystemAPI from '@/api/system'
 import {cacher} from '@/common/cache'
 
+// 导航菜单和路由混淆
 const mixinMenu = () => {
   navMenuList.forEach(element => {
     const cur = routeMenuList.find(item => item.path === element.path)
     if (cur) element.meta = cur.meta
   })
 }
+// 获取按钮权限
 const getBtnPrivilege = privilege => {
   if (privilege && privilege.length === 1) return privilege[0].privilege
   return Array.from(privilege).reduce((item, next, index) => {
@@ -61,11 +63,14 @@ const menu = {
           const buttonPrivileges = getBtnPrivilege(privileges)
 
           mixinMenu()
+          // 获取授权菜单
           const priMenuList = navMenuList.filter(item => {
             return privileges.find(pri => pri.id === item.id)
           })
           const allBtnPrivileges = buttonPrivileges.concat(custommenu)
           commit('SET_MENU_NAV_LIST', priMenuList)
+
+          // 默认菜单入口
           const path = location.href.slice(location.href.indexOf('#') + 1, location.href.lastIndexOf('?'))
           const defaultMenu = priMenuList.find(item => item.path === path) || priMenuList[0]
           commit('UPDATE_MENU_NAV_ACTIVE_NAME', defaultMenu.path)

@@ -103,6 +103,12 @@ export default {
       tableField: '{FIELD, select, serial{序列号} name{名称} status{状态} version{版本} action{操作} other{}}',
       message: '{MESSAGE, select, fetchFail{网关设备获取失败} loading{网关设备删除中...} delConfirm{确认删除网关？} delDevice{网关删除} other{}}',
     },
+    device: {
+      title: '设备列表',
+      search: '{FIELD, select, serial{序列号} status{全部状态} name{名称} other{}}',
+      tableField: '{FIELD, select, serial{序列号} name{名称} status{状态} version{版本} action{操作} other{}}',
+      message: '{MESSAGE, select, fetchFail{获取失败} loading{网关设备删除中...} delConfirm{确认删除设备？} delDevice{设备删除} add{添加} other{}}',
+    },
     scenemodule: '场景管理',
     scene: {
       search: '{FIELD, select, build{全部楼栋} floor{全部楼层} room{全部教室} name{场景名称} other{}}',
