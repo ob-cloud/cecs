@@ -209,6 +209,7 @@ body.dark{
     border-color: $dark;
   }
 
+  .el-select-dropdown.is-multiple .el-select-dropdown__item.selected,
   .el-dropdown-menu__item:not(.is-disabled):hover, .el-dropdown-menu__item:focus,
   .el-select-dropdown__item.hover, .el-select-dropdown__item:hover{
     color: $white;

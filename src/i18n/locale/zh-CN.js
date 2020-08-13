@@ -105,9 +105,16 @@ export default {
     },
     device: {
       title: '设备列表',
-      search: '{FIELD, select, serial{序列号} status{全部状态} name{名称} other{}}',
+      search: '{FIELD, select, serial{组号} status{全部状态} name{名称} other{}}',
       tableField: '{FIELD, select, serial{序列号} name{名称} status{状态} version{版本} action{操作} other{}}',
       message: '{MESSAGE, select, fetchFail{获取失败} loading{网关设备删除中...} delConfirm{确认删除设备？} delDevice{设备删除} add{添加} other{}}',
+    },
+    group: {
+      title: '面板编组',
+      search: '{FIELD, select, serial{组号} addr{面板地址} name{名称} other{}}',
+      tableField: '{FIELD, select, serial{组号} name{名称} addr{面板地址} createTime{添加时间} action{操作} other{}}',
+      message: '{MESSAGE, select, fetchFail{获取失败} loading{网关设备删除中...} delConfirm{确认删除设备？} delDevice{设备删除} add{添加} other{}}',
+      action: '{FIELD, select, create{添加编组} excute{执行场景} edit{编辑场景} delete{刪除} other{}}',
     },
     scenemodule: '场景管理',
     scene: {

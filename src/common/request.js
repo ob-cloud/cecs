@@ -78,7 +78,13 @@ export const request = {
   get (url, params = {}, headers) {
     return service(_defaults('GET', url, params, headers))
   },
-  post (url, params = {}, headers) {
+  post (url, params = {}, headers = {}) {
+    return service(_defaults('post', url, params, headers))
+  },
+  postJson (url, params = {}, headers) {
+    if (!headers) headers = {}
+    headers['Content-Type'] = 'application/json;charset=UTF-8'
+    params.access_token = Storage.getToken()
     return service(_defaults('post', url, params, headers))
   },
   postForm (url, params = {}, headers) {

@@ -1,7 +1,7 @@
 <template>
   <div class="slide-page">
-    <transition name="slide-fade" v-if="pageVisible">
-      <div class="sidebar">
+    <transition :name="slideFade" v-if="pageVisible">
+      <div class="sidebar" :style="sidebarStyle">
         <div class="header">
           <i class="el-icon el-icon-close" @click="pageVisible = false" title="关闭"></i>
           <div class="title">{{title}}{{extraLabel && `(${extraLabel})`}}</div>
@@ -9,8 +9,10 @@
         <div class="content">
           <slot></slot>
         </div>
+        <div class="footer">
+          <slot name="footer"></slot>
+        </div>
       </div>
-
     </transition>
     <div class="cover" v-if="pageVisible"></div>
   </div>
@@ -19,6 +21,10 @@
 <script>
 export default {
   props: {
+    dir: {
+      type: String,
+      default: 'horizontal'
+    },
     visible: {
       type: Boolean,
       default: false
@@ -30,6 +36,25 @@ export default {
     extraLabel: {
       type: String,
       default: ''
+    }
+  },
+  computed: {
+    slideFade () {
+      return this.dir === 'horizontal' ? 'slide-fade' : 'slide-fade-v'
+    },
+    isHorizontal () {
+      return this.dir === 'horizontal'
+    },
+    sidebarStyle () {
+      return this.isHorizontal ? {
+        right: 0,
+        left: 0,
+        height: 500 + 'px'
+      } : {
+        right: 0,
+        height: '100%',
+        width: 500 + 'px'
+      }
     }
   },
   data () {
@@ -61,16 +86,21 @@ export default {
   background: rgba(0, 0, 0, 0.3);
   z-index: 1;
 }
+.footer{
+  position: absolute;
+  bottom: 14px;
+  width: 100%;
+  text-align: right;
+  right: 10px;
+}
 .sidebar{
   display: inline-block;
   position: fixed;
-  right: 0;
-  left: 0;
   bottom: 0;
   background: #fff;
-  height: 500px;
+
   box-shadow: 0 0 2px 1px #ddd;
-  z-index: 999999;
+  z-index: 2;
   .header{
     padding: 12px 10px;
     border-bottom: 1px solid #eee;
@@ -136,6 +166,17 @@ export default {
 .slide-fade-enter, .slide-fade-leave-to
 /* .slide-fade-leave-active for below version 2.1.8 */ {
   transform: translateY(500px);
+  // opacity: 0;
+}
+.slide-fade-v-enter-active {
+  transition: all .3s ease;
+}
+.slide-fade-v-leave-active {
+  transition: all .3s cubic-bezier(1.0, 0.5, 0.8, 1.0);
+}
+.slide-fade-v-enter, .slide-fade-v-leave-to
+/* .slide-fade-leave-active for below version 2.1.8 */ {
+  transform: translateX(500px);
   // opacity: 0;
 }
 </style>

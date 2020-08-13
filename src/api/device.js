@@ -2,7 +2,7 @@
  * @Author: eamiear
  * @Date: 2019-08-05 17:32:41
  * @Last Modified by: eamiear
- * @Last Modified time: 2020-02-14 16:36:45
+ * @Last Modified time: 2020-08-13 10:57:27
  */
 
 import {request} from '@/common/request'
@@ -154,4 +154,25 @@ const AcControlAPI = {
     })
   }
 }
-export default {...DeviceAPI, ...WifiDeviceAPI, ...KeySwitchAPI, ...AcControlAPI}
+
+const GroupApi = {
+  getPanelGroupList (params) {
+    return request.get('/consumer/common', {
+      CMD: 'get_panel_group',
+      ...params
+    })
+  },
+  setanelGroup (params = {}) {
+    return request.get('/consumer/common', {
+      CMD: 'set_panel_group',
+      ...params
+    })
+  },
+  delPanelGroup (groupId) {
+    return request.postForm('/consumer/common', {
+      CMD: 'del_panel_group',
+      group_id: groupId
+    })
+  },
+}
+export default {...DeviceAPI, ...WifiDeviceAPI, ...KeySwitchAPI, ...AcControlAPI, ...GroupApi}

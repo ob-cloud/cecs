@@ -21,6 +21,9 @@
         <template v-if="item.id===$submenu.device">
           <device v-if="activeName === 'device'" :height="tableHeight" :layoutHeight="containerHeight"></device>
         </template>
+        <template v-if="item.id===$submenu.group">
+          <group v-if="activeName === 'group'" :height="tableHeight" :layoutHeight="containerHeight"></group>
+        </template>
       </el-tab-pane>
     </el-tabs>
   </div>
@@ -31,6 +34,7 @@ import DeviceObox from './obox'
 import DeviceWifi from './wifi'
 import Gateway from './gateway'
 import Device from './device'
+import Group from './group'
 import Helper from '@/common/helper'
 import {privDevSubMenu} from '@/router/menu'
 export default {
@@ -46,7 +50,7 @@ export default {
       navMenu: []
     }
   },
-  components: { DeviceObox, DeviceWifi, Gateway, Device },
+  components: { DeviceObox, DeviceWifi, Gateway, Device, Group },
   created () {
   },
   watch: {
@@ -58,7 +62,8 @@ export default {
       this.breadcrumb.current = {
         'obox': this.$t('smart.obox.title'),
         'wifi': this.$t('smart.wifi.title'),
-        'gateway': this.$t('smart.gateway.title')
+        'gateway': this.$t('smart.gateway.title'),
+        'group': this.$t('smart.group.title')
       }[val]
     }
   },
