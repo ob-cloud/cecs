@@ -31,9 +31,13 @@
     <slide-page :visible.sync="humidifierMap.dialogVisible" :title="$t('smart.obox.slide', {FIELD: 'humidifier'})" :extraLabel="humidifierSerialId" @onClose="humidifierSerialId = ''">
       <humifier :serialId="humidifierSerialId" :state="humidifierState"></humifier>
     </slide-page>
-    <slide-page :visible.sync="panelDialogVisible" title="面板控制" @onClose="serialId = ''">
-      <key-panel></key-panel>
+    <slide-page :visible.sync="panelDialogVisible" title="面板控制" @onClose="panelSerialId = ''">
+      <key-panel :serialId="panelSerialId" @on-setting-finished="panelDialogVisible = false"></key-panel>
     </slide-page>
+    <slide-page :visible.sync="lampDialogVisible" title="灯控" @onClose="lampSerialId = '';getDeviceList()" :extraLabel="lampSerialId">
+      <lamp :status="lampStatus" :serialId="lampSerialId" :type="lampDeviceChildType"></lamp>
+    </slide-page>
+
     <el-dialog  v-if="renameDialogVisible" top="10%" width="660px" title="重命名" :visible.sync="renameDialogVisible" :close-on-click-modal="false">
       <el-form class="ob-form" ref="rename" autoComplete="on" :rules="renameRules" :model="renameModel" label-position="left" label-width="80px">
         <el-form-item :label="$t('smart.obox.tableField', { FIELD: 'name' })" prop="name">
@@ -53,6 +57,7 @@ import BaseTable from '@/assets/package/table-base'
 import Humifier from './components/humifier'
 import iSwitcher from './components/switcher'
 import KeyPanel from './components/panel'
+import Lamp from './components/lamp'
 import SlidePage from '@/components/SlidePage'
 import DeviceAPI from '@/api/device'
 import OboxAPI from '@/api/obox'
@@ -102,10 +107,14 @@ export default {
         name: [{ required: true, message: this.$t('message.rules', {RULE: 'deviceName'}), trigger: 'blur' }]
       },
       panelSerialId: '',
-      panelDialogVisible: false
+      panelDialogVisible: false,
+      lampSerialId: '',
+      lampStatus: '',
+      lampDeviceChildType: '',
+      lampDialogVisible: false
     }
   },
-  components: { BaseTable, Humifier, iSwitcher, SlidePage, KeyPanel },
+  components: { BaseTable, Humifier, iSwitcher, SlidePage, KeyPanel, Lamp },
   created () {
     this.getOboxList()
     this.columns = this.getColumns()
@@ -181,6 +190,8 @@ export default {
         toolboxs.push(<el-button size="tiny" icon="obicon obicon-humidity" title={this.$t('smart.obox.placeholder', {FIELD: 'humidifier'})} onClick={() => this.handleHumidifier(row)}>{this.$t('smart.obox.placeholder', {FIELD: 'humidifier'})}</el-button>)
       } else if (this.$isPermited(32) && row.device_child_type === '7a') {
         toolboxs.push(<el-button size="tiny" icon="el-icon-setting" title="设置" onClick={() => this.handlePanelAction(row)}>设置</el-button>)
+      } else if (this.$isPermited(32) && Suit.typeHints.isSimpleLed(row.device_child_type)) {
+        toolboxs.push(<el-button size="tiny" icon="el-icon-switch-button" title="灯控" onClick={() => this.handleLampAction(row)}>灯控</el-button>)
       }
       this.$isPermited(35) && toolboxs.push(rename)
       this.$isPermited(34) && toolboxs.push(remove)
@@ -320,6 +331,12 @@ export default {
     handlePanelAction (row) {
       this.panelSerialId = row.serialId
       this.panelDialogVisible = true
+    },
+    handleLampAction (row) {
+      this.lampSerialId = row.serialId
+      this.lampStatus = row.state
+      this.lampDeviceChildType = row.device_child_type
+      this.lampDialogVisible = true
     },
     onSwitcherChange () {
       this.getDeviceList()

@@ -2,7 +2,7 @@
  * @Author: eamiear
  * @Date: 2019-08-05 17:32:41
  * @Last Modified by: eamiear
- * @Last Modified time: 2020-08-13 10:57:27
+ * @Last Modified time: 2020-08-18 15:37:56
  */
 
 import {request} from '@/common/request'
@@ -139,6 +139,12 @@ const KeySwitchAPI = {
       serialId,
       status
     })
+  },
+  getSwitchStatus (serialId) {
+    return request.postForm('/consumer/common', {
+      CMD: 'query_node_real_status',
+      serialId
+    })
   }
 }
 
@@ -158,11 +164,11 @@ const AcControlAPI = {
 const GroupApi = {
   getPanelGroupList (params) {
     return request.get('/consumer/common', {
-      CMD: 'get_panel_group',
+      CMD: 'get_user_panel_group',
       ...params
     })
   },
-  setanelGroup (params = {}) {
+  setPanelGroup (params = {}) {
     return request.get('/consumer/common', {
       CMD: 'set_panel_group',
       ...params
@@ -174,5 +180,24 @@ const GroupApi = {
       group_id: groupId
     })
   },
+  setPanelKey (params = {}) {
+    return request.get('/consumer/common', {
+      CMD: 'set_panel_key',
+      ...params
+    })
+  },
+  getGroupListByPanelId (id) {
+    return request.get('/consumer/common', {
+      CMD: 'get_panel_group',
+      serialId: id
+    })
+  },
+  getGrouplListPanelKey (serialId, key) {
+    return request.get('/consumer/common', {
+      CMD: 'get_panel_key',
+      serialId,
+      index: key
+    })
+  }
 }
 export default {...DeviceAPI, ...WifiDeviceAPI, ...KeySwitchAPI, ...AcControlAPI, ...GroupApi}

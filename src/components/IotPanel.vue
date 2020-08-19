@@ -5,7 +5,10 @@
     </div>
     <div class="panel-content">
       <div class="key-container">
-        <span class="key" :class="{'active': item === selectedKey}" v-for="(item, index) in keyNum" :key="index" @click="onClickKey(item)"></span>
+        <div class="key" :class="{'active': item === selectedKey}" v-for="(item, index) in keyNum" :key="index" @click="onClickKey(item)">
+            <span class="dot"></span>
+            <span class="label">{{item}}</span>
+        </div>
       </div>
     </div>
   </div>
@@ -22,6 +25,10 @@ export default {
     keyNum: {
       type: Number,
       default: 6
+    },
+    labels: {
+      type: Array,
+      default: () => []
     }
   },
   data () {
@@ -46,27 +53,52 @@ export default {
   .key-container{
     margin-top: 10px;
     padding: 10px;
-    border: 1px solid #A2AAB5;
+    border: 1px solid #000;
     border-radius: 6px;
   }
 }
 
 .key{
   display: inline-block;
+  position: relative;
   cursor: pointer;
-  &::after{
-    content: " ";
+  padding: 10px 0;
+  // &::after{
+  //   content: " ";
+  //   width: 20px;
+  //   height: 20px;
+  //   border: 1px solid #A2AAB5;
+  //   border-radius: 100%;
+  //   margin: 12px 16px;
+  //   display: inline-block;
+  //   transition: all .3s;
+  // }
+  // &.active,
+  // &:hover{
+  //   &::after {
+  //     border-color: #0185ED;
+  //   }
+  // }
+  & .dot{
     width: 20px;
     height: 20px;
-    border: 1px solid #A2AAB5;
+    border: 1px solid #000;
     border-radius: 100%;
     margin: 12px 16px;
     display: inline-block;
     transition: all .3s;
   }
+  & .label{
+    color: #A2AAB5;
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 12px;
+  }
   &.active,
   &:hover{
-    &::after {
+    & .dot {
       border-color: #0185ED;
     }
   }

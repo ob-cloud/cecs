@@ -40,10 +40,10 @@
           <el-input v-model="formModel.group_member" placeholder="选择组员" @click.native="openDeviceBox"></el-input>
         </el-form-item>
         <el-form-item label="短地址" prop="addr">
-          <el-input v-model="formModel.addr" placeholder="输入短地址"></el-input>
+          <el-input :readonly="!!formModel.group_id" v-model="formModel.addr" placeholder="输入短地址(2个字节)"></el-input>
         </el-form-item>
         <el-form-item label="面板地址" prop="group_addr">
-          <el-input v-model="formModel.group_addr" placeholder="输入面板地址"></el-input>
+          <el-input :readonly="!!formModel.group_id" v-model="formModel.group_addr" placeholder="输入面板地址(1个字节)"></el-input>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -399,7 +399,7 @@ export default {
           formdata.panel_addr = {list: [{addr: this.formModel.addr, groupAddr: this.formModel.group_addr}]}
           formdata.group_name = this.formModel.group_name
           formdata.group_member = this.formModel.group_member
-          DeviceAPI.setanelGroup(formdata).then(res => {
+          DeviceAPI.setPanelGroup(formdata).then(res => {
             this.responseHandler(res, '添加失败')
             if (res.message.includes('success')) {
               this.editDialogVisible = false
