@@ -137,7 +137,6 @@ export default {
     onPowerChange (power) {
       const powerHex = power ? 'ff' : '00'
       let state = ''
-      console.log('---- ', powerHex)
       this.bright = !power ? 0 : 100
       if (this.isColorLamp()) {
         // let color = (255 - Math.round(this.color * 2.55)).toString(16)
