@@ -5,9 +5,9 @@
       </el-aside>
       <el-main class="main-content">
         <el-card class="box-card" shadow="never">
-          <!-- <div slot="header" class="clearfix">
-            <span>{{this.status}}</span>
-          </div> -->
+          <div slot="header" class="clearfix">
+            <span>异常状态：{{this.exceptionText}}</span>
+          </div>
           <div class="card-content">
             <el-row :gutter="40" class="card-content__item">
               <el-col :span="3">
@@ -83,7 +83,8 @@ export default {
       power: false,
       bright: 0,
       color: 0,
-      lampColor: '#fff'
+      lampColor: '#fff',
+      exception: ''
     }
   },
   watch: {
@@ -103,12 +104,18 @@ export default {
   computed: {
     isPowerOn () {
       return this.power
+    },
+    exceptionText () {
+      const bits = this.exception.split('')
+      if (!bits || !bits.length) return '无异常'
+      return bits[0] === '1' ? '开路' : bits[1] === '1' ? '短路' : '无异常'
     }
   },
   mounted () {
     this.power = this.status.slice(0, 2) !== '00'
     this.bright = this.getBrightDecimal()
     this.color = this.getColorDecimal() // 100 - (parseInt(this.status.slice(2, 4), 16) / 2.55)
+    this.exception = this.status.slice(14) || '00'
   },
   methods: {
     isColorLamp () {
