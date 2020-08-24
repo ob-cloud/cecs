@@ -164,11 +164,20 @@ export default {
           return Suit.getDeviceTypeDescriptor(row.device_type, val)
         }
       },
-      // {
-      //   label: this.$t('smart.obox.tableField', {FIELD: 'version'}),
-      //   prop: 'version',
-      //   align: 'center'
-      // },
+      {
+        label: '异常状态',
+        prop: 'state',
+        align: 'center',
+        formatter (status, row) {
+          if (Suit.typeHints.isSimpleLed(row.device_child_type)) {
+            const exception = status.slice(14) || '00'
+            const bits = exception.split('')
+            if (!bits || !bits.length) return '无异常'
+            return bits[0] === '1' ? '开路' : bits[1] === '1' ? '短路' : '无异常'
+          }
+          return '-'
+        }
+      },
       {
         label: this.$t('smart.obox.tableField', {FIELD: 'action'}),
         align: 'center',
