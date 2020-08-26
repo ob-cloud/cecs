@@ -173,7 +173,7 @@ export default {
             const exception = status.slice(14) || '00'
             const bits = exception.split('')
             if (!bits || !bits.length) return '无异常'
-            return bits[0] === '1' ? '开路' : bits[1] === '1' ? '短路' : '无异常'
+            return bits[0] === '1' ? '异常' : bits[1] === '1' ? '异常' : '无异常'
           }
           return '-'
         }
