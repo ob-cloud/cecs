@@ -124,32 +124,37 @@ export default {
     getBrightDecimal (status) {
       const state = status || this.status
       const brightValue = +parseInt(state.slice(0, 2), 16).toString(16)
-      return Math.ceil(brightValue / 255 * 100)
+      // return Math.ceil(brightValue / 255 * 100)
+      return brightValue - 154 < 0 ? 154 : brightValue - 154
     },
     getBrightHex (bright) {
-      const hexValue = Math.ceil(bright * 255 / 100)
+      // const hexValue = Math.ceil(bright * 255 / 100)
+      const hexValue = bright + 154
+      console.log('bright ', hexValue)
       const hex = parseInt(hexValue, 10).toString(16)
       return hex.length > 1 ? hex : '0' + hex
     },
     getColorHex (color = 0) {
-      const hexValue = Math.ceil(color * 254 / 100)
+      // const hexValue = Math.ceil(color * 254 / 100)
+      const hexValue = color + 154
       const hex = parseInt(hexValue, 10).toString(16)
       return hex.length > 1 ? hex : '0' + hex
     },
     getColorDecimal (status) {
       const state = status || this.status
       const brightValue = +parseInt(state.slice(2, 4), 16).toString(16)
-      return Math.ceil(brightValue / 254 * 100)
+      // return Math.ceil(brightValue / 254 * 100)
+      return brightValue - 154 < 0 ? 154 : brightValue - 154
     },
     onPowerChange (power) {
-      const powerHex = power ? 'ff' : '00'
+      const powerHex = power ? 'fe' : '00'
       let state = ''
       this.bright = !power ? 0 : 100
       if (this.isColorLamp()) {
         // let color = (255 - Math.round(this.color * 2.55)).toString(16)
         // color = color.length > 1 ? color : '0' + color
         const color = this.getColorHex(this.color)
-        state = powerHex + color + 'ff0000000200'
+        state = powerHex + color + 'fe0000000200'
       } else {
         state = powerHex + '00000000000200'
       }
@@ -164,7 +169,7 @@ export default {
         // let color = (255 - Math.round(this.color * 2.55)).toString(16)
         // color = color.length > 1 ? color : '0' + color
         const color = this.getColorHex(this.color)
-        state = brightValue + color + 'ff0000000200'
+        state = brightValue + color + 'fe0000000200'
       } else {
         state = brightValue + '00000000000200'
       }
@@ -175,7 +180,7 @@ export default {
       let state = ''
       if (this.isColorLamp()) {
         const colorHex = this.getColorHex(color)
-        state = brightValue + colorHex + 'ff0000000200'
+        state = brightValue + colorHex + 'fe0000000200'
       } else {
         state = brightValue + '00000000000200'
       }
