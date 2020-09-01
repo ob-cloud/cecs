@@ -123,28 +123,30 @@ export default {
     },
     getBrightDecimal (status) {
       const state = status || this.status
-      const brightValue = +parseInt(state.slice(0, 2), 16).toString(16)
+      const brightValue = +parseInt(state.slice(0, 2), 16).toString(10)
       // return Math.ceil(brightValue / 255 * 100)
-      return brightValue - 154 < 0 ? 154 : brightValue - 154
+      console.log('bright d', brightValue, brightValue === 154 ? 0 : brightValue === 254 ? 100 : brightValue - 175)
+      return brightValue === 154 ? 0 : brightValue === 254 ? 100 : brightValue - 175 < 0 ? 0 : brightValue - 175
     },
     getBrightHex (bright) {
       // const hexValue = Math.ceil(bright * 255 / 100)
-      const hexValue = bright + 154
-      console.log('bright ', hexValue)
+      // const hexValue = bright + 154
+      const hexValue = bright === 0 ? 154 : bright === 100 ? 254 : bright + 175
       const hex = parseInt(hexValue, 10).toString(16)
+      console.log('bright h', hexValue, hex.length > 1 ? hex : '0' + hex)
       return hex.length > 1 ? hex : '0' + hex
     },
     getColorHex (color = 0) {
-      // const hexValue = Math.ceil(color * 254 / 100)
-      const hexValue = color + 154
+      const hexValue = Math.ceil(color * 254 / 100)
+      // const hexValue = color + 154
       const hex = parseInt(hexValue, 10).toString(16)
       return hex.length > 1 ? hex : '0' + hex
     },
     getColorDecimal (status) {
       const state = status || this.status
-      const brightValue = +parseInt(state.slice(2, 4), 16).toString(16)
-      // return Math.ceil(brightValue / 254 * 100)
-      return brightValue - 154 < 0 ? 154 : brightValue - 154
+      const brightValue = +parseInt(state.slice(2, 4), 16).toString(10)
+      return Math.ceil(brightValue / 254 * 100)
+      // return brightValue - 154 < 0 ? 154 : brightValue - 154
     },
     onPowerChange (power) {
       const powerHex = power ? 'fe' : '00'
