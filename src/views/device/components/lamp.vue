@@ -131,7 +131,7 @@ export default {
     getBrightHex (bright) {
       // const hexValue = Math.ceil(bright * 255 / 100)
       // const hexValue = bright + 154
-      const hexValue = bright === 0 ? 154 : bright === 100 ? 254 : bright + 175
+      const hexValue = bright === 0 ? 154 : bright === 100 ? 254 : bright + 175 > 254 ? 254 : bright + 175
       const hex = parseInt(hexValue, 10).toString(16)
       console.log('bright h', hexValue, hex.length > 1 ? hex : '0' + hex)
       return hex.length > 1 ? hex : '0' + hex
